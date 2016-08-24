@@ -10,8 +10,8 @@ Once the package is installed you can update it along with the others issuing
 
 ## Usage
 
-Load Prox.jl with `using Prox`. The package exports constructors to instantiate
-some functions, and the `prox` method to evaluate their proximal mapping.
+Load Prox.jl with `using Prox`. The package exports constructors you can use to
+instantiate functions, and the `prox` method to evaluate their proximal mapping.
 The available constructors are described in the following table.
 
 Function        | Description                                          | Properties
@@ -33,7 +33,9 @@ Function        | Description                                          | Propert
 `NormL21`       | Sum-of-L2 norms                                      | convex
 `SqrNormL2`     | Squared Euclidean norm                               | convex
 
-Each function can be customized with parameters: you can access the documentation of each function from the command line of Julia directly (try typing in `?NormL1`).
+Each function can be customized with parameters: you can access the specific documentation
+of each function from the command line of Julia directly (try typing in `?NormL1`).
+
 Once a function has been created, you can at any time inspect it by simply printing it out:
 
 ```
