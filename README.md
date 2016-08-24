@@ -54,7 +54,7 @@ julia> f(x)
 32.40700818735099
 ```
 
-Method `prox` evaluate the proximal operator associated with a function, given a
+The `prox` method evaluates the proximal operator associated with a function, given a
 positive stepsize parameter and a point. The return values are the proximal point
 `y` and the value of the function at `y`:
 
