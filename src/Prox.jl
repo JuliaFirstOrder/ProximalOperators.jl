@@ -10,7 +10,8 @@ RealOrComplexMatrix = Union{Array{Float64,2}, Array{Complex{Float64},2}}
 
 export prox
 
-export DistL2,
+export ProximableFunction,
+       DistL2,
        SqrDistL2,
        ElasticNet,
        IndAffine,
