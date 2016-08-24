@@ -40,8 +40,8 @@ julia> y, fy = prox(f, 0.5, x)
 ## Available functions
 
 The available constructors are described in the following table.
-Each function can be customized with parameters: you can access the specific documentation
-of each one from the command line of Julia directly (try typing in `?NormL1`).
+You can access the specific documentation of each of them from the command line
+of Julia (try typing in `?NormL1`) to have information on their parameters.
 
 Function        | Description                                          | Properties
 ----------------|------------------------------------------------------|----------------
