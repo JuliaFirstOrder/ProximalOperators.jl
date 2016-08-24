@@ -13,7 +13,7 @@ immutable IndBallL2 <: IndicatorConvex
 end
 
 function call(f::IndBallL2, x::RealOrComplexArray)
-  if vecnorm(x) > f.r return +Inf end
+  if vecnorm(x) - f.r > 1e-14 return +Inf end
   return 0.0
 end
 

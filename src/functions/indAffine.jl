@@ -30,7 +30,7 @@ end
 
 function call(f::IndAffine, x::Array{Float64,1})
   # the tolerance in the following line should be customizable
-  if norm(f.A*x - f.b, Inf) <= 1e-15 return 0.0 end
+  if norm(f.A*x - f.b, Inf) <= 1e-14 return 0.0 end
   return +Inf
 end
 

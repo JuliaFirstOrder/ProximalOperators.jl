@@ -17,7 +17,7 @@ function call(f::IndBallRank, x::RealOrComplexMatrix)
   if maxr <= f.r return 0.0 end
   u, s, v = svds(x, nsv=f.r+1)
   # the tolerance in the following line should be customizable
-  if s[end]/s[1] <= 1e-15 return 0.0 end
+  if s[end]/s[1] <= 1e-14 return 0.0 end
   return +Inf
 end
 

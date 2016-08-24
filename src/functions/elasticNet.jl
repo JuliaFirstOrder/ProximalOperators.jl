@@ -14,13 +14,12 @@ immutable ElasticNet <: ProximableFunction
 end
 
 function call(f::ElasticNet, x::Array{Float64})
-  return f.mu*vecnorm(x,1) + f.lambda*vecnorm(x,2)^2
+  return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2
 end
 
 function prox(f::ElasticNet, gamma::Float64, x::Array{Float64})
   uz = max(0, abs(x) - gamma*f.mu)/(1 + f.lambda*gamma);
-  prox = sign(x).*uz;
-  g = f.mu*sum(uz) + (f.lambda/2)*vecnorm(uz)^2;
+  return sign(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
 end
 
 fun_name(f::ElasticNet) = "elastic-net regularization"
