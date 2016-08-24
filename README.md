@@ -4,9 +4,8 @@ Nonsmooth functions and proximal operators in Julia.
 
 ## Installation
 
-From the Julia command line hit `Pkg.clone("https://github.com/lostella/Prox.jl.git")`.
-Once the package is installed you can update it along with the others issuing
-`Pkg.update()` in the command line.
+From the Julia command line `Pkg.clone("https://github.com/lostella/Prox.jl.git")`.
+Remember to update the package with `Pkg.update()`.
 
 ## Usage
 
