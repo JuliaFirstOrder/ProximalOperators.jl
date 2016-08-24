@@ -1,1 +1,2 @@
-include("test_prox.jl")
+include("test_calls.jl")
+include("test_results.jl")
