@@ -9,9 +9,39 @@ Remember to update the package with `Pkg.update()`.
 
 ## Usage
 
-Load Prox.jl with `using Prox`. The package exports constructors you can use to
-instantiate functions, and the `prox` method to evaluate their proximal mapping.
+With `using Prox` the package exports constructors to create functions, and the
+`prox` method to evaluate their proximal mapping. For example, you can create
+the (weighted) L1-norm function as follows:
+
+```julia
+julia> f = NormL1(3.5)
+description : weighted L1 norm
+type        : C^n → R
+expression  : x ↦ λ||x||_1
+parameters  : λ = 3.5
+```
+
+Functions created this way are, of course, callable:
+
+```julia
+julia> x = randn(10) # some random point
+julia> f(x)
+32.40700818735099
+```
+
+The `prox` method evaluates the proximal operator associated with a function, given a
+positive stepsize parameter and a point. The return values are the proximal point
+`y` and the value of the function at `y`:
+
+```julia
+julia> y, fy = prox(f, 0.5, x)
+```
+
+## Available functions
+
 The available constructors are described in the following table.
+Each function can be customized with parameters: you can access the specific documentation
+of each one from the command line of Julia directly (try typing in `?NormL1`).
 
 Function        | Description                                          | Properties
 ----------------|------------------------------------------------------|----------------
@@ -32,38 +62,9 @@ Function        | Description                                          | Propert
 `NormL21`       | Sum-of-L2 norms                                      | convex
 `SqrNormL2`     | Squared Euclidean norm                               | convex
 
-Each function can be customized with parameters: you can access the specific documentation
-of each function from the command line of Julia directly (try typing in `?NormL1`).
-
-Once a function has been created, you can at any time inspect it by simply printing it out:
-
-```
-julia> f = NormL1(3.5)
-description : weighted L1 norm
-type        : C^n → R
-expression  : x ↦ λ||x||_1
-parameters  : λ = 3.5
-```
-
-Functions created this way are, of course, callable:
-
-```
-julia> x = randn(10)
-julia> f(x)
-32.40700818735099
-```
-
-The `prox` method evaluates the proximal operator associated with a function, given a
-positive stepsize parameter and a point. The return values are the proximal point
-`y` and the value of the function at `y`:
-
-```
-julia> y, fy = prox(f, 0.5, x)
-```
-
 ## References
 
-PUT SOME REFERENCES HERE
+[1] Neal Parikh and Stephen Boyd, *Proximal Algorithms*. Found. Trends Optim. 1, 3 (January 2014), 127-239. http://dx.doi.org/10.1561/2400000003
 
 ## Credits
 
