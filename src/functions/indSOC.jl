@@ -1,16 +1,12 @@
 # indicator of second-order cones
 
 """
-  IndSOC(n::Int64)
+  IndSOC()
 
 Returns the indicator of the second-order cone (ice-cream cone) of R^n.
 """
 
-immutable IndSOC <: IndicatorConvex
-  n::Int
-  IndSOC(n::Int) =
-    n <= 0 ? error("dimension must be n ⩾ 1") : new(n)
-end
+immutable IndSOC <: IndicatorConvex end
 
 function call(f::IndSOC, x::Array{Float64,1})
   # the tolerance in the following line should be customizable
@@ -37,4 +33,4 @@ end
 fun_name(f::IndSOC) = "indicator of a second-order cone"
 fun_type(f::IndSOC) = "R^n → R ∪ {+∞}"
 fun_expr(f::IndSOC) = "x ↦ 0 if x[1] >= ||x[2:end]||, +∞ otherwise"
-fun_params(f::IndSOC) = "n = $(f.n)"
+fun_params(f::IndSOC) = "none"

@@ -3,53 +3,61 @@ using Base.Test
 
 stuff = [
           Dict( "constr" => DistL2,
-                "params" => [ (IndSOC(10),), (IndNonnegative(), rand()) ],
+                "wrong"  => [ (IndBallL2(), -rand()) ],
+                "params" => [ (IndSOC(),), (IndNonnegative(), rand()) ],
                 "args"   => ( randn(10), randn(10) )
               ),
 
           Dict( "constr" => SqrDistL2,
+                "wrong"  => [ (IndBallL2(), -rand()) ],
                 "params" => [ (IndSimplex(),), (IndNonnegative(), rand()) ],
                 "args"   => ( randn(10), randn(10) )
               ),
 
           Dict( "constr" => ElasticNet,
+                "wrong"  => [ (-rand()), (-rand(), -rand()), (-rand(), rand()), (rand(), -rand()) ],
                 "params" => [ (), (rand(),), (rand(), rand()) ],
                 "args"   => ( randn(10), randn(10), randn(10) )
               ),
 
           Dict( "constr" => IndAffine,
                 "params" => [ (randn(10), randn()), (randn(10,20), randn(10)) ],
-                "args"   => ( randn(10), randn(20) )
+                "args"   => ( randn(10), randn(20) ),
               ),
 
           Dict( "constr" => IndBallInf,
+                "wrong"  => [ (-rand(),), ],
                 "params" => [ (rand(),), ],
                 "args"   => ( randn(20), )
               ),
 
           Dict( "constr" => IndBallL0,
+                "wrong"  => [ (-4,), ],
                 "params" => [ (5,), (5,) ],
                 "args"   => ( randn(25), randn(35), )
               ),
 
           Dict( "constr" => IndBallL2,
+                "wrong"  => [ (-rand(),), ],
                 "params" => [ (rand(),), ],
                 "args"   => ( randn(10), )
               ),
 
           Dict( "constr" => IndBallRank,
+                "wrong"  => [ (-2,), ],
                 "params" => [ (1+Int(round(10*rand())),), ],
                 "args"   => ( randn(20, 50), )
               ),
 
           Dict( "constr" => IndBox,
+                "wrong"  => [ (+1, -1), ],
                 "params" => [ (-rand(),+rand(10)), (-rand(10),+rand()), (-rand(),+rand()) ],
                 "args"   => ( randn(10), randn(10), randn(20) )
               ),
 
           Dict( "constr" => IndHalfspace,
                 "params" => [ (rand(10),rand()), (rand(10),rand()), (rand(10),rand()), (rand(10),rand()) ],
-                "args"   => ( randn(10), randn(10), randn(10), randn(10) )
+                "args"   => ( randn(10), randn(10), randn(10), randn(10) ),
               ),
 
           Dict( "constr" => IndNonnegative,
@@ -63,7 +71,7 @@ stuff = [
               ),
 
           Dict( "constr" => IndSOC,
-                "params" => [ (5), (10,), (20,), (30,) ],
+                "params" => [ (), (), (), () ],
                 "args"   => ( randn(5), randn(10), randn(20), randn(30) )
               ),
 
@@ -95,6 +103,12 @@ stuff = [
 
 for i = 1:length(stuff)
   constr = stuff[i]["constr"]
+  if haskey(stuff[i], "wrong")
+    for j = 1:length(stuff[i]["wrong"])
+      wrong = stuff[i]["wrong"][j]
+      @test_throws ErrorException constr(wrong...)
+    end
+  end
   for j = 1:length(stuff[i]["params"])
     println("----------------------------------------------------------")
     println(constr)

@@ -1,14 +1,14 @@
 # indicator of the L2 norm ball with given radius
 
 """
-  IndBallL2(r::Float64)
+  IndBallL2(r::Float64=1.0)
 
 Returns the function `g = ind{x : ||x|| ⩽ r}`, for a real parameter `r > 0`.
 """
 
 immutable IndBallL2 <: IndicatorConvex
   r::Float64
-  IndBallL2(r::Float64) =
+  IndBallL2(r::Float64=1.0) =
     r <= 0 ? error("parameter r must be positive") : new(r)
 end
 

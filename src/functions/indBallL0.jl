@@ -1,14 +1,14 @@
 # indicator of the L0 norm ball with given (integer) radius
 
 """
-  IndBallL0(r::Int64)
+  IndBallL0(r::Int=1)
 
 Returns the function `g = ind{x : countnz(x) ⩽ r}`, for an integer parameter `r > 0`.
 """
 
 immutable IndBallL0 <: IndicatorFunction
   r::Int
-  IndBallL0(r::Int) =
+  IndBallL0(r::Int=1) =
     r <= 0 ? error("parameter r must be a positive integer") : new(r)
 end
 

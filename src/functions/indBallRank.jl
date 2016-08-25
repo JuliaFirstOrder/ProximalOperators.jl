@@ -1,14 +1,14 @@
 # indicator of the ball of matrices with (at most) a given rank
 
 """
-  IndBallRank(r::Int64)
+  IndBallRank(r::Int=1)
 
 Returns the function `g = ind{X : rank(X) ⩽ r}`, for an integer parameter `r > 0`.
 """
 
 immutable IndBallRank <: IndicatorFunction
   r::Int
-  IndBallRank(r::Int) =
+  IndBallRank(r::Int=1) =
     r <= 0 ? error("parameter r must be a positive integer") : new(r)
 end
 

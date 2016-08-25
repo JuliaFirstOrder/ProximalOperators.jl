@@ -61,10 +61,6 @@ include("functions/indSimplex.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
 
-function call(f::ProximableFunction, x)
-  error("call is not implemented for type ", typeof(f))
-end
-
 """
   prox(f::ProximableFunction, x::Array, γ::Float64)
 
@@ -76,7 +72,7 @@ and parameter `γ > 0`, that is
 and returns `y` and `f(y)`.
 """
 
-function prox(f::ProximableFunction, x, gamma::Float64=1.0)
+function prox(f, x, gamma::Float64=1.0)
   error("prox is not implemented for type ", typeof(f))
 end
 
@@ -87,9 +83,9 @@ function Base.show(io::IO, f::ProximableFunction)
   print(  io, "parameters  : ", fun_params(f))
 end
 
-fun_name(  f::ProximableFunction) = "n/a"
-fun_type(  f::ProximableFunction) = "n/a"
-fun_expr(  f::ProximableFunction) = "n/a"
-fun_params(f::ProximableFunction) = "n/a"
+fun_name(  f) = "n/a"
+fun_type(  f) = "n/a"
+fun_expr(  f) = "n/a"
+fun_params(f) = "n/a"
 
 end
