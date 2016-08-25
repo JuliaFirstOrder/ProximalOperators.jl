@@ -12,4 +12,4 @@ notifications:
 script:
  - julia -e 'Pkg.clone("https://github.com/kul-forbes/Prox.jl.git"); Pkg.build("Prox"); Pkg.test("Prox"; coverage=true)'
 after_success:
- - julia -e 'cd(Pkg.dir("MyPkg")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
+ - julia -e 'cd(Pkg.dir("Prox")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
