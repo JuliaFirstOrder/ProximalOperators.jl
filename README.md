@@ -66,7 +66,8 @@ Function        | Description                                          | Propert
 
 ## References
 
-[1] Neal Parikh and Stephen Boyd, *Proximal Algorithms*. Found. Trends Optim. 1, 3 (January 2014), 127-239. http://dx.doi.org/10.1561/2400000003
+1. Neal Parikh and Stephen Boyd, *Proximal Algorithms*.
+Foundations and Trends in Optimization 1, 3 (January 2014), 127-239. http://dx.doi.org/10.1561/2400000003
 
 ## Credits
 
