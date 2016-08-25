@@ -61,8 +61,8 @@ Function        | Description                                          | Propert
 `NormL2`        | Euclidean norm                                       | convex
 `NormL21`       | Sum-of-L2 norms                                      | convex
 `SqrNormL2`     | Squared Euclidean norm                               | convex
-`DistL2`        | Euclidean distance                                   | convex
-`SqrDistL2`     | Squared Euclidean distance                           | convex
+`DistL2`        | Euclidean distance from a convex set                 | convex
+`SqrDistL2`     | Squared Euclidean distance from a convex set         | convex
 
 ## References
 
