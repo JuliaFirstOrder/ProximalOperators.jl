@@ -83,8 +83,8 @@ stuff = [
               ),
 
           Dict( "constr" => NormL21,
-                "params" => [ (), (rand(),) ],
-                "args"   => ( randn(10), randn(10) )
+                "params" => [ (), (rand(),), (rand(),1), (rand(),2) ],
+                "args"   => ( randn(10,20), randn(10,20), randn(10,20), randn(10,20) )
               ),
 
           Dict( "constr" => SqrNormL2,
@@ -99,9 +99,9 @@ for i = 1:length(stuff)
     params = stuff[i]["params"][j]
     x      = stuff[i]["args"][j]
     f = constr(params...)
-    fx = f(x)
+    print(constr, " (call) : "); @time fx = f(x)
     gamma = 5*rand()
-    y, fy = prox(f, gamma, x)
+    print(constr, " (prox) : "); @time y, fy = prox(f, gamma, x)
     f_at_y = f(y)
     @test abs(fy - f_at_y)/(1+abs(fy)) <= 1e-14
   end

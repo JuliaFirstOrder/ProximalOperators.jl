@@ -23,3 +23,8 @@ function prox(f::NormL21, gamma::Float64, X::RealOrComplexArray)
   Y = max(0, 1-f.lambda*gamma./sqrt(sum(abs(X).^2, f.dim))).*X
   return Y, f.lambda*sum(sqrt(sum(abs(Y).^2, f.dim)))
 end
+
+fun_name(f::NormL21) = "sum of Euclidean norms"
+fun_type(f::NormL21) = "R^n → R"
+fun_expr(f::NormL21) = "x ↦ λsum(||x_i||)"
+fun_params(f::NormL21) = "λ = $(f.lambda), dim = $(f.dim)"

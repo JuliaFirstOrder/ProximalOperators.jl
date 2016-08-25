@@ -23,7 +23,7 @@ function prox(f::NormL2, gamma::Float64, x::Array{Float64})
   return y, f.lambda*scale*vecnormx
 end
 
-fun_name(f::NormL2) = "weighted Euclidean norm"
+fun_name(f::NormL2) = "Euclidean norm"
 fun_type(f::NormL2) = "R^n → R"
 fun_expr(f::NormL2) = "x ↦ λ||x||_2"
 fun_params(f::NormL2) = "λ = $(f.lambda)"

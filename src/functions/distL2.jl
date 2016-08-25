@@ -19,3 +19,8 @@ function prox(f::DistL2, gamma::Float64, x::Array)
   if d > gamlam return (x + gamlam/d*(p-x), f.lambda*(d-gamlam)) end
   return p, 0.0
 end
+
+fun_name(f::DistL2) = "Euclidean distance from a set"
+fun_type(f::DistL2) = "R^n → R"
+fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
+fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))

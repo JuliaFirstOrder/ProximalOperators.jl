@@ -41,7 +41,8 @@ function prox(f::NormL1, gamma::Float64, x::RealOrComplexArray)
   return y, vecnorm(f.lambda.*y,1)
 end
 
-fun_name(f::NormL1) = "weighted L1 norm"
+fun_name(f::NormL1{Float64}) = "L1 norm"
+fun_name(f::NormL1{Array{Float64}}) = "weighted L1 norm"
 fun_type(f::NormL1) = "C^n → R"
 fun_expr(f::NormL1{Float64}) = "x ↦ λ||x||_1"
 fun_expr(f::NormL1{Array{Float64}}) = "x ↦ sum( λ_i |x_i| )"

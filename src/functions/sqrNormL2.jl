@@ -40,7 +40,8 @@ function prox(f::SqrNormL2, gamma::Float64, x::Array{Float64})
   return y, 0.5*vecdot(f.lambda.*y,y)
 end
 
-fun_name(f::SqrNormL2) = "weighted squared Euclidean norm"
+fun_name(f::SqrNormL2{Float64}) = "squared Euclidean norm"
+fun_name(f::SqrNormL2{Array{Float64}}) = "weighted squared Euclidean norm"
 fun_type(f::SqrNormL2) = "R^n → R"
 fun_expr(f::SqrNormL2{Float64}) = "x ↦ (λ/2)||x||^2"
 fun_expr(f::SqrNormL2{Array{Float64}}) = "x ↦ (1/2)sum( λ_i (x_i)^2 )"

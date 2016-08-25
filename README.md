@@ -11,11 +11,11 @@ Remember to update the package with `Pkg.update()`.
 
 With `using Prox` the package exports constructors to create functions, and the
 `prox` method to evaluate their proximal mapping. For example, you can create
-the (weighted) L1-norm function as follows:
+the L1-norm as follows:
 
 ```julia
 julia> f = NormL1(3.5)
-description : weighted L1 norm
+description : L1 norm
 type        : C^n → R
 expression  : x ↦ λ||x||_1
 parameters  : λ = 3.5
