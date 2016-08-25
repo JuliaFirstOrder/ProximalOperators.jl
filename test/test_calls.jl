@@ -96,13 +96,16 @@ stuff = [
 for i = 1:length(stuff)
   constr = stuff[i]["constr"]
   for j = 1:length(stuff[i]["params"])
+    println("----------------------------------------------------------")
+    println(constr)
     params = stuff[i]["params"][j]
     x      = stuff[i]["args"][j]
     f = constr(params...)
-    print(constr, " (call) : "); @time fx = f(x)
-    print(constr, " (prox) : "); @time y, fy = prox(f, x)
+    println(f)
+    print("* call : "); @time fx = f(x)
+    print("* prox : "); @time y, fy = prox(f, x)
     gamma = 5*rand()
-    print(constr, " (prox) : "); @time y, fy = prox(f, x, gamma)
+    print("* prox : "); @time y, fy = prox(f, x, gamma)
     f_at_y = f(y)
     @test abs(fy - f_at_y)/(1+abs(fy)) <= 1e-14
   end
