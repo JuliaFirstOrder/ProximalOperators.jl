@@ -31,12 +31,12 @@ function call(f::NormL1, x::RealOrComplexArray)
   return vecnorm(f.lambda.*x,1)
 end
 
-function prox(f::NormL1{Float64}, x::RealOrComplexArray, gamma::Float64=1.0)
+function prox(f::NormL1{Float64}, gamma::Float64, x::RealOrComplexArray)
   y = sign(x).*max(0.0, abs(x)-gamma*f.lambda)
   return y, f.lambda*vecnorm(y,1)
 end
 
-function prox(f::NormL1, x::RealOrComplexArray, gamma::Float64=1.0)
+function prox(f::NormL1, gamma::Float64, x::RealOrComplexArray)
   y = sign(x).*max(0.0, abs(x)-gamma*f.lambda)
   return y, vecnorm(f.lambda.*y,1)
 end

@@ -13,7 +13,7 @@ function call(f::IndSimplex, x::Array{Float64,1})
   return +Inf
 end
 
-function prox(f::IndSimplex, x::Array{Float64}, gamma::Float64=1.0)
+function prox(f::IndSimplex, gamma::Float64, x::Array{Float64})
   n = length(x)
   p = sort(x,rev=true);
   s = 0

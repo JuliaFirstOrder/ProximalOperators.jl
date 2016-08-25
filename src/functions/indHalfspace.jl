@@ -21,7 +21,7 @@ function call(f::IndHalfspace, x::Array{Float64})
   return +Inf
 end
 
-function prox(f::IndHalfspace, x::Array{Float64}, gamma::Float64=1.0)
+function prox(f::IndHalfspace, gamma::Float64, x::Array{Float64})
   s = vecdot(f.a,x)-f.b
   if s <= 0 return (x, 0.0) end
   return (x - s*f.a, 0.0)

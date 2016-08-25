@@ -34,7 +34,7 @@ function call(f::IndAffine, x::Array{Float64,1})
   return +Inf
 end
 
-function prox(f::IndAffine, x::Array{Float64,1}, gamma::Float64=1.0)
+function prox(f::IndAffine, gamma::Float64, x::Array{Float64,1})
   res = f.A*x - f.b
   y = x - f.A'*(f.R\(f.R'\res))
   return y, 0.0

@@ -13,8 +13,8 @@ immutable Conjugate <: ProximableFunction
   f::ProximableFunction
 end
 
-function prox(g::Conjugate, x::Array, gamma::Float64=1.0)
-  z, v = prox(g.f, x/gamma, 1/gamma)
+function prox(g::Conjugate, gamma::Float64, x::Array)
+  z, v = prox(g.f, 1/gamma, x/gamma)
   p = x - gamma*z
   return p, vecdot(p,z) - v
 end

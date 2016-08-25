@@ -8,12 +8,12 @@ immutable DistL2 <: ProximableFunction
 end
 
 function call(f::DistL2, x::Array)
-  p, = prox(f.ind, x)
+  p, = prox(f.ind, 1.0, x)
   return f.lambda*vecnorm(x-p)
 end
 
-function prox(f::DistL2, x::Array, gamma::Float64=1.0)
-  p, = prox(f.ind, x)
+function prox(f::DistL2, gamma::Float64, x::Array)
+  p, = prox(f.ind, 1.0, x)
   d = vecnorm(x-p)
   gamlam = gamma*f.lambda
   if d > gamlam return (x + gamlam/d*(p-x), f.lambda*(d-gamlam)) end

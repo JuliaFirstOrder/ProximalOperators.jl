@@ -16,7 +16,7 @@ function call(f::NormL0, x::Array{Float64})
   return f.lambda*countnz(x)
 end
 
-function prox(f::NormL0, x::Array{Float64}, gamma::Float64=1.0)
+function prox(f::NormL0, gamma::Float64, x::Array{Float64})
   over = abs(x) .> sqrt(2*gamma*f.lambda);
   y = x.*over;
   return y, f.lambda*countnz(y)

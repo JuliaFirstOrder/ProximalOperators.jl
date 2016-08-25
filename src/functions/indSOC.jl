@@ -18,7 +18,7 @@ function call(f::IndSOC, x::Array{Float64,1})
   return +Inf
 end
 
-function prox(f::IndSOC, x::Array{Float64,1}, gamma::Float64=1.0)
+function prox(f::IndSOC, gamma::Float64, x::Array{Float64,1})
   nx = norm(x[2:end])
   t = x[1]
   if nx <= -t

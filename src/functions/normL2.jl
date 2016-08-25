@@ -16,7 +16,7 @@ function call(f::NormL2, x::Array{Float64})
   return f.lambda*vecnorm(x)
 end
 
-function prox(f::NormL2, x::Array{Float64}, gamma::Float64=1.0)
+function prox(f::NormL2, gamma::Float64, x::Array{Float64})
   vecnormx = vecnorm(x)
   scale = max(0, 1-f.lambda*gamma/vecnormx)
   y = scale*x
