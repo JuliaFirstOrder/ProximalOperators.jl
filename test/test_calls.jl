@@ -48,8 +48,8 @@ stuff = [
               ),
 
           Dict( "constr" => IndHalfspace,
-                "params" => [ (rand(10),rand()), ],
-                "args"   => ( randn(10), )
+                "params" => [ (rand(10),rand()), (rand(10),rand()), (rand(10),rand()), (rand(10),rand()) ],
+                "args"   => ( randn(10), randn(10), randn(10), randn(10) )
               ),
 
           Dict( "constr" => IndNonnegative,
