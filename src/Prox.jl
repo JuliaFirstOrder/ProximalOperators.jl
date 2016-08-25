@@ -4,16 +4,13 @@ __precompile__()
 
 module Prox
 
-RealOrComplexArray = Union{Array{Float64}, Array{Complex{Float64}}}
-RealOrComplexVector = Union{Array{Float64,1}, Array{Complex{Float64},1}}
-RealOrComplexMatrix = Union{Array{Float64,2}, Array{Complex{Float64},2}}
+typealias RealOrComplexArray Union{Array{Float64}, Array{Complex{Float64}}}
+typealias RealOrComplexVector Union{Array{Float64,1}, Array{Complex{Float64},1}}
+typealias RealOrComplexMatrix Union{Array{Float64,2}, Array{Complex{Float64},2}}
 
 export prox
 
 export ProximableFunction,
-       DistL2,
-       SqrDistL2,
-       ElasticNet,
        IndAffine,
        IndBallInf,
        IndBallL0,
@@ -25,11 +22,14 @@ export ProximableFunction,
        IndNonnegative,
        IndSimplex,
        IndSOC,
+       ElasticNet,
        NormL0,
        NormL1,
        NormL2,
        NormL21,
-       SqrNormL2
+       SqrNormL2,
+       DistL2,
+       SqrDistL2
 
 # This hierarchy of abstract types (or a similar one) may be useful.
 # Unfortunately Julia does not allow for multiple inheritance.
@@ -53,7 +53,6 @@ include("functions/normL0.jl")
 include("functions/indAffine.jl")
 include("functions/indBallL0.jl")
 include("functions/indBallL2.jl")
-include("functions/indBallL20.jl")
 include("functions/indBallRank.jl")
 include("functions/indBox.jl")
 include("functions/indSOC.jl")

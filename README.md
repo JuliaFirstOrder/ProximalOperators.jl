@@ -4,7 +4,7 @@ Nonsmooth functions and proximal operators in Julia.
 
 ## Installation
 
-From the Julia command line `Pkg.clone("https://github.com/lostella/Prox.jl.git")`.
+From the Julia command line `Pkg.clone("https://github.com/kul-forbes/Prox.jl.git")`.
 Remember to update the package with `Pkg.update()`.
 
 ## Usage
@@ -45,7 +45,6 @@ of Julia (try typing in `?NormL1`) to have information on their parameters.
 
 Function        | Description                                          | Properties
 ----------------|------------------------------------------------------|----------------
-`ElasticNet`    | Elastic-net regularization                           | convex
 `IndAffine`     | Indicator of an affine subspace                      | convex
 `IndBallInf`    | Indicator of an infinity-norm ball                   | convex
 `IndBallL0`     | Indicator of an L0 pseudo-norm ball                  | nonconvex
@@ -56,11 +55,14 @@ Function        | Description                                          | Propert
 `IndNonnegative`| Indicator of the nonnegative orthant                 | convex
 `IndSimplex`    | Indicator of the probability simplex                 | convex
 `IndSOC`        | Indicator of the second-order cone                   | convex
+`ElasticNet`    | Elastic-net regularization                           | convex
 `NormL0`        | L0 pseudo-norm                                       | nonconvex
 `NormL1`        | L1 norm                                              | convex
 `NormL2`        | Euclidean norm                                       | convex
 `NormL21`       | Sum-of-L2 norms                                      | convex
 `SqrNormL2`     | Squared Euclidean norm                               | convex
+`DistL2`        | Euclidean distance                                   | convex
+`SqrDistL2`     | Squared Euclidean distance                           | convex
 
 ## References
 
