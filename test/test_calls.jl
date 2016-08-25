@@ -28,8 +28,8 @@ stuff = [
               ),
 
           Dict( "constr" => IndBallL0,
-                "params" => [ (1+Int(round(10*rand())),), ],
-                "args"   => ( randn(30), )
+                "params" => [ (5,), (5,) ],
+                "args"   => ( randn(25), randn(35), )
               ),
 
           Dict( "constr" => IndBallL2,
@@ -63,8 +63,8 @@ stuff = [
               ),
 
           Dict( "constr" => IndSOC,
-                "params" => [ (1+Int(round(10*rand())),), ],
-                "args"   => ( randn(10), )
+                "params" => [ (5), (10,), (20,), (30,) ],
+                "args"   => ( randn(5), randn(10), randn(20), randn(30) )
               ),
 
           Dict( "constr" => NormL0,
