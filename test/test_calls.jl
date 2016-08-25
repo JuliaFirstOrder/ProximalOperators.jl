@@ -73,8 +73,8 @@ stuff = [
               ),
 
           Dict( "constr" => NormL1,
-                "params" => [ (), (rand(),) ],
-                "args"   => ( randn(10), randn(10) )
+                "params" => [ (), (rand(),), (rand(20),) ],
+                "args"   => ( randn(10), randn(10), randn(20) )
               ),
 
           Dict( "constr" => NormL2,
@@ -88,8 +88,8 @@ stuff = [
               ),
 
           Dict( "constr" => SqrNormL2,
-                "params" => [ (), (rand(),) ],
-                "args"   => ( randn(10), randn(10) )
+                "params" => [ (), (rand(),), (rand(20),) ],
+                "args"   => ( randn(10), randn(10), randn(20) )
               )
         ]
 
