@@ -66,7 +66,7 @@ function call(f::ProximableFunction, x)
 end
 
 """
-  prox(f::ProximableFunction, γ::Float64, x::Array)
+  prox(f::ProximableFunction, x::Array, γ::Float64)
 
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0`, that is
