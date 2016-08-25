@@ -7,8 +7,8 @@ Returns the function `g = ind{x : countnz(x) ⩽ r}`, for an integer parameter `
 """
 
 immutable IndBallL0 <: IndicatorFunction
-  r::Int64
-  IndBallL0(r::Int64) =
+  r::Int
+  IndBallL0(r::Int) =
     r <= 0 ? error("parameter r must be a positive integer") : new(r)
 end
 

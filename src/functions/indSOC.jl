@@ -7,8 +7,8 @@ Returns the indicator of the second-order cone (ice-cream cone) of R^n.
 """
 
 immutable IndSOC <: IndicatorConvex
-  n::Int64
-  IndSOC(n::Int64) =
+  n::Int
+  IndSOC(n::Int) =
     new(n)
 end
 
