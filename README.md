@@ -1,5 +1,7 @@
 # Prox.jl
 
+[![Build Status](https://travis-ci.org/kul-forbes/Prox.jl.svg?branch=master)](https://travis-ci.org/kul-forbes/Prox.jl)
+
 Nonsmooth functions and proximal operators in Julia.
 
 ## Installation
