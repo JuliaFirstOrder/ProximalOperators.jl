@@ -20,7 +20,7 @@ function call(f::IndBox, x::Array{Float64})
   return 0.0
 end
 
-function prox(f::IndBox, gamma::Float64, x::Array{Float64})
+function prox(f::IndBox, x::Array{Float64}, gamma::Float64=1.0)
   y = min(f.ub, max(f.lb, x))
   return y, 0.0
 end

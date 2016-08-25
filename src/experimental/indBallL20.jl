@@ -20,7 +20,7 @@ function call(f::IndBallL20, X::RealOrComplexArray)
   return 0.0
 end
 
-function prox(f::IndBallL20, gamma::Float64, X::RealOrComplexArray)
+function prox(f::IndBallL20, X::RealOrComplexArray, gamma::Float64=1.0)
   Y = zeros(X)
   if f.r < log2(size(X,dim))
     p = selectperm(sqrt(sum(abs(X).^2,dim)[:]), 1:f.r, rev=true)

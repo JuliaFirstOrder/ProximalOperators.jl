@@ -21,7 +21,7 @@ function call(f::IndBallRank, x::RealOrComplexMatrix)
   return +Inf
 end
 
-function prox(f::IndBallRank, gamma::Float64, x::RealOrComplexMatrix)
+function prox(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r return (x, 0.0) end
   u, s, v = svds(x, nsv=f.r)

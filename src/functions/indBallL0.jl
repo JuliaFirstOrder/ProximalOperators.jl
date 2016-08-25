@@ -17,7 +17,7 @@ function call(f::IndBallL0, x::RealOrComplexArray)
   return 0.0
 end
 
-function prox(f::IndBallL0, gamma::Float64, x::RealOrComplexArray)
+function prox(f::IndBallL0, x::RealOrComplexArray, gamma::Float64=1.0)
   y = zeros(x)
   if f.r < log2(length(x))
     p = selectperm(abs(x)[:], 1:f.r, rev=true)

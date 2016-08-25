@@ -17,7 +17,7 @@ function call(f::IndBallL2, x::RealOrComplexArray)
   return 0.0
 end
 
-function prox(f::IndBallL2, gamma::Float64, x::RealOrComplexArray)
+function prox(f::IndBallL2, x::RealOrComplexArray, gamma::Float64=1.0)
   y = x*min(1, f.r/vecnorm(x))
   return y, 0.0
 end
