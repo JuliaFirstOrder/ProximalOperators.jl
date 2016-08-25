@@ -76,7 +76,7 @@ and parameter `γ > 0`, that is
 and returns `y` and `f(y)`.
 """
 
-function prox(f::ProximableFunction, gamma::Float64, x)
+function prox(f::ProximableFunction, x, gamma::Float64=1.0)
   error("prox is not implemented for type ", typeof(f))
 end
 

@@ -100,8 +100,9 @@ for i = 1:length(stuff)
     x      = stuff[i]["args"][j]
     f = constr(params...)
     print(constr, " (call) : "); @time fx = f(x)
+    print(constr, " (prox) : "); @time y, fy = prox(f, x)
     gamma = 5*rand()
-    print(constr, " (prox) : "); @time y, fy = prox(f, gamma, x)
+    print(constr, " (prox) : "); @time y, fy = prox(f, x, gamma)
     f_at_y = f(y)
     @test abs(fy - f_at_y)/(1+abs(fy)) <= 1e-14
   end

@@ -30,12 +30,12 @@ function call(f::SqrNormL2, x::Array{Float64})
   return 0.5*vecdot(f.lambda.*x,x)
 end
 
-function prox(f::SqrNormL2{Float64}, gamma::Float64, x::Array{Float64})
+function prox(f::SqrNormL2{Float64}, x::Array{Float64}, gamma::Float64=1.0)
   y = x/(1+f.lambda*gamma)
   return y, (f.lambda/2)*vecdot(y,y)
 end
 
-function prox(f::SqrNormL2, gamma::Float64, x::Array{Float64})
+function prox(f::SqrNormL2, x::Array{Float64}, gamma::Float64=1.0)
   y = x./(1+f.lambda*gamma)
   return y, 0.5*vecdot(f.lambda.*y,y)
 end

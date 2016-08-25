@@ -10,8 +10,8 @@ function call(f::SeparableSum, xs...)
   return sum(vs)
 end
 
-function prox(f::SeparableSum, gamma::Float64, xs...)
-  res = map(i -> prox(f.fs[i], gamma, xs[i]), (1:f.N...))
+function prox(f::SeparableSum, xs..., gamma::Float64=1.0)
+  res = map(i -> prox(f.fs[i], xs[i], gamma), (1:f.N...))
   return map(p -> p[1], res), sum(map(p -> p[2], res))
 end
 
