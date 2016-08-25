@@ -9,7 +9,7 @@ Returns the indicator of the second-order cone (ice-cream cone) of R^n.
 immutable IndSOC <: IndicatorConvex
   n::Int
   IndSOC(n::Int) =
-    new(n)
+    n <= 0 ? error("dimension must be n ⩾ 1") : new(n)
 end
 
 function call(f::IndSOC, x::Array{Float64,1})

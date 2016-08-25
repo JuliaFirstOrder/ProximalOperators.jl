@@ -7,8 +7,8 @@ Returns the function `g = ind{X : rank(X) ⩽ r}`, for an integer parameter `r >
 """
 
 immutable IndBallRank <: IndicatorFunction
-  r::Int64
-  IndBallRank(r::Int64) =
+  r::Int
+  IndBallRank(r::Int) =
     r <= 0 ? error("parameter r must be a positive integer") : new(r)
 end
 
