@@ -30,11 +30,11 @@ julia> f(x)
 ```
 
 The `prox` method evaluates the proximal operator associated with a function, given a
-positive stepsize parameter and a point. The return values are the proximal point
-`y` and the value of the function at `y`:
+point and (optionally) a positive stepsize parameter.
+This returns the proximal point `y` and the value of the function at `y`:
 
 ```julia
-julia> y, fy = prox(f, 0.5, x)
+julia> y, fy = prox(f, x, 0.5)
 ```
 
 ## Available functions
