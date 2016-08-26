@@ -17,7 +17,7 @@ if VERSION >= v"0.5.0-rc1"
 function call(f::IndBallRank, x::RealOrComplexMatrix)
   maxr = minimum(size(x))
   if maxr <= f.r return 0.0 end
-  svdobj = svds(x, nsv=f.r+1)
+  svdobj = svds(x, nsv=f.r+1)[1]
   # the tolerance in the following line should be customizable
   if svdobj[:S][end]/svdobj[:S][1] <= 1e-14 return 0.0 end
   return +Inf
@@ -26,8 +26,8 @@ end
 function prox(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r return (x, 0.0) end
-  svdobj = svds(x, nsv=f.r)
-  return (svdobj[:U].*svdobj[:S]')*svdobj[:Vt], 0.0
+  svdobj = svds(x, nsv=f.r)[1]
+  return (svdobj[:U].*svdobj[:S]')*svdobj[:Vt]', 0.0
 end
 
 else
