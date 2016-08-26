@@ -12,6 +12,26 @@ immutable IndBallRank <: IndicatorFunction
     r <= 0 ? error("parameter r must be a positive integer") : new(r)
 end
 
+if VERSION >= v"0.5.0-rc1"
+
+function call(f::IndBallRank, x::RealOrComplexMatrix)
+  maxr = minimum(size(x))
+  if maxr <= f.r return 0.0 end
+  svdobj = svds(x, nsv=f.r+1)
+  # the tolerance in the following line should be customizable
+  if svdobj.S[end]/svdobj.S[1] <= 1e-14 return 0.0 end
+  return +Inf
+end
+
+function prox(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64=1.0)
+  maxr = minimum(size(x))
+  if maxr <= f.r return (x, 0.0) end
+  svdobj = svds(x, nsv=f.r)
+  return (svdobj.U.*svdobj.S')*svdobj.Vt, 0.0
+end
+
+else
+
 function call(f::IndBallRank, x::RealOrComplexMatrix)
   maxr = minimum(size(x))
   if maxr <= f.r return 0.0 end
@@ -25,7 +45,9 @@ function prox(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r return (x, 0.0) end
   u, s, v = svds(x, nsv=f.r)
-  return (u*diagm(s))*v', 0.0
+  return (u.*s')*v', 0.0
+end
+
 end
 
 fun_name(f::IndBallRank) = "indicator of the set of rank-r matrices"
