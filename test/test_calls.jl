@@ -71,8 +71,8 @@ stuff = [
               ),
 
           Dict( "constr" => IndSOC,
-                "params" => [ (), (), (), () ],
-                "args"   => ( randn(5), randn(10), randn(20), randn(30) )
+                "params" => [ (), (), (), (), (), (), () ],
+                "args"   => ( [rand(), -rand()], [-rand(), rand()], rand(3), rand(5), randn(10), randn(20), randn(30) )
               ),
 
           Dict( "constr" => NormL0,

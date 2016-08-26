@@ -17,9 +17,9 @@ end
 function prox(f::IndSOC, x::Array{Float64,1}, gamma::Float64=1.0)
   nx = norm(x[2:end])
   t = x[1]
-  if nx <= -t
+  if t <= -nx
     y = zeros(x)
-  elseif nx <= t
+  elseif t >= nx
     y = x
   else
     y = zeros(x)
