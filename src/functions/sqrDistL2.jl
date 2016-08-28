@@ -11,12 +11,12 @@ SqrDistL2(ind::IndicatorConvex, lambda::Float64=1.0) = SqrDistL2{Float64}(ind, l
 
 SqrDistL2(ind::IndicatorConvex, lambda::Array{Float64}) = SqrDistL2{Array{Float64}}(ind, lambda)
 
-function call(f::SqrDistL2{Float64}, x::Array)
+@compat function (f::SqrDistL2{Float64})(x::RealOrComplexArray)
   p, = prox(f.ind, x)
   return (f.lambda/2)*vecnorm(x-p)^2
 end
 
-function prox(f::SqrDistL2{Float64}, x::Array, gamma::Float64=1.0)
+function prox(f::SqrDistL2{Float64}, x::RealOrComplexArray, gamma::Float64=1.0)
   p, = prox(f.ind, x)
   sqrd = (f.lambda/2)*vecnorm(x-p)^2
   gamlam = f.lambda*gamma
@@ -24,6 +24,6 @@ function prox(f::SqrDistL2{Float64}, x::Array, gamma::Float64=1.0)
 end
 
 fun_name(f::SqrDistL2) = "squared Euclidean distance from a convex set"
-fun_type(f::SqrDistL2) = "R^n → R"
+fun_type(f::SqrDistL2) = "C^n → R"
 fun_expr(f::SqrDistL2) = "x ↦ (λ/2) inf { ||x-y||^2 : y ∈ S} "
 fun_params(f::SqrDistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))

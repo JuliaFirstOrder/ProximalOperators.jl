@@ -8,7 +8,7 @@ Returns the indicator of the second-order cone (ice-cream cone) of R^n.
 
 immutable IndSOC <: IndicatorConvex end
 
-function call(f::IndSOC, x::Array{Float64,1})
+@compat function (f::IndSOC)(x::Array{Float64,1})
   # the tolerance in the following line should be customizable
   if norm(x[2:end]) - x[1] <= 1e-14 return 0.0 end
   return +Inf

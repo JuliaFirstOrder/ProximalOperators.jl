@@ -15,7 +15,7 @@ immutable IndHalfspace <: IndicatorConvex
   end
 end
 
-function call(f::IndHalfspace, x::Array{Float64})
+@compat function (f::IndHalfspace)(x::Array{Float64})
   s = vecdot(f.a,x)-f.b
   if s <= 1e-14 return 0.0 end
   return +Inf

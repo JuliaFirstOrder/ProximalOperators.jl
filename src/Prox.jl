@@ -4,6 +4,10 @@ __precompile__()
 
 module Prox
 
+using Compat
+import Compat.String
+
+typealias RealOrComplex Union{Float64, Complex{Float64}}
 typealias RealOrComplexArray Union{Array{Float64}, Array{Complex{Float64}}}
 typealias RealOrComplexVector Union{Array{Float64,1}, Array{Complex{Float64},1}}
 typealias RealOrComplexMatrix Union{Array{Float64,2}, Array{Complex{Float64},2}}
@@ -73,7 +77,8 @@ and returns `y` and `f(y)`.
 """
 
 function prox(f, x, gamma::Float64=1.0)
-  error("prox is not implemented for type ", typeof(f))
+  error("prox is not implemented for functions of type ", typeof(f),
+    " and arguments of type ", typeof(x))
 end
 
 function Base.show(io::IO, f::ProximableFunction)

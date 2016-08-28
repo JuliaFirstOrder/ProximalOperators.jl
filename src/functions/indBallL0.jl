@@ -12,7 +12,7 @@ immutable IndBallL0 <: IndicatorFunction
     r <= 0 ? error("parameter r must be a positive integer") : new(r)
 end
 
-function call(f::IndBallL0, x::RealOrComplexArray)
+@compat function (f::IndBallL0)(x::RealOrComplexArray)
   if countnz(x) > f.r return +Inf end
   return 0.0
 end

@@ -118,8 +118,8 @@ for i = 1:length(stuff)
     println(f)
     print("* call : "); @time fx = f(x)
     print("* prox : "); @time y, fy = prox(f, x)
-    gamma = 5*rand()
-    print("* prox : "); @time y, fy = prox(f, x, gamma)
+    gam = 5*rand()
+    print("* prox : "); @time y, fy = prox(f, x, gam)
     f_at_y = f(y)
     @test abs(fy - f_at_y)/(1+abs(fy)) <= 1e-14
   end

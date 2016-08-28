@@ -12,11 +12,11 @@ immutable NormL2 <: NormFunction
     lambda < 0 ? error("parameter λ must be nonnegative") : new(lambda)
 end
 
-function call(f::NormL2, x::Array{Float64})
+@compat function (f::NormL2)(x::RealOrComplexArray)
   return f.lambda*vecnorm(x)
 end
 
-function prox(f::NormL2, x::Array{Float64}, gamma::Float64=1.0)
+function prox(f::NormL2, x::RealOrComplexArray, gamma::Float64=1.0)
   vecnormx = vecnorm(x)
   scale = max(0, 1-f.lambda*gamma/vecnormx)
   y = scale*x
@@ -24,6 +24,6 @@ function prox(f::NormL2, x::Array{Float64}, gamma::Float64=1.0)
 end
 
 fun_name(f::NormL2) = "Euclidean norm"
-fun_type(f::NormL2) = "R^n → R"
+fun_type(f::NormL2) = "C^n → R"
 fun_expr(f::NormL2) = "x ↦ λ||x||_2"
 fun_params(f::NormL2) = "λ = $(f.lambda)"

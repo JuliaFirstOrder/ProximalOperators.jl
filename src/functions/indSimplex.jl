@@ -8,7 +8,7 @@ Returns the function `g = ind{x : x ⩾ 0, sum(x) = 1}`.
 
 immutable IndSimplex <: IndicatorConvex end
 
-function call(f::IndSimplex, x::Array{Float64,1})
+@compat function (f::IndSimplex)(x::Array{Float64,1})
   if all(x .>= 0) && abs(sum(x)-1) <= 1e-14 return 0.0 end
   return +Inf
 end

@@ -15,7 +15,7 @@ immutable IndBox <: IndicatorConvex
     any(lb .> ub) ? error("arguments lb, ub must satisfy lb <= ub") : new(lb, ub)
 end
 
-function call(f::IndBox, x::Array{Float64})
+@compat function (f::IndBox)(x::Array{Float64})
   if any(x .< f.lb) || any(x .> f.ub) return +Inf end
   return 0.0
 end

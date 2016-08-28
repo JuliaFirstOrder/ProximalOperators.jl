@@ -22,28 +22,28 @@ Returns the function `g(x) = (1/2)(λ.*x)'x`, for an array of real parameters `�
 
 SqrNormL2(lambda::Array{Float64}) = SqrNormL2{Array{Float64}}(lambda)
 
-function call(f::SqrNormL2{Float64}, x::Array{Float64})
-  return (f.lambda/2)*vecdot(x,x)
+@compat function (f::SqrNormL2{Float64})(x::RealOrComplexArray)
+  return (f.lambda/2)*vecnorm(x)^2
 end
 
-function call(f::SqrNormL2, x::Array{Float64})
-  return 0.5*vecdot(f.lambda.*x,x)
+@compat function (f::SqrNormL2)(x::RealOrComplexArray)
+  return 0.5*real(vecdot(f.lambda.*x,x))
 end
 
-function prox(f::SqrNormL2{Float64}, x::Array{Float64}, gamma::Float64=1.0)
+function prox(f::SqrNormL2{Float64}, x::RealOrComplexArray, gamma::Float64=1.0)
   y = x/(1+f.lambda*gamma)
-  return y, (f.lambda/2)*vecdot(y,y)
+  return y, (f.lambda/2)*vecnorm(y)^2
 end
 
-function prox(f::SqrNormL2, x::Array{Float64}, gamma::Float64=1.0)
+function prox(f::SqrNormL2, x::RealOrComplexArray, gamma::Float64=1.0)
   y = x./(1+f.lambda*gamma)
-  return y, 0.5*vecdot(f.lambda.*y,y)
+  return y, 0.5*real(vecdot(f.lambda.*y,y))
 end
 
 fun_name(f::SqrNormL2{Float64}) = "squared Euclidean norm"
-fun_name(f::SqrNormL2{Array{Float64}}) = "weighted squared Euclidean norm"
-fun_type(f::SqrNormL2) = "R^n → R"
+fun_name(f::SqrNormL2) = "weighted squared Euclidean norm"
+fun_type(f::SqrNormL2) = "C^n → R"
 fun_expr(f::SqrNormL2{Float64}) = "x ↦ (λ/2)||x||^2"
-fun_expr(f::SqrNormL2{Array{Float64}}) = "x ↦ (1/2)sum( λ_i (x_i)^2 )"
+fun_expr(f::SqrNormL2) = "x ↦ (1/2)sum( λ_i (x_i)^2 )"
 fun_params(f::SqrNormL2{Float64}) = "λ = $(f.lambda)"
-fun_params(f::SqrNormL2{Array{Float64}}) = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
+fun_params(f::SqrNormL2) = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))

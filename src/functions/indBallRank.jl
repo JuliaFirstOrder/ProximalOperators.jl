@@ -14,7 +14,7 @@ end
 
 if VERSION >= v"0.5.0-rc1"
 
-function call(f::IndBallRank, x::RealOrComplexMatrix)
+@compat function (f::IndBallRank)(x::RealOrComplexMatrix)
   maxr = minimum(size(x))
   if maxr <= f.r return 0.0 end
   svdobj = svds(x, nsv=f.r+1)[1]
@@ -32,7 +32,7 @@ end
 
 else
 
-function call(f::IndBallRank, x::RealOrComplexMatrix)
+@compat function (f::IndBallRank)(x::RealOrComplexMatrix)
   maxr = minimum(size(x))
   if maxr <= f.r return 0.0 end
   u, s, v = svds(x, nsv=f.r+1)

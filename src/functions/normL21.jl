@@ -15,7 +15,7 @@ immutable NormL21 <: NormFunction
     lambda < 0 ? error("parameter λ must be nonnegative") : new(lambda, dim)
 end
 
-function call(f::NormL21, X::RealOrComplexArray)
+@compat function (f::NormL21)(X::RealOrComplexArray)
   return f.lambda*sum(sqrt(sum(abs(X).^2, f.dim)))
 end
 
@@ -25,6 +25,6 @@ function prox(f::NormL21, X::RealOrComplexArray, gamma::Float64=1.0)
 end
 
 fun_name(f::NormL21) = "sum of Euclidean norms"
-fun_type(f::NormL21) = "R^n → R"
+fun_type(f::NormL21) = "C^{n×m} → R"
 fun_expr(f::NormL21) = "x ↦ λsum(||x_i||)"
 fun_params(f::NormL21) = "λ = $(f.lambda), dim = $(f.dim)"

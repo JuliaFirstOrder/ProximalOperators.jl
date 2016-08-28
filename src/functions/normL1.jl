@@ -23,11 +23,11 @@ parameters `λ_i ⩾ 0`.
 
 NormL1(lambda::Array{Float64}) = NormL1{Array{Float64}}(lambda)
 
-function call(f::NormL1{Float64}, x::RealOrComplexArray)
+@compat function (f::NormL1{Float64})(x::RealOrComplexArray)
   return f.lambda*vecnorm(x,1)
 end
 
-function call(f::NormL1, x::RealOrComplexArray)
+@compat function (f::NormL1)(x::RealOrComplexArray)
   return vecnorm(f.lambda.*x,1)
 end
 
@@ -42,9 +42,9 @@ function prox(f::NormL1, x::RealOrComplexArray, gamma::Float64=1.0)
 end
 
 fun_name(f::NormL1{Float64}) = "L1 norm"
-fun_name(f::NormL1{Array{Float64}}) = "weighted L1 norm"
+fun_name(f::NormL1) = "weighted L1 norm"
 fun_type(f::NormL1) = "C^n → R"
 fun_expr(f::NormL1{Float64}) = "x ↦ λ||x||_1"
-fun_expr(f::NormL1{Array{Float64}}) = "x ↦ sum( λ_i |x_i| )"
+fun_expr(f::NormL1) = "x ↦ sum( λ_i |x_i| )"
 fun_params(f::NormL1{Float64}) = "λ = $(f.lambda)"
-fun_params(f::NormL1{Array{Float64}}) = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
+fun_params(f::NormL1) = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))

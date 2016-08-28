@@ -12,7 +12,7 @@ immutable IndBallL2 <: IndicatorConvex
     r <= 0 ? error("parameter r must be positive") : new(r)
 end
 
-function call(f::IndBallL2, x::RealOrComplexArray)
+@compat function (f::IndBallL2)(x::RealOrComplexArray)
   if vecnorm(x) - f.r > 1e-14 return +Inf end
   return 0.0
 end

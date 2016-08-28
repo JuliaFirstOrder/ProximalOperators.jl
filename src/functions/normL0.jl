@@ -12,17 +12,17 @@ immutable NormL0 <: ProximableFunction
     lambda < 0 ? error("parameter λ must be nonnegative") : new(lambda)
 end
 
-function call(f::NormL0, x::Array{Float64})
+@compat function (f::NormL0)(x::RealOrComplexArray)
   return f.lambda*countnz(x)
 end
 
-function prox(f::NormL0, x::Array{Float64}, gamma::Float64=1.0)
+function prox(f::NormL0, x::RealOrComplexArray, gamma::Float64=1.0)
   over = abs(x) .> sqrt(2*gamma*f.lambda);
   y = x.*over;
   return y, f.lambda*countnz(y)
 end
 
 fun_name(f::NormL0) = "weighted L0 pseudo-norm"
-fun_type(f::NormL0) = "R^n → R"
+fun_type(f::NormL0) = "C^n → R"
 fun_expr(f::NormL0) = "x ↦ λ countnz(x)"
 fun_params(f::NormL0) = "λ = $(f.lambda)"
