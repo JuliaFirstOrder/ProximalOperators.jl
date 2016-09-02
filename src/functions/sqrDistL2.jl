@@ -1,22 +1,18 @@
 # squared Euclidean distance from a set
 
-immutable SqrDistL2{T <: Union{Float64,Array{Float64}}} <: ProximableFunction
+immutable SqrDistL2 <: ProximableFunction
   ind::IndicatorConvex
-  lambda::T
-  SqrDistL2(ind::IndicatorConvex, lambda) =
-    any(lambda .< 0) ? error("coefficients in λ must be nonnegative") : new(ind, lambda)
+  lambda::Float64
+  SqrDistL2(ind::IndicatorConvex, lambda::Float64=1.0) =
+    lambda < 0 ? error("parameter λ must be nonnegative") : new(ind, lambda)
 end
 
-SqrDistL2(ind::IndicatorConvex, lambda::Float64=1.0) = SqrDistL2{Float64}(ind, lambda)
-
-SqrDistL2(ind::IndicatorConvex, lambda::Array{Float64}) = SqrDistL2{Array{Float64}}(ind, lambda)
-
-@compat function (f::SqrDistL2{Float64})(x::RealOrComplexArray)
+@compat function (f::SqrDistL2)(x::RealOrComplexArray)
   p, = prox(f.ind, x)
   return (f.lambda/2)*vecnorm(x-p)^2
 end
 
-function prox(f::SqrDistL2{Float64}, x::RealOrComplexArray, gamma::Float64=1.0)
+function prox(f::SqrDistL2, x::RealOrComplexArray, gamma::Float64=1.0)
   p, = prox(f.ind, x)
   sqrd = (f.lambda/2)*vecnorm(x-p)^2
   gamlam = f.lambda*gamma

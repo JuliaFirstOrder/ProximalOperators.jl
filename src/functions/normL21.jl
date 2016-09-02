@@ -16,12 +16,12 @@ immutable NormL21 <: NormFunction
 end
 
 @compat function (f::NormL21)(X::RealOrComplexArray)
-  return f.lambda*sum(sqrt(sum(abs(X).^2, f.dim)))
+  return f.lambda*sum(sqrt(sum(abs2(X), f.dim)))
 end
 
 function prox(f::NormL21, X::RealOrComplexArray, gamma::Float64=1.0)
-  Y = max(0, 1-f.lambda*gamma./sqrt(sum(abs(X).^2, f.dim))).*X
-  return Y, f.lambda*sum(sqrt(sum(abs(Y).^2, f.dim)))
+  Y = max(0, 1-f.lambda*gamma./sqrt(sum(abs2(X), f.dim))).*X
+  return Y, f.lambda*sum(sqrt(sum(abs2(Y), f.dim)))
 end
 
 fun_name(f::NormL21) = "sum of Euclidean norms"
