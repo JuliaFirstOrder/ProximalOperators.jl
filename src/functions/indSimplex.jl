@@ -13,7 +13,29 @@ immutable IndSimplex <: IndicatorConvex end
   return +Inf
 end
 
-function prox(f::IndSimplex, x::Array{Float64}, gamma::Float64=1.0)
+function prox!(f::IndSimplex, x::Array{Float64}, gamma::Float64, y::Array{Float64})
+  n = length(x)
+  p = sort(x, rev=true);
+  s = 0
+  for i = 1:n-1
+    s = s + p[i]
+    tmax = (s - 1)/i
+    if tmax >= p[i+1]
+      y[:] = max(x-tmax, 0)
+      return 0.0
+    end
+  end
+  tmax = (s + p[n] - 1)/n
+  y[:] = max(x-tmax, 0)
+  return 0.0
+end
+
+fun_name(f::IndSimplex) = "indicator of the probability simplex"
+fun_type(f::IndSimplex) = "Array{Real} → Real ∪ {+∞}"
+fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = 1, +∞ otherwise"
+fun_params(f::IndSimplex) = "none"
+
+function prox_naive(f::IndSimplex, x::Array{Float64}, gamma::Float64=1.0)
   n = length(x)
   p = sort(x,rev=true);
   s = 0
@@ -25,8 +47,3 @@ function prox(f::IndSimplex, x::Array{Float64}, gamma::Float64=1.0)
   tmax = (s + p(n) - 1)/n
   return max(x-tmax,0), 0.0
 end
-
-fun_name(f::IndSimplex) = "indicator of the probability simplex"
-fun_type(f::IndSimplex) = "R^n → R ∪ {+∞}"
-fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = 1, +∞ otherwise"
-fun_params(f::IndSimplex) = "none"

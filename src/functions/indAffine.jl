@@ -34,15 +34,21 @@ end
   return +Inf
 end
 
-function prox(f::IndAffine, x::RealOrComplexVector, gamma::Float64=1.0)
+function prox!(f::IndAffine, x::RealOrComplexVector, gamma::Float64, y::RealOrComplexVector)
   res = f.A*x - f.b
-  y = x - f.A'*(f.R\(f.R'\res))
-  return y, 0.0
+  y[:] = x - f.A'*(f.R\(f.R'\res))
+  return 0.0
 end
 
 fun_name(f::IndAffine) = "indicator of an affine subspace"
-fun_type(f::IndAffine) = "C^n → R ∪ {+∞}"
+fun_type(f::IndAffine) = "Array{Complex} → Real ∪ {+∞}"
 fun_expr(f::IndAffine) = "x ↦ 0 if Ax = b, +∞ otherwise"
 fun_params(f::IndAffine) =
   string( "A = ", typeof(f.A), " of size ", size(f.A), ", ",
           "b = ", typeof(f.b), " of size ", size(f.b))
+
+function prox_naive(f::IndAffine, x::RealOrComplexVector, gamma::Float64=1.0)
+  res = f.A*x - f.b
+  y = x - f.A'*(f.R\(f.R'\res))
+  return y, 0.0
+end

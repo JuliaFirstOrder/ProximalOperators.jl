@@ -5,22 +5,23 @@ Nonsmooth functions and proximal operators in Julia.
 ## Installation
 
 From the Julia command line `Pkg.clone("https://github.com/kul-forbes/Prox.jl.git")`.
-Remember to update the package with `Pkg.update()`.
+Use `Pkg.update()` to keep the package up to date.
 
 ## Usage
 
-With `using Prox` the package exports constructors to create functions, and the
-`prox` method to evaluate their proximal mapping. For example, you can create
-the L1-norm as follows:
+With `using Prox` the package exports the `prox` and `prox!` methods to evaluate
+the proximal mapping of several functions. Such functions can be instantiated using
+*constructors*. For example, you can create the L1-norm as follows:
 
 ```julia
 julia> f = NormL1(3.5)
 description : L1 norm
-type        : C^n → R
+type        : Array{Complex} → Real
 expression  : x ↦ λ||x||_1
 parameters  : λ = 3.5
 ```
 
+For the available constructors, see the following sections.
 Functions created this way are, of course, callable:
 
 ```julia
@@ -35,6 +36,13 @@ This returns the proximal point `y` and the value of the function at `y`:
 
 ```julia
 julia> y, fy = prox(f, x, 0.5)
+```
+
+The `prox!` method evaluates the proximal operator *in place*, and only returns the
+function value at the proximal point.
+
+```julia
+julia> fx = prox!(f, x, 0.5) # in-place equivalent to x, fx = prox(f, x, 0.5)
 ```
 
 ## Available functions
@@ -66,8 +74,8 @@ Function        | Description                                          | Propert
 
 ## References
 
-1. Neal Parikh and Stephen Boyd, *Proximal Algorithms*.
-Foundations and Trends in Optimization 1, 3 (January 2014), 127-239. http://dx.doi.org/10.1561/2400000003
+1. Neal Parikh and Stephen Boyd, [*Proximal Algorithms*](http://dx.doi.org/10.1561/2400000003).
+Foundations and Trends in Optimization 1, 3 (2014), 127-239.
 
 ## Credits
 

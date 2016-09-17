@@ -17,19 +17,14 @@ end
   return 0.0
 end
 
-function prox(f::IndBallL0, x::RealOrComplexArray, gamma::Float64=1.0)
-  y = zeros(x)
-  if f.r < log2(length(x))
-    p = selectperm(abs(x)[:], 1:f.r, rev=true)
-    y[p] = x[p]
-  else
-    p = sortperm(abs(x)[:], rev=true)
-    y[p[1:f.r]] = x[p[1:f.r]]
-  end
-  return y, 0.0
+function prox!(f::IndBallL0, x::RealOrComplexArray, gamma::Float64, y::RealOrComplexArray)
+  p = sortperm(abs(x)[:], rev=true)
+  y[p[1:f.r]] = x[p[1:f.r]]
+  y[p[f.r+1:end]] = 0
+  return 0.0
 end
 
 fun_name(f::IndBallL0) = "indicator of an L0 pseudo-norm ball"
-fun_type(f::IndBallL0) = "C^n → R ∪ {+∞}"
+fun_type(f::IndBallL0) = "Array{Complex} → Real ∪ {+∞}"
 fun_expr(f::IndBallL0) = "x ↦ 0 if countnz(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL0) = "r = $(f.r)"

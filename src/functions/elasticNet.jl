@@ -17,12 +17,38 @@ end
   return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2
 end
 
-function prox(f::ElasticNet, x::RealOrComplexArray, gamma::Float64=1.0)
-  uz = max(0, abs(x) - gamma*f.mu)/(1 + f.lambda*gamma);
-  return sign(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
+function prox!(f::ElasticNet, x::RealArray, gamma::Float64, y::RealArray)
+  sqnorm2x = zero(Float64)
+  norm1x = zero(Float64)
+  gm = gamma*f.mu
+  gl = gamma*f.lambda
+  for i in eachindex(x)
+    y[i] = (x[i] + (x[i] <= -gm ? gm : (x[i] >= gm ? -gm : -x[i])))/(1 + gl)
+    sqnorm2x += abs2(y[i])
+    norm1x += abs(y[i])
+  end
+  return f.mu*norm1x + (f.lambda/2)*sqnorm2x
+end
+
+function prox!(f::ElasticNet, x::ComplexArray, gamma::Float64, y::ComplexArray)
+  sqnorm2x = zero(Float64)
+  norm1x = zero(Float64)
+  gm = gamma*f.mu
+  gl = gamma*f.lambda
+  for i in eachindex(x)
+    y[i] = sign(x[i])*max(0, abs(x[i]) - gm)/(1 + gl)
+    sqnorm2x += abs2(y[i])
+    norm1x += abs(y[i])
+  end
+  return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
 fun_name(f::ElasticNet) = "elastic-net regularization"
-fun_type(f::ElasticNet) = "C^n → R"
+fun_type(f::ElasticNet) = "Array{Complex} → Real"
 fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||^2"
 fun_params(f::ElasticNet) = "μ = $(f.mu), λ = $(f.lambda)"
+
+function prox_naive(f::ElasticNet, x::RealOrComplexArray, gamma::Float64=1.0)
+  uz = max(0, abs(x) - gamma*f.mu)/(1 + f.lambda*gamma);
+  return sign(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
+end

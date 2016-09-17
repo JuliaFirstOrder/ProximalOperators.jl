@@ -12,7 +12,27 @@ end
   return f.lambda*vecnorm(x-p)
 end
 
-function prox(f::DistL2, x::RealOrComplexArray, gamma::Float64=1.0)
+function prox!(f::DistL2, x::RealOrComplexArray, gamma::Float64, y::RealOrComplexArray)
+  p, = prox(f.ind, x)
+  d = vecnorm(x-p)
+  gamlam = (gamma*f.lambda)
+  if gamlam < d
+    gamlamd = gamlam/d
+    for k in eachindex(p)
+      y[k] = (1-gamlamd)*x[k] + gamlamd*p[k]
+    end
+    return f.lambda*(d-gamlam)
+  end
+  y[:] = p
+  return 0.0
+end
+
+fun_name(f::DistL2) = "Euclidean distance from a convex set"
+fun_type(f::DistL2) = "Array{Complex} → Real"
+fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
+fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
+
+function prox_naive(f::DistL2, x::RealOrComplexArray, gamma::Float64=1.0)
   p, = prox(f.ind, x)
   d = vecnorm(x-p)
   gamlam = gamma*f.lambda
@@ -21,8 +41,3 @@ function prox(f::DistL2, x::RealOrComplexArray, gamma::Float64=1.0)
   end
   return p, 0.0
 end
-
-fun_name(f::DistL2) = "Euclidean distance from a convex set"
-fun_type(f::DistL2) = "C^n → R"
-fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
-fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))

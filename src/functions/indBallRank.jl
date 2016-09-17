@@ -23,11 +23,15 @@ if VERSION >= v"0.5.0-rc1"
   return +Inf
 end
 
-function prox(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64=1.0)
+function prox!(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64, y::RealOrComplexMatrix)
   maxr = minimum(size(x))
-  if maxr <= f.r return (x, 0.0) end
+  if maxr <= f.r
+    y[:] = x
+    return 0.0
+  end
   svdobj = svds(x, nsv=f.r)[1]
-  return (svdobj[:U].*svdobj[:S]')*svdobj[:Vt]', 0.0
+  y[:] = (svdobj[:U].*svdobj[:S]')*svdobj[:Vt]'
+  return 0.0
 end
 
 else
@@ -41,16 +45,17 @@ else
   return +Inf
 end
 
-function prox(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64=1.0)
+function prox!(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64, y::RealOrComplexMatrix)
   maxr = minimum(size(x))
   if maxr <= f.r return (x, 0.0) end
   u, s, v = svds(x, nsv=f.r)
-  return (u.*s')*v', 0.0
+  y[:] = (u.*s')*v'
+  return 0.0
 end
 
 end
 
 fun_name(f::IndBallRank) = "indicator of the set of rank-r matrices"
-fun_type(f::IndBallRank) = "C^{n×m} → R ∪ {+∞}"
+fun_type(f::IndBallRank) = "Array{Complex,2} → Real ∪ {+∞}"
 fun_expr(f::IndBallRank) = "x ↦ 0 if rank(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallRank) = "r = $(f.r)"
