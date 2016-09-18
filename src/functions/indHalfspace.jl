@@ -39,3 +39,11 @@ fun_expr(f::IndHalfspace) = "x ↦ 0 if <a,x> ⩽ b, +∞ otherwise"
 fun_params(f::IndHalfspace) =
   string( "a = ", typeof(f.a), " of size ", size(f.a), ", ",
           "b = $(f.b)")
+
+function prox_naive(f::IndHalfspace, x::Array{Float64}, gamma::Float64=1.0)
+  s = vecdot(f.a,x)-f.b
+  if s <= 0
+    return x, 0.0
+  end
+  return x - s*f.a, 0.0
+end

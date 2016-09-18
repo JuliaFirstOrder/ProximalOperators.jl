@@ -18,13 +18,13 @@ end
 end
 
 function prox!(f::IndBallL2, x::RealOrComplexArray, gamma::Float64, y::RealOrComplexArray)
-  scal = min(1.0, f.r/vecnorm(x))
-  if scal == 1.0
+  scal = f.r/vecnorm(x)
+  if scal > 1
     y[:] = x[:]
     return 0.0
   end
-  for iter in eachindex(x)
-    y[iter] = scal*x[iter]
+  for k in eachindex(x)
+    y[k] = scal*x[k]
   end
   return 0.0
 end
@@ -33,3 +33,13 @@ fun_name(f::IndBallL2) = "indicator of an L2 norm ball"
 fun_type(f::IndBallL2) = "Array{Complex} → Real ∪ {+∞}"
 fun_expr(f::IndBallL2) = "x ↦ 0 if ||x|| ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL2) = "r = $(f.r)"
+
+function prox_naive(f::IndBallL2, x::RealOrComplexArray, gamma::Float64=1.0)
+  normx = vecnorm(x)
+  if normx > f.r
+    y = (f.r/normx)*x
+  else
+    y = x
+  end
+  return y, 0.0
+end

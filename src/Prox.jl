@@ -123,13 +123,4 @@ and returns f(x)`.
 
 prox!(f, x, gamma::Float64=1.0) = prox!(f, x, gamma, x)
 
-# this is for testing
-# has to be implemented in a "naive" way for each ProximableFunction subtype
-# should be the "textbook" implementation, the "math-to-code" one
-# should be the implementation that you look at it you can say it's correct
-# no fancy things, no optimizations, no memory savings, just correctness
-# when testing, check that prox returns the same as prox_naive
-prox_naive(f, x, gamma::Float64=1.0) = prox(f, x, gamma)
-# in principle, the above line should be removed and let specific naive implementations operate
-
 end

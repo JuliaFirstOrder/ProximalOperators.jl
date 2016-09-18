@@ -1,7 +1,7 @@
 using Prox
 using Base.Test
 
-TOL_ASSERT = 1e-13
+TOL_ASSERT = 1e-12
 
 stuff = [
   Dict( "constr" => DistL2,
@@ -41,14 +41,14 @@ stuff = [
 
   Dict( "constr" => IndBallL2,
         "wrong"  => [ (-rand(),), ],
-        "params" => [ (rand(),), ],
-        "args"   => ( randn(10), )
+        "params" => [ (rand(),), (sqrt(20)) ],
+        "args"   => ( randn(10), randn(20), )
       ),
 
   Dict( "constr" => IndBallRank,
         "wrong"  => [ (-2,), ],
-        "params" => [ (1+Int(round(10*rand())),), ],
-        "args"   => ( randn(20, 50), )
+        "params" => [ (1+Int(round(10*rand())),), (10+Int(round(5*rand())),)],
+        "args"   => ( randn(20, 50), rand(30, 8)*rand(8,70) )
       ),
 
   Dict( "constr" => IndBox,

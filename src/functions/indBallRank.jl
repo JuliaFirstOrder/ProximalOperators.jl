@@ -59,3 +59,15 @@ fun_name(f::IndBallRank) = "indicator of the set of rank-r matrices"
 fun_type(f::IndBallRank) = "Array{Complex,2} → Real ∪ {+∞}"
 fun_expr(f::IndBallRank) = "x ↦ 0 if rank(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallRank) = "r = $(f.r)"
+
+function prox_naive(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64=1.0)
+  maxr = minimum(size(x))
+  if maxr <= f.r
+    y = x
+    return 0.0
+  end
+  U, S, V = svd(x)
+  M = U[:,1:f.r]*spdiagm(S[1:f.r])
+  y = M*V[:,1:f.r]'
+  return y, 0.0
+end
