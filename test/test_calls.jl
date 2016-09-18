@@ -18,8 +18,8 @@ stuff = [
 
   Dict( "constr" => ElasticNet,
         "wrong"  => [ (-rand()), (-rand(), -rand()), (-rand(), rand()), (rand(), -rand()) ],
-        "params" => [ (), (rand(),), (rand(), rand()) ],
-        "args"   => ( randn(10), randn(10), randn(10) )
+        "params" => [ (), (rand(),), (rand(), rand()), (rand(), rand()) ],
+        "args"   => ( randn(10), randn(10), randn(10), rand(Complex{Float64},20) )
       ),
 
   Dict( "constr" => IndAffine,
@@ -53,8 +53,8 @@ stuff = [
 
   Dict( "constr" => IndBox,
         "wrong"  => [ (+1, -1), ],
-        "params" => [ (-rand(),+rand(10)), (-rand(10),+rand()), (-rand(),+rand()) ],
-        "args"   => ( randn(10), randn(10), randn(20) )
+        "params" => [ (-rand(),+rand(10)), (-rand(10),+rand()), (-rand(),+rand()), (-rand(30),+rand(30)) ],
+        "args"   => ( randn(10), randn(10), randn(20), randn(30) )
       ),
 
   Dict( "constr" => IndHalfspace,
@@ -83,8 +83,8 @@ stuff = [
       ),
 
   Dict( "constr" => NormL1,
-        "params" => [ (), (rand(),), (rand(20),) ],
-        "args"   => ( randn(10), randn(10), randn(20) )
+        "params" => [ (), (rand(),), (rand(20),), (rand(30),), (rand(),) ],
+        "args"   => ( randn(10), randn(10), randn(20), rand(Complex{Float64},30), rand(Complex{Float64}, 50) )
       ),
 
   Dict( "constr" => NormL2,
@@ -98,8 +98,8 @@ stuff = [
       ),
 
   Dict( "constr" => SqrNormL2,
-        "params" => [ (), (rand(),), (rand(20),) ],
-        "args"   => ( randn(10), randn(10), randn(20) )
+        "params" => [ (), (rand(),), (rand(20),), (rand(30),), (rand(),) ],
+        "args"   => ( randn(10), randn(10), randn(20), rand(Complex{Float64}, 30), rand(Complex{Float64}, 50) )
       )
 ]
 

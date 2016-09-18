@@ -62,7 +62,7 @@ end
 function prox!(f::SqrNormL2, x::ComplexArray, gamma::Float64, y::ComplexArray)
   wsqny = zero(Float64)
   for k in eachindex(x)
-    y[k] = x[k]/(1+f.lambda[k])
+    y[k] = x[k]/(1+gamma*f.lambda[k])
     wsqny += f.lambda[k]*abs2(y[k])
   end
   return 0.5*wsqny
