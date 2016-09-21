@@ -1,27 +1,29 @@
 # indicator of a halfspace
 
 """
-  IndHalfspace(a::Array{Float64}, b::Float64)
+  IndHalfspace(a::Array{Real}, b::Real)
 
 Returns the function `g = ind{x : <a,x> ⩽ b}`.
 """
 
 immutable IndHalfspace <: IndicatorConvex
-  a::Array{Float64}
-  b::Float64
-  function IndHalfspace(a::Array{Float64}, b::Float64)
+  a::RealArray
+  b::Real
+  function IndHalfspace(a::RealArray, b::Real)
     norma = vecnorm(a)
     new(a/norma, b/norma)
   end
 end
 
-@compat function (f::IndHalfspace)(x::Array{Float64})
+@compat function (f::IndHalfspace)(x::RealArray)
   s = vecdot(f.a,x)-f.b
-  if s <= 1e-14 return 0.0 end
+  if s <= 1e-14
+    return 0.0
+  end
   return +Inf
 end
 
-function prox!(f::IndHalfspace, x::Array{Float64}, gamma::Float64, y::Array{Float64})
+function prox!(f::IndHalfspace, x::RealArray, gamma::Real, y::RealArray)
   s = vecdot(f.a,x)-f.b
   if s <= 0
     y[:] = x
@@ -40,7 +42,7 @@ fun_params(f::IndHalfspace) =
   string( "a = ", typeof(f.a), " of size ", size(f.a), ", ",
           "b = $(f.b)")
 
-function prox_naive(f::IndHalfspace, x::Array{Float64}, gamma::Float64=1.0)
+function prox_naive(f::IndHalfspace, x::RealArray, gamma::Real=1.0)
   s = vecdot(f.a,x)-f.b
   if s <= 0
     return x, 0.0

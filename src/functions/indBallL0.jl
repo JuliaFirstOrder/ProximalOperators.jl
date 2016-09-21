@@ -13,11 +13,13 @@ immutable IndBallL0 <: IndicatorFunction
 end
 
 @compat function (f::IndBallL0)(x::RealOrComplexArray)
-  if countnz(x) > f.r return +Inf end
+  if countnz(x) > f.r
+    return +Inf
+  end
   return 0.0
 end
 
-function prox!(f::IndBallL0, x::RealOrComplexArray, gamma::Float64, y::RealOrComplexArray)
+function prox!{T <: RealOrComplexArray}(f::IndBallL0, x::T, gamma::Real, y::T)
   p = sortperm(abs(x)[:], rev=true)
   y[p[1:f.r]] = x[p[1:f.r]]
   y[p[f.r+1:end]] = 0
@@ -29,7 +31,7 @@ fun_type(f::IndBallL0) = "Array{Complex} → Real ∪ {+∞}"
 fun_expr(f::IndBallL0) = "x ↦ 0 if countnz(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL0) = "r = $(f.r)"
 
-function prox_naive(f::IndBallL0, x::RealOrComplexArray, gamma::Float64=1.0)
+function prox_naive(f::IndBallL0, x::RealOrComplexArray, gamma::Real=1.0)
   p = sortperm(abs(x)[:], rev=true)
   y = similar(x)
   y[p[1:f.r]] = x[p[1:f.r]]

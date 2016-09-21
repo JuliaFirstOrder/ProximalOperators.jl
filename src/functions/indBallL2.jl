@@ -1,23 +1,25 @@
 # indicator of the L2 norm ball with given radius
 
 """
-  IndBallL2(r::Float64=1.0)
+  IndBallL2(r::Real=1.0)
 
 Returns the function `g = ind{x : ||x|| ⩽ r}`, for a real parameter `r > 0`.
 """
 
 immutable IndBallL2 <: IndicatorConvex
-  r::Float64
-  IndBallL2(r::Float64=1.0) =
+  r::Real
+  IndBallL2(r::Real=1.0) =
     r <= 0 ? error("parameter r must be positive") : new(r)
 end
 
 @compat function (f::IndBallL2)(x::RealOrComplexArray)
-  if vecnorm(x) - f.r > 1e-14 return +Inf end
+  if vecnorm(x) - f.r > 1e-14
+    return +Inf
+  end
   return 0.0
 end
 
-function prox!(f::IndBallL2, x::RealOrComplexArray, gamma::Float64, y::RealOrComplexArray)
+function prox!{T <: RealOrComplexArray}(f::IndBallL2, x::T, gamma::Real, y::T)
   scal = f.r/vecnorm(x)
   if scal > 1
     y[:] = x[:]
@@ -34,7 +36,7 @@ fun_type(f::IndBallL2) = "Array{Complex} → Real ∪ {+∞}"
 fun_expr(f::IndBallL2) = "x ↦ 0 if ||x|| ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL2) = "r = $(f.r)"
 
-function prox_naive(f::IndBallL2, x::RealOrComplexArray, gamma::Float64=1.0)
+function prox_naive(f::IndBallL2, x::RealOrComplexArray, gamma::Real=1.0)
   normx = vecnorm(x)
   if normx > f.r
     y = (f.r/normx)*x

@@ -60,6 +60,7 @@ Function        | Description                                          | Propert
 `IndBallRank`   | Indicator of the set of matrices with given rank     | nonconvex
 `IndBox`        | Indicator of a box                                   | convex
 `IndHalfspace`  | Indicator of a halfspace                             | convex
+`IndNonpositive`| Indicator of the nonpositive orthant                 | convex
 `IndNonnegative`| Indicator of the nonnegative orthant                 | convex
 `IndSimplex`    | Indicator of the probability simplex                 | convex
 `IndSOC`        | Indicator of the second-order cone                   | convex

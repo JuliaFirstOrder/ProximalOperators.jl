@@ -1,11 +1,11 @@
 # indicator of an affine set
 
 """
-  IndAffine(A::Array{Float64,2}, b::Array{Float64,1})
+  IndAffine(A::Array{Real,2}, b::Array{Real,1})
 
 Returns the function `g = ind{x : Ax = b}`.
 
-  IndAffine(A::Array{Float64,1}, b::Float64)
+  IndAffine(A::Array{Real,1}, b::Real)
 
 Returns the function `g = ind{x : dot(a,x) = b}`.
 """
@@ -30,11 +30,13 @@ end
 
 @compat function (f::IndAffine)(x::RealOrComplexVector)
   # the tolerance in the following line should be customizable
-  if norm(f.A*x - f.b, Inf) <= 1e-14 return 0.0 end
+  if norm(f.A*x - f.b, Inf) <= 1e-14
+    return 0.0
+  end
   return +Inf
 end
 
-function prox!(f::IndAffine, x::RealOrComplexVector, gamma::Float64, y::RealOrComplexVector)
+function prox!{T <: RealOrComplexVector}(f::IndAffine, x::T, gamma::Real, y::T)
   res = f.A*x - f.b
   y[:] = x - f.A'*(f.R\(f.R'\res))
   return 0.0
@@ -47,7 +49,7 @@ fun_params(f::IndAffine) =
   string( "A = ", typeof(f.A), " of size ", size(f.A), ", ",
           "b = ", typeof(f.b), " of size ", size(f.b))
 
-function prox_naive(f::IndAffine, x::RealOrComplexVector, gamma::Float64=1.0)
+function prox_naive(f::IndAffine, x::RealOrComplexVector, gamma::Real=1.0)
   res = f.A*x - f.b
   y = x - f.A'*(f.R\(f.R'\res))
   return y, 0.0

@@ -1,15 +1,15 @@
 # elastic-net regularization
 
 """
-  ElasticNet(λ::Float64=1.0, μ::Float64=1.0)
+  ElasticNet(λ::Real=1.0, μ::Real=1.0)
 
 Returns the function `g(x) = μ||x||_1 + (λ/2)||x||^2`, for a real parameters `μ, λ ⩾ 0`.
 """
 
 immutable ElasticNet <: ProximableFunction
-  mu::Float64
-  lambda::Float64
-  ElasticNet(mu::Float64=1.0, lambda::Float64=1.0) =
+  mu::Real
+  lambda::Real
+  ElasticNet(mu::Real=1.0, lambda::Real=1.0) =
     lambda < 0 || mu < 0 ? error("parameters μ, λ must be nonnegative") : new(mu, lambda)
 end
 
@@ -17,7 +17,7 @@ end
   return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2
 end
 
-function prox!(f::ElasticNet, x::RealArray, gamma::Float64, y::RealArray)
+function prox!(f::ElasticNet, x::RealArray, gamma::Real, y::RealArray)
   sqnorm2x = zero(Float64)
   norm1x = zero(Float64)
   gm = gamma*f.mu
@@ -30,7 +30,7 @@ function prox!(f::ElasticNet, x::RealArray, gamma::Float64, y::RealArray)
   return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
-function prox!(f::ElasticNet, x::ComplexArray, gamma::Float64, y::ComplexArray)
+function prox!(f::ElasticNet, x::ComplexArray, gamma::Real, y::ComplexArray)
   sqnorm2x = zero(Float64)
   norm1x = zero(Float64)
   gm = gamma*f.mu
@@ -48,7 +48,7 @@ fun_type(f::ElasticNet) = "Array{Complex} → Real"
 fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||^2"
 fun_params(f::ElasticNet) = "μ = $(f.mu), λ = $(f.lambda)"
 
-function prox_naive(f::ElasticNet, x::RealOrComplexArray, gamma::Float64=1.0)
+function prox_naive(f::ElasticNet, x::RealOrComplexArray, gamma::Real=1.0)
   uz = max(0, abs(x) - gamma*f.mu)/(1 + f.lambda*gamma);
   return sign(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
 end

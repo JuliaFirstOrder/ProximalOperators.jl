@@ -19,18 +19,45 @@ if VERSION >= v"0.5.0-rc1"
   if maxr <= f.r return 0.0 end
   svdobj = svds(x, nsv=f.r+1)[1]
   # the tolerance in the following line should be customizable
-  if svdobj[:S][end]/svdobj[:S][1] <= 1e-14 return 0.0 end
+  if svdobj[:S][end]/svdobj[:S][1] <= 1e-14
+    return 0.0
+  end
   return +Inf
 end
 
-function prox!(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64, y::RealOrComplexMatrix)
+function prox!(f::IndBallRank, x::RealMatrix, gamma::Real, y::RealMatrix)
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
     return 0.0
   end
   svdobj = svds(x, nsv=f.r)[1]
-  y[:] = (svdobj[:U].*svdobj[:S]')*svdobj[:Vt]'
+  for i = 1:size(x,1)
+    for j = 1:size(x,2)
+      y[i,j] = 0.0
+      for k = 1:f.r
+        y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][j,k]
+      end
+    end
+  end
+  return 0.0
+end
+
+function prox!(f::IndBallRank, x::ComplexMatrix, gamma::Real, y::ComplexMatrix)
+  maxr = minimum(size(x))
+  if maxr <= f.r
+    y[:] = x
+    return 0.0
+  end
+  svdobj = svds(x, nsv=f.r)[1]
+  for i = 1:size(x,1)
+    for j = 1:size(x,2)
+      y[i,j] = 0.0
+      for k = 1:f.r
+        y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*conj(svdobj[:Vt][j,k])
+      end
+    end
+  end
   return 0.0
 end
 
@@ -38,18 +65,48 @@ else
 
 @compat function (f::IndBallRank)(x::RealOrComplexMatrix)
   maxr = minimum(size(x))
-  if maxr <= f.r return 0.0 end
+  if maxr <= f.r
+    return 0.0
+  end
   u, s, v = svds(x, nsv=f.r+1)
   # the tolerance in the following line should be customizable
   if s[end]/s[1] <= 1e-14 return 0.0 end
   return +Inf
 end
 
-function prox!(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64, y::RealOrComplexMatrix)
+function prox!(f::IndBallRank, x::RealMatrix, gamma::Real, y::RealMatrix)
   maxr = minimum(size(x))
-  if maxr <= f.r return (x, 0.0) end
+  if maxr <= f.r
+    y[:] = x
+    return 0.0
+  end
   u, s, v = svds(x, nsv=f.r)
-  y[:] = (u.*s')*v'
+  for i = 1:size(x,1)
+    for j = 1:size(x,2)
+      y[i,j] = 0.0
+      for k = 1:f.r
+        y[i,j] += u[i,k]*s[k]*v[j,k]
+      end
+    end
+  end
+  return 0.0
+end
+
+function prox!(f::IndBallRank, x::ComplexMatrix, gamma::Real, y::ComplexMatrix)
+  maxr = minimum(size(x))
+  if maxr <= f.r
+    y[:] = x
+    return 0.0
+  end
+  u, s, v = svds(x, nsv=f.r)
+  for i = 1:size(x,1)
+    for j = 1:size(x,2)
+      y[i,j] = 0.0
+      for k = 1:f.r
+        y[i,j] += u[i,k]*s[k]*conj(v[j,k])
+      end
+    end
+  end
   return 0.0
 end
 
@@ -60,7 +117,7 @@ fun_type(f::IndBallRank) = "Array{Complex,2} → Real ∪ {+∞}"
 fun_expr(f::IndBallRank) = "x ↦ 0 if rank(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallRank) = "r = $(f.r)"
 
-function prox_naive(f::IndBallRank, x::RealOrComplexMatrix, gamma::Float64=1.0)
+function prox_naive(f::IndBallRank, x::RealOrComplexMatrix, gamma::Real=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r
     y = x
