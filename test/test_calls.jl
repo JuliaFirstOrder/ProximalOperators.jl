@@ -77,6 +77,12 @@ stuff = [
         "args"   => ( [rand(), -rand()], [-rand(), rand()], rand(3), rand(5), randn(10), randn(20), randn(30) )
       ),
 
+  Dict( "constr" => IndSphereL2,
+        "wrong"  => [ (-rand(),), ],
+        "params" => [ (rand(),), (sqrt(20)) ],
+        "args"   => ( randn(10), randn(20), )
+      ),
+
   Dict( "constr" => NormL0,
         "params" => [ (), (rand(),) ],
         "args"   => ( randn(10), randn(10) )

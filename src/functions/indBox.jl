@@ -11,21 +11,19 @@ Bounds are allowed to take values `-Inf` and `+Inf`.
 immutable IndBox{T <: Union{Real, RealArray}, S <: Union{Real, RealArray}} <: IndicatorConvex
   lb::T
   ub::S
-  iter_lb
-  iter_ub
-  IndBox(lb, ub, iter_lb, iter_ub) =
-    any(lb .> ub) ? error("arguments lb, ub must satisfy lb <= ub") : new(lb, ub, iter_lb, iter_ub)
+  IndBox(lb, ub) =
+    any(lb .> ub) ? error("arguments lb, ub must satisfy lb <= ub") : new(lb, ub)
 end
 
-IndBox(lb::Real, ub::Real) = IndBox{Real, Real}(lb, ub, [1], [1])
+IndBox(lb::Real, ub::Real) = IndBox{Real, Real}(lb, ub)
 
-IndBox(lb::RealArray, ub::Real) = IndBox{RealArray, Real}(lb, ub, eachindex(lb), [1])
+IndBox(lb::RealArray, ub::Real) = IndBox{RealArray, Real}(lb, ub)
 
-IndBox(lb::Real, ub::RealArray) = IndBox{Real, RealArray}(lb, ub, [1], eachindex(ub))
+IndBox(lb::Real, ub::RealArray) = IndBox{Real, RealArray}(lb, ub)
 
 IndBox(lb::RealArray, ub::RealArray) =
   size(lb) != size(ub) ? error("bounds must have the same dimensions, or at least one of them be scalar") :
-  IndBox{RealArray, RealArray}(lb, ub, eachindex(lb), eachindex(ub))
+  IndBox{RealArray, RealArray}(lb, ub)
 
 @compat function (f::IndBox{Real,Real})(x::RealArray)
   for k in eachindex(x)

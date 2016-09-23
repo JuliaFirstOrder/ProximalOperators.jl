@@ -38,6 +38,7 @@ export ProximableFunction,
        IndNonnegative,
        IndSimplex,
        IndSOC,
+       IndSphereL2,
        ElasticNet,
        NormL0,
        NormL1,
@@ -72,6 +73,7 @@ include("functions/indBallL2.jl")
 include("functions/indBallRank.jl")
 include("functions/indBox.jl")
 include("functions/indSOC.jl")
+include("functions/indSphereL2.jl")
 include("functions/indHalfspace.jl")
 include("functions/indSimplex.jl")
 include("functions/sqrDistL2.jl")

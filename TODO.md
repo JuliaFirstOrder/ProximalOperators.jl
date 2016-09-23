@@ -3,13 +3,17 @@
 * Update docstrings.
 * Add more tests, especially with `Array{Complex}` variables.
 * Functions that take either scalar or `Array` parameters when constructing them: check their implementations.
-* Get rid of `Array` in favor of `AbstractArray`
+* Get rid of `Array` in favor of `AbstractArray`.
+* Implement calculus rules.
+* Implement iterative routines to evaluate general proximal mappings.
 
 ## Functions to add
 
 * Nuclear norm.
 * Indicator of L1 norm ball.
 * Least squares penalty.
+* Generic quadratic function.
+* Indicator of PSD cone.
 
 ## Questions
 

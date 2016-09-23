@@ -1,6 +1,6 @@
 # Prox.jl [![Build Status](https://travis-ci.org/kul-forbes/Prox.jl.svg?branch=master)](https://travis-ci.org/kul-forbes/Prox.jl) [![Coverage Status](https://coveralls.io/repos/github/kul-forbes/Prox.jl/badge.svg?branch=master)](https://coveralls.io/github/kul-forbes/Prox.jl?branch=master)
 
-Nonsmooth functions and proximal operators in Julia.
+Proximal operators for nonsmooth optimization in Julia.
 
 ## Installation
 
@@ -56,7 +56,7 @@ Function        | Description                                          | Propert
 `IndAffine`     | Indicator of an affine subspace                      | convex
 `IndBallInf`    | Indicator of an infinity-norm ball                   | convex
 `IndBallL0`     | Indicator of an L0 pseudo-norm ball                  | nonconvex
-`IndBallL2`     | Indicator of an Euclidean ball                       | convex
+`IndBallL2`     | Indicator of a Euclidean ball                        | convex
 `IndBallRank`   | Indicator of the set of matrices with given rank     | nonconvex
 `IndBox`        | Indicator of a box                                   | convex
 `IndHalfspace`  | Indicator of a halfspace                             | convex
