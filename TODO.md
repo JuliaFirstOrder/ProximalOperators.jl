@@ -14,6 +14,7 @@
 * Least squares penalty.
 * Generic quadratic function.
 * Indicator of PSD cone.
+* Ky-Fan (k)-norms.
 
 ## Questions
 
