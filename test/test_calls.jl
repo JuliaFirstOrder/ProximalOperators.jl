@@ -47,8 +47,8 @@ stuff = [
 
   Dict( "constr" => IndBallRank,
         "wrong"  => [ (-2,), ],
-        "params" => [ (1+Int(round(10*rand())),), (10+Int(round(5*rand())),)],
-        "args"   => ( randn(20, 50), rand(30, 8)*rand(8,70) )
+        "params" => [ (1+Int(round(10*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),)],
+        "args"   => ( randn(20, 50), rand(30, 8)*rand(8,70), randn(5, 8) )
       ),
 
   Dict( "constr" => IndBox,

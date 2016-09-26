@@ -121,7 +121,7 @@ function prox_naive{T <: RealOrComplex}(f::IndBallRank, x::AbstractArray{T,2}, g
   maxr = minimum(size(x))
   if maxr <= f.r
     y = x
-    return 0.0
+    return y, 0.0
   end
   U, S, V = svd(x)
   M = U[:,1:f.r]*spdiagm(S[1:f.r])

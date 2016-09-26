@@ -12,9 +12,9 @@ end
 Returns the function `g(x) = λ||x||_1`, for a real parameter `λ ⩾ 0`.
 """
 
-NormL1() = NormL1{Float64}(lambda)
+NormL1() = NormL1{Float64}(1.0)
 
-NormL1{T <: Real}(lambda::T=1.0) = NormL1{T}(lambda)
+NormL1{T <: Real}(lambda::T) = NormL1{T}(lambda)
 
 """
   NormL1(λ::Array{Real})
