@@ -88,6 +88,11 @@ stuff = [
         "args"   => ( randn(10), randn(20), )
       ),
 
+  Dict( "constr" => IndPSD,
+        "params" => [ (), () ],
+        "args"   => ( Symmetric(randn(5,5)), Symmetric(rand(20,20)  )),
+      ),
+
   Dict( "constr" => NormL0,
         "params" => [ (), (rand(),) ],
         "args"   => ( randn(10), randn(10) )
@@ -106,6 +111,11 @@ stuff = [
   Dict( "constr" => NormL21,
         "params" => [ (), (rand(),), (rand(),1), (rand(),2) ],
         "args"   => ( randn(10,20), randn(10,20), randn(10,20), randn(10,20) )
+      ),
+
+  Dict( "constr" => nuclearNorm,
+        "params" => [ (rand()), (rand()), (rand()) ,(sqrt(10))  ],
+        "args"   => ( rand(10,10), rand(100,25), rand(Complex{Float64},20,20), rand(Complex{Float64},30,20) )
       ),
 
   Dict( "constr" => SqrNormL2,

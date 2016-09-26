@@ -8,6 +8,7 @@ using Compat
 import Compat.String
 
 typealias RealOrComplex Union{Real, Complex}
+typealias HermOrSym{T,S} Union{Hermitian{T,S}, Symmetric{T,S}}
 
 export prox, prox!
 
@@ -22,6 +23,7 @@ export ProximableFunction,
        IndHalfspace,
        IndNonnegative,
        IndNonpositive,
+       IndPSD,
        IndSimplex,
        IndSOC,
        IndSphereL2,
@@ -30,6 +32,7 @@ export ProximableFunction,
        NormL1,
        NormL2,
        NormL21,
+       nuclearNorm,
        SqrNormL2,
        DistL2,
        SqrDistL2
@@ -53,11 +56,13 @@ include("functions/normL2.jl")
 include("functions/normL1.jl")
 include("functions/normL21.jl")
 include("functions/normL0.jl")
+include("functions/nuclearNorm.jl")
 include("functions/indAffine.jl")
 include("functions/indBallL0.jl")
 include("functions/indBallL2.jl")
 include("functions/indBallRank.jl")
 include("functions/indBox.jl")
+include("functions/indPSD.jl")
 include("functions/indSOC.jl")
 include("functions/indSphereL2.jl")
 include("functions/indHalfspace.jl")
