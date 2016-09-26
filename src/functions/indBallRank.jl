@@ -14,7 +14,7 @@ end
 
 if VERSION >= v"0.5.0-rc1"
 
-@compat function (f::IndBallRank)(x::RealOrComplexMatrix)
+@compat function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r return 0.0 end
   svdobj = svds(x, nsv=f.r+1)[1]
@@ -25,7 +25,7 @@ if VERSION >= v"0.5.0-rc1"
   return +Inf
 end
 
-function prox!(f::IndBallRank, x::RealMatrix, gamma::Real, y::RealMatrix)
+function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
@@ -43,7 +43,7 @@ function prox!(f::IndBallRank, x::RealMatrix, gamma::Real, y::RealMatrix)
   return 0.0
 end
 
-function prox!(f::IndBallRank, x::ComplexMatrix, gamma::Real, y::ComplexMatrix)
+function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
@@ -63,7 +63,7 @@ end
 
 else
 
-@compat function (f::IndBallRank)(x::RealOrComplexMatrix)
+@compat function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r
     return 0.0
@@ -74,7 +74,7 @@ else
   return +Inf
 end
 
-function prox!(f::IndBallRank, x::RealMatrix, gamma::Real, y::RealMatrix)
+function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
@@ -92,7 +92,7 @@ function prox!(f::IndBallRank, x::RealMatrix, gamma::Real, y::RealMatrix)
   return 0.0
 end
 
-function prox!(f::IndBallRank, x::ComplexMatrix, gamma::Real, y::ComplexMatrix)
+function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
@@ -117,7 +117,7 @@ fun_type(f::IndBallRank) = "Array{Complex,2} → Real ∪ {+∞}"
 fun_expr(f::IndBallRank) = "x ↦ 0 if rank(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallRank) = "r = $(f.r)"
 
-function prox_naive(f::IndBallRank, x::RealOrComplexMatrix, gamma::Real=1.0)
+function prox_naive{T <: RealOrComplex}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r
     y = x

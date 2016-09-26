@@ -6,16 +6,17 @@
 Returns the function `g = ind{x : <a,x> ⩽ b}`.
 """
 
-immutable IndHalfspace <: IndicatorConvex
-  a::RealArray
-  b::Real
-  function IndHalfspace(a::RealArray, b::Real)
-    norma = vecnorm(a)
-    new(a/norma, b/norma)
-  end
+immutable IndHalfspace{T <: Real} <: IndicatorConvex
+  a::AbstractArray{T}
+  b::T
 end
 
-@compat function (f::IndHalfspace)(x::RealArray)
+function IndHalfspace{T <: Real}(a::AbstractArray{T}, b::T)
+  norma = vecnorm(a)
+  IndHalfspace{T}(a/norma, b/norma)
+end
+
+@compat function (f::IndHalfspace){T <: Real}(x::AbstractArray{T})
   s = vecdot(f.a,x)-f.b
   if s <= 1e-14
     return 0.0
@@ -23,7 +24,7 @@ end
   return +Inf
 end
 
-function prox!(f::IndHalfspace, x::RealArray, gamma::Real, y::RealArray)
+function prox!{T <: Real}(f::IndHalfspace, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
   s = vecdot(f.a,x)-f.b
   if s <= 0
     y[:] = x
@@ -42,7 +43,7 @@ fun_params(f::IndHalfspace) =
   string( "a = ", typeof(f.a), " of size ", size(f.a), ", ",
           "b = $(f.b)")
 
-function prox_naive(f::IndHalfspace, x::RealArray, gamma::Real=1.0)
+function prox_naive{T <: Real}(f::IndHalfspace, x::AbstractArray{T}, gamma::Real=1.0)
   s = vecdot(f.a,x)-f.b
   if s <= 0
     return x, 0.0

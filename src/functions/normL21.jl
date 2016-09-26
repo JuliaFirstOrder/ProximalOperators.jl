@@ -15,7 +15,7 @@ immutable NormL21 <: NormFunction
     lambda < 0 ? error("parameter λ must be nonnegative") : new(lambda, dim)
 end
 
-@compat function (f::NormL21)(X::RealOrComplexArray)
+@compat function (f::NormL21){T <: RealOrComplex}(X::AbstractArray{T,2})
   nslice = zero(Float64)
   n21X = zero(Float64)
   if f.dim == 1
@@ -32,7 +32,7 @@ end
   return f.lambda*n21X
 end
 
-function prox!{T <: RealOrComplexArray}(f::NormL21, X::T, gamma::Real, Y::T)
+function prox!{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, gamma::Real, Y::AbstractArray{T,2})
   gl = gamma*f.lambda
   nslice = zero(Float64)
   n21X = zero(Float64)
@@ -65,7 +65,7 @@ fun_type(f::NormL21) = "Array{Complex,2} → Real"
 fun_expr(f::NormL21) = "x ↦ λsum(||x_i||)"
 fun_params(f::NormL21) = "λ = $(f.lambda), dim = $(f.dim)"
 
-function prox_naive(f::NormL21, X::RealOrComplexArray, gamma::Real=1.0)
+function prox_naive{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, gamma::Real=1.0)
   Y = max(0, 1-f.lambda*gamma./sqrt(sum(abs(X).^2, f.dim))).*X
   return Y, f.lambda*sum(sqrt(sum(abs(Y).^2, f.dim)))
 end

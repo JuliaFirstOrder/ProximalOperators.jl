@@ -8,14 +8,14 @@ Returns the function `g = ind{x : x ⩾ 0, sum(x) = 1}`.
 
 immutable IndSimplex <: IndicatorConvex end
 
-@compat function (f::IndSimplex)(x::RealVector)
+@compat function (f::IndSimplex){T <: Real}(x::AbstractArray{T,1})
   if all(x .>= 0) && abs(sum(x)-1) <= 1e-14
     return 0.0
   end
   return +Inf
 end
 
-function prox!(f::IndSimplex, x::RealVector, gamma::Real, y::RealVector)
+function prox!{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, gamma::Real, y::AbstractArray{T,1})
   n = length(x)
   p = sort(x, rev=true);
   s = 0
@@ -37,7 +37,7 @@ fun_type(f::IndSimplex) = "Array{Real,1} → Real ∪ {+∞}"
 fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = 1, +∞ otherwise"
 fun_params(f::IndSimplex) = "none"
 
-function prox_naive(f::IndSimplex, x::RealVector, gamma::Real=1.0)
+function prox_naive{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, gamma::Real=1.0)
   n = length(x)
   p = sort(x,rev=true);
   s = 0

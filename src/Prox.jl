@@ -7,22 +7,7 @@ module Prox
 using Compat
 import Compat.String
 
-# Scalar aliases
-typealias RealOrComplex Union{Float64, Complex{Float64}}
-
-# Vector aliases
-typealias RealVector Array{Float64,1}
-typealias RealOrComplexVector Union{Array{Float64,1}, Array{Complex{Float64},1}}
-
-# Matrix aliases
-typealias RealMatrix Array{Float64,2}
-typealias ComplexMatrix Array{Complex{Float64},2}
-typealias RealOrComplexMatrix Union{Array{Float64,2}, Array{Complex{Float64},2}}
-
-# Array aliases
-typealias RealArray Array{Float64}
-typealias ComplexArray Array{Complex{Float64}}
-typealias RealOrComplexArray Union{Array{Float64}, Array{Complex{Float64}}}
+typealias RealOrComplex Union{Real, Complex}
 
 export prox, prox!
 
@@ -36,6 +21,7 @@ export ProximableFunction,
        IndBox,
        IndHalfspace,
        IndNonnegative,
+       IndNonpositive,
        IndSimplex,
        IndSOC,
        IndSphereL2,

@@ -10,25 +10,27 @@ Returns the function `g = ind{x : Ax = b}`.
 Returns the function `g = ind{x : dot(a,x) = b}`.
 """
 
-immutable IndAffine <: IndicatorConvex
-  A::RealOrComplexMatrix
-  b::RealOrComplexVector
-  R::RealOrComplexMatrix
-  function IndAffine(A::RealOrComplexMatrix, b::RealOrComplexVector)
-    if size(A,1) > size(A,2)
-      error("A must be full row rank")
-    end
-    normrows = vec(sqrt(sum(abs(A).^2, 2)))
-    A = (1./normrows).*A # normalize rows of A
-    b = (1./normrows).*b # and b accordingly
-    Q, R = qr(A')
-    new(A, b, R)
-  end
-  IndAffine(a::RealOrComplexVector, b::RealOrComplex) =
-    IndAffine(a', [b])
+immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
+  A::AbstractArray{T,2}
+  b::AbstractArray{T,1}
+  R::AbstractArray{T,2}
 end
 
-@compat function (f::IndAffine)(x::RealOrComplexVector)
+function IndAffine{T <: RealOrComplex}(A::AbstractArray{T,2}, b::AbstractArray{T,1})
+  if size(A,1) > size(A,2)
+    error("A must be full row rank")
+  end
+  normrows = vec(sqrt(sum(abs(A).^2, 2)))
+  A = (1./normrows).*A # normalize rows of A
+  b = (1./normrows).*b # and b accordingly
+  Q, R = qr(A')
+  IndAffine{T}(A, b, R)
+end
+
+IndAffine{T <: RealOrComplex}(a::AbstractArray{T,1}, b::T) =
+  IndAffine(a', [b])
+
+@compat function (f::IndAffine){T <: RealOrComplex}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable
   if norm(f.A*x - f.b, Inf) <= 1e-14
     return 0.0
@@ -36,7 +38,7 @@ end
   return +Inf
 end
 
-function prox!{T <: RealOrComplexVector}(f::IndAffine, x::T, gamma::Real, y::T)
+function prox!{T <: RealOrComplex}(f::IndAffine, x::AbstractArray{T,1}, gamma::Real, y::AbstractArray{T,1})
   res = f.A*x - f.b
   y[:] = x - f.A'*(f.R\(f.R'\res))
   return 0.0
@@ -49,7 +51,7 @@ fun_params(f::IndAffine) =
   string( "A = ", typeof(f.A), " of size ", size(f.A), ", ",
           "b = ", typeof(f.b), " of size ", size(f.b))
 
-function prox_naive(f::IndAffine, x::RealOrComplexVector, gamma::Real=1.0)
+function prox_naive{T <: RealOrComplex}(f::IndAffine, x::AbstractArray{T,1}, gamma::Real=1.0)
   res = f.A*x - f.b
   y = x - f.A'*(f.R\(f.R'\res))
   return y, 0.0

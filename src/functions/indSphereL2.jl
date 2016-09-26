@@ -12,14 +12,14 @@ immutable IndSphereL2 <: IndicatorFunction
     r <= 0 ? error("parameter r must be positive") : new(r)
 end
 
-@compat function (f::IndSphereL2)(x::RealOrComplexArray)
+@compat function (f::IndSphereL2){T <: RealOrComplex}(x::AbstractArray{T})
   if abs(vecnorm(x) - f.r)/f.r > 1e-14
     return +Inf
   end
   return 0.0
 end
 
-function prox!{T <: RealOrComplexArray}(f::IndSphereL2, x::T, gamma::Real, y::T)
+function prox!{T <: RealOrComplex}(f::IndSphereL2, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
   normx = vecnorm(x)
   if normx > 0
     scal = f.r/normx
@@ -37,7 +37,7 @@ fun_type(f::IndSphereL2) = "Array{Complex} → Real ∪ {+∞}"
 fun_expr(f::IndSphereL2) = "x ↦ 0 if ||x|| = r, +∞ otherwise"
 fun_params(f::IndSphereL2) = "r = $(f.r)"
 
-function prox_naive(f::IndSphereL2, x::RealOrComplexArray, gamma::Real=1.0)
+function prox_naive{T <: RealOrComplex}(f::IndSphereL2, x::AbstractArray{T}, gamma::Real=1.0)
   normx = vecnorm(x)
   if normx > 0
     y = x*f.r/normx

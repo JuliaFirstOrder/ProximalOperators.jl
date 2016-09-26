@@ -67,6 +67,11 @@ stuff = [
         "args"   => ( randn(10), )
       ),
 
+  Dict( "constr" => IndNonpositive,
+        "params" => [ (), ],
+        "args"   => ( randn(10), )
+      ),
+
   Dict( "constr" => IndSimplex,
         "params" => [ (), ],
         "args"   => ( randn(10), )

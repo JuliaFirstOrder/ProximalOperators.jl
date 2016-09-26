@@ -8,7 +8,7 @@ Returns the indicator of the second-order cone (ice-cream cone) of R^n.
 
 immutable IndSOC <: IndicatorConvex end
 
-@compat function (f::IndSOC)(x::RealVector)
+@compat function (f::IndSOC){T <: Real}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable
   if norm(x[2:end]) - x[1] <= 1e-14
     return 0.0
@@ -16,7 +16,7 @@ immutable IndSOC <: IndicatorConvex end
   return +Inf
 end
 
-function prox!(f::IndSOC, x::RealVector, gamma::Real, y::RealVector)
+function prox!{T <: Real}(f::IndSOC, x::AbstractArray{T,1}, gamma::Real, y::AbstractArray{T,1})
   nx = norm(x[2:end])
   t = x[1]
   if t <= -nx
@@ -36,7 +36,7 @@ fun_type(f::IndSOC) = "Array{Real,1} → Real ∪ {+∞}"
 fun_expr(f::IndSOC) = "x ↦ 0 if x[1] >= ||x[2:end]||, +∞ otherwise"
 fun_params(f::IndSOC) = "none"
 
-function prox_naive(f::IndSOC, x::RealVector, gamma::Real=1.0)
+function prox_naive{T <: Real}(f::IndSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
   nx = norm(x[2:end])
   t = x[1]
   if t <= -nx

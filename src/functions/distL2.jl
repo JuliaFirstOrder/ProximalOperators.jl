@@ -7,12 +7,12 @@ immutable DistL2 <: ProximableFunction
     lambda < 0 ? error("parameter λ must be nonnegative") : new(ind, lambda)
 end
 
-@compat function (f::DistL2)(x::Array)
+@compat function (f::DistL2){T <: RealOrComplex}(x::AbstractArray{T})
   p, = prox(f.ind, x)
   return f.lambda*vecnorm(x-p)
 end
 
-function prox!{T <: RealOrComplexArray}(f::DistL2, x::T, gamma::Real, y::T)
+function prox!{T <: RealOrComplex}(f::DistL2, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
   p, = prox(f.ind, x)
   d = vecnorm(x-p)
   gamlam = (gamma*f.lambda)
@@ -32,7 +32,7 @@ fun_type(f::DistL2) = "Array{Complex} → Real"
 fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
 fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
-function prox_naive(f::DistL2, x::RealOrComplexArray, gamma::Real=1.0)
+function prox_naive{T <: RealOrComplex}(f::DistL2, x::AbstractArray{T}, gamma::Real=1.0)
   p, = prox(f.ind, x)
   d = vecnorm(x-p)
   gamlam = gamma*f.lambda

@@ -12,11 +12,11 @@ immutable NormL0 <: ProximableFunction
     lambda < 0 ? error("parameter λ must be nonnegative") : new(lambda)
 end
 
-@compat function (f::NormL0)(x::RealOrComplexArray)
+@compat function (f::NormL0){T <: RealOrComplex}(x::AbstractArray{T})
   return f.lambda*countnz(x)
 end
 
-function prox!{T <: RealOrComplexArray}(f::NormL0, x::T, gamma::Real, y::T)
+function prox!{T <: RealOrComplex}(f::NormL0, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
   countnzy = 0;
   gl = gamma*f.lambda
   for i in eachindex(x)
@@ -32,7 +32,7 @@ fun_type(f::NormL0) = "Array{Complex} → Real"
 fun_expr(f::NormL0) = "x ↦ λ countnz(x)"
 fun_params(f::NormL0) = "λ = $(f.lambda)"
 
-function prox_naive(f::NormL0, x::RealOrComplexArray, gamma::Real=1.0)
+function prox_naive{T <: RealOrComplex}(f::NormL0, x::AbstractArray{T}, gamma::Real=1.0)
   over = abs(x) .> sqrt(2*gamma*f.lambda);
   y = x.*over;
   return y, f.lambda*countnz(y)
