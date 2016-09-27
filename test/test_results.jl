@@ -298,7 +298,7 @@ x = Float64[1.0  2.0  3.0;
 lambda = 1.0
 gamma = 1.0
 
-g = nuclearNorm(lambda)
+g = NuclearNorm(lambda)
 ref_gx = 17.916472867168920
 ref_gy = 15.916472867168915
 ref_y = Float64[1.586052850795247   1.944185442781408   2.302318034767569;

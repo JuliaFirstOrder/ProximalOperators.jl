@@ -32,7 +32,7 @@ export ProximableFunction,
        NormL1,
        NormL2,
        NormL21,
-       nuclearNorm,
+       NuclearNorm,
        SqrNormL2,
        DistL2,
        SqrDistL2
@@ -108,8 +108,8 @@ and parameter `γ > 0`, and writes the result in `y`. Returns f(y)`.
 
 function prox!(f, x, gamma, y)
   error(
-    "prox! is not implemented for functions of type ", typeof(f), " ",
-    "and arguments of type ", typeof(x)
+    "prox! is not implemented for f::", typeof(f),
+    ", x::", typeof(x), ", gamma::", typeof(gamma), ", y::", typeof(y)
   )
 end
 

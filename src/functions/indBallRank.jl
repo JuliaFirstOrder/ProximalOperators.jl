@@ -12,7 +12,7 @@ immutable IndBallRank <: IndicatorFunction
     r <= 0 ? error("parameter r must be a positive integer") : new(r)
 end
 
-if VERSION >= v"0.5.0-rc1"
+if VERSION >= v"0.5-"
 
 @compat function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   maxr = minimum(size(x))

@@ -1,6 +1,9 @@
 # Prox.jl [![Build Status](https://travis-ci.org/kul-forbes/Prox.jl.svg?branch=master)](https://travis-ci.org/kul-forbes/Prox.jl) [![Coverage Status](https://coveralls.io/repos/github/kul-forbes/Prox.jl/badge.svg?branch=master)](https://coveralls.io/github/kul-forbes/Prox.jl?branch=master)
 
 Proximal operators for nonsmooth optimization in Julia.
+This package can be used to easily implement proximal algorithms
+for convex and nonconvex optimization problems such as ADMM,
+the alternating direction method of multipliers.
 
 ## Installation
 
@@ -21,7 +24,7 @@ expression  : x ↦ λ||x||_1
 parameters  : λ = 3.5
 ```
 
-For the available constructors, see the following sections.
+For the available constructors, see the [dedicated section](https://github.com/kul-forbes/Prox.jl#available-functions).
 Functions created this way are, of course, callable:
 
 ```julia
@@ -29,6 +32,8 @@ julia> x = randn(10) # some random point
 julia> f(x)
 32.40700818735099
 ```
+
+### `prox` and `prox!`
 
 The `prox` method evaluates the proximal operator associated with a function, given a
 point and (optionally) a positive stepsize parameter.
@@ -45,9 +50,9 @@ function value at the proximal point.
 julia> fx = prox!(f, x, 0.5) # in-place equivalent to x, fx = prox(f, x, 0.5)
 ```
 
-## Available functions
+## Functions
 
-The available constructors are described in the following table.
+The available constructors are listed in the following table.
 You can access the specific documentation of each of them from the command line
 of Julia (try typing in `?NormL1`) to have information on their parameters.
 
@@ -64,11 +69,13 @@ Function        | Description                                          | Propert
 `IndNonpositive`| Indicator of the nonpositive orthant                 | convex
 `IndSimplex`    | Indicator of the probability simplex                 | convex
 `IndSOC`        | Indicator of the second-order cone                   | convex
+`IndSphereL2`   | Indicator of Euclidean sphere                        | nonconvex
 `ElasticNet`    | Elastic-net regularization                           | convex
 `NormL0`        | L0 pseudo-norm                                       | nonconvex
 `NormL1`        | L1 norm                                              | convex
 `NormL2`        | Euclidean norm                                       | convex
 `NormL21`       | Sum-of-L2 norms                                      | convex
+`NuclearNorm`   | Nuclear norm                                         | convex
 `SqrNormL2`     | Squared Euclidean norm                               | convex
 `DistL2`        | Euclidean distance from a convex set                 | convex
 `SqrDistL2`     | Squared Euclidean distance from a convex set         | convex

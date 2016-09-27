@@ -29,9 +29,33 @@ function prox!{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, gamma::Real, Y::H
   return 0.0
 end
 
-fun_name(f::IndPSD) = "indicator of Positive semidefinite cone"
+################################################################################
+# temporary: 'similar' doesn't yield a Symmetric or Hermitian object in 0.5
+################################################################################
+
+if VERSION < v"0.6-"
+
+function prox(f::IndPSD, x::Symmetric, gamma::Float64=1.0)
+  y = Symmetric(similar(x))
+  fy = prox!(f, x, gamma, y)
+  return y, fy
+end
+
+function prox(f::IndPSD, x::Hermitian, gamma::Float64=1.0)
+  y = Hermitian(similar(x))
+  fy = prox!(f, x, gamma, y)
+  return y, fy
+end
+
+end
+
+################################################################################
+################################################################################
+################################################################################
+
+fun_name(f::IndPSD) = "indicator of positive semidefinite cone"
 fun_type(f::IndPSD) = "HermOrSym → Real ∪ {+∞}"
-fun_expr(f::IndPSD) = "x ↦ 0 if A ⪰ 0,  +∞ otherwise"
+fun_expr(f::IndPSD) = "x ↦ 0 if A ⪰ 0, +∞ otherwise"
 fun_params(f::IndPSD) = "none"
 
 function prox_naive{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0)
@@ -39,5 +63,5 @@ function prox_naive{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, gamma::Real=
   for i in eachindex(F.values)
     F.values[i] = max(0,F.values[i]);
   end
-  return  F.vectors * diagm(F.values) * F.vectors', 0.0;
+  return F.vectors * diagm(F.values) * F.vectors', 0.0;
 end

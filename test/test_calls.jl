@@ -47,8 +47,8 @@ stuff = [
 
   Dict( "constr" => IndBallRank,
         "wrong"  => [ (-2,), ],
-        "params" => [ (1+Int(round(10*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),)],
-        "args"   => ( randn(20, 50), rand(30, 8)*rand(8,70), randn(5, 8) )
+        "params" => [ (1+Int(round(10*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),) ],
+        "args"   => ( randn(20, 50), rand(30, 8)*rand(8,70), randn(5, 8), rand(Complex{Float64}, 20, 50), rand(Complex{Float64}, 5, 8) )
       ),
 
   Dict( "constr" => IndBox,
@@ -90,7 +90,7 @@ stuff = [
 
   Dict( "constr" => IndPSD,
         "params" => [ (), () ],
-        "args"   => ( Symmetric(randn(5,5)), Symmetric(rand(20,20)  )),
+        "args"   => ( Symmetric(randn(5,5)), Symmetric(rand(20,20)) ),
       ),
 
   Dict( "constr" => NormL0,
@@ -113,8 +113,8 @@ stuff = [
         "args"   => ( randn(10,20), randn(10,20), randn(10,20), randn(10,20) )
       ),
 
-  Dict( "constr" => nuclearNorm,
-        "params" => [ (rand()), (rand()), (rand()) ,(sqrt(10))  ],
+  Dict( "constr" => NuclearNorm,
+        "params" => [ (rand(),), (rand(),), (rand(),), (sqrt(10),) ],
         "args"   => ( rand(10,10), rand(100,25), rand(Complex{Float64},20,20), rand(Complex{Float64},30,20) )
       ),
 

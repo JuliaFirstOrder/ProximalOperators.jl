@@ -2,23 +2,23 @@
 
 * Update docstrings.
 * Add more tests, especially with `Array{Complex}` variables.
-* Functions that take either scalar or `Array` parameters when constructing them: check their implementations.
-* Get rid of `Array` in favor of `AbstractArray`.
 * Implement calculus rules.
 * Implement iterative routines to evaluate general proximal mappings.
 
 ## Functions to add
 
-* Nuclear norm.
-* Indicator of L1 norm ball.
+* Indicator of L1 norm ball. ([Duchi et al. 2008](http://dl.acm.org/citation.cfm?id=1390191))
 * Least squares penalty.
 * Generic quadratic function.
-* Indicator of PSD cone.
 * Ky-Fan (k)-norms.
+* Indicator of exponential cone. (Numerically)
+
+## Calculus rules
+
+* Moreau identity (conjugation)
+* Precomposition
 
 ## Questions
 
-* Are the typealias `RealArray`, `RealOrComplexArray` and so on OK?
-* Can we get rid of `Float64` everywhere in favor of `Real` somehow?
 * In `prox!`, is it safe to use `@inbounds`? Because we take the iterator for `x`
 and not for `y`, in principle one could provide `y` of the wrong dimension.
