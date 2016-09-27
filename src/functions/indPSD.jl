@@ -60,8 +60,5 @@ fun_params(f::IndPSD) = "none"
 
 function prox_naive{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0)
   F = eigfact(X);
-  for i in eachindex(F.values)
-    F.values[i] = max(0,F.values[i]);
-  end
-  return F.vectors * diagm(F.values) * F.vectors', 0.0;
+  return F.vectors * diagm(max(0.0, F.values)) * F.vectors', 0.0;
 end

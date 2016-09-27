@@ -289,7 +289,7 @@ gy2 = g(y)
 ### nuclear norm
 ################################################################################
 
-println("testing nuclear Norm")
+println("testing nuclear norm")
 x = Float64[1.0  2.0  3.0;
             4.0  5.0  6.0;
             7.0  8.0  9.0;
@@ -310,6 +310,36 @@ y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
 @test abs(gx-ref_gx)/(1+abs(ref_gx)) <= ASSERT_REL_TOL
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+
+################################################################################
+### indicator of positive semidefinite cone
+################################################################################
+
+println("testing positive semidefinite cone")
+x = Symmetric(Float64[
+  1.0  2.0  3.0  2.0;
+  2.0  2.0  6.0  2.5;
+  3.0  6.0  3.0  1.5;
+  2.0  2.5  1.5  1.0 ]);
+
+gamma = 1.0
+
+g = IndPSD()
+ref_gx = +Inf
+ref_gy = 0.0
+ref_y = Symmetric(Float64[
+  1.6410947195520720 2.3777145021117252 2.5281090002887159 1.4927448378285653;
+  2.3777145021117252 3.9278061374789126 4.2522683130214816 1.9740014117486595;
+  2.5281090002887159 4.2522683130214816 4.6140313368981438 2.0691378959547362;
+  1.4927448378285653 1.9740014117486600 2.0691378959547362 1.4316113417275229 ]);
+gx = g(x)
+y, gy1 = prox(g, x, gamma)
+gy2 = g(y)
+
+@test gx == ref_gx
 @test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
 @test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
 @test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL

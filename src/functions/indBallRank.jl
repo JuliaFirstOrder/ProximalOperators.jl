@@ -12,56 +12,7 @@ immutable IndBallRank <: IndicatorFunction
     r <= 0 ? error("parameter r must be a positive integer") : new(r)
 end
 
-if VERSION >= v"0.5-"
-
-@compat function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
-  maxr = minimum(size(x))
-  if maxr <= f.r return 0.0 end
-  svdobj = svds(x, nsv=f.r+1)[1]
-  # the tolerance in the following line should be customizable
-  if svdobj[:S][end]/svdobj[:S][1] <= 1e-14
-    return 0.0
-  end
-  return +Inf
-end
-
-function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
-  maxr = minimum(size(x))
-  if maxr <= f.r
-    y[:] = x
-    return 0.0
-  end
-  svdobj = svds(x, nsv=f.r)[1]
-  for i = 1:size(x,1)
-    for j = 1:size(x,2)
-      y[i,j] = 0.0
-      for k = 1:f.r
-        y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][j,k]
-      end
-    end
-  end
-  return 0.0
-end
-
-function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
-  maxr = minimum(size(x))
-  if maxr <= f.r
-    y[:] = x
-    return 0.0
-  end
-  svdobj = svds(x, nsv=f.r)[1]
-  for i = 1:size(x,1)
-    for j = 1:size(x,2)
-      y[i,j] = 0.0
-      for k = 1:f.r
-        y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*conj(svdobj[:Vt][j,k])
-      end
-    end
-  end
-  return 0.0
-end
-
-else
+if VERSION < v"0.5-"
 
 @compat function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   maxr = minimum(size(x))
@@ -104,6 +55,55 @@ function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractA
       y[i,j] = 0.0
       for k = 1:f.r
         y[i,j] += u[i,k]*s[k]*conj(v[j,k])
+      end
+    end
+  end
+  return 0.0
+end
+
+else
+
+@compat function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
+  maxr = minimum(size(x))
+  if maxr <= f.r return 0.0 end
+  svdobj = svds(x, nsv=f.r+1)[1]
+  # the tolerance in the following line should be customizable
+  if svdobj[:S][end]/svdobj[:S][1] <= 1e-14
+    return 0.0
+  end
+  return +Inf
+end
+
+function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
+  maxr = minimum(size(x))
+  if maxr <= f.r
+    y[:] = x
+    return 0.0
+  end
+  svdobj = svds(x, nsv=f.r)[1]
+  for i = 1:size(x,1)
+    for j = 1:size(x,2)
+      y[i,j] = 0.0
+      for k = 1:f.r
+        y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][j,k]
+      end
+    end
+  end
+  return 0.0
+end
+
+function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
+  maxr = minimum(size(x))
+  if maxr <= f.r
+    y[:] = x
+    return 0.0
+  end
+  svdobj = svds(x, nsv=f.r)[1]
+  for i = 1:size(x,1)
+    for j = 1:size(x,2)
+      y[i,j] = 0.0
+      for k = 1:f.r
+        y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*conj(svdobj[:Vt][j,k])
       end
     end
   end
