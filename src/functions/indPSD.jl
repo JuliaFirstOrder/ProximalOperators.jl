@@ -30,10 +30,10 @@ function prox!{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, Y::HermOrSym{T}, 
 end
 
 ################################################################################
-# temporary: 'similar' doesn't yield a Symmetric or Hermitian object in 0.5
+# temporary: 'similar' doesn't yield a Symmetric or Hermitian object in 0.4
 ################################################################################
 
-if VERSION < v"0.6-"
+if VERSION < v"0.5-"
 
 function prox(f::IndPSD, x::Symmetric, gamma::Real=1.0)
   y = Symmetric(similar(x))
