@@ -83,7 +83,7 @@ fun_expr(  f) = "n/a"
 fun_params(f) = "n/a"
 
 """
-  prox(f::ProximableFunction, x::Array, γ::Float64)
+  prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
 
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0`, that is
@@ -93,20 +93,20 @@ and parameter `γ > 0`, that is
 and returns `y` and `f(y)`.
 """
 
-function prox(f, x, gamma::Float64=1.0)
+function prox(f::ProximableFunction, x::AbstractArray, gamma::Real=1.0)
   y = similar(x)
-  fy = prox!(f, x, gamma, y)
+  fy = prox!(f, x, y, gamma)
   return y, fy
 end
 
 """
-  prox!(f::ProximableFunction, x::Array, γ::Float64, y::Array)
+  prox!(f::ProximableFunction, x::AbstractArray, y::AbstractArray, γ::Real=1.0)
 
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0`, and writes the result in `y`. Returns f(y)`.
 """
 
-function prox!(f, x, gamma, y)
+function prox!(f::ProximableFunction, x::AbstractArray, y::AbstractArray, gamma::Real=1.0)
   error(
     "prox! is not implemented for f::", typeof(f),
     ", x::", typeof(x), ", gamma::", typeof(gamma), ", y::", typeof(y)
@@ -114,7 +114,7 @@ function prox!(f, x, gamma, y)
 end
 
 """
-  prox!(f::ProximableFunction, x::Array, γ::Float64=1.0)
+  prox!(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
 
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0` *in place*, that is
@@ -124,6 +124,6 @@ and parameter `γ > 0` *in place*, that is
 and returns f(x)`.
 """
 
-prox!(f, x, gamma::Float64=1.0) = prox!(f, x, gamma, x)
+prox!(f::ProximableFunction, x::AbstractArray, gamma::Real=1.0) = prox!(f, x, x, gamma)
 
 end

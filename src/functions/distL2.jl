@@ -12,7 +12,7 @@ end
   return f.lambda*vecnorm(x-p)
 end
 
-function prox!{T <: RealOrComplex}(f::DistL2, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{T <: RealOrComplex}(f::DistL2, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   p, = prox(f.ind, x)
   d = vecnorm(x-p)
   gamlam = (gamma*f.lambda)

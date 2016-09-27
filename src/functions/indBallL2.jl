@@ -19,7 +19,7 @@ end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndBallL2, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{T <: RealOrComplex}(f::IndBallL2, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   scal = f.r/vecnorm(x)
   if scal > 1
     y[:] = x[:]

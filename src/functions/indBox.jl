@@ -39,7 +39,7 @@ ub{T, S <: AbstractArray}(f::IndBox{T, S}, i) = f.ub[i]
   return 0.0
 end
 
-function prox!{R <: Real}(f::IndBox, x::AbstractArray{R}, gamma::Real, y::AbstractArray{R})
+function prox!{R <: Real}(f::IndBox, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
   for k in eachindex(x)
     if x[k] < lb(f,k)
       y[k] = lb(f,k)

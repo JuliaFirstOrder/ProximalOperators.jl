@@ -16,7 +16,7 @@ end
   return f.lambda*countnz(x)
 end
 
-function prox!{T <: RealOrComplex}(f::NormL0, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{T <: RealOrComplex}(f::NormL0, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   countnzy = 0;
   gl = gamma*f.lambda
   for i in eachindex(x)

@@ -33,7 +33,7 @@ end
   return vecnorm(f.lambda.*x,1)
 end
 
-function prox!{S <: Real, T <: Real}(f::NormL1{AbstractArray{S}}, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{S <: Real, T <: Real}(f::NormL1{AbstractArray{S}}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   fy = zero(Float64)
   for i in eachindex(x)
     gl = gamma*f.lambda[i]
@@ -43,7 +43,7 @@ function prox!{S <: Real, T <: Real}(f::NormL1{AbstractArray{S}}, x::AbstractArr
   return fy
 end
 
-function prox!{S <: Real, T <: Complex}(f::NormL1{AbstractArray{S}}, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{S <: Real, T <: Complex}(f::NormL1{AbstractArray{S}}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   fy = zero(Float64)
   for i in eachindex(x)
     gl = gamma*f.lambda[i]
@@ -53,7 +53,7 @@ function prox!{S <: Real, T <: Complex}(f::NormL1{AbstractArray{S}}, x::Abstract
   return fy
 end
 
-function prox!{S <: Real, T <: Real}(f::NormL1{S}, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{S <: Real, T <: Real}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   gl = gamma*f.lambda
   n1y = zero(Float64)
   for i in eachindex(x)
@@ -63,7 +63,7 @@ function prox!{S <: Real, T <: Real}(f::NormL1{S}, x::AbstractArray{T}, gamma::R
   return f.lambda*n1y
 end
 
-function prox!{S <: Real, T <: Complex}(f::NormL1{S}, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{S <: Real, T <: Complex}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   gl = gamma*f.lambda
   n1y = zero(Float64)
   for i in eachindex(x)

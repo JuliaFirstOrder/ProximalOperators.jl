@@ -16,7 +16,7 @@ immutable IndSOC <: IndicatorConvex end
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndSOC, x::AbstractArray{T,1}, gamma::Real, y::AbstractArray{T,1})
+function prox!{T <: Real}(f::IndSOC, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
   nx = norm(x[2:end])
   t = x[1]
   if t <= -nx

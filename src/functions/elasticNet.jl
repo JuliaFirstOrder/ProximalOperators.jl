@@ -17,7 +17,7 @@ end
   return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2
 end
 
-function prox!{T <: Real}(f::ElasticNet, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{T <: Real}(f::ElasticNet, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   sqnorm2x = zero(Float64)
   norm1x = zero(Float64)
   gm = gamma*f.mu
@@ -30,7 +30,7 @@ function prox!{T <: Real}(f::ElasticNet, x::AbstractArray{T}, gamma::Real, y::Ab
   return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
-function prox!{T <: Complex}(f::ElasticNet, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{T <: Complex}(f::ElasticNet, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   sqnorm2x = zero(Float64)
   norm1x = zero(Float64)
   gm = gamma*f.mu

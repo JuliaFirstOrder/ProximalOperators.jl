@@ -19,7 +19,7 @@ end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndSphereL2, x::AbstractArray{T}, gamma::Real, y::AbstractArray{T})
+function prox!{T <: RealOrComplex}(f::IndSphereL2, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   normx = vecnorm(x)
   if normx > 0
     scal = f.r/normx

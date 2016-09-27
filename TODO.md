@@ -7,10 +7,13 @@
 
 ## Functions to add
 
-* Indicator of L1 norm ball. ([Duchi et al. 2008](http://dl.acm.org/citation.cfm?id=1390191))
 * Least squares penalty.
 * Generic quadratic function.
+* Indicator of L1 norm ball. ([Duchi et al. 2008](http://dl.acm.org/citation.cfm?id=1390191))
+* Sum of k-largest components. ([Parikh, Boyd 2014](http://www.web.stanford.edu/~boyd/papers/pdf/prox_algs.pdf))
 * Ky-Fan (k)-norms.
+* Max function.
+* Log barrier.
 * Indicator of exponential cone. (Numerically)
 
 ## Calculus rules

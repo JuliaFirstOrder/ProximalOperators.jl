@@ -15,7 +15,7 @@ immutable IndSimplex <: IndicatorConvex end
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, gamma::Real, y::AbstractArray{T,1})
+function prox!{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
   n = length(x)
   p = sort(x, rev=true);
   s = 0

@@ -32,7 +32,7 @@ end
   return f.lambda*n21X
 end
 
-function prox!{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, gamma::Real, Y::AbstractArray{T,2})
+function prox!{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, Y::AbstractArray{T,2}, gamma::Real=1.0)
   gl = gamma*f.lambda
   nslice = zero(Float64)
   n21X = zero(Float64)

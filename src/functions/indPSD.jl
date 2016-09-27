@@ -20,7 +20,7 @@ immutable IndPSD <: IndicatorConvex end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, gamma::Real, Y::HermOrSym{T})
+function prox!{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, Y::HermOrSym{T}, gamma::Real=1.0)
   F = eigfact(X);
   for i in eachindex(F.values)
     F.values[i] = max(0,F.values[i]);
@@ -35,15 +35,15 @@ end
 
 if VERSION < v"0.6-"
 
-function prox(f::IndPSD, x::Symmetric, gamma::Float64=1.0)
+function prox(f::IndPSD, x::Symmetric, gamma::Real=1.0)
   y = Symmetric(similar(x))
-  fy = prox!(f, x, gamma, y)
+  fy = prox!(f, x, y, gamma)
   return y, fy
 end
 
-function prox(f::IndPSD, x::Hermitian, gamma::Float64=1.0)
+function prox(f::IndPSD, x::Hermitian, gamma::Real=1.0)
   y = Hermitian(similar(x))
-  fy = prox!(f, x, gamma, y)
+  fy = prox!(f, x, y, gamma)
   return y, fy
 end
 

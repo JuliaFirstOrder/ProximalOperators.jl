@@ -17,7 +17,7 @@ end
   return f.lambda * sum(S);
 end
 
-function prox!{T <: RealOrComplex}(f::NuclearNorm, X::AbstractArray{T,2}, gamma::Real, Y::AbstractArray{T,2})
+function prox!{T <: RealOrComplex}(f::NuclearNorm, X::AbstractArray{T,2}, Y::AbstractArray{T,2}, gamma::Real=1.0)
   U, S, V = svd(X)
 
   for i in eachindex(S)

@@ -25,7 +25,7 @@ if VERSION >= v"0.5-"
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y::AbstractArray{T,2})
+function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
@@ -43,7 +43,7 @@ function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y:
   return 0.0
 end
 
-function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y::AbstractArray{T,2})
+function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
@@ -74,7 +74,7 @@ else
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y::AbstractArray{T,2})
+function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
@@ -92,7 +92,7 @@ function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y:
   return 0.0
 end
 
-function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real, y::AbstractArray{T,2})
+function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x

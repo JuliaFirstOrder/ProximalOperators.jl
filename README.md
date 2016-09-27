@@ -1,4 +1,7 @@
-# Prox.jl [![Build Status](https://travis-ci.org/kul-forbes/Prox.jl.svg?branch=master)](https://travis-ci.org/kul-forbes/Prox.jl) [![Coverage Status](https://coveralls.io/repos/github/kul-forbes/Prox.jl/badge.svg?branch=master)](https://coveralls.io/github/kul-forbes/Prox.jl?branch=master)
+# Prox.jl
+
+[![Build Status](https://travis-ci.org/kul-forbes/Prox.jl.svg?branch=master)](https://travis-ci.org/kul-forbes/Prox.jl) [![Build status](https://ci.appveyor.com/api/projects/status/00rk6ip0y0t2wj8t?svg=true)](https://ci.appveyor.com/project/lostella/prox-jl) [![Coverage Status](https://coveralls.io/repos/github/kul-forbes/Prox.jl/badge.svg?branch=master)](https://coveralls.io/github/kul-forbes/Prox.jl?branch=master)
+
 
 Proximal operators for nonsmooth optimization in Julia.
 This package can be used to easily implement proximal algorithms
@@ -24,7 +27,7 @@ expression  : x ↦ λ||x||_1
 parameters  : λ = 3.5
 ```
 
-For the available constructors, see the [dedicated section](https://github.com/kul-forbes/Prox.jl#available-functions).
+For the available constructors, see the [dedicated section](https://github.com/kul-forbes/Prox.jl#functions).
 Functions created this way are, of course, callable:
 
 ```julia
@@ -33,28 +36,27 @@ julia> f(x)
 32.40700818735099
 ```
 
-### `prox` and `prox!`
-
-The `prox` method evaluates the proximal operator associated with a function, given a
-point and (optionally) a positive stepsize parameter.
-This returns the proximal point `y` and the value of the function at `y`:
+**`prox`** evaluates the proximal operator associated with a function, given a point and (optionally) a positive stepsize parameter,
+returning the proximal point `y` and the value of the function at `y`:
 
 ```julia
-julia> y, fy = prox(f, x, 0.5)
+julia> y, fy = prox(f, x, 0.5) # last argument is 1.0 if absent
 ```
 
-The `prox!` method evaluates the proximal operator *in place*, and only returns the
-function value at the proximal point.
+**`prox!`** evaluates the proximal operator *in place*, and only returns the function value at the proximal point:
 
 ```julia
 julia> fx = prox!(f, x, 0.5) # in-place equivalent to x, fx = prox(f, x, 0.5)
+julia> fy = prox!(f, x, y, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
 ```
 
 ## Functions
 
-The available constructors are listed in the following table.
+The available constructors are listed in the following tables.
 You can access the specific documentation of each of them from the command line
 of Julia (try typing in `?NormL1`) to have information on their parameters.
+
+### Indicator functions
 
 Function        | Description                                          | Properties
 ----------------|------------------------------------------------------|----------------
@@ -67,9 +69,15 @@ Function        | Description                                          | Propert
 `IndHalfspace`  | Indicator of a halfspace                             | convex
 `IndNonnegative`| Indicator of the nonnegative orthant                 | convex
 `IndNonpositive`| Indicator of the nonpositive orthant                 | convex
+`IndPSD`        | Indicator of the positive semidefinite cone          | convex
 `IndSimplex`    | Indicator of the probability simplex                 | convex
 `IndSOC`        | Indicator of the second-order cone                   | convex
 `IndSphereL2`   | Indicator of Euclidean sphere                        | nonconvex
+
+### Norms, pseudo-norms, regularization functions
+
+Function        | Description                                          | Properties
+----------------|------------------------------------------------------|----------------
 `ElasticNet`    | Elastic-net regularization                           | convex
 `NormL0`        | L0 pseudo-norm                                       | nonconvex
 `NormL1`        | L1 norm                                              | convex
@@ -77,6 +85,11 @@ Function        | Description                                          | Propert
 `NormL21`       | Sum-of-L2 norms                                      | convex
 `NuclearNorm`   | Nuclear norm                                         | convex
 `SqrNormL2`     | Squared Euclidean norm                               | convex
+
+### Distances
+
+Function        | Description                                          | Properties
+----------------|------------------------------------------------------|----------------
 `DistL2`        | Euclidean distance from a convex set                 | convex
 `SqrDistL2`     | Squared Euclidean distance from a convex set         | convex
 
