@@ -8,8 +8,13 @@ Returns the function `g(x) = λ*countnz(x)`, for a nonnegative parameter `λ ⩾
 
 immutable NormL0 <: ProximableFunction
   lambda::Real
-  NormL0(lambda::Real=1.0) =
-    lambda < 0 ? error("parameter λ must be nonnegative") : new(lambda)
+  function NormL0(lambda::Real=1.0)
+    if lambda < 0
+      error("parameter λ must be nonnegative")
+    else
+      new(lambda)
+    end
+  end
 end
 
 @compat function (f::NormL0){T <: RealOrComplex}(x::AbstractArray{T})

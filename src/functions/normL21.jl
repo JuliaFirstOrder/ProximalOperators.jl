@@ -11,8 +11,13 @@ In words, it is the (weighted) sum of the Euclidean norm of the columns (rows) o
 immutable NormL21 <: NormFunction
   lambda::Real
   dim::Integer
-  NormL21(lambda::Real=1.0, dim::Integer=1) =
-    lambda < 0 ? error("parameter λ must be nonnegative") : new(lambda, dim)
+  function NormL21(lambda::Real=1.0, dim::Integer=1)
+    if lambda < 0
+      error("parameter λ must be nonnegative")
+    else
+      new(lambda, dim)
+    end
+  end
 end
 
 @compat function (f::NormL21){T <: RealOrComplex}(X::AbstractArray{T,2})

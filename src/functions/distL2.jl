@@ -3,8 +3,13 @@
 immutable DistL2 <: ProximableFunction
   ind::IndicatorConvex
   lambda::Real
-  DistL2(ind::IndicatorConvex, lambda::Real=1.0) =
-    lambda < 0 ? error("parameter λ must be nonnegative") : new(ind, lambda)
+  function DistL2(ind::IndicatorConvex, lambda::Real=1.0)
+    if lambda < 0
+      error("parameter λ must be nonnegative")
+    else
+      new(ind, lambda)
+    end
+  end
 end
 
 @compat function (f::DistL2){T <: RealOrComplex}(x::AbstractArray{T})

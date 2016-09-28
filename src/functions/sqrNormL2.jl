@@ -2,8 +2,13 @@
 
 immutable SqrNormL2{T <: Union{Real,AbstractArray}} <: ProximableFunction
   lambda::T
-  SqrNormL2(lambda::T) =
-    any(lambda .< 0) ? error("coefficients in λ must be nonnegative") : new(lambda)
+  function SqrNormL2(lambda::T)
+    if any(lambda .< 0)
+      error("coefficients in λ must be nonnegative")
+    else
+      new(lambda)
+    end
+  end
 end
 
 """

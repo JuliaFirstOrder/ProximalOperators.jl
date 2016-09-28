@@ -8,8 +8,13 @@
 
 immutable NuclearNorm <: NormFunction
   lambda::Real
-  NuclearNorm(lambda::Real=1.0) =
-    lambda < 0 ? error("parameter λ must be nonnegative") : new(lambda)
+  function NuclearNorm(lambda::Real=1.0)
+    if lambda < 0
+      error("parameter λ must be nonnegative")
+    else
+      new(lambda)
+    end
+  end
 end
 
 @compat function (f::NuclearNorm){T <: RealOrComplex}(X::AbstractArray{T,2})

@@ -8,8 +8,13 @@ Returns the function `g(x) = λ||x||_2`, for a real parameter `λ ⩾ 0`.
 
 immutable NormL2 <: NormFunction
   lambda::Real
-  NormL2(lambda::Real=1.0) =
-    lambda < 0 ? error("parameter λ must be nonnegative") : new(lambda)
+  function NormL2(lambda::Real=1.0)
+    if lambda < 0
+      error("parameter λ must be nonnegative")
+    else
+      new(lambda)
+    end
+  end
 end
 
 @compat function (f::NormL2){T <: RealOrComplex}(x::AbstractArray{T})

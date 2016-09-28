@@ -58,8 +58,8 @@ stuff = [
       ),
 
   Dict( "constr" => IndHalfspace,
-        "params" => [ (rand(10),rand()), (rand(10),rand()), (rand(10),rand()), (rand(10),rand()) ],
-        "args"   => ( randn(10), randn(10), randn(10), randn(10) ),
+        "params" => [ (rand(10),rand()), (rand(20),rand()), (rand(30),rand()), (rand(50),rand()) ],
+        "args"   => ( randn(10), randn(20), randn(30), randn(50) ),
       ),
 
   Dict( "constr" => IndNonnegative,
@@ -84,8 +84,8 @@ stuff = [
 
   Dict( "constr" => IndSphereL2,
         "wrong"  => [ (-rand(),), ],
-        "params" => [ (rand(),), (sqrt(20)) ],
-        "args"   => ( randn(10), randn(20), )
+        "params" => [ (rand(),), (sqrt(20),) ],
+        "args"   => ( randn(10), randn(20) )
       ),
 
   Dict( "constr" => IndPSD,
@@ -114,6 +114,7 @@ stuff = [
       ),
 
   Dict( "constr" => NuclearNorm,
+        "wrong"  => [ (-rand(),), ],
         "params" => [ (rand(),), (rand(),), (rand(),), (sqrt(10),) ],
         "args"   => ( rand(10,10), rand(100,25), rand(Complex{Float64},20,20), rand(Complex{Float64},30,20) )
       ),

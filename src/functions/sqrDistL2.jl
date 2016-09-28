@@ -3,8 +3,13 @@
 immutable SqrDistL2 <: ProximableFunction
   ind::IndicatorConvex
   lambda::Real
-  SqrDistL2(ind::IndicatorConvex, lambda::Real=1.0) =
-    lambda < 0 ? error("parameter λ must be nonnegative") : new(ind, lambda)
+  function SqrDistL2(ind::IndicatorConvex, lambda::Real=1.0)
+    if lambda < 0
+      error("parameter λ must be nonnegative")
+    else
+      new(ind, lambda)
+    end
+  end
 end
 
 @compat function (f::SqrDistL2){T <: RealOrComplex}(x::AbstractArray{T})

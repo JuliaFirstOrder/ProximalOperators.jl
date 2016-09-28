@@ -290,10 +290,10 @@ gy2 = g(y)
 ################################################################################
 
 println("testing nuclear norm")
-x = Float64[1.0  2.0  3.0;
-            4.0  5.0  6.0;
-            7.0  8.0  9.0;
-            ];
+x = Float64[
+  1.0  2.0  3.0;
+  4.0  5.0  6.0;
+  7.0  8.0  9.0 ];
 
 lambda = 1.0
 gamma = 1.0
@@ -301,10 +301,11 @@ gamma = 1.0
 g = NuclearNorm(lambda)
 ref_gx = 17.916472867168920
 ref_gy = 15.916472867168915
-ref_y = Float64[1.586052850795247   1.944185442781408   2.302318034767569;
-                      3.944185442781405   4.720927213907027   5.497668985032647;
-                      6.302318034767567   7.497668985032650   8.693019935297732;
-];
+ref_y = Float64[
+  1.586052850795247   1.944185442781408   2.302318034767569;
+  3.944185442781405   4.720927213907027   5.497668985032647;
+  6.302318034767567   7.497668985032650   8.693019935297732 ];
+
 gx = g(x)
 y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
@@ -343,3 +344,23 @@ gy2 = g(y)
 @test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
 @test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
 @test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+
+################################################################################
+### indicator of L2 sphere
+################################################################################
+
+println("testing indicator of L2 sphere")
+x = zeros(10)
+R = 5.0
+g = IndSphereL2(R)
+ref_gx = +Inf
+ref_gy = 0.0
+
+gx = g(x)
+y, gy1 = prox(g, x, gamma)
+gy2 = g(y)
+
+@test gx == ref_gx
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
+@test vecnorm(y)-R <= ASSERT_REL_TOL

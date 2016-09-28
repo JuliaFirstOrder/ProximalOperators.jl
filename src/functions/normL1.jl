@@ -2,8 +2,13 @@
 
 immutable NormL1{T <: Union{Real,AbstractArray}} <: NormFunction
   lambda::T
-  NormL1(lambda::T) =
-    any(lambda .< 0) ? error("coefficients in λ must be nonnegative") : new(lambda)
+  function NormL1(lambda::T)
+    if any(lambda .< 0)
+      error("coefficients in λ must be nonnegative")
+    else
+      new(lambda)
+    end
+  end
 end
 
 """

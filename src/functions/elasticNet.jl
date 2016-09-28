@@ -9,8 +9,13 @@ Returns the function `g(x) = μ||x||_1 + (λ/2)||x||^2`, for a real parameters `
 immutable ElasticNet <: ProximableFunction
   mu::Real
   lambda::Real
-  ElasticNet(mu::Real=1.0, lambda::Real=1.0) =
-    lambda < 0 || mu < 0 ? error("parameters μ, λ must be nonnegative") : new(mu, lambda)
+  function ElasticNet(mu::Real=1.0, lambda::Real=1.0)
+    if lambda < 0 || mu < 0
+      error("parameters μ, λ must be nonnegative")
+    else
+      new(mu, lambda)
+    end
+  end
 end
 
 @compat function (f::ElasticNet){T <: RealOrComplex}(x::AbstractArray{T})

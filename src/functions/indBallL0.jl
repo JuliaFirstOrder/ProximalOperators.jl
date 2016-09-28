@@ -8,8 +8,13 @@ Returns the function `g = ind{x : countnz(x) ⩽ r}`, for an integer parameter `
 
 immutable IndBallL0 <: IndicatorFunction
   r::Int
-  IndBallL0(r::Int=1) =
-    r <= 0 ? error("parameter r must be a positive integer") : new(r)
+  function IndBallL0(r::Int=1)
+    if r <= 0
+      error("parameter r must be a positive integer")
+    else
+      new(r)
+    end
+  end
 end
 
 @compat function (f::IndBallL0){T <: RealOrComplex}(x::AbstractArray{T})

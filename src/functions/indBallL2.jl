@@ -8,8 +8,13 @@ Returns the function `g = ind{x : ||x|| ⩽ r}`, for a real parameter `r > 0`.
 
 immutable IndBallL2 <: IndicatorConvex
   r::Real
-  IndBallL2(r::Real=1.0) =
-    r <= 0 ? error("parameter r must be positive") : new(r)
+  function IndBallL2(r::Real=1.0)
+    if r <= 0
+      error("parameter r must be positive")
+    else
+      new(r)
+    end
+  end
 end
 
 @compat function (f::IndBallL2){T <: RealOrComplex}(x::AbstractArray{T})

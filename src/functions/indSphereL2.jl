@@ -8,8 +8,13 @@ Returns the function `g = ind{x : ||x|| = r}`, for a real parameter `r > 0`.
 
 immutable IndSphereL2 <: IndicatorFunction
   r::Real
-  IndSphereL2(r::Real=1.0) =
-    r <= 0 ? error("parameter r must be positive") : new(r)
+  function IndSphereL2(r::Real=1.0)
+    if r <= 0
+      error("parameter r must be positive")
+    else
+      new(r)
+    end
+  end
 end
 
 @compat function (f::IndSphereL2){T <: RealOrComplex}(x::AbstractArray{T})
@@ -21,13 +26,19 @@ end
 
 function prox!{T <: RealOrComplex}(f::IndSphereL2, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   normx = vecnorm(x)
-  if normx > 0
+  if normx > 0 # zero-zero?
     scal = f.r/normx
     for k in eachindex(x)
       y[k] = scal*x[k]
     end
   else
-    # TODO: pick y as a uniform random point on the sphere
+    normy = 0.0
+    for k in eachindex(x)
+      y[k] = randn()
+      normy += y[k]*y[k]
+    end
+    normy = sqrt(normy)
+    y[:] *= f.r/normy
   end
   return 0.0
 end
@@ -42,7 +53,8 @@ function prox_naive{T <: RealOrComplex}(f::IndSphereL2, x::AbstractArray{T}, gam
   if normx > 0
     y = x*f.r/normx
   else
-    # TODO: pick y as a uniform random point on the sphere
+    y = randn(size(x))
+    y *= f.r/vecnorm(y)
   end
   return y, 0.0
 end

@@ -11,8 +11,13 @@ Bounds are allowed to take values `-Inf` and `+Inf`.
 immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: IndicatorConvex
   lb::T
   ub::S
-  IndBox(lb::T, ub::S) =
-    any(lb .> ub) ? error("arguments lb, ub must satisfy lb <= ub") : new(lb, ub)
+  function IndBox(lb::T, ub::S)
+    if any(lb .> ub)
+      error("arguments lb, ub must satisfy lb <= ub")
+    else
+      new(lb, ub)
+    end
+  end
 end
 
 IndBox{T <: Real}(lb::T, ub::T) = IndBox{Real, Real}(lb, ub)
