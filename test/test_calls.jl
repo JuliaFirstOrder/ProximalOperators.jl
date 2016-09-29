@@ -39,6 +39,12 @@ stuff = [
         "args"   => ( randn(25), randn(35), )
       ),
 
+  Dict( "constr" => IndBallL1,
+        "wrong"  => [ (-rand(),), ],
+        "params" => [ (3.), (.4,) , (4.6), (rand() + 0.1) ],
+        "args"   => ( randn(25), randn(35), randn(60), rand(Complex{Float64},30) )
+      ),
+
   Dict( "constr" => IndBallL2,
         "wrong"  => [ (-rand(),), ],
         "params" => [ (rand(),), (sqrt(20)) ],

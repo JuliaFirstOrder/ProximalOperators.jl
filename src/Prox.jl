@@ -16,6 +16,7 @@ export ProximableFunction,
        IndAffine,
        IndBallInf,
        IndBallL0,
+       IndBallL1,
        IndBallL2,
        IndBallL20,
        IndBallRank,
@@ -59,6 +60,7 @@ include("functions/normL0.jl")
 include("functions/nuclearNorm.jl")
 include("functions/indAffine.jl")
 include("functions/indBallL0.jl")
+include("functions/indBallL1.jl")
 include("functions/indBallL2.jl")
 include("functions/indBallRank.jl")
 include("functions/indBox.jl")
