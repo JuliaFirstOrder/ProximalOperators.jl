@@ -366,6 +366,47 @@ gy2 = g(y)
 @test vecnorm(y)-R <= ASSERT_REL_TOL
 
 ################################################################################
+### indicator of simplex
+################################################################################
+
+println("testing indicator of simplex")
+g = IndSimplex()
+
+x     = [2.0, -rand(), -rand()]
+ref_y = [1.0, 0.0, 0.0]
+
+gx = g(x)
+y, gy1 = prox(g, x, gamma)
+gy2 = g(y)
+@test gx == +Inf
+@test gy1 == 0.0
+@test gy2 == 0.0
+@test vecnorm(y-ref_y, Inf)/(1+vecnorm(ref_y, Inf)) <= ASSERT_REL_TOL
+
+x     = [-5.0*rand(), 1.0, 1.0]
+ref_y = [0.0, 0.5, 0.5]
+
+gx = g(x)
+y, gy1 = prox(g, x, gamma)
+gy2 = g(y)
+@test gx == +Inf
+@test gy1 == 0.0
+@test gy2 == 0.0
+@test vecnorm(y-ref_y, Inf)/(1+vecnorm(ref_y, Inf)) <= ASSERT_REL_TOL
+
+ref_y = rand(10)
+ref_y = ref_y/sum(ref_y)
+x     = ref_y + 3.0*randn()*ones(10)
+
+gx = g(x)
+y, gy1 = prox(g, x, gamma)
+gy2 = g(y)
+@test gx == +Inf
+@test gy1 == 0.0
+@test gy2 == 0.0
+@test vecnorm(y-ref_y, Inf)/(1+vecnorm(ref_y, Inf)) <= ASSERT_REL_TOL
+
+################################################################################
 ### indicator of L1 ball
 ################################################################################
 println("testing indicator of L1 norm ball")
@@ -396,7 +437,8 @@ gx = g(x)
 y,gy1 = prox(g,x)
 gy2 = g(y)
 
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
+@test gx == ref_gx
+@test gy1 == ref_gy
+@test gy2 == ref_gy
 #THE BASELINE SOLUTION IS NOT AS PRECISE
 @test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= 1e-8
