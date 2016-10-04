@@ -376,7 +376,7 @@ x     = [2.0, -rand(), -rand()]
 ref_y = [1.0, 0.0, 0.0]
 
 gx = g(x)
-y, gy1 = prox(g, x, gamma)
+y, gy1 = prox(g, x)
 gy2 = g(y)
 @test gx == +Inf
 @test gy1 == 0.0
@@ -387,7 +387,7 @@ x     = [-5.0*rand(), 1.0, 1.0]
 ref_y = [0.0, 0.5, 0.5]
 
 gx = g(x)
-y, gy1 = prox(g, x, gamma)
+y, gy1 = prox(g, x)
 gy2 = g(y)
 @test gx == +Inf
 @test gy1 == 0.0
@@ -399,7 +399,7 @@ ref_y = ref_y/sum(ref_y)
 x     = ref_y + 3.0*randn()*ones(10)
 
 gx = g(x)
-y, gy1 = prox(g, x, gamma)
+y, gy1 = prox(g, x)
 gy2 = g(y)
 @test gx == +Inf
 @test gy1 == 0.0

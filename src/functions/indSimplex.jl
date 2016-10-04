@@ -53,16 +53,22 @@ fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = 1, +∞ otherwise"
 fun_params(f::IndSimplex) = "none"
 
 function prox_naive{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, gamma::Real=1.0)
-# Use bisection algorithm here? Like in IndBallL1
-  n = length(x)
-  p = sort(x,rev=true);
-  s = 0
-  for i = 1:n-1
-    tmax = (sum(p[1:i]) - f.a)/i
-    if tmax >= p[i+1]
-      return (max(x-tmax,0), 0.0)
+  low = 0.0
+  upp = maximum(x)
+  v = x
+  s = Inf
+  for i = 1:100
+    if abs(s)/f.a <= 1e-15
+      break
+    end
+    alpha = (low+upp)/2
+    v = max(x - alpha, 0.0)
+    s = sum(v) - f.a
+    if s <= 0
+      upp = alpha
+    else
+      low = alpha
     end
   end
-  tmax = (sum(p) - f.a)/n
-  return max(x-tmax,0), 0.0
+  return v, 0.0
 end

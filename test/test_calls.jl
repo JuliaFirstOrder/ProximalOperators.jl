@@ -41,8 +41,8 @@ stuff = [
 
   Dict( "constr" => IndBallL1,
         "wrong"  => [ (-rand(),), ],
-        "params" => [ (3.0,), (0.4,), (rand() + 0.1,) ],
-        "args"   => ( randn(25), randn(35), randn(60) )
+        "params" => [ (), (3.0,), (0.4,), (rand() + 0.1,) ],
+        "args"   => ( rand(15), randn(25), randn(35), randn(60) )
       ),
 
   Dict( "constr" => IndBallL2,
@@ -80,7 +80,7 @@ stuff = [
 
   Dict( "constr" => IndSimplex,
         "wrong"  => [ (-rand(),) ],
-        "params" => [ (), (20*rand(),) ],
+        "params" => [ (), (2*rand(),) ],
         "args"   => ( randn(10), randn(20) )
       ),
 
