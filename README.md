@@ -93,8 +93,6 @@ Name            | Description                         | Properties
 ----------------|-------------------------------------|-----------------
 `HingeLoss`     | Hinge loss function                 | convex
 `LogBarrier`    | Logarithmic barrier                 | convex
-`MaxFunction`   | Maximum element in the argument     | convex
-`SumLargest`    | Sum of the k largest elements       | convex
 
 ### Distances
 
