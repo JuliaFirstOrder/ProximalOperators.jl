@@ -6,9 +6,9 @@
 Returns the function `g = ind{x : x ⩾ 0, sum(x) = a}`.
 """
 
-immutable IndSimplex <: IndicatorConvex
-  a::Real
-  function IndSimplex(a::Real=1.0)
+immutable IndSimplex{T <: Real} <: IndicatorConvex
+  a::T
+  function IndSimplex(a::T)
     if a <= 0
       error("parameter a must be positive")
     else
@@ -16,6 +16,8 @@ immutable IndSimplex <: IndicatorConvex
     end
   end
 end
+
+IndSimplex{T <: Real}(a::T=1.0) = IndSimplex{T}(a)
 
 @compat function (f::IndSimplex){T <: Real}(x::AbstractArray{T,1})
   if all(x .>= 0) && abs(sum(x)-f.a) <= 1e-14
@@ -49,8 +51,8 @@ end
 
 fun_name(f::IndSimplex) = "indicator of the probability simplex"
 fun_type(f::IndSimplex) = "Array{Real,1} → Real ∪ {+∞}"
-fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = 1, +∞ otherwise"
-fun_params(f::IndSimplex) = "none"
+fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = a, +∞ otherwise"
+fun_params(f::IndSimplex) = "a = $(f.a)"
 
 function prox_naive{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, gamma::Real=1.0)
   low = 0.0

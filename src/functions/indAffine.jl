@@ -14,21 +14,23 @@ immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
   A::AbstractArray{T,2}
   b::AbstractArray{T,1}
   R::AbstractArray{T,2}
+  function IndAffine(A::AbstractArray{T,2}, b::AbstractArray{T,1})
+    if size(A,1) > size(A,2)
+      error("A must be full row rank")
+    end
+    normrows = vec(sqrt(sum(abs(A).^2, 2)))
+    A = (1./normrows).*A # normalize rows of A
+    b = (1./normrows).*b # and b accordingly
+    Q, R = qr(A')
+    new(A, b, R)
+  end
 end
 
-function IndAffine{T <: RealOrComplex}(A::AbstractArray{T,2}, b::AbstractArray{T,1})
-  if size(A,1) > size(A,2)
-    error("A must be full row rank")
-  end
-  normrows = vec(sqrt(sum(abs(A).^2, 2)))
-  A = (1./normrows).*A # normalize rows of A
-  b = (1./normrows).*b # and b accordingly
-  Q, R = qr(A')
-  IndAffine{T}(A, b, R)
-end
+IndAffine{T <: RealOrComplex}(A::AbstractArray{T,2}, b::AbstractArray{T,1}) =
+  IndAffine{T}(A, b)
 
 IndAffine{T <: RealOrComplex}(a::AbstractArray{T,1}, b::T) =
-  IndAffine(a', [b])
+  IndAffine{T}(a', [b])
 
 @compat function (f::IndAffine){T <: RealOrComplex}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable

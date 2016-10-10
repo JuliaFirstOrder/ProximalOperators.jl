@@ -1,5 +1,4 @@
-using Prox
-using Base.Test
+# Test the correctness of f(x) and prox(f,x,gamma) for a few hardcoded cases
 
 ASSERT_REL_TOL = 1e-14
 

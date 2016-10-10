@@ -12,8 +12,9 @@ typealias HermOrSym{T,S} Union{Hermitian{T,S}, Symmetric{T,S}}
 
 export prox, prox!
 
-export ProximableFunction,
-       IndAffine,
+export ProximableFunction
+
+export IndAffine,
        IndBallInf,
        IndBallL0,
        IndBallL1,
@@ -28,15 +29,21 @@ export ProximableFunction,
        IndSimplex,
        IndSOC,
        IndSphereL2,
+       HingeLoss,
        ElasticNet,
        NormL0,
        NormL1,
        NormL2,
        NormL21,
        NuclearNorm,
+       LogBarrier,
        SqrNormL2,
        DistL2,
        SqrDistL2
+
+export Precomposition,
+       Postcomposition,
+       Conjugate
 
 # A hierarchy of abstract types like this may be useful.
 # Unfortunately Julia does not allow for multiple inheritance.
@@ -53,11 +60,13 @@ abstract IndicatorConvex <: IndicatorFunction
 
 include("functions/distL2.jl")
 include("functions/elasticNet.jl")
+include("functions/logBarrier.jl")
 include("functions/normL2.jl")
 include("functions/normL1.jl")
 include("functions/normL21.jl")
 include("functions/normL0.jl")
 include("functions/nuclearNorm.jl")
+include("functions/hingeLoss.jl")
 include("functions/indAffine.jl")
 include("functions/indBallL0.jl")
 include("functions/indBallL1.jl")
@@ -71,6 +80,10 @@ include("functions/indSphereL2.jl")
 include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
+
+include("calculus/precomposition.jl")
+include("calculus/postcomposition.jl")
+include("calculus/conjugate.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
   println(io, "description : ", fun_name(f))
@@ -111,7 +124,7 @@ and parameter `γ > 0`, and writes the result in `y`. Returns f(y)`.
 function prox!(f::ProximableFunction, x::AbstractArray, y::AbstractArray, gamma::Real=1.0)
   error(
     "prox! is not implemented for f::", typeof(f),
-    ", x::", typeof(x), ", gamma::", typeof(gamma), ", y::", typeof(y)
+    ", x::", typeof(x), ", y::", typeof(y), ", gamma::", typeof(gamma)
   )
 end
 

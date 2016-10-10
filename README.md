@@ -58,37 +58,47 @@ of Julia (try typing in `?NormL1`) to have information on their parameters.
 
 ### Indicator functions
 
-Function        | Description                                          | Properties
-----------------|------------------------------------------------------|----------------
-`IndAffine`     | Indicator of an affine subspace                      | convex
-`IndBallInf`    | Indicator of an infinity-norm ball                   | convex
-`IndBallL0`     | Indicator of an L0 pseudo-norm ball                  | nonconvex
-`IndBallL2`     | Indicator of a Euclidean ball                        | convex
-`IndBallRank`   | Indicator of the set of matrices with given rank     | nonconvex
-`IndBox`        | Indicator of a box                                   | convex
-`IndHalfspace`  | Indicator of a halfspace                             | convex
-`IndNonnegative`| Indicator of the nonnegative orthant                 | convex
-`IndNonpositive`| Indicator of the nonpositive orthant                 | convex
-`IndPSD`        | Indicator of the positive semidefinite cone          | convex
-`IndSimplex`    | Indicator of the probability simplex                 | convex
-`IndSOC`        | Indicator of the second-order cone                   | convex
-`IndSphereL2`   | Indicator of Euclidean sphere                        | nonconvex
+Name            | Type of set                         | Properties
+----------------|-------------------------------------|----------------
+`IndAffine`     | Affine subspace                     | convex
+`IndBallInf`    | Infinity-norm ball                  | convex
+`IndBallL0`     | L0 pseudo-norm ball                 | nonconvex
+`IndBallL1`     | L1 norm ball                        | convex
+`IndBallL2`     | Euclidean ball                      | convex
+`IndBallRank`   | Set of matrices with given rank     | nonconvex
+`IndBox`        | Box                                 | convex
+`IndHalfspace`  | Halfspace                           | convex
+`IndNonnegative`| Nonnegative orthant                 | convex
+`IndNonpositive`| Nonpositive orthant                 | convex
+`IndPSD`        | Positive semidefinite cone          | convex
+`IndSimplex`    | Simplex                             | convex
+`IndSOC`        | Second-order cone                   | convex
+`IndSphereL2`   | Euclidean sphere                    | nonconvex
 
 ### Norms, pseudo-norms, regularization functions
 
-Function        | Description                                          | Properties
-----------------|------------------------------------------------------|----------------
-`ElasticNet`    | Elastic-net regularization                           | convex
-`NormL0`        | L0 pseudo-norm                                       | nonconvex
-`NormL1`        | L1 norm                                              | convex
-`NormL2`        | Euclidean norm                                       | convex
-`NormL21`       | Sum-of-L2 norms                                      | convex
-`NuclearNorm`   | Nuclear norm                                         | convex
-`SqrNormL2`     | Squared Euclidean norm                               | convex
+Name            | Description                         | Properties
+----------------|-------------------------------------|----------------
+`ElasticNet`    | Elastic-net regularization          | convex
+`NormL0`        | L0 pseudo-norm                      | nonconvex
+`NormL1`        | L1 norm                             | convex
+`NormL2`        | Euclidean norm                      | convex
+`NormL21`       | Sum-of-L2 norms                     | convex
+`NuclearNorm`   | Nuclear norm                        | convex
+`SqrNormL2`     | Squared Euclidean norm              | convex
+
+### Penalties
+
+Name            | Description                         | Properties
+----------------|-------------------------------------|-----------------
+`HingeLoss`     | Hinge loss function                 | convex
+`LogBarrier`    | Logarithmic barrier                 | convex
+`MaxFunction`   | Maximum element in the argument     | convex
+`SumLargest`    | Sum of the k largest elements       | convex
 
 ### Distances
 
-Function        | Description                                          | Properties
+Name            | Description                                          | Properties
 ----------------|------------------------------------------------------|----------------
 `DistL2`        | Euclidean distance from a convex set                 | convex
 `SqrDistL2`     | Squared Euclidean distance from a convex set         | convex

@@ -6,9 +6,9 @@
 Returns the function `g = ind{X : rank(X) ⩽ r}`, for an integer parameter `r > 0`.
 """
 
-immutable IndBallRank <: IndicatorFunction
-  r::Int
-  function IndBallRank(r::Int=1)
+immutable IndBallRank{I <: Integer} <: IndicatorFunction
+  r::I
+  function IndBallRank(r::I)
     if r <= 0
       error("parameter r must be a positive integer")
     else
@@ -16,6 +16,8 @@ immutable IndBallRank <: IndicatorFunction
     end
   end
 end
+
+IndBallRank{I <: Integer}(r::I=1) = IndBallRank{I}(r)
 
 if VERSION < v"0.5-"
 

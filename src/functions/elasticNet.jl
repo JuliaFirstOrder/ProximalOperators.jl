@@ -6,10 +6,10 @@
 Returns the function `g(x) = μ||x||_1 + (λ/2)||x||^2`, for a real parameters `μ, λ ⩾ 0`.
 """
 
-immutable ElasticNet <: ProximableFunction
-  mu::Real
-  lambda::Real
-  function ElasticNet(mu::Real=1.0, lambda::Real=1.0)
+immutable ElasticNet{R <: Real} <: ProximableFunction
+  mu::R
+  lambda::R
+  function ElasticNet(mu::R, lambda::R)
     if lambda < 0 || mu < 0
       error("parameters μ, λ must be nonnegative")
     else
@@ -17,6 +17,8 @@ immutable ElasticNet <: ProximableFunction
     end
   end
 end
+
+ElasticNet{R <: Real}(mu::R=1.0, lambda::R=1.0) = ElasticNet{R}(mu, lambda)
 
 @compat function (f::ElasticNet){T <: RealOrComplex}(x::AbstractArray{T})
   return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2

@@ -8,10 +8,10 @@ where x_i are the columns of X if dim == 1, or the rows of X if dim == 2.
 In words, it is the (weighted) sum of the Euclidean norm of the columns (rows) of X.
 """
 
-immutable NormL21 <: NormFunction
-  lambda::Real
-  dim::Integer
-  function NormL21(lambda::Real=1.0, dim::Integer=1)
+immutable NormL21{R <: Real, I <: Integer} <: NormFunction
+  lambda::R
+  dim::I
+  function NormL21(lambda::R, dim::I)
     if lambda < 0
       error("parameter λ must be nonnegative")
     else
@@ -19,6 +19,8 @@ immutable NormL21 <: NormFunction
     end
   end
 end
+
+NormL21{R <: Real, I <: Integer}(lambda::R=1.0, dim::I=1) = NormL21{R, I}(lambda, dim)
 
 @compat function (f::NormL21){T <: RealOrComplex}(X::AbstractArray{T,2})
   nslice = zero(Float64)

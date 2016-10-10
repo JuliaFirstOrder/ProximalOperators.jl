@@ -6,9 +6,9 @@
 Returns the function `g = ind{x : ||x|| ⩽ r}`, for a real parameter `r > 0`.
 """
 
-immutable IndBallL2 <: IndicatorConvex
-  r::Real
-  function IndBallL2(r::Real=1.0)
+immutable IndBallL2{R <: Real} <: IndicatorConvex
+  r::R
+  function IndBallL2(r::R)
     if r <= 0
       error("parameter r must be positive")
     else
@@ -16,6 +16,8 @@ immutable IndBallL2 <: IndicatorConvex
     end
   end
 end
+
+IndBallL2{R <: Real}(r::R=1.0) = IndBallL2{R}(r)
 
 @compat function (f::IndBallL2){T <: RealOrComplex}(x::AbstractArray{T})
   if vecnorm(x) - f.r > 1e-14

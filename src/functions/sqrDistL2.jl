@@ -1,9 +1,9 @@
 # squared Euclidean distance from a set
 
-immutable SqrDistL2 <: ProximableFunction
+immutable SqrDistL2{R <: Real} <: ProximableFunction
   ind::IndicatorConvex
-  lambda::Real
-  function SqrDistL2(ind::IndicatorConvex, lambda::Real=1.0)
+  lambda::R
+  function SqrDistL2(ind::IndicatorConvex, lambda::R)
     if lambda < 0
       error("parameter λ must be nonnegative")
     else
@@ -11,6 +11,8 @@ immutable SqrDistL2 <: ProximableFunction
     end
   end
 end
+
+SqrDistL2{R <: Real}(ind::IndicatorConvex, lambda::R=1.0) = SqrDistL2{R}(ind, lambda)
 
 @compat function (f::SqrDistL2){T <: RealOrComplex}(x::AbstractArray{T})
   p, = prox(f.ind, x)

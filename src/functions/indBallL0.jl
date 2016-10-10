@@ -6,9 +6,9 @@
 Returns the function `g = ind{x : countnz(x) ⩽ r}`, for an integer parameter `r > 0`.
 """
 
-immutable IndBallL0 <: IndicatorFunction
-  r::Int
-  function IndBallL0(r::Int=1)
+immutable IndBallL0{I <: Integer} <: IndicatorFunction
+  r::I
+  function IndBallL0(r::I)
     if r <= 0
       error("parameter r must be a positive integer")
     else
@@ -16,6 +16,8 @@ immutable IndBallL0 <: IndicatorFunction
     end
   end
 end
+
+IndBallL0{I <: Integer}(r::I) = IndBallL0{I}(r)
 
 @compat function (f::IndBallL0){T <: RealOrComplex}(x::AbstractArray{T})
   if countnz(x) > f.r

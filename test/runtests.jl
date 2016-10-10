@@ -1,3 +1,11 @@
+using Prox
+using Base.Test
+
 include("test_calls.jl")
+println("*********************************************************************")
+include("test_calculus.jl")
+println("*********************************************************************")
 include("test_results.jl")
-include("test_consistency.jl")
+println("*********************************************************************")
+include("test_equivalences.jl")
+println("*********************************************************************")

@@ -2,13 +2,13 @@
 
 """
   NuclearNorm(λ::Real=1.0)
-  Returns the function `λ∑σ_i(X)`, where `σ_i(X)` is i-th singular
-  value of matrix X.
+
+Returns the function `λ∑σ_i(X)`, where `σ_i(X)` is i-th singular value of matrix X.
 """
 
-immutable NuclearNorm <: NormFunction
-  lambda::Real
-  function NuclearNorm(lambda::Real=1.0)
+immutable NuclearNorm{R <: Real} <: NormFunction
+  lambda::R
+  function NuclearNorm(lambda::R)
     if lambda < 0
       error("parameter λ must be nonnegative")
     else
@@ -16,6 +16,8 @@ immutable NuclearNorm <: NormFunction
     end
   end
 end
+
+NuclearNorm{R <: Real}(lambda::R=1.0) = NuclearNorm{R}(lambda)
 
 @compat function (f::NuclearNorm){T <: RealOrComplex}(X::AbstractArray{T,2})
   U, S, V = svd(X);

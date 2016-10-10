@@ -6,9 +6,9 @@
 Returns the function `g(x) = λ||x||_2`, for a real parameter `λ ⩾ 0`.
 """
 
-immutable NormL2 <: NormFunction
-  lambda::Real
-  function NormL2(lambda::Real=1.0)
+immutable NormL2{R <: Real} <: NormFunction
+  lambda::R
+  function NormL2(lambda::R)
     if lambda < 0
       error("parameter λ must be nonnegative")
     else
@@ -16,6 +16,8 @@ immutable NormL2 <: NormFunction
     end
   end
 end
+
+NormL2{R <: Real}(lambda::R=1.0) = NormL2{R}(lambda)
 
 @compat function (f::NormL2){T <: RealOrComplex}(x::AbstractArray{T})
   return f.lambda*vecnorm(x)

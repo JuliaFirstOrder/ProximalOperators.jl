@@ -6,9 +6,9 @@
 Returns the function `g = ind{x : ||x|| = r}`, for a real parameter `r > 0`.
 """
 
-immutable IndSphereL2 <: IndicatorFunction
-  r::Real
-  function IndSphereL2(r::Real=1.0)
+immutable IndSphereL2{R <: Real} <: IndicatorFunction
+  r::R
+  function IndSphereL2(r::R)
     if r <= 0
       error("parameter r must be positive")
     else
@@ -16,6 +16,8 @@ immutable IndSphereL2 <: IndicatorFunction
     end
   end
 end
+
+IndSphereL2{R <: Real}(r::R=1.0) = IndSphereL2{R}(r)
 
 @compat function (f::IndSphereL2){T <: RealOrComplex}(x::AbstractArray{T})
   if abs(vecnorm(x) - f.r)/f.r > 1e-14

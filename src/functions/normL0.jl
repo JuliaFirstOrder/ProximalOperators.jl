@@ -6,9 +6,9 @@
 Returns the function `g(x) = λ*countnz(x)`, for a nonnegative parameter `λ ⩾ 0`.
 """
 
-immutable NormL0 <: ProximableFunction
-  lambda::Real
-  function NormL0(lambda::Real=1.0)
+immutable NormL0{R <: Real} <: ProximableFunction
+  lambda::R
+  function NormL0(lambda::R)
     if lambda < 0
       error("parameter λ must be nonnegative")
     else
@@ -16,6 +16,8 @@ immutable NormL0 <: ProximableFunction
     end
   end
 end
+
+NormL0{R <: Real}(lambda::R=1.0) = NormL0{R}(lambda)
 
 @compat function (f::NormL0){T <: RealOrComplex}(x::AbstractArray{T})
   return f.lambda*countnz(x)

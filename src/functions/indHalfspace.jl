@@ -6,15 +6,16 @@
 Returns the function `g = ind{x : <a,x> ⩽ b}`.
 """
 
-immutable IndHalfspace{T <: Real} <: IndicatorConvex
-  a::AbstractArray{T}
-  b::T
+immutable IndHalfspace{T <: AbstractArray, R <: Real} <: IndicatorConvex
+  a::T
+  b::R
+  function IndHalfspace(a::T, b::R)
+    norma = vecnorm(a)
+    new(a/norma, b/norma)
+  end
 end
 
-function IndHalfspace{T <: Real}(a::AbstractArray{T}, b::T)
-  norma = vecnorm(a)
-  IndHalfspace{T}(a/norma, b/norma)
-end
+IndHalfspace{T <: AbstractArray, R <: Real}(a::T, b::R) = IndHalfspace{T, R}(a, b)
 
 @compat function (f::IndHalfspace){T <: Real}(x::AbstractArray{T})
   s = vecdot(f.a,x)-f.b
