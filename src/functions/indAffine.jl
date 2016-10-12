@@ -18,7 +18,7 @@ immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
     if size(A,1) > size(A,2)
       error("A must be full row rank")
     end
-    normrows = vec(sqrt(sum(abs(A).^2, 2)))
+    normrows = vec(sqrt(sum(abs2(A), 2)))
     A = (1./normrows).*A # normalize rows of A
     b = (1./normrows).*b # and b accordingly
     Q, R = qr(A')
