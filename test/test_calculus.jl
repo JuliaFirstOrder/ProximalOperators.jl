@@ -36,6 +36,11 @@ stuff = [
                       5.0*sign(randn(20)) + 5.0*randn(20) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
+
+  Dict( "funcs"  => ((a, b, mu) -> (LogBarrier(a, b, mu), Postcomposition(Precomposition(LogBarrier(), a, b), mu)))(2.0, 0.5, 1.0),
+        "args"   => ( rand(10), rand(10) ),
+        "gammas" => ( 0.5+rand(), 0.5+rand() )
+      )
 ]
 
 for i = 1:length(stuff)

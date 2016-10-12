@@ -1,11 +1,5 @@
 # Postcomposition
 
-"""
-  Postcomposition(f::ProximableFunction, a::Real=1.0, b::Real=0.0)
-
-For a function f, returns g(x) = a*f(x) + b.
-"""
-
 immutable Postcomposition{T <: ProximableFunction, S <: Real} <: ProximableFunction
   f::T
   a::S
@@ -29,8 +23,3 @@ function prox!{T <: RealOrComplex}(g::Postcomposition, x::AbstractArray{T}, y::A
   v = prox!(g.f, x, y, g.a * gamma)
   return g.a * v + g.b
 end
-
-fun_name(g::Postcomposition) = string("scaled ", typeof(g.f), " plus a constant")
-fun_type(g::Precomposition) = fun_type(g.f)
-fun_expr(g::Postcomposition) = "x ↦ a*f(x) + b"
-fun_params(g::Postcomposition) = string("f = ", typeof(g.f), ", a = $(g.a)", ", b = $(g.b)")

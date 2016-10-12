@@ -1,10 +1,13 @@
 # L1 norm (times a constant, or weighted)
 
-immutable NormL1{T <: Union{Real,AbstractArray}} <: NormFunction
+immutable NormL1{T <: Union{Real, AbstractArray}} <: NormFunction
   lambda::T
-  function NormL1{T}(lambda::T)
+  function NormL1(lambda::T)
+    if !(eltype(lambda) <: Real)
+      error("λ must be real")
+    end
     if any(lambda .< 0)
-      error("coefficients in λ must be nonnegative")
+      error("λ must be nonnegative")
     else
       new(lambda)
     end

@@ -12,8 +12,11 @@ immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray
   lb::T
   ub::S
   function IndBox(lb::T, ub::S)
+    if !(eltype(lb) <: Real && eltype(ub) <: Real)
+      error("lb and ub must be real")
+    end
     if any(lb .> ub)
-      error("arguments lb, ub must satisfy lb <= ub")
+      error("lb and ub must satisfy lb <= ub")
     else
       new(lb, ub)
     end

@@ -26,7 +26,7 @@ IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
   return 0.0
 end
 
-function prox!{T <: Real}(f::IndBallL1, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
   # TODO: a faster algorithm
   if vecnorm(x,1) - f.r < 1e-14
     y[:] = x[:]
@@ -59,7 +59,7 @@ fun_type(f::IndBallL1) = "Array{Real} → Real ∪ {+∞}"
 fun_expr(f::IndBallL1) = "x ↦ 0 if ‖x‖_1 ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL1) = "r = $(f.r)"
 
-function prox_naive{T <: Real}(f::IndBallL1, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox_naive{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T,1}, gamma::Real=1.0)
   # do a simple bisection (aka binary search) on λ
   L = 0.0
   U = maxabs(x)

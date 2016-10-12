@@ -106,9 +106,9 @@ stuff = [
       ),
 
   Dict( "constr" => LogBarrier,
-        "wrong"  => ( (-rand(),), ),
-        "params" => ( (), (10*rand(),) ),
-        "args"   => ( rand(10), rand(20) )
+        "wrong"  => ( (1.0, 0.0, -rand()), ),
+        "params" => ( (), (rand(),), (rand(), rand()), (rand(), rand(), rand()) ),
+        "args"   => ( rand(10), rand(20), rand(30), rand(50) )
       ),
 
   Dict( "constr" => NormL0,

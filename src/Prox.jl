@@ -22,13 +22,16 @@ export IndAffine,
        IndBallL20,
        IndBallRank,
        IndBox,
+       IndFree,
        IndHalfspace,
        IndNonnegative,
        IndNonpositive,
+       IndPoint,
        IndPSD,
        IndSimplex,
        IndSOC,
        IndSphereL2,
+       IndZero,
        HingeLoss,
        ElasticNet,
        NormL0,
@@ -39,24 +42,29 @@ export IndAffine,
        LogBarrier,
        SqrNormL2,
        DistL2,
-       SqrDistL2
+       SqrDistL2,
+       Zero
 
-export Precomposition,
+export Conjugate,
        Postcomposition,
-       Conjugate
-
-# A hierarchy of abstract types like this may be useful.
-# Unfortunately Julia does not allow for multiple inheritance.
-#
-# ProximableFunction --+-- NormFunction
-#                      |
-#                      +-- IndicatorFunction -- IndicatorConvex
-#
+       Precomposition
 
 abstract ProximableFunction
 abstract NormFunction <: ProximableFunction
 abstract IndicatorFunction <: ProximableFunction
 abstract IndicatorConvex <: IndicatorFunction
+
+################################################################################
+# experimental stuff
+abstract SeparableFunction <: ProximableFunction
+abstract ElementwiseFunction <: ProximableFunction
+include("calculus/separableSum.jl")
+include("functions/absoluteValue.jl")
+################################################################################
+
+include("calculus/conjugate.jl")
+include("calculus/postcomposition.jl")
+include("calculus/precomposition.jl")
 
 include("functions/distL2.jl")
 include("functions/elasticNet.jl")
@@ -65,6 +73,7 @@ include("functions/normL2.jl")
 include("functions/normL1.jl")
 include("functions/normL21.jl")
 include("functions/normL0.jl")
+include("functions/normLinf.jl")
 include("functions/nuclearNorm.jl")
 include("functions/hingeLoss.jl")
 include("functions/indAffine.jl")
@@ -73,6 +82,8 @@ include("functions/indBallL1.jl")
 include("functions/indBallL2.jl")
 include("functions/indBallRank.jl")
 include("functions/indBox.jl")
+include("functions/indFree.jl")
+include("functions/indPoint.jl")
 include("functions/indPSD.jl")
 include("functions/indSimplex.jl")
 include("functions/indSOC.jl")
@@ -80,10 +91,6 @@ include("functions/indSphereL2.jl")
 include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
-
-include("calculus/precomposition.jl")
-include("calculus/postcomposition.jl")
-include("calculus/conjugate.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
   println(io, "description : ", fun_name(f))
