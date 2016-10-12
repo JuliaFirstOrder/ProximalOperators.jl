@@ -85,8 +85,8 @@ stuff = [
 
   Dict( "constr" => IndSimplex,
         "wrong"  => ( (-rand(),) ),
-        "params" => ( (), (1.0+1e-1*rand(),) ),
-        "args"   => ( randn(10), randn(20) )
+        "params" => ( (), ),
+        "args"   => ( randn(20), )
       ),
 
   Dict( "constr" => IndSOC,
