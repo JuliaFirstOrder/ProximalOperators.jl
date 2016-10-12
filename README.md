@@ -67,13 +67,16 @@ Name            | Type of set                         | Properties
 `IndBallL2`     | Euclidean ball                      | convex
 `IndBallRank`   | Set of matrices with given rank     | nonconvex
 `IndBox`        | Box                                 | convex
+`IndFree`       | Indicator of the free cone          | convex
 `IndHalfspace`  | Halfspace                           | convex
 `IndNonnegative`| Nonnegative orthant                 | convex
 `IndNonpositive`| Nonpositive orthant                 | convex
+`IndPoint`      | Indicator of a singleton            | convex
 `IndPSD`        | Positive semidefinite cone          | convex
 `IndSimplex`    | Simplex                             | convex
 `IndSOC`        | Second-order cone                   | convex
 `IndSphereL2`   | Euclidean sphere                    | nonconvex
+`IndZero`       | Indicator of the zero singleton     | convex
 
 ### Norms, pseudo-norms, regularization functions
 
