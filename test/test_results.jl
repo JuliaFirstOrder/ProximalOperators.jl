@@ -1,7 +1,5 @@
 # Test the correctness of f(x) and prox(f,x,gamma) for a few hardcoded cases
 
-ASSERT_REL_TOL = 1e-14
-
 ################################################################################
 ### L2 norm
 ################################################################################
@@ -22,10 +20,10 @@ gx = g(x)
 y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
-@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= ASSERT_REL_TOL
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= TOL_ASSERT
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 # Case: x::Array{Float64,2}, lambda::Float64
 
@@ -49,10 +47,10 @@ gx = g(x)
 y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
-@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= ASSERT_REL_TOL
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= TOL_ASSERT
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 ################################################################################
 ### L1 norm
@@ -74,10 +72,10 @@ gx = g(x)
 y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
-@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= ASSERT_REL_TOL
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= TOL_ASSERT
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 # Case: x::Array{Complex{Float64},2}, lambda::Float64
 
@@ -97,10 +95,10 @@ gx = g(x)
 y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
-@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= ASSERT_REL_TOL
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= TOL_ASSERT
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 ################################################################################
 ### L0 pseudo-norm
@@ -122,10 +120,10 @@ gx = g(x)
 y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
-@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= ASSERT_REL_TOL
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= TOL_ASSERT
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 # Case: x::Array{Float64,2}, lambda::Float64
 
@@ -148,10 +146,10 @@ gx = g(x)
 y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
-@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= ASSERT_REL_TOL
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1 +abs(ref_gy)) <= ASSERT_REL_TOL
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= TOL_ASSERT
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test abs(gy2-ref_gy)/(1 +abs(ref_gy)) <= TOL_ASSERT
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 ################################################################################
 ### indicator of L0 pseudo-norm ball
@@ -176,7 +174,7 @@ gy2 = g(y)
 @test gx == ref_gx
 @test gy1 == ref_gy
 @test gy2 == ref_gy
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 # Case: x::Array{Float64,2}
 
@@ -199,7 +197,7 @@ gy2 = g(y)
 @test gx == ref_gx
 @test gy1 == ref_gy
 @test gy2 == ref_gy
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 # Case: x::Array{Complex{Float64},2}
 
@@ -222,7 +220,7 @@ gy2 = g(y)
 @test gx == ref_gx
 @test gy1 == ref_gy
 @test gy2 == ref_gy
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 ################################################################################
 ### indicator of the matrices with a given rank
@@ -253,7 +251,7 @@ gy2 = g(y)
 @test gx == ref_gx
 @test gy1 == ref_gy
 @test gy2 == ref_gy
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 # Case: x::Array{Complex{Float64},2}
 
@@ -282,7 +280,7 @@ gy2 = g(y)
 @test gx == ref_gx
 @test gy1 == ref_gy
 @test gy2 == ref_gy
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 ################################################################################
 ### nuclear norm
@@ -309,10 +307,10 @@ gx = g(x)
 y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
-@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= ASSERT_REL_TOL
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test abs(gx-ref_gx)/(1+abs(ref_gx)) <= TOL_ASSERT
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 ################################################################################
 ### indicator of positive semidefinite cone
@@ -340,9 +338,9 @@ y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
 @test gx == ref_gx
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= ASSERT_REL_TOL
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
 
 ################################################################################
 ### indicator of L2 sphere
@@ -360,9 +358,9 @@ y, gy1 = prox(g, x, gamma)
 gy2 = g(y)
 
 @test gx == ref_gx
-@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= ASSERT_REL_TOL
-@test vecnorm(y)-R <= ASSERT_REL_TOL
+@test abs(gy1-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test abs(gy2-ref_gy)/(1+abs(ref_gy)) <= TOL_ASSERT
+@test vecnorm(y)-R <= TOL_ASSERT
 
 ################################################################################
 ### indicator of simplex
@@ -380,7 +378,7 @@ gy2 = g(y)
 @test gx == +Inf
 @test gy1 == 0.0
 @test gy2 == 0.0
-@test vecnorm(y-ref_y, Inf)/(1+vecnorm(ref_y, Inf)) <= ASSERT_REL_TOL
+@test vecnorm(y-ref_y, Inf)/(1+vecnorm(ref_y, Inf)) <= TOL_ASSERT
 
 x     = [-5.0*rand(), 1.0, 1.0]
 ref_y = [0.0, 0.5, 0.5]
@@ -391,7 +389,7 @@ gy2 = g(y)
 @test gx == +Inf
 @test gy1 == 0.0
 @test gy2 == 0.0
-@test vecnorm(y-ref_y, Inf)/(1+vecnorm(ref_y, Inf)) <= ASSERT_REL_TOL
+@test vecnorm(y-ref_y, Inf)/(1+vecnorm(ref_y, Inf)) <= TOL_ASSERT
 
 ref_y = rand(10)
 ref_y = ref_y/sum(ref_y)
@@ -403,7 +401,7 @@ gy2 = g(y)
 @test gx == +Inf
 @test gy1 == 0.0
 @test gy2 == 0.0
-@test vecnorm(y-ref_y, Inf)/(1+vecnorm(ref_y, Inf)) <= ASSERT_REL_TOL
+@test vecnorm(y-ref_y, Inf)/(1+vecnorm(ref_y, Inf)) <= TOL_ASSERT
 
 ################################################################################
 ### indicator of L1 ball
@@ -441,3 +439,72 @@ gy2 = g(y)
 @test gy2 == ref_gy
 #THE BASELINE SOLUTION IS NOT AS PRECISE
 @test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= 1e-8
+
+################################################################################
+### indicator of exponential cone
+################################################################################
+println("testing indicator of exponential cone")
+
+x = [0.537667139546100, 1.833885014595086, -2.258846861003648]
+ref_y = [-2.331395211405815e-01, 2.108704992310933e-01, 6.980034791326437e-02]
+
+g = IndExpPrimal()
+ref_gx = +Inf
+ref_gy = 0.0
+
+gx = g(x)
+y,gy1 = prox(g,x)
+gy2 = g(y)
+
+@test gx == ref_gx
+@test gy1 == ref_gy
+@test gy2 == ref_gy
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
+
+x = [8.621733203681206e-01, 3.187652398589808e-01, -1.307688296305273e+00]
+ref_y = [0.0, 0.0, 0.0]
+
+g = IndExpPrimal()
+ref_gx = +Inf
+ref_gy = 0.0
+
+gx = g(x)
+y,gy1 = prox(g,x)
+gy2 = g(y)
+
+@test gx == ref_gx
+@test gy1 == ref_gy
+@test gy2 == ref_gy
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
+
+x = [-4.335920223056836e-01, 3.426244665386499e-01, 3.578396939725760e+00]
+ref_y = [-4.335920223056836e-01, 3.426244665386499e-01, 3.578396939725760e+00]
+
+g = IndExpPrimal()
+ref_gx = 0.0
+ref_gy = 0.0
+
+gx = g(x)
+y,gy1 = prox(g,x)
+gy2 = g(y)
+
+@test gx == ref_gx
+@test gy1 == ref_gy
+@test gy2 == ref_gy
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT
+
+x = [-2.049660582997746e-01, -1.241443482163119e-01, 1.489697607785465e+00]
+ref_y = [-2.049660582997746e-01, 0, 1.489697607785465e+00]
+
+g = IndExpPrimal()
+ref_gx = +Inf
+ref_gy = 0.0
+
+gx = g(x)
+y,gy1 = prox(g,x)
+gy2 = g(y)
+
+@test gx == ref_gx
+@test gy1 == ref_gy
+@test gy2 == ref_gy
+@test vecnorm(y-ref_y,Inf)/(1+vecnorm(ref_y,Inf)) <= TOL_ASSERT

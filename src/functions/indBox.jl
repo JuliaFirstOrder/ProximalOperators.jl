@@ -61,13 +61,13 @@ function prox!{R <: Real}(f::IndBox, x::AbstractArray{R}, y::AbstractArray{R}, g
 end
 
 """
-  IndBallInf(r::Real)
+  IndBallInf(r::Real=1.0)
 
 Returns the indicator function of an infinity-norm ball, that is function
 `g(x) = ind{maximum(abs(x)) ⩽ r}` for `r ⩾ 0`.
 """
 
-IndBallInf{R <: Real}(r::R) = IndBox(-r, r)
+IndBallInf{R <: Real}(r::R=1.0) = IndBox(-r, r)
 
 """
   IndNonnegative()

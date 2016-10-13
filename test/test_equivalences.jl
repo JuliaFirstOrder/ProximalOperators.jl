@@ -1,7 +1,5 @@
 # Test other equivalences of prox operations which are not covered by calculus rules
 
-ASSERT_REL_TOL = 1e-12
-
 ################################################################################
 ### testing consistency of simplex/L1 ball
 ################################################################################
@@ -24,7 +22,7 @@ for i = 1:N
   y1 = sign(x).*y1
   y2, gy2 = prox(g, x)
 
-  @test vecnorm(y1-y2,Inf)/(1+vecnorm(y1,Inf)) <= ASSERT_REL_TOL
+  @test vecnorm(y1-y2,Inf)/(1+vecnorm(y1,Inf)) <= TOL_ASSERT
 end
 
 # projecting onto the simplex
@@ -37,7 +35,7 @@ for i = 1:N
   y1, fy1 = prox(f, x)
   y2, gy2 = prox(g, x-minimum(x)+r/n)
 
-  @test vecnorm(y1-y2,Inf)/(1+vecnorm(y1,Inf)) <= ASSERT_REL_TOL
+  @test vecnorm(y1-y2,Inf)/(1+vecnorm(y1,Inf)) <= TOL_ASSERT
 end
 
 ################################################################################
@@ -68,5 +66,5 @@ for i = 1:N
   y1, ~ = prox(g, x, gamma)
   z, ~ = prox(h, (1-b.*x)/(mu*gamma), 1/(mu*gamma))
   y2 = mu*gamma*(z./b) + x
-  @test vecnorm(y1-y2, Inf)/(1+norm(y1, Inf)) <= ASSERT_REL_TOL
+  @test vecnorm(y1-y2, Inf)/(1+norm(y1, Inf)) <= TOL_ASSERT
 end

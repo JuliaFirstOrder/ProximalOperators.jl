@@ -14,35 +14,19 @@ export prox, prox!
 
 export ProximableFunction
 
-export IndAffine,
-       IndBallInf,
-       IndBallL0,
-       IndBallL1,
-       IndBallL2,
-       IndBallL20,
+export IndAffine, IndHalfspace,
+       IndBallInf, IndBallL0, IndBallL1, IndBallL2,
        IndBallRank,
-       IndBox,
+       IndBox, IndNonnegative, IndNonpositive,
+       IndExpPrimal, IndExpDual, IndPSD, IndSOC,
        IndFree,
-       IndHalfspace,
-       IndNonnegative,
-       IndNonpositive,
-       IndPoint,
-       IndPSD,
+       IndPoint, IndZero,
        IndSimplex,
-       IndSOC,
        IndSphereL2,
-       IndZero,
        HingeLoss,
-       ElasticNet,
-       NormL0,
-       NormL1,
-       NormL2,
-       NormL21,
-       NuclearNorm,
        LogBarrier,
-       SqrNormL2,
-       DistL2,
-       SqrDistL2,
+       NormL0, NormL1, NormL2, NormL21, NuclearNorm, SqrNormL2, ElasticNet,
+       DistL2, SqrDistL2,
        Zero
 
 export Conjugate,
@@ -82,6 +66,7 @@ include("functions/indBallL1.jl")
 include("functions/indBallL2.jl")
 include("functions/indBallRank.jl")
 include("functions/indBox.jl")
+include("functions/indExp.jl")
 include("functions/indFree.jl")
 include("functions/indPoint.jl")
 include("functions/indPSD.jl")

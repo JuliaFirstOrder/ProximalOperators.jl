@@ -1,7 +1,5 @@
 # Simply test the call to functions and their prox
 
-TOL_ASSERT = 1e-12
-
 stuff = [
   Dict( "constr" => DistL2,
         "wrong"  => ( (IndBallL2(), -rand()), ),
@@ -66,6 +64,16 @@ stuff = [
         "wrong"  => ( (+1, -1), ),
         "params" => ( (-rand(),+rand(10)), (-rand(10),+rand()), (-rand(),+rand()), (-rand(30),+rand(30)) ),
         "args"   => ( randn(10), randn(10), randn(20), randn(30) )
+      ),
+
+  Dict( "constr" => IndExpPrimal,
+        "params" => ( (), (), () ),
+        "args"   => ( randn(3), randn(3), randn(3) )
+      ),
+
+  Dict( "constr" => IndExpDual,
+        "params" => ( (), (), () ),
+        "args"   => ( randn(3), randn(3), randn(3) )
       ),
 
   Dict( "constr" => IndHalfspace,
@@ -165,41 +173,25 @@ for i = 1:length(stuff)
     println(f)
 
 ##### just call f
-    print("* call                        : "); @time fx = f(x)
+    call_test(f, x)
 
 ##### compute prox with default gamma
-    print("* prox                        : "); @time y, fy = prox(f, x)
-    print("* prox! (preallocated output) : "); y_prealloc = copy(x); @time fy_prealloc = prox!(f, x, y_prealloc)
-    print("* prox! (in place)            : "); y_inplace = copy(x); @time fy_inplace = prox!(f, y_inplace)
-
-    # compare the three versions
-    @test vecnorm(y_prealloc - y)/(1+vecnorm(y)) <= TOL_ASSERT
-    @test abs(fy_prealloc - fy)/(1+abs(fy)) <= TOL_ASSERT
-    @test vecnorm(y_inplace - y)/(1+vecnorm(y)) <= TOL_ASSERT
-    @test abs(fy_inplace - fy)/(1+abs(fy_inplace)) <= TOL_ASSERT
+    y, fy = prox_test(f, x)
 
     # compare with naive implementation
     y_naive, fy_naive = Prox.prox_naive(f, x)
-    @test vecnorm(y_naive - y)/(1+vecnorm(y_naive)) <= TOL_ASSERT
+    @test vecnorm(y_naive - y, Inf)/(1+vecnorm(y_naive, Inf)) <= TOL_ASSERT
     @test abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT
     f_at_y = f(y)
     @test abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT
 
 ##### compute prox with random gamma
     gam = 5*rand()
-    print("* prox                        : "); @time y, fy = prox(f, x, gam)
-    print("* prox! (preallocated output) : "); y_prealloc = copy(x); @time fy_prealloc = prox!(f, x, y_prealloc, gam)
-    print("* prox! (in place)            : "); y_inplace = copy(x); @time fy_inplace = prox!(f, y_inplace, gam)
-
-    # compare the three versions
-    @test vecnorm(y_prealloc - y)/(1+vecnorm(y)) <= TOL_ASSERT
-    @test abs(fy_prealloc - fy)/(1+abs(fy)) <= TOL_ASSERT
-    @test vecnorm(y_inplace - y)/(1+vecnorm(y)) <= TOL_ASSERT
-    @test abs(fy_inplace - fy)/(1+abs(fy_inplace)) <= TOL_ASSERT
+    y, fy = prox_test(f, x, gam)
 
     # compare with naive implementation
     y_naive, fy_naive = Prox.prox_naive(f, x, gam)
-    @test vecnorm(y_naive - y)/(1+vecnorm(y_naive)) <= TOL_ASSERT
+    @test vecnorm(y_naive - y, Inf)/(1+vecnorm(y_naive, Inf)) <= TOL_ASSERT
     @test abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT
     f_at_y = f(y)
     @test abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT

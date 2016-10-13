@@ -8,10 +8,13 @@ end
 # an element of the subdifferential of the conjugate
 
 function prox!{T <: RealOrComplex}(g::Conjugate, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+  # need to make a copy, doing this in place is probably not possible in general:
+  # if object_id(x) == object_id(y), then prox! causes the loss of x (which is needed afterwards)
+  x_copy = copy(x)
   # Moreau identity
   v = prox!(g.f, x/gamma, y, 1.0/gamma)
-  v = vecdot(x,y) - gamma*vecdot(y,y) - v
+  v = vecdot(x_copy,y) - gamma*vecdot(y,y) - v
   y[:] *= -gamma
-  y[:] += x
+  y[:] += x_copy
   return v
 end

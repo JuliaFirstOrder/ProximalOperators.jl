@@ -23,17 +23,23 @@ end
 NormL21{R <: Real, I <: Integer}(lambda::R=1.0, dim::I=1) = NormL21{R, I}(lambda, dim)
 
 @compat function (f::NormL21){T <: RealOrComplex}(X::AbstractArray{T,2})
-  nslice = zero(Float64)
-  n21X = zero(Float64)
+  nslice = 0.0
+  n21X = 0.0
   if f.dim == 1
     for j = 1:size(X,2)
-      nslice = vecnorm(X[:,j]);
-      n21X += nslice
+      nslice = 0.0
+      for i = 1:size(X,1)
+        nslice += X[i,j]^2
+      end
+      n21X += sqrt(nslice)
     end
   elseif f.dim == 2
     for i = 1:size(X,1)
-      nslice = vecnorm(X[i,:]);
-      n21X += nslice
+      nslice = 0.0
+      for j = 1:size(X,2)
+        nslice += X[i,j]^2
+      end
+      n21X += sqrt(nslice)
     end
   end
   return f.lambda*n21X
@@ -45,7 +51,11 @@ function prox!{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, Y::Abstrac
   n21X = zero(Float64)
   if f.dim == 1
     for j = 1:size(X,2)
-      nslice = vecnorm(X[:,j]);
+      nslice = 0.0
+      for i = 1:size(X,1)
+        nslice += X[i,j]^2
+      end
+      nslice = sqrt(nslice)
       scal = 1-gl/nslice
       scal = scal <= 0.0 ? 0.0 : scal
       for i = 1:size(X,1)
@@ -55,7 +65,11 @@ function prox!{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, Y::Abstrac
     end
   elseif f.dim == 2
     for i = 1:size(X,1)
-      nslice = vecnorm(X[i,:]);
+      nslice = 0.0
+      for j = 1:size(X,2)
+        nslice += X[i,j]^2
+      end
+      nslice = sqrt(nslice)
       scal = 1-gl/nslice
       scal = scal <= 0.0 ? 0.0 : scal
       for j = 1:size(X,2)

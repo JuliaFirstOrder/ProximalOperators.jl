@@ -32,31 +32,16 @@ SqrNormL2{T <: AbstractArray}(lambda::T) = SqrNormL2{T}(lambda)
 end
 
 @compat function (f::SqrNormL2{S}){S <: AbstractArray, T <: RealOrComplex}(x::AbstractArray{T})
-  return 0.5*real(vecdot(f.lambda.*x,x))
-end
-
-function prox!{S <: Real, T <: Real}(f::SqrNormL2{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  gl = gamma*f.lambda
-  sqny = zero(Float64)
+  sqnorm = 0.0
   for k in eachindex(x)
-    y[k] = x[k]/(1+gl)
-    sqny += y[k]*y[k]
+    sqnorm += f.lambda[k]*abs2(x[k])
   end
-  return (f.lambda/2)*sqny
+  return 0.5*sqnorm
 end
 
-function prox!{S <: AbstractArray, T <: Real}(f::SqrNormL2{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  wsqny = zero(Float64)
-  for k in eachindex(x)
-    y[k] = x[k]/(1+gamma*f.lambda[k])
-    wsqny += f.lambda[k]*(y[k]*y[k])
-  end
-  return 0.5*wsqny
-end
-
-function prox!{S <: Real, T <: Complex}(f::SqrNormL2{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{S <: Real, T <: RealOrComplex}(f::SqrNormL2{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   gl = gamma*f.lambda
-  sqny = zero(Float64)
+  sqny = 0.0
   for k in eachindex(x)
     y[k] = x[k]/(1+gl)
     sqny += abs2(y[k])
@@ -64,8 +49,8 @@ function prox!{S <: Real, T <: Complex}(f::SqrNormL2{S}, x::AbstractArray{T}, y:
   return (f.lambda/2)*sqny
 end
 
-function prox!{S <: AbstractArray, T <: Complex}(f::SqrNormL2{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  wsqny = zero(Float64)
+function prox!{S <: AbstractArray, T <: RealOrComplex}(f::SqrNormL2{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+  wsqny = 0.0
   for k in eachindex(x)
     y[k] = x[k]/(1+gamma*f.lambda[k])
     wsqny += f.lambda[k]*abs2(y[k])
