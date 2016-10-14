@@ -8,21 +8,26 @@ end
 
 IndExpDual() = IndExpDual(IndExpPrimal())
 
+EXP_CONE_CALL_TOL = 1e-8
+
 @compat function (f::IndExpPrimal){R <: Real}(x::AbstractArray{R})
-  TOL = min(1e-6, 1e4*eps(R))
-  if (x[2] > -TOL && x[2]*exp(x[1]/x[2]) <= x[3]+TOL) || (x[1] <= TOL && abs(x[2]) <= TOL && x[3] >= -TOL)
+  if (x[2] > 0.0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_CONE_CALL_TOL) ||
+     (x[1] <= EXP_CONE_CALL_TOL && abs(x[2]) <= EXP_CONE_CALL_TOL && x[3] >= -EXP_CONE_CALL_TOL)
     return 0.0
   end
   return +Inf
 end
 
 @compat function (f::IndExpDual){R <: Real}(x::AbstractArray{R})
-  TOL = min(1e-6, 1e4*eps(R))
-  if (x[1] < TOL && -x[1]*exp(x[2]/x[1]) <= exp(1)*x[3]+TOL) || (abs(x[1]) <= TOL && x[2] >= -TOL && x[3] >= -TOL)
+  if (x[1] < 0.0 && -x[1]*exp(x[2]/x[1]) <= exp(1)*x[3]+EXP_CONE_CALL_TOL) ||
+     (abs(x[1]) <= EXP_CONE_CALL_TOL && x[2] >= -EXP_CONE_CALL_TOL && x[3] >= -EXP_CONE_CALL_TOL)
     return 0.0
   end
   return +Inf
 end
+
+EXP_CONE_PROJ_TOL = 1e-15
+EXP_CONE_PROJ_MAXIT = 100
 
 function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
   r = x[1]
@@ -40,34 +45,22 @@ function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray
     y[2] = max(x[2], 0.0)
     y[3] = max(x[3], 0.0)
   else
-    # minimize ||y - x||^2 subject to se^{r/s} = t
-    alpha = 0.001
-    beta = 0.5
-    y[:] = x
-    y[2] = max(1.0, y[2])
-    y[3] = max(1.0, y[3])
-    l = 1.0
-    x_copy = [r; s; t]
-    r = (w, z) -> [w - x_copy + z*GradIndExp(w); PenaltyIndExp(w)]
-    for iter = 1:100
-      KKT = [eye(3)+l*HessIndExp(y) GradIndExp(y); GradIndExp(y)' 0.0 ]
-      z = KKT \ -r(y,l)
-      dy = z[1:3]
-      dl = z[4]
-      # backtracking line search
-      t = 1.0
-      ystep = y + t*dy; lstep = l + t*dl
-      while ystep[2] < 0 || (norm(r(ystep, lstep)) > (1 - alpha*t)*norm(r(y, l)))
-        t = beta*t
-        ystep = y + t*dy
-        lstep = l + t*dl
+    # this is the algorithm used in SCS
+    v = x
+    ub, lb = getRhoUb(x)
+    for iter = 1:EXP_CONE_PROJ_MAXIT
+      rho = (ub + lb)/2
+      g, v = calcGrad(x,rho)
+      if g > 0
+        lb = rho
+      else
+        ub = rho
       end
-      y[:] = ystep
-      l = lstep
-      if abs(PenaltyIndExp(y)) < 1e-15 && norm(r(y,l)) <= 1e-15
+      if ub - lb <= EXP_CONE_PROJ_TOL
         break
       end
     end
+    y[:] = v
   end
   return 0.0
 end
@@ -79,20 +72,55 @@ function prox!{R <: Real}(f::IndExpDual, x::AbstractArray{R}, y::AbstractArray{R
   return 0.0
 end
 
-function PenaltyIndExp{R <: Real}(w::Array{R})
-  return w[2]*exp(w[1]/w[2]) - w[3]
+function getRhoUb(v)
+  lb = 0
+  rho = 2.0^(-3)
+  g, z = calcGrad(v, rho)
+  while g > 0
+    lb = rho
+    rho = rho*2
+    g, z = calcGrad(v, rho)
+  end
+  ub = rho
+  return ub, lb
 end
 
-function GradIndExp{R <: Real}(w::Array{R})
-  r = w[1]/w[2]
-  expr = exp(r)
-  return [expr; expr*(1 - r); -1]
+function calcGrad(v, rho)
+  x = solve_with_rho(v, rho)
+  if x[2] == 0.0
+    g = x[1]
+  else
+    g = x[1] + x[2]*log(x[2]/x[3])
+  end
+  return g, x
 end
 
-function HessIndExp{R <: Real}(w::Array{R})
-    r = w[1]/w[2]
-    h = exp(r)*[ 1/w[2] -r/w[2] 0.0; -r/w[2] r^2/w[2] 0.0; 0.0 0.0 0.0 ]
-    return h
+function solve_with_rho(v, rho)
+  x = zeros(3)
+  x[3] = newton_exp_onz(rho, v[2], v[3])
+  x[2] = (1/rho)*(x[3] - v[3])*x[3]
+  x[1] = v[1] - rho
+  return x
+end
+
+function newton_exp_onz(rho, y_hat, z_hat)
+  t = max(-z_hat,EXP_CONE_PROJ_TOL)
+  for iter=1:EXP_CONE_PROJ_MAXIT
+    f = (1.0/rho^2)*t*(t + z_hat) - y_hat/rho + log(t/rho) + 1.0
+    fp = (1.0/rho^2)*(2.0*t + z_hat) + 1.0/t
+    t = t - f/fp
+    if t <= -z_hat
+      t = -z_hat
+      break
+    elseif t <= 0
+      t = 0
+      break
+    elseif abs(f) <= EXP_CONE_PROJ_TOL
+      break
+    end
+  end
+  z = t + z_hat
+  return z
 end
 
 fun_name(f::IndExpPrimal) = "indicator exponential cone (primal)"
