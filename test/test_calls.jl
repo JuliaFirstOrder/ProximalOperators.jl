@@ -76,6 +76,16 @@ stuff = [
         "args"   => ( randn(3), randn(3), randn(3) )
       ),
 
+  Dict( "constr" => IndFree,
+        "params" => ( (), (), () ),
+        "args"   => ( randn(5), randn(10), randn(30) )
+      ),
+
+  Dict( "constr" => IndPoint,
+        "params" => ( (), (randn(20), ) ),
+        "args"   => ( randn(10), randn(20) )
+      ),
+
   Dict( "constr" => IndHalfspace,
         "params" => ( (rand(10),rand()), (rand(20),rand()), (rand(30),rand()), (rand(50),rand()) ),
         "args"   => ( randn(10), randn(20), randn(30), randn(50) ),
@@ -113,6 +123,11 @@ stuff = [
         "args"   => ( Symmetric(randn(5,5)), Symmetric(rand(20,20)) ),
       ),
 
+  Dict( "constr" => IndZero,
+        "params" => ( (), () ),
+        "args"   => ( randn(10), randn(20) )
+      ),
+
   Dict( "constr" => LogBarrier,
         "wrong"  => ( (1.0, 0.0, -rand()), ),
         "params" => ( (), (rand(),), (rand(), rand()), (rand(), rand(), rand()) ),
@@ -139,6 +154,11 @@ stuff = [
   Dict( "constr" => NormL21,
         "params" => ( (), (rand(),), (rand(),1), (rand(),2) ),
         "args"   => ( randn(10,20), randn(10,20), randn(10,20), randn(10,20) )
+      ),
+
+  Dict( "constr" => NormLinf,
+        "params" => ( (), (rand(),), (), (rand(),) ),
+        "args"   => ( randn(10), randn(20), rand(Complex{Float64}, 10), rand(Complex{Float64}, 20) )
       ),
 
   Dict( "constr" => NuclearNorm,

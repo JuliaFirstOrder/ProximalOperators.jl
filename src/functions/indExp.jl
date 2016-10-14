@@ -9,14 +9,16 @@ end
 IndExpDual() = IndExpDual(IndExpPrimal())
 
 @compat function (f::IndExpPrimal){R <: Real}(x::AbstractArray{R})
-  if (x[2] > -1e-12 && x[2]*exp(x[1]/x[2]) <= x[3]+1e-10) || (x[1] <= 1e-12 && abs(x[2]) <= 1e-12 && x[3] >= -1e-12)
+  TOL = min(1e-6, 1e4*eps(R))
+  if (x[2] > -TOL && x[2]*exp(x[1]/x[2]) <= x[3]+TOL) || (x[1] <= TOL && abs(x[2]) <= TOL && x[3] >= -TOL)
     return 0.0
   end
   return +Inf
 end
 
 @compat function (f::IndExpDual){R <: Real}(x::AbstractArray{R})
-  if (x[1] < 1e-12 && -x[1]*exp(x[2]/x[1]) <= exp(1)*x[3]+1e-10) || (abs(x[1]) <= 1e-12 && x[2] >= -1e-12 && x[3] >= -1e-12)
+  TOL = min(1e-6, 1e4*eps(R))
+  if (x[1] < TOL && -x[1]*exp(x[2]/x[1]) <= exp(1)*x[3]+TOL) || (abs(x[1]) <= TOL && x[2] >= -TOL && x[3] >= -TOL)
     return 0.0
   end
   return +Inf
@@ -62,7 +64,7 @@ function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray
       end
       y[:] = ystep
       l = lstep
-      if abs(PenaltyIndExp(y)) < 1e-14 && norm(r(y,l)) <= 1e-14
+      if abs(PenaltyIndExp(y)) < 1e-15 && norm(r(y,l)) <= 1e-15
         break
       end
     end

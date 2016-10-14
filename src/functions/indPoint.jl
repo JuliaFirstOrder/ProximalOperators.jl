@@ -35,8 +35,7 @@ fun_params(f::IndPoint) =
   string( "p = ", typeof(f.p) <: AbstractArray ? string(typeof(f.p), " of size ", size(f.p)) : f.p, ", ")
 
 function prox_naive{T <: RealOrComplex}(f::IndPoint, x::AbstractArray{T}, gamma::Real=1.0)
-  y = f.p
-  return y, 0.0
+  return f.p, 0.0
 end
 
 """

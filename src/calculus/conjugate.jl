@@ -18,3 +18,8 @@ function prox!{T <: RealOrComplex}(g::Conjugate, x::AbstractArray{T}, y::Abstrac
   y[:] += x_copy
   return v
 end
+
+function prox_naive{T <: RealOrComplex}(g::Conjugate, x::AbstractArray{T}, gamma::Real=1.0)
+  y, v = prox_naive(g.f, x/gamma, 1.0/gamma)
+  return x - gamma*y, vecdot(x,y) - gamma*vecdot(y,y) - v
+end

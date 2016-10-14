@@ -23,3 +23,8 @@ function prox!{T <: RealOrComplex}(g::Postcomposition, x::AbstractArray{T}, y::A
   v = prox!(g.f, x, y, g.a * gamma)
   return g.a * v + g.b
 end
+
+function prox_naive{T <: RealOrComplex}(g::Postcomposition, x::AbstractArray{T}, gamma::Real=1.0)
+  y, v = prox_naive(g.f, x, g.a * gamma)
+  return y, g.a * v + g.b
+end

@@ -25,7 +25,7 @@ export IndAffine, IndHalfspace,
        IndSphereL2,
        HingeLoss,
        LogBarrier,
-       NormL0, NormL1, NormL2, NormL21, NuclearNorm, SqrNormL2, ElasticNet,
+       NormL0, NormL1, NormL2, NormL21, NormLinf, NuclearNorm, SqrNormL2, ElasticNet,
        DistL2, SqrDistL2,
        Zero
 
