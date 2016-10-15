@@ -49,6 +49,7 @@ include("functions/absoluteValue.jl")
 include("calculus/conjugate.jl")
 include("calculus/postcomposition.jl")
 include("calculus/precomposition.jl")
+include("calculus/symmetricpacked.jl")
 
 include("functions/distL2.jl")
 include("functions/elasticNet.jl")
