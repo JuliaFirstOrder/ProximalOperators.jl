@@ -38,12 +38,7 @@ abstract NormFunction <: ProximableFunction
 abstract IndicatorFunction <: ProximableFunction
 abstract IndicatorConvex <: IndicatorFunction
 
-################################################################################
-# looks like there are some issues in 0.4
-if VERSION >= v"0.5-"
-  include("utilities/symmetricpacked.jl")
-end
-################################################################################
+include("utilities/symmetricpacked.jl")
 
 ################################################################################
 # experimental stuff
