@@ -38,6 +38,8 @@ abstract NormFunction <: ProximableFunction
 abstract IndicatorFunction <: ProximableFunction
 abstract IndicatorConvex <: IndicatorFunction
 
+include("utilities/symmetricpacked.jl")
+
 ################################################################################
 # experimental stuff
 abstract SeparableFunction <: ProximableFunction
