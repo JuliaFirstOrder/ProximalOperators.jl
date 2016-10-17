@@ -1,13 +1,13 @@
-# TODO
+## TODO
 
-## General
+### General
 
 * Fix docstrings (in particular: types of constructors arguments).
 * Add more tests, especially with `Array{Complex}` variables.
 * Implement iterative routines to evaluate general proximal mappings.
 * For separable functions it makes sense to have `gamma::Array`.
 
-## Functions to add
+### Functions to add
 
 * Least squares penalty.
 * Generic quadratic function.
@@ -16,9 +16,8 @@
 * Ky-Fan (k)-norms.
 * Max function.
 * Log barrier.
-* Indicator of exponential cone. (Numerically.)
 
-## Calculus rules
+### Calculus rules
 
 * Pre-composition with uniform scaling. (To be improved.)
 * Moreau identity. (To be improved.)

@@ -1,18 +1,18 @@
 # Test equivalence of functions and prox mappings by means of calculus rules
 
 stuff = [
-  Dict( "funcs"  => (IndBallInf(), Conjugate(NormL1())),
+  Dict( "funcs"  => (IndBallLinf(), Conjugate(NormL1())),
         "args"   => ( randn(10), ),
         "gammas" => ( 1.0, )
       ),
 
-  Dict( "funcs"  => (lambda -> (NormL1(lambda), Conjugate(IndBallInf(lambda))))(0.1+10.0*rand()),
+  Dict( "funcs"  => (lambda -> (NormL1(lambda), Conjugate(IndBallLinf(lambda))))(0.1+10.0*rand()),
         "args"   => ( 5.0*sign(randn(10)) + 5.0*randn(10),
                       5.0*sign(randn(20)) + 5.0*randn(20) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
-  Dict( "funcs"  => (lambda -> (IndBallInf(lambda), Conjugate(NormL1(lambda))))(0.1+10.0*rand()),
+  Dict( "funcs"  => (lambda -> (IndBallLinf(lambda), Conjugate(NormL1(lambda))))(0.1+10.0*rand()),
         "args"   => ( 5.0*sign(randn(10)) + 5.0*randn(10),
                       5.0*sign(randn(20)) + 5.0*randn(20) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )

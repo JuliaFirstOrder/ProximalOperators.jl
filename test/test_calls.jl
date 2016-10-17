@@ -30,7 +30,7 @@ stuff = [
         "args"   => ( randn(10), randn(20) )
       ),
 
-  Dict( "constr" => IndBallInf,
+  Dict( "constr" => IndBallLinf,
         "wrong"  => ( (-rand(),), ),
         "params" => ( (rand(),), ),
         "args"   => ( randn(20), )

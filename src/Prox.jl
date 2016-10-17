@@ -15,7 +15,7 @@ export prox, prox!
 export ProximableFunction
 
 export IndAffine, IndHalfspace,
-       IndBallInf, IndBallL0, IndBallL1, IndBallL2,
+       IndBallLinf, IndBallL0, IndBallL1, IndBallL2,
        IndBallRank,
        IndBox, IndNonnegative, IndNonpositive,
        IndExpPrimal, IndExpDual, IndPSD, IndSOC,
