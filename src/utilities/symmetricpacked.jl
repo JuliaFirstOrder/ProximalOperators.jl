@@ -1,6 +1,6 @@
 import Base.LinAlg: Char, BlasInt, chkstride1
 import Base.LinAlg.LAPACK: chklapackerror
-import Base.LinAlg.BLAS.@blasfunc
+import Compat.@blasfunc
 
 """
     dspev!(jobz::Char, uplo::Char, x::StridedVector{Float64})
