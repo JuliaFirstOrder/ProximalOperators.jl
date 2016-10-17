@@ -39,6 +39,13 @@ abstract IndicatorFunction <: ProximableFunction
 abstract IndicatorConvex <: IndicatorFunction
 
 ################################################################################
+# looks like there are some issues in 0.4
+if VERSION >= v"0.5-"
+  include("utilities/symmetricpacked.jl")
+end
+################################################################################
+
+################################################################################
 # experimental stuff
 abstract SeparableFunction <: ProximableFunction
 abstract ElementwiseFunction <: ProximableFunction
@@ -49,7 +56,6 @@ include("functions/absoluteValue.jl")
 include("calculus/conjugate.jl")
 include("calculus/postcomposition.jl")
 include("calculus/precomposition.jl")
-include("calculus/symmetricpacked.jl")
 
 include("functions/distL2.jl")
 include("functions/elasticNet.jl")

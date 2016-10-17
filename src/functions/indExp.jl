@@ -8,7 +8,7 @@ end
 
 IndExpDual() = IndExpDual(IndExpPrimal())
 
-EXP_CONE_CALL_TOL = 1e-8
+EXP_CONE_CALL_TOL = 1e-6
 
 @compat function (f::IndExpPrimal){R <: Real}(x::AbstractArray{R})
   if (x[2] > 0.0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_CONE_CALL_TOL) ||

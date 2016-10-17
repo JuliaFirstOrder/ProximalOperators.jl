@@ -8,7 +8,6 @@ import Base.LinAlg.BLAS.@blasfunc
 Computes all the eigenvalues and optionally the eigenvectors of a real
 symmetric `n×n` matrix `A` in packed storage. Will corrupt `x`.
 
-
 Arguments:
 
   `jobz`: `'N'` if only eigenvalues, `'V'` if eigenvalues and eigenvectors
@@ -17,11 +16,11 @@ Arguments:
 
   `x`: `A` represented as vector of the lower (upper) n*(n+1)/2 elements, packed columnwise.
 
-
 Returns:
 
   `W,Z` if `jobz == 'V'` or: `W` if `jobz == 'N'` such that `A=Z*diagm(W)*Z'`
 """
+
 function dspev!(jobz::Char, uplo::Char, A::StridedVector{Float64})
     chkstride1(A)
     vecN = length(A)
