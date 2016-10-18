@@ -96,20 +96,20 @@ function prox_naive{T<:Float64}(f::IndPSD, x::AbstractVector{T}, gamma::Real=1.0
     X = Array{T,2}(n,n)
     k = 1
     for j = 1:n, i = j:n                # Store y in M
-        X[i,j] = y[k]                   # Lower half
+        X[i,j] = x[k]                   # Lower half
         if i != j
-            X[j,i] = y[k]               # Strictly upper half
+            X[j,i] = x[k]               # Strictly upper half
         end
         k = k+1
     end
-    X = prox_naive(f, X, gamma)
+    X, v = prox_naive(f, Symmetric(X), gamma)
     y = similar(x)
     k = 1
     for j = 1:n, i = j:n                # Store Lower half of X in y
         y[k] = X[i,j]
         k = k+1
     end
-    return y
+    return y, 0.0
 end
 
 end

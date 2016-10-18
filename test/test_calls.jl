@@ -174,6 +174,15 @@ stuff = [
       )
 ]
 
+if isdefined(Prox, :dspev!)
+stuff = [stuff;
+  Dict( "constr" => IndPSD,
+        "params" => ( (), (), () ),
+        "args"   => ( randn(6), randn(15), randn(55) )
+      )
+]
+end
+
 for i = 1:length(stuff)
   constr = stuff[i]["constr"]
 
@@ -215,7 +224,7 @@ for i = 1:length(stuff)
     # compare with naive implementation
     y_naive, fy_naive = Prox.prox_naive(f, x, gam)
     @test vecnorm(y_naive - y, Inf)/(1+vecnorm(y_naive, Inf)) <= TOL_ASSERT
-    
+
     if Prox.is_prox_exact(f)
       @test fy_naive == fy || abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT
       f_at_y = f(y)
