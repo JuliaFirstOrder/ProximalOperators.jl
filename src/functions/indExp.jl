@@ -8,7 +8,10 @@ end
 
 IndExpDual() = IndExpDual(IndExpPrimal())
 
-EXP_CONE_CALL_TOL = 1e-6
+EXP_PRIMAL_CALL_TOL = 1e-6
+EXP_DUAL_CALL_TOL = 1e-3
+EXP_PROJ_TOL = 1e-15
+EXP_PROJ_MAXIT = 100
 
 @compat function (f::IndExpPrimal){R <: Real}(x::AbstractArray{R})
   if (x[2] > 0.0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_CONE_CALL_TOL) ||
@@ -19,15 +22,12 @@ EXP_CONE_CALL_TOL = 1e-6
 end
 
 @compat function (f::IndExpDual){R <: Real}(x::AbstractArray{R})
-  if (x[1] < 0.0 && -x[1]*exp(x[2]/x[1]) <= exp(1)*x[3]+EXP_CONE_CALL_TOL) ||
-     (abs(x[1]) <= EXP_CONE_CALL_TOL && x[2] >= -EXP_CONE_CALL_TOL && x[3] >= -EXP_CONE_CALL_TOL)
+  if (x[1] < 0.0 && -x[1]*exp(x[2]/x[1]) <= exp(1)*x[3]+EXP_DUAL_CALL_TOL) ||
+     (abs(x[1]) <= EXP_DUAL_CALL_TOL && x[2] >= -EXP_DUAL_CALL_TOL && x[3] >= -EXP_DUAL_CALL_TOL)
     return 0.0
   end
   return +Inf
 end
-
-EXP_CONE_PROJ_TOL = 1e-15
-EXP_CONE_PROJ_MAXIT = 100
 
 function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
   r = x[1]
