@@ -22,10 +22,13 @@ function prox_test(f, x, gamma::Real=1.0)
     @test fy_prealloc == fy || abs(fy_prealloc - fy)/(1+abs(fy)) <= TOL_ASSERT
     @test fy_inplace == fy || abs(fy_inplace - fy)/(1+abs(fy_inplace)) <= TOL_ASSERT
   end
-  
+
   return yf, fy
 end
 
+println("*********************************************************************")
+include("test_utilities.jl")
+println("*********************************************************************")
 include("test_calls.jl")
 println("*********************************************************************")
 include("test_calculus.jl")

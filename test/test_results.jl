@@ -208,7 +208,7 @@ stuff = [
       )
 ]
 
-if isdefined(:dspev!)
+if isdefined(Prox, :dspev!)
 stuff = [stuff;
   Dict( "f"      => IndPSD(),
         "x"      => Float64[1.0, 2.0, 3.0, 2.0, 2.0, 6.0, 2.5, 3.0, 1.5, 1.0],
@@ -241,7 +241,7 @@ for i = 1:length(stuff)
   @test fx == ref_fx || abs(fx-ref_fx)/(1+abs(ref_fx)) <= TOL_ASSERT
   y, fy = prox_test(f, x, gamma)
   @test vecnorm(y-ref_y, Inf)/(1+norm(ref_y, Inf)) <= TOL_ASSERT
-  
+
   if Prox.is_prox_exact(f)
     @test fy == ref_fy || abs(fy-ref_fy)/(1+abs(ref_fy)) <= TOL_ASSERT
   end
