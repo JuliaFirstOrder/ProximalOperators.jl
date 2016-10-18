@@ -96,6 +96,8 @@ fun_type(  f) = "n/a"
 fun_expr(  f) = "n/a"
 fun_params(f) = "n/a"
 
+is_prox_exact(f::ProximableFunction) = true
+
 """
   prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
 
