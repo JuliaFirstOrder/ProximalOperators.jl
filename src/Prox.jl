@@ -38,7 +38,12 @@ abstract NormFunction <: ProximableFunction
 abstract IndicatorFunction <: ProximableFunction
 abstract IndicatorConvex <: IndicatorFunction
 
-include("utilities/symmetricpacked.jl")
+################################################################################
+# looks like there are some issues in 0.4
+if VERSION >= v"0.5-"
+  include("utilities/symmetricpacked.jl")
+end
+################################################################################
 
 ################################################################################
 # experimental stuff
@@ -90,6 +95,8 @@ fun_name(  f) = "n/a"
 fun_type(  f) = "n/a"
 fun_expr(  f) = "n/a"
 fun_params(f) = "n/a"
+
+is_prox_exact(f::ProximableFunction) = true
 
 """
   prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)

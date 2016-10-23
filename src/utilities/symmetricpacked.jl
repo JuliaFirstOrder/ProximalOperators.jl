@@ -45,7 +45,7 @@ function dspev!(jobz::Char, uplo::Char, A::StridedVector{Float64})
 end
 
 function dspevV!(uplo::Char, A::StridedVector{Float64})
-    jobz == 'V'
+    jobz = 'V'
     chkstride1(A)
     vecN = length(A)
     n = try

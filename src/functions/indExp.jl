@@ -8,26 +8,26 @@ end
 
 IndExpDual() = IndExpDual(IndExpPrimal())
 
-EXP_CONE_CALL_TOL = 1e-6
+EXP_PRIMAL_CALL_TOL = 1e-6
+EXP_DUAL_CALL_TOL = 1e-3
+EXP_PROJ_TOL = 1e-15
+EXP_PROJ_MAXIT = 100
 
 @compat function (f::IndExpPrimal){R <: Real}(x::AbstractArray{R})
-  if (x[2] > 0.0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_CONE_CALL_TOL) ||
-     (x[1] <= EXP_CONE_CALL_TOL && abs(x[2]) <= EXP_CONE_CALL_TOL && x[3] >= -EXP_CONE_CALL_TOL)
+  if (x[2] > 0.0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_PRIMAL_CALL_TOL) ||
+     (x[1] <= EXP_PRIMAL_CALL_TOL && abs(x[2]) <= EXP_PRIMAL_CALL_TOL && x[3] >= -EXP_PRIMAL_CALL_TOL)
     return 0.0
   end
   return +Inf
 end
 
 @compat function (f::IndExpDual){R <: Real}(x::AbstractArray{R})
-  if (x[1] < 0.0 && -x[1]*exp(x[2]/x[1]) <= exp(1)*x[3]+EXP_CONE_CALL_TOL) ||
-     (abs(x[1]) <= EXP_CONE_CALL_TOL && x[2] >= -EXP_CONE_CALL_TOL && x[3] >= -EXP_CONE_CALL_TOL)
+  if (x[1] < 0.0 && -x[1]*exp(x[2]/x[1]) <= exp(1)*x[3]+EXP_DUAL_CALL_TOL) ||
+     (abs(x[1]) <= EXP_DUAL_CALL_TOL && x[2] >= -EXP_DUAL_CALL_TOL && x[3] >= -EXP_DUAL_CALL_TOL)
     return 0.0
   end
   return +Inf
 end
-
-EXP_CONE_PROJ_TOL = 1e-15
-EXP_CONE_PROJ_MAXIT = 100
 
 function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
   r = x[1]
@@ -48,7 +48,7 @@ function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray
     # this is the algorithm used in SCS
     v = x
     ub, lb = getRhoUb(x)
-    for iter = 1:EXP_CONE_PROJ_MAXIT
+    for iter = 1:EXP_PROJ_MAXIT
       rho = (ub + lb)/2
       g, v = calcGrad(x,rho)
       if g > 0
@@ -56,7 +56,7 @@ function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray
       else
         ub = rho
       end
-      if ub - lb <= EXP_CONE_PROJ_TOL
+      if ub - lb <= EXP_PROJ_TOL
         break
       end
     end
@@ -104,8 +104,8 @@ function solve_with_rho(v, rho)
 end
 
 function newton_exp_onz(rho, y_hat, z_hat)
-  t = max(-z_hat,EXP_CONE_PROJ_TOL)
-  for iter=1:EXP_CONE_PROJ_MAXIT
+  t = max(-z_hat,EXP_PROJ_TOL)
+  for iter=1:EXP_PROJ_MAXIT
     f = (1.0/rho^2)*t*(t + z_hat) - y_hat/rho + log(t/rho) + 1.0
     fp = (1.0/rho^2)*(2.0*t + z_hat) + 1.0/t
     t = t - f/fp
@@ -115,7 +115,7 @@ function newton_exp_onz(rho, y_hat, z_hat)
     elseif t <= 0
       t = 0
       break
-    elseif abs(f) <= EXP_CONE_PROJ_TOL
+    elseif abs(f) <= EXP_PROJ_TOL
       break
     end
   end
