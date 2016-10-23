@@ -78,7 +78,7 @@ end
 
 function prox!(f::IndPSD, x::AbstractVector{Float64}, y::AbstractVector{Float64}, gamma::Real=1.0)
     y[:] = x              # Copy x since dspev! corrupts input
-    (W, Z) = dspev!('V', 'L', y)
+    (W, Z) = dspevV!('L', y)
     W = max(W, 0)         # NonNeg eigenvalues
     M = Z.*W'             # Equivalent to Z*diagm(W) without constructing W matrix
     M = M*Z'              # Now let M = Z*diagm(W)*Z'
