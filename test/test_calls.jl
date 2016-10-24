@@ -123,6 +123,11 @@ stuff = [
         "args"   => ( Symmetric(randn(5,5)), Symmetric(rand(20,20)) ),
       ),
 
+  Dict( "constr" => IndPSD,
+        "params" => ( (), (), () ),
+        "args"   => ( randn(6), randn(15), randn(55) )
+      ),
+
   Dict( "constr" => IndZero,
         "params" => ( (), () ),
         "args"   => ( randn(10), randn(20) )
@@ -174,15 +179,6 @@ stuff = [
       )
 ]
 
-if isdefined(Prox, :dspev!)
-stuff = [stuff;
-  Dict( "constr" => IndPSD,
-        "params" => ( (), (), () ),
-        "args"   => ( randn(6), randn(15), randn(55) )
-      )
-]
-end
-
 for i = 1:length(stuff)
   constr = stuff[i]["constr"]
 
@@ -202,7 +198,14 @@ for i = 1:length(stuff)
     println(f)
 
 ##### just call f
-    call_test(f, x)
+    try
+      call_test(f, x)
+    catch e
+      if isa(e, MethodError)
+        println("(not defined)")
+        continue
+      end
+    end
 
 ##### compute prox with default gamma
     y, fy = prox_test(f, x)

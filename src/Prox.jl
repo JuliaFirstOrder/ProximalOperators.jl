@@ -39,13 +39,6 @@ abstract IndicatorFunction <: ProximableFunction
 abstract IndicatorConvex <: IndicatorFunction
 
 ################################################################################
-# looks like there are some issues in 0.4
-if VERSION >= v"0.5-"
-  include("utilities/symmetricpacked.jl")
-end
-################################################################################
-
-################################################################################
 # experimental stuff
 abstract SeparableFunction <: ProximableFunction
 abstract ElementwiseFunction <: ProximableFunction
@@ -84,6 +77,8 @@ include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
 
+include("compatibility.jl")
+
 function Base.show(io::IO, f::ProximableFunction)
   println(io, "description : ", fun_name(f))
   println(io, "type        : ", fun_type(f))
@@ -119,14 +114,14 @@ end
   prox!(f::ProximableFunction, x::AbstractArray, y::AbstractArray, γ::Real=1.0)
 
 Computes the proximal point of `x` with respect to function `f`
-and parameter `γ > 0`, and writes the result in `y`. Returns f(y)`.
+and parameter `γ > 0`, and writes the result in `y`. Returns `f(y)`.
 """
 
 function prox!(f::ProximableFunction, x::AbstractArray, y::AbstractArray, gamma::Real=1.0)
-  error(
+  throw(MethodException(
     "prox! is not implemented for f::", typeof(f),
     ", x::", typeof(x), ", y::", typeof(y), ", gamma::", typeof(gamma)
-  )
+  ))
 end
 
 """
@@ -137,7 +132,7 @@ and parameter `γ > 0` *in place*, that is
 
   x ← argmin_z { f(z) + 1/(2γ)||z-x||^2 }
 
-and returns f(x)`.
+and returns `f(x)`.
 """
 
 prox!(f::ProximableFunction, x::AbstractArray, gamma::Real=1.0) = prox!(f, x, x, gamma)
