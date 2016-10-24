@@ -46,6 +46,7 @@ function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray
     y[3] = max(x[3], 0.0)
   else
     # this is the algorithm used in SCS
+    # Copyright (c) 2012 Brendan O'Donoghue (bodonoghue85@gmail.com)
     v = x
     ub, lb = getRhoUb(x)
     for iter = 1:EXP_PROJ_MAXIT
