@@ -1,8 +1,8 @@
-# Prox.jl - library of nonsmooth functions and associated proximal mappings
+# ProximalOperators.jl - library of nonsmooth functions and associated proximal mappings
 
 __precompile__()
 
-module Prox
+module ProximalOperators
 
 using Compat
 import Compat.String

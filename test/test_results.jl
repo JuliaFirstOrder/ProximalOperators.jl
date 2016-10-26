@@ -248,7 +248,7 @@ for i = 1:length(stuff)
   y, fy = prox_test(f, x, gamma)
   @test vecnorm(y-ref_y, Inf)/(1+norm(ref_y, Inf)) <= TOL_ASSERT
 
-  if Prox.is_prox_exact(f)
+  if ProximalOperators.is_prox_exact(f)
     @test fy == ref_fy || abs(fy-ref_fy)/(1+abs(ref_fy)) <= TOL_ASSERT
   end
 

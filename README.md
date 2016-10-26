@@ -1,21 +1,17 @@
-# Prox.jl
-
-[![Build Status](https://travis-ci.org/kul-forbes/Prox.jl.svg?branch=master)](https://travis-ci.org/kul-forbes/Prox.jl)
-[![Build status](https://ci.appveyor.com/api/projects/status/00rk6ip0y0t2wj8t?svg=true)](https://ci.appveyor.com/project/lostella/prox-jl)
-[![Coverage Status](https://coveralls.io/repos/github/kul-forbes/Prox.jl/badge.svg?branch=master)](https://coveralls.io/github/kul-forbes/Prox.jl?branch=master)
+# ProximalOperators.jl
 
 Proximal operators for nonsmooth optimization in Julia.
 This package can be used to easily implement proximal algorithms for convex and nonconvex optimization problems such as ADMM, the alternating direction method of multipliers.
 
 ## Installation
 
-From the Julia command line `Pkg.clone("https://github.com/kul-forbes/Prox.jl.git")`.
+From the Julia command line `Pkg.clone("https://github.com/kul-forbes/ProximalOperators.jl.git")`.
 Use `Pkg.update()` to keep the package up to date.
 
 ## Usage
 
-With `using Prox` the package exports the `prox` and `prox!` methods to evaluate the proximal mapping of several functions.
-Such functions can be instantiated using *constructors*: the available constructors are listed [here](https://github.com/kul-forbes/Prox.jl/blob/master/FUNCTIONS.md).
+With `using ProximalOperators` the package exports the `prox` and `prox!` methods to evaluate the proximal mapping of several functions.
+Such functions can be instantiated using *constructors*: the available constructors are listed [here](https://github.com/kul-forbes/ProximalOperators.jl/blob/master/FUNCTIONS.md).
 For example, you can create the L1-norm as follows.
 
 ```julia
@@ -53,7 +49,7 @@ julia> fy = prox!(f, x, y, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
 ## Contributing
 
 If you wish to contribute to the repository,
-see the [to do list](https://github.com/kul-forbes/Prox.jl/blob/master/TODO.md).
+see the [to do list](https://github.com/kul-forbes/ProximalOperators.jl/blob/master/TODO.md).
 
 ## References
 
@@ -62,7 +58,7 @@ Foundations and Trends in Optimization 1, 3 (2014), 127-239.
 
 ## Credits
 
-Prox.jl is developed by
+ProximalOperators.jl is developed by
 [Lorenzo Stella](https://lostella.github.io)
 and [Niccolò Antonello](http://homes.esat.kuleuven.be/~nantonel/)
 at [KU Leuven, ESAT/Stadius](https://www.esat.kuleuven.be/stadius/).

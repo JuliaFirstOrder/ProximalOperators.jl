@@ -2,7 +2,7 @@
 # dspev!
 ############
 
-if isdefined(Prox, :dspev!) && isdefined(Prox, :dspevV!)
+if isdefined(ProximalOperators, :dspev!) && isdefined(ProximalOperators, :dspevV!)
 
 println("testing dspev!")
 
@@ -13,8 +13,8 @@ Z_ref = [0.9486832980505137	0.17781910596911388	-0.26149639682478454;
   -0.3162277660168381	0.5334573179073402	-0.7844891904743537]
 A_ref = [1.0 2.0 3.0; 2.0 5.0 6.0; 3.0 6.0 9.0]
 
-a_copy = copy(a); W1, Z1 = Prox.dspev!('V','L',a_copy)
-a_copy = copy(a); W2, Z2 = Prox.dspevV!('L',a_copy)
+a_copy = copy(a); W1, Z1 = ProximalOperators.dspev!('V','L',a_copy)
+a_copy = copy(a); W2, Z2 = ProximalOperators.dspevV!('L',a_copy)
 
 A1 = Z1*diagm(W1)*Z1'
 A2 = Z2*diagm(W2)*Z2'
