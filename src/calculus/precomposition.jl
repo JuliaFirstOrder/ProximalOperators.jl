@@ -45,3 +45,5 @@ function prox!{T <: RealOrComplex, R <: Real}(g::Precomposition, x::AbstractArra
   y[:] ./= g.a
   return v
 end
+
+is_prox_accurate(f::Precomposition) = is_prox_accurate(f.f)

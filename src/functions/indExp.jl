@@ -1,7 +1,7 @@
 # indicator of the (primal) exponential cone
 # the dual exponential cone is obtained through calculus rules
 
-immutable IndExpPrimal <: IndicatorConvex end
+immutable IndExpPrimal <: IndicatorConvexCone end
 
 typealias IndExpDual Precomposition{Conjugate{IndExpPrimal}}
 IndExpDual() = Precomposition(Conjugate(IndExpPrimal()), -1.0)

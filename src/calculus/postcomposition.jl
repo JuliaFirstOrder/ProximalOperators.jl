@@ -28,3 +28,5 @@ function prox_naive{T <: RealOrComplex}(g::Postcomposition, x::AbstractArray{T},
   y, v = prox_naive(g.f, x, g.a * gamma)
   return y, g.a * v + g.b
 end
+
+is_prox_accurate(f::Postcomposition) = is_prox_accurate(f.f)

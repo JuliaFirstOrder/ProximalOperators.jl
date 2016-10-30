@@ -214,7 +214,7 @@ for i = 1:length(stuff)
     y_naive, fy_naive = ProximalOperators.prox_naive(f, x)
     @test vecnorm(y_naive - y, Inf)/(1+vecnorm(y_naive, Inf)) <= TOL_ASSERT
 
-    if ProximalOperators.is_prox_exact(f)
+    if ProximalOperators.is_prox_accurate(f)
       @test fy_naive == fy || abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT
       f_at_y = f(y)
       @test f_at_y == fy || abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT
@@ -228,7 +228,7 @@ for i = 1:length(stuff)
     y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gam)
     @test vecnorm(y_naive - y, Inf)/(1+vecnorm(y_naive, Inf)) <= TOL_ASSERT
 
-    if ProximalOperators.is_prox_exact(f)
+    if ProximalOperators.is_prox_accurate(f)
       @test fy_naive == fy || abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT
       f_at_y = f(y)
       @test f_at_y == fy || abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT

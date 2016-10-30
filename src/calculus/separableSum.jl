@@ -35,3 +35,5 @@ function prox!{T <: RealOrComplex, R <: Real}(f::SeparableSum, x::AbstractArray{
   end
   return v
 end
+
+is_prox_accurate(f::SeparableSum) = is_prox_accurate(f.g)

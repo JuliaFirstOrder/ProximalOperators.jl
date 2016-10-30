@@ -18,7 +18,7 @@ function prox_test(f, x, gamma::Real=1.0)
   @test vecnorm(yf_prealloc - yf, Inf)/(1+vecnorm(yf, Inf)) <= TOL_ASSERT
   @test vecnorm(yf_inplace - yf, Inf)/(1+vecnorm(yf, Inf)) <= TOL_ASSERT
 
-  if ProximalOperators.is_prox_exact(f)
+  if ProximalOperators.is_prox_accurate(f)
     @test fy_prealloc == fy || abs(fy_prealloc - fy)/(1+abs(fy)) <= TOL_ASSERT
     @test fy_inplace == fy || abs(fy_inplace - fy)/(1+abs(fy_inplace)) <= TOL_ASSERT
   end

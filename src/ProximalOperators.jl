@@ -36,6 +36,7 @@ abstract ProximableFunction
 abstract NormFunction <: ProximableFunction
 abstract IndicatorFunction <: ProximableFunction
 abstract IndicatorConvex <: IndicatorFunction
+abstract IndicatorConvexCone <: IndicatorConvex
 
 ################################################################################
 # experimental stuff
@@ -90,7 +91,7 @@ fun_type(  f) = "n/a"
 fun_expr(  f) = "n/a"
 fun_params(f) = "n/a"
 
-is_prox_exact(f::ProximableFunction) = true
+is_prox_accurate(f::ProximableFunction) = true
 
 """
   prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
