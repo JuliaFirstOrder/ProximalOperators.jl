@@ -5,7 +5,6 @@ __precompile__()
 module ProximalOperators
 
 using Compat
-import Compat.String
 
 typealias RealOrComplex Union{Real, Complex}
 typealias HermOrSym{T,S} Union{Hermitian{T,S}, Symmetric{T,S}}
