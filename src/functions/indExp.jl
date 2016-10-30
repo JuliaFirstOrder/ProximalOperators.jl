@@ -1,15 +1,13 @@
 # indicator of the (primal) exponential cone
+# the dual exponential cone is obtained through calculus rules
 
 immutable IndExpPrimal <: IndicatorConvex end
 
-immutable IndExpDual <: IndicatorConvex
-  g::IndExpPrimal
-end
-
-IndExpDual() = IndExpDual(IndExpPrimal())
+typealias IndExpDual Precomposition{Conjugate{IndExpPrimal}}
+IndExpDual() = Precomposition(Conjugate(IndExpPrimal()), -1.0)
 
 EXP_PRIMAL_CALL_TOL = 1e-6
-EXP_DUAL_CALL_TOL = 1e-3
+EXP_POLAR_CALL_TOL = 1e-3
 EXP_PROJ_TOL = 1e-15
 EXP_PROJ_MAXIT = 100
 
@@ -21,13 +19,38 @@ EXP_PROJ_MAXIT = 100
   return +Inf
 end
 
-@compat function (f::IndExpDual){R <: Real}(x::AbstractArray{R})
-  if (x[1] < 0.0 && -x[1]*exp(x[2]/x[1]) <= exp(1)*x[3]+EXP_DUAL_CALL_TOL) ||
-     (abs(x[1]) <= EXP_DUAL_CALL_TOL && x[2] >= -EXP_DUAL_CALL_TOL && x[3] >= -EXP_DUAL_CALL_TOL)
+@compat function (f::Conjugate{IndExpPrimal}){R <: Real}(x::AbstractArray{R})
+  if (x[1] > 0.0 && x[1]*exp(x[2]/x[1]) <= -exp(1)*x[3]+EXP_POLAR_CALL_TOL) ||
+     (abs(x[1]) <= EXP_POLAR_CALL_TOL && x[2] <= EXP_POLAR_CALL_TOL && x[3] <= EXP_POLAR_CALL_TOL)
     return 0.0
   end
   return +Inf
 end
+
+# Projection onto the cone is performed as in SCS (https://github.com/cvxgrp/scs).
+# See the following copyright and permission notices.
+
+# The MIT License (MIT)
+#
+# Copyright (c) 2012 Brendan O'Donoghue (bodonoghue85@gmail.com)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
   r = x[1]
@@ -45,8 +68,6 @@ function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray
     y[2] = max(x[2], 0.0)
     y[3] = max(x[3], 0.0)
   else
-    # this is the algorithm used in SCS
-    # Copyright (c) 2012 Brendan O'Donoghue (bodonoghue85@gmail.com)
     v = x
     ub, lb = getRhoUb(x)
     for iter = 1:EXP_PROJ_MAXIT
@@ -63,13 +84,6 @@ function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, y::AbstractArray
     end
     y[:] = v
   end
-  return 0.0
-end
-
-function prox!{R <: Real}(f::IndExpDual, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
-  x_copy = copy(x)
-  prox!(f.g, -x, y)
-  y[:] += x_copy
   return 0.0
 end
 
@@ -135,7 +149,7 @@ fun_expr(f::IndExpDual) = "x ↦ 0 if x ∈ cl{(u,v,w) : u < 0, -u*exp(v/u) ⩽ 
 fun_params(f::IndExpDual) = "none"
 
 prox_naive{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, gamma::Real=1.0) =
-  prox(f, x, gamma)
+  prox(f, x, gamma) # we don't have a much simpler way to do this yet
 
 prox_naive{R <: Real}(f::IndExpDual, x::AbstractArray{R}, gamma::Real=1.0) =
-  prox(f, x, gamma)
+  prox(f, x, gamma) # we don't have a much simpler way to do this yet
