@@ -40,7 +40,7 @@ end
 end
 
 function prox!{S <: AbstractArray, T <: Real}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  fy = zero(T)
+  fy = zero(Real)
   for i in eachindex(x)
     gl = gamma*f.lambda[i]
     y[i] = x[i] + (x[i] <= -gl ? gl : (x[i] >= gl ? -gl : -x[i]))
@@ -49,7 +49,7 @@ function prox!{S <: AbstractArray, T <: Real}(f::NormL1{S}, x::AbstractArray{T},
 end
 
 function prox!{S <: AbstractArray, T <: Complex}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  fy = zero(T)
+  fy = zero(Real)
   for i in eachindex(x)
     gl = gamma*f.lambda[i]
     y[i] = sign(x[i])*(abs(x[i]) <= gl ? 0 : abs(x[i]) - gl)
@@ -58,7 +58,7 @@ function prox!{S <: AbstractArray, T <: Complex}(f::NormL1{S}, x::AbstractArray{
 end
 
 function prox!{S <: Real, T <: Real}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  n1y = zero(T)
+  n1y = zero(Real)
   gl = gamma*f.lambda
   for i in eachindex(x)
     y[i] = x[i] + (x[i] <= -gl ? gl : (x[i] >= gl ? -gl : -x[i]))
@@ -69,7 +69,7 @@ end
 
 function prox!{S <: Real, T <: Complex}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   gl = gamma*f.lambda
-  n1y = zero(T)
+  n1y = zero(Real)
   for i in eachindex(x)
     y[i] = sign(x[i])*(abs(x[i]) <= gl ? 0 : abs(x[i]) - gl)
     n1y += abs(y[i])
