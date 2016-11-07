@@ -35,7 +35,7 @@ function prox!{T <: RealOrComplex}(f::NormL0, x::AbstractArray{T}, y::AbstractAr
 end
 
 fun_name(f::NormL0) = "weighted L0 pseudo-norm"
-fun_type(f::NormL0) = "Array{Complex} → Real"
+fun_dom(f::NormL0) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::NormL0) = "x ↦ λ countnz(x)"
 fun_params(f::NormL0) = "λ = $(f.lambda)"
 

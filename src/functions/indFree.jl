@@ -27,7 +27,7 @@ function prox!(f::IndFree, x::AbstractArray, y::AbstractArray, gamma::Real=1.0)
 end
 
 fun_name(f::IndFree) = "indicator of the free cone"
-fun_type(f::IndFree) = "Array{Complex} → Real ∪ {+∞}"
+fun_dom(f::IndFree) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndFree) = "x ↦ 0"
 fun_params(f::IndFree) = "none"
 

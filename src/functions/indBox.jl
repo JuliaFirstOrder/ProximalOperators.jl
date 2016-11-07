@@ -90,7 +90,7 @@ Returns the indicator function the nonpositive orthant, that is
 IndNonpositive() = IndBox(-Inf, 0.0)
 
 fun_name(f::IndBox) = "indicator of a box"
-fun_type(f::IndBox) = "Array{Real} → Real ∪ {+∞}"
+fun_dom(f::IndBox) = "AbstractArray{Real}"
 fun_expr(f::IndBox) = "x ↦ 0 if all(lb ⩽ x ⩽ ub), +∞ otherwise"
 fun_params(f::IndBox) =
   string( "lb = ", typeof(f.lb) <: AbstractArray ? string(typeof(f.lb), " of size ", size(f.lb)) : f.lb, ", ",

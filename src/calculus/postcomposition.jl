@@ -13,6 +13,8 @@ immutable Postcomposition{T <: ProximableFunction, S <: Real} <: ProximableFunct
   end
 end
 
+fun_dom(f::Postcomposition) = fun_dom(f.f)
+
 Postcomposition{T <: ProximableFunction, S <: Real}(f::T, a::S=1.0, b::S=0.0) = Postcomposition{T, S}(f, a, b)
 
 @compat function (g::Postcomposition){T <: RealOrComplex}(x::AbstractArray{T})

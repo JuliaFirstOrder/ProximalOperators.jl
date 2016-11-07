@@ -31,7 +31,7 @@ function prox!{T <: RealOrComplex}(f::SqrDistL2, x::AbstractArray{T}, y::Abstrac
 end
 
 fun_name(f::SqrDistL2) = "squared Euclidean distance from a convex set"
-fun_type(f::SqrDistL2) = "Array{Complex} → Real"
+fun_dom(f::SqrDistL2) = fun_dom(f.ind)
 fun_expr(f::SqrDistL2) = "x ↦ (λ/2) inf { ||x-y||^2 : y ∈ S} "
 fun_params(f::SqrDistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 

@@ -120,7 +120,7 @@ end
 end
 
 fun_name(f::IndBallRank) = "indicator of the set of rank-r matrices"
-fun_type(f::IndBallRank) = "Array{Complex,2} → Real ∪ {+∞}"
+fun_dom(f::IndBallRank) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
 fun_expr(f::IndBallRank) = "x ↦ 0 if rank(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallRank) = "r = $(f.r)"
 

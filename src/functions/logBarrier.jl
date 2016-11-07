@@ -49,7 +49,7 @@ function prox!{T <: Real}(f::LogBarrier, x::AbstractArray{T,1}, y::AbstractArray
 end
 
 fun_name(f::LogBarrier) = "logarithmic barrier"
-fun_type(f::LogBarrier) = "Array{Real} → Real ∪ {+∞}"
+fun_dom(f::LogBarrier) = "AbstractArray{Real}"
 fun_expr(f::LogBarrier) = "x ↦ -μ * sum( log(a*x_i+b), i=1,...,n )"
 fun_params(f::LogBarrier) = "a = $(f.a), b = $(f.b), μ = $(f.mu)"
 

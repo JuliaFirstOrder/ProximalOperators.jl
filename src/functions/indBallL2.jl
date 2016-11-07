@@ -39,7 +39,7 @@ function prox!{T <: RealOrComplex}(f::IndBallL2, x::AbstractArray{T}, y::Abstrac
 end
 
 fun_name(f::IndBallL2) = "indicator of an L2 norm ball"
-fun_type(f::IndBallL2) = "Array{Complex} → Real ∪ {+∞}"
+fun_dom(f::IndBallL2) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL2) = "x ↦ 0 if ||x|| ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL2) = "r = $(f.r)"
 

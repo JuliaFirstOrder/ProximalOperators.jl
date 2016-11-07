@@ -26,7 +26,7 @@ IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T,1}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
   # TODO: a faster algorithm
   if vecnorm(x,1) - f.r < 1e-14
     y[:] = x[:]
@@ -55,7 +55,7 @@ function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T,1}, y::Abstr
 end
 
 fun_name(f::IndBallL1) = "indicator of an L1 norm ball"
-fun_type(f::IndBallL1) = "Array{Complex,1} → Real ∪ {+∞}"
+fun_dom(f::IndBallL1) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"
 fun_expr(f::IndBallL1) = "x ↦ 0 if ‖x‖_1 ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL1) = "r = $(f.r)"
 

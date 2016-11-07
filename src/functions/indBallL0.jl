@@ -19,14 +19,14 @@ end
 
 IndBallL0{I <: Integer}(r::I) = IndBallL0{I}(r)
 
-@compat function (f::IndBallL0){T <: RealOrComplex}(x::AbstractArray{T})
+@compat function (f::IndBallL0){T <: RealOrComplex}(x::AbstractArray{T,1})
   if countnz(x) > f.r
     return +Inf
   end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndBallL0, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(f::IndBallL0, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
   p = sortperm(abs(x)[:], rev=true)
   y[p[1:f.r]] = x[p[1:f.r]]
   y[p[f.r+1:end]] = 0
@@ -34,7 +34,7 @@ function prox!{T <: RealOrComplex}(f::IndBallL0, x::AbstractArray{T}, y::Abstrac
 end
 
 fun_name(f::IndBallL0) = "indicator of an L0 pseudo-norm ball"
-fun_type(f::IndBallL0) = "Array{Complex} → Real ∪ {+∞}"
+fun_dom(f::IndBallL0) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"
 fun_expr(f::IndBallL0) = "x ↦ 0 if countnz(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL0) = "r = $(f.r)"
 

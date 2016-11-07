@@ -36,7 +36,7 @@ function prox!{T <: Real}(f::HingeLoss, x::AbstractArray{T}, y::AbstractArray{T}
 end
 
 fun_name(f::HingeLoss) = "hinge loss"
-fun_type(f::HingeLoss) = "Array{Real} → Real"
+fun_dom(f::HingeLoss) = "AbstractArray{Real}"
 fun_expr(f::HingeLoss) = "x ↦ μ * sum( max(0, 1 - b_i*x_i), i=1,...,n )"
 fun_params(f::HingeLoss) = string("b = ", typeof(f.b), " of size ", size(f.b), ", μ = $(f.mu)")
 

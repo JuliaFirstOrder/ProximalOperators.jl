@@ -51,7 +51,7 @@ function prox!{T <: Complex}(f::ElasticNet, x::AbstractArray{T}, y::AbstractArra
 end
 
 fun_name(f::ElasticNet) = "elastic-net regularization"
-fun_type(f::ElasticNet) = "Array{Complex} → Real"
+fun_dom(f::ElasticNet) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||^2"
 fun_params(f::ElasticNet) = "μ = $(f.mu), λ = $(f.lambda)"
 

@@ -1,10 +1,11 @@
 # indicator of a PSD
 
 """
-  IndPSD(a::HermOrSym{T})
+  IndPSD()
 
-Returns the function `g = ind{A : A ⪰ 0}`, i.e. an indicator of
-positive semidefinite cone
+Returns the function `g = ind{A : A ⪰ 0}`, i.e. the indicator of the positive semidefinite cone.
+The argument to the function can be either a Symmetric or Hermitian object.
+From Julia 0.5, the argument can also be an AbstractVector{Float64} holding a symmetric matrix in (lower triangular) packed storage.
 """
 
 immutable IndPSD <: IndicatorConvex end
@@ -30,7 +31,7 @@ function prox!{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, Y::HermOrSym{T}, 
 end
 
 fun_name(f::IndPSD) = "indicator of positive semidefinite cone"
-fun_type(f::IndPSD) = "HermOrSym → Real ∪ {+∞}"
+fun_dom(f::IndPSD) = "Symmetric, Hermitian, AbstractArray{Float64}"
 fun_expr(f::IndPSD) = "x ↦ 0 if A ⪰ 0, +∞ otherwise"
 fun_params(f::IndPSD) = "none"
 

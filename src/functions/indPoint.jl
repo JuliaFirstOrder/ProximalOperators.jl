@@ -29,7 +29,7 @@ function prox!{T <: RealOrComplex}(f::IndPoint, x::AbstractArray{T}, y::Abstract
 end
 
 fun_name(f::IndPoint) = "indicator of a point"
-fun_type(f::IndPoint) = "Array{Real} → Real ∪ {+∞}"
+fun_dom(f::IndPoint) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndPoint) = "x ↦ 0 if x = p, +∞ otherwise"
 fun_params(f::IndPoint) =
   string( "p = ", typeof(f.p) <: AbstractArray ? string(typeof(f.p), " of size ", size(f.p)) : f.p, ", ")

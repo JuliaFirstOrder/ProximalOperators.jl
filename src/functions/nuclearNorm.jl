@@ -36,7 +36,7 @@ function prox!{T <: RealOrComplex}(f::NuclearNorm, X::AbstractArray{T,2}, Y::Abs
 end
 
 fun_name(f::NuclearNorm) = "nuclear norm"
-fun_type(f::NuclearNorm) = "Array{Complex,2} → Real"
+fun_dom(f::NuclearNorm) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
 fun_expr(f::NuclearNorm) = "X ↦ λ∑σ_i(X)"
 fun_params(f::NuclearNorm) = "λ = $(f.lambda)"
 

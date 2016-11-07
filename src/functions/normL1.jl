@@ -20,7 +20,7 @@ end
 Returns the function `g(x) = λ||x||_1`, for a real parameter `λ ⩾ 0`.
 """
 
-NormL1{T <: Real}(lambda::T=1.0) = NormL1{T}(lambda)
+NormL1{R <: Real}(lambda::R=1.0) = NormL1{R}(lambda)
 
 """
   NormL1(λ::Array{Real})
@@ -29,18 +29,18 @@ Returns the function `g(x) = sum(λ_i|x_i|, i = 1,...,n)`, for a vector of real
 parameters `λ_i ⩾ 0`.
 """
 
-NormL1{T <: AbstractArray}(lambda::T) = NormL1{T}(lambda)
+NormL1{A <: AbstractArray}(lambda::A) = NormL1{A}(lambda)
 
-@compat function (f::NormL1{S}){S <: Real, T <: RealOrComplex}(x::AbstractArray{T})
+@compat function (f::NormL1{R}){R <: Real}(x::AbstractArray)
   return f.lambda*vecnorm(x,1)
 end
 
-@compat function (f::NormL1{S}){S <: AbstractArray, T <: RealOrComplex}(x::AbstractArray{T})
+@compat function (f::NormL1{A}){A <: AbstractArray}(x::AbstractArray)
   return vecnorm(f.lambda.*x,1)
 end
 
-function prox!{S <: AbstractArray, T <: Real}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  fy = zero(Real)
+function prox!{A <: AbstractArray, R <: Real}(f::NormL1{A}, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
+  fy = zero(R)
   for i in eachindex(x)
     gl = gamma*f.lambda[i]
     y[i] = x[i] + (x[i] <= -gl ? gl : (x[i] >= gl ? -gl : -x[i]))
@@ -48,8 +48,8 @@ function prox!{S <: AbstractArray, T <: Real}(f::NormL1{S}, x::AbstractArray{T},
   return sum(f.lambda .* abs(y))
 end
 
-function prox!{S <: AbstractArray, T <: Complex}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  fy = zero(Real)
+function prox!{A <: AbstractArray, R <: Real}(f::NormL1{A}, x::AbstractArray{Complex{R}}, y::AbstractArray{Complex{R}}, gamma::Real=1.0)
+  fy = zero(R)
   for i in eachindex(x)
     gl = gamma*f.lambda[i]
     y[i] = sign(x[i])*(abs(x[i]) <= gl ? 0 : abs(x[i]) - gl)
@@ -57,8 +57,8 @@ function prox!{S <: AbstractArray, T <: Complex}(f::NormL1{S}, x::AbstractArray{
   return sum(f.lambda .* abs(y))
 end
 
-function prox!{S <: Real, T <: Real}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  n1y = zero(Real)
+function prox!{T <: Real, R <: Real}(f::NormL1{T}, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
+  n1y = zero(R)
   gl = gamma*f.lambda
   for i in eachindex(x)
     y[i] = x[i] + (x[i] <= -gl ? gl : (x[i] >= gl ? -gl : -x[i]))
@@ -67,9 +67,9 @@ function prox!{S <: Real, T <: Real}(f::NormL1{S}, x::AbstractArray{T}, y::Abstr
   return f.lambda*n1y
 end
 
-function prox!{S <: Real, T <: Complex}(f::NormL1{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: Real, R <: Real}(f::NormL1{T}, x::AbstractArray{Complex{R}}, y::AbstractArray{Complex{R}}, gamma::Real=1.0)
   gl = gamma*f.lambda
-  n1y = zero(Real)
+  n1y = zero(R)
   for i in eachindex(x)
     y[i] = sign(x[i])*(abs(x[i]) <= gl ? 0 : abs(x[i]) - gl)
     n1y += abs(y[i])
@@ -78,11 +78,11 @@ function prox!{S <: Real, T <: Complex}(f::NormL1{S}, x::AbstractArray{T}, y::Ab
 end
 
 fun_name(f::NormL1) = "weighted L1 norm"
-fun_type(f::NormL1) = "Array{Complex} → Real"
-fun_expr{T <: Real}(f::NormL1{T}) = "x ↦ λ||x||_1"
-fun_expr{T <: AbstractArray}(f::NormL1{T}) = "x ↦ sum( λ_i |x_i| )"
-fun_params{T <: Real}(f::NormL1{T}) = "λ = $(f.lambda)"
-fun_params{T <: AbstractArray}(f::NormL1{T}) = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
+fun_dom(f::NormL1) = "AbstractArray{Real}, AbstractArray{Complex}"
+fun_expr{R <: Real}(f::NormL1{R}) = "x ↦ λ||x||_1"
+fun_expr{A <: AbstractArray}(f::NormL1{A}) = "x ↦ sum( λ_i |x_i| )"
+fun_params{R <: Real}(f::NormL1{R}) = "λ = $(f.lambda)"
+fun_params{A <: AbstractArray}(f::NormL1{A}) = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
 
 function prox_naive{T <: RealOrComplex}(f::NormL1, x::AbstractArray{T}, gamma::Real=1.0)
   y = sign(x).*max(0.0, abs(x)-gamma*f.lambda)

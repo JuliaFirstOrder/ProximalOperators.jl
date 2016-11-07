@@ -50,7 +50,7 @@ function prox!{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, y::AbstractArray
 end
 
 fun_name(f::IndSimplex) = "indicator of the probability simplex"
-fun_type(f::IndSimplex) = "Array{Real,1} → Real ∪ {+∞}"
+fun_dom(f::IndSimplex) = "AbstractArray{Real,1}"
 fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = a, +∞ otherwise"
 fun_params(f::IndSimplex) = "a = $(f.a)"
 

@@ -32,7 +32,7 @@ function prox!{T <: Real}(f::IndSOC, x::AbstractArray{T,1}, y::AbstractArray{T,1
 end
 
 fun_name(f::IndSOC) = "indicator of a second-order cone"
-fun_type(f::IndSOC) = "Array{Real,1} → Real ∪ {+∞}"
+fun_dom(f::IndSOC) = "AbstractArray{Real,1}"
 fun_expr(f::IndSOC) = "x ↦ 0 if x[1] >= ||x[2:end]||, +∞ otherwise"
 fun_params(f::IndSOC) = "none"
 

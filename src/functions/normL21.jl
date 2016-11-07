@@ -82,7 +82,7 @@ function prox!{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, Y::Abstrac
 end
 
 fun_name(f::NormL21) = "sum of Euclidean norms"
-fun_type(f::NormL21) = "Array{Complex,2} → Real"
+fun_dom(f::NormL21) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
 fun_expr(f::NormL21) = "x ↦ λsum(||x_i||)"
 fun_params(f::NormL21) = "λ = $(f.lambda), dim = $(f.dim)"
 

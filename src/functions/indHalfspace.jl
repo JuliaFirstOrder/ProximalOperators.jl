@@ -38,7 +38,7 @@ function prox!{T <: Real}(f::IndHalfspace, x::AbstractArray{T}, y::AbstractArray
 end
 
 fun_name(f::IndHalfspace) = "indicator of a halfspace"
-fun_type(f::IndHalfspace) = "Array{Real} → Real ∪ {+∞}"
+fun_dom(f::IndHalfspace) = "AbstractArray{Real}"
 fun_expr(f::IndHalfspace) = "x ↦ 0 if <a,x> ⩽ b, +∞ otherwise"
 fun_params(f::IndHalfspace) =
   string( "a = ", typeof(f.a), " of size ", size(f.a), ", ",

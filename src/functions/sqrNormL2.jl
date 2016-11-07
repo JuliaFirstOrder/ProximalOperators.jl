@@ -59,7 +59,7 @@ function prox!{S <: AbstractArray, T <: RealOrComplex}(f::SqrNormL2{S}, x::Abstr
 end
 
 fun_name(f::SqrNormL2) = "weighted squared Euclidean norm"
-fun_type(f::SqrNormL2) = "Array{Complex} → Real"
+fun_dom(f::SqrNormL2) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr{T <: Real}(f::SqrNormL2{T}) = "x ↦ (λ/2)||x||^2"
 fun_expr{T <: AbstractArray}(f::SqrNormL2{T}) = "x ↦ (1/2)sum( λ_i (x_i)^2 )"
 fun_params{T <: Real}(f::SqrNormL2{T}) = "λ = $(f.lambda)"

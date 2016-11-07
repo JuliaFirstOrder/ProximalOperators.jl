@@ -47,7 +47,7 @@ function prox!{T <: RealOrComplex}(f::IndAffine, x::AbstractArray{T,1}, y::Abstr
 end
 
 fun_name(f::IndAffine) = "indicator of an affine subspace"
-fun_type(f::IndAffine) = "Array{Complex} → Real ∪ {+∞}"
+fun_dom(f::IndAffine) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"
 fun_expr(f::IndAffine) = "x ↦ 0 if Ax = b, +∞ otherwise"
 fun_params(f::IndAffine) =
   string( "A = ", typeof(f.A), " of size ", size(f.A), ", ",

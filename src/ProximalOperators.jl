@@ -57,7 +57,6 @@ include("functions/normL2.jl")
 include("functions/normL1.jl")
 include("functions/normL21.jl")
 include("functions/normL0.jl")
-include("functions/normLinf.jl")
 include("functions/nuclearNorm.jl")
 include("functions/hingeLoss.jl")
 include("functions/indAffine.jl")
@@ -76,18 +75,19 @@ include("functions/indSphereL2.jl")
 include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
+include("functions/normLinf.jl")
 
 include("compatibility.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
   println(io, "description : ", fun_name(f))
-  println(io, "type        : ", fun_type(f))
+  println(io, "domain      : ", fun_dom(f))
   println(io, "expression  : ", fun_expr(f))
   print(  io, "parameters  : ", fun_params(f))
 end
 
 fun_name(  f) = "n/a"
-fun_type(  f) = "n/a"
+fun_dom(   f) = "n/a"
 fun_expr(  f) = "n/a"
 fun_params(f) = "n/a"
 

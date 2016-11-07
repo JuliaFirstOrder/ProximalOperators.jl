@@ -20,7 +20,7 @@ For example, you can create the L1-norm as follows.
 
 ```julia
 julia> f = NormL1(3.5)
-description : L1 norm
+description : weighted L1 norm
 type        : Array{Complex} → Real
 expression  : x ↦ λ||x||_1
 parameters  : λ = 3.5

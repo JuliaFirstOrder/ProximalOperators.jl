@@ -19,7 +19,7 @@ end
 
 NormL2{R <: Real}(lambda::R=1.0) = NormL2{R}(lambda)
 
-@compat function (f::NormL2){T <: RealOrComplex}(x::AbstractArray{T})
+@compat function (f::NormL2)(x::AbstractArray)
   return f.lambda*vecnorm(x)
 end
 
@@ -33,7 +33,7 @@ function prox!{T <: RealOrComplex}(f::NormL2, x::AbstractArray{T}, y::AbstractAr
 end
 
 fun_name(f::NormL2) = "Euclidean norm"
-fun_type(f::NormL2) = "Array{Complex} → Real"
+fun_dom(f::NormL2) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::NormL2) = "x ↦ λ||x||_2"
 fun_params(f::NormL2) = "λ = $(f.lambda)"
 
