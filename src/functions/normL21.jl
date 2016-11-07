@@ -29,7 +29,7 @@ NormL21{R <: Real, I <: Integer}(lambda::R=1.0, dim::I=1) = NormL21{R, I}(lambda
     for j = 1:size(X,2)
       nslice = 0.0
       for i = 1:size(X,1)
-        nslice += X[i,j]^2
+	nslice += abs(X[i,j])^2
       end
       n21X += sqrt(nslice)
     end
@@ -37,7 +37,7 @@ NormL21{R <: Real, I <: Integer}(lambda::R=1.0, dim::I=1) = NormL21{R, I}(lambda
     for i = 1:size(X,1)
       nslice = 0.0
       for j = 1:size(X,2)
-        nslice += X[i,j]^2
+	nslice += abs(X[i,j])^2
       end
       n21X += sqrt(nslice)
     end
@@ -53,7 +53,7 @@ function prox!{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, Y::Abstrac
     for j = 1:size(X,2)
       nslice = 0.0
       for i = 1:size(X,1)
-        nslice += X[i,j]^2
+	nslice += abs(X[i,j])^2
       end
       nslice = sqrt(nslice)
       scal = 1-gl/nslice
@@ -67,7 +67,7 @@ function prox!{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, Y::Abstrac
     for i = 1:size(X,1)
       nslice = 0.0
       for j = 1:size(X,2)
-        nslice += X[i,j]^2
+	nslice += abs(X[i,j])^2
       end
       nslice = sqrt(nslice)
       scal = 1-gl/nslice
