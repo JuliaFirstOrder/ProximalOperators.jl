@@ -9,8 +9,19 @@ This package can be used to easily implement proximal algorithms for convex and 
 
 ## Installation
 
-From the Julia command line `Pkg.clone("https://github.com/kul-forbes/ProximalOperators.jl.git")`.
-Use `Pkg.update()` to keep the package up to date.
+To install the stable version, use the following in the Julia command line
+
+```julia
+Pkg.add("ProximalOperators")
+```
+
+If instead you are interested in the (possibly unstable) development version, use
+
+```julia
+Pkg.clone("https://github.com/kul-forbes/ProximalOperators.jl.git")
+```
+
+Remember to `Pkg.update()` to keep the package up to date.
 
 ## Usage
 

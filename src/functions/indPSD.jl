@@ -22,11 +22,19 @@ immutable IndPSD <: IndicatorConvex end
 end
 
 function prox!{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, Y::HermOrSym{T}, gamma::Real=1.0)
+  n = size(X, 1);
   F = eigfact(X);
   for i in eachindex(F.values)
     F.values[i] = max(0,F.values[i]);
   end
-  Y.data[:] = F.vectors * diagm(F.values) * F.vectors'
+  for i = 1:n
+    for j = 1:n
+      Y.data[i,j] = 0.0
+      for k = 1:n
+        Y.data[i,j] += F.vectors[i,k]*F.values[k]*F.vectors[j,k]
+      end
+    end
+  end
   return 0.0
 end
 

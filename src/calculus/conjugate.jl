@@ -16,8 +16,9 @@ function prox!{R <: Real}(g::Conjugate, x::AbstractArray{R}, y::AbstractArray{R}
   # Moreau identity
   v = prox!(g.f, x/gamma, y, 1.0/gamma)
   v = vecdot(x_copy,y) - gamma*vecdot(y,y) - v
-  y[:] *= -gamma
-  y[:] += x_copy
+  for k in eachindex(y)
+    y[k] = x_copy[k] - gamma*y[k]
+  end
   return v
 end
 
@@ -27,8 +28,9 @@ function prox!{R <: Real}(g::Conjugate, x::AbstractArray{Complex{R}}, y::Abstrac
   x_copy = copy(x)
   v = prox!(g.f, x/gamma, y, 1.0/gamma)
   v = real(vecdot(x_copy,y)) - gamma*real(vecdot(y,y)) - v
-  y[:] *= -gamma
-  y[:] += x_copy
+  for k in eachindex(y)
+    y[k] = x_copy[k] - gamma*y[k]
+  end
   return v
 end
 
@@ -43,8 +45,9 @@ prox!{R <: Real, C <: IndicatorConvexCone}(g::Conjugate{C}, x::AbstractArray{Com
 function prox_conjugate_convex_cone!{T <: RealOrComplex, C <: IndicatorConvexCone}(f::C, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   x_copy = copy(x)
   prox!(f, x/gamma, y, 1.0/gamma)
-  y[:] *= -gamma
-  y[:] += x_copy
+  for k in eachindex(y)
+    y[k] = x_copy[k] - gamma*y[k]
+  end
   return 0.0
 end
 

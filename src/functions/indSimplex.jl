@@ -26,11 +26,16 @@ IndSimplex{T <: Real}(a::T=1.0) = IndSimplex{T}(a)
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: Real}(f::IndSimplex, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
 # Implements Algorithm 1 in Condat, "Fast projection onto the simplex and the l1 ball", Mathematical Programming, 158:575–585, 2016.
 # We should consider implementing the other algorithms reviewed there, and the one proposed in the paper.
   n = length(x)
-  p = sort(x, rev=true);
+  p = []
+  if length(indices(x)) == 1
+    p = sort(x, rev=true)
+  else
+    p = sort(x[:], rev=true)
+  end
   s = 0
   for i = 1:n-1
     s = s + p[i]
@@ -50,11 +55,11 @@ function prox!{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, y::AbstractArray
 end
 
 fun_name(f::IndSimplex) = "indicator of the probability simplex"
-fun_dom(f::IndSimplex) = "AbstractArray{Real,1}"
+fun_dom(f::IndSimplex) = "AbstractArray{Real}"
 fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = a, +∞ otherwise"
 fun_params(f::IndSimplex) = "a = $(f.a)"
 
-function prox_naive{T <: Real}(f::IndSimplex, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox_naive{T <: Real}(f::IndSimplex, x::AbstractArray{T}, gamma::Real=1.0)
   low = 0.0
   upp = maximum(x)
   v = x

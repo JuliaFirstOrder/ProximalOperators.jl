@@ -19,21 +19,26 @@ end
 
 IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
 
-@compat function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T,1})
+@compat function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T})
   if vecnorm(x,1) - f.r > 1e-14
     return +Inf
   end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   # TODO: a faster algorithm
   if vecnorm(x,1) - f.r < 1e-14
     y[:] = x[:]
     return 0.0
   else # do a projection of abs(x) onto simplex then recover signs
     n = length(x)
-    p = abs(x)
+    p = []
+    if length(indices(x)) == 1
+      p = abs(x)
+    else
+      p = abs(x)[:]
+    end
     sort!(p,rev=true)
     s = 0.0
     @inbounds for i = 1:n-1
@@ -55,11 +60,11 @@ function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T,1}, y::Abstr
 end
 
 fun_name(f::IndBallL1) = "indicator of an L1 norm ball"
-fun_dom(f::IndBallL1) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"
+fun_dom(f::IndBallL1) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL1) = "x ↦ 0 if ‖x‖_1 ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL1) = "r = $(f.r)"
 
-function prox_naive{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox_naive{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0)
   # do a simple bisection (aka binary search) on λ
   L = 0.0
   U = maxabs(x)
