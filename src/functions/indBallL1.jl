@@ -34,7 +34,7 @@ function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T}, y::Abstrac
   else # do a projection of abs(x) onto simplex then recover signs
     n = length(x)
     p = []
-    if length(indices(x)) == 1
+    if ndims(x) == 1
       p = abs(x)
     else
       p = abs(x)[:]

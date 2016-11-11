@@ -31,7 +31,7 @@ function prox!{T <: Real}(f::IndSimplex, x::AbstractArray{T}, y::AbstractArray{T
 # We should consider implementing the other algorithms reviewed there, and the one proposed in the paper.
   n = length(x)
   p = []
-  if length(indices(x)) == 1
+  if ndims(x) == 1
     p = sort(x, rev=true)
   else
     p = sort(x[:], rev=true)

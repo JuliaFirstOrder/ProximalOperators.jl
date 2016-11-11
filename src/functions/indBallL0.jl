@@ -28,7 +28,7 @@ end
 
 function prox!{T <: RealOrComplex}(f::IndBallL0, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   p = []
-  if length(indices(x)) == 1
+  if ndims(x) == 1
     p = selectperm(x, 1:f.r, by=abs, rev=true)
   else
     p = selectperm(x[:], 1:f.r, by=abs, rev=true)
