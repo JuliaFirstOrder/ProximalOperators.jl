@@ -24,6 +24,7 @@ export IndAffine, IndHalfspace,
        IndSphereL2,
        HingeLoss,
        LogBarrier,
+       LeastSquares,
        NormL0, NormL1, NormL2, NormL21, NormLinf, NuclearNorm, SqrNormL2, ElasticNet,
        DistL2, SqrDistL2,
        Zero
@@ -76,6 +77,7 @@ include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
 include("functions/normLinf.jl")
+include("functions/LeastSquares.jl")
 
 include("compatibility.jl")
 

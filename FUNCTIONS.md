@@ -47,6 +47,7 @@ Name            | Description                         | Properties
 ----------------|-------------------------------------|-----------------
 `HingeLoss`     | Hinge loss function                 | convex
 `LogBarrier`    | Logarithmic barrier                 | convex
+`LeastSquares`  | Sum-of-residual-squares             | convex
 
 ### Distances
 

@@ -38,14 +38,14 @@ stuff = [
 
   Dict( "constr" => IndBallL0,
         "wrong"  => ( (-4,), ),
-        "params" => ( (5,), (5,) ),
-        "args"   => ( randn(25), randn(35), )
+        "params" => ( (5,), (5,), (10, ) ),
+        "args"   => ( randn(25), randn(35), randn(10, 10) )
       ),
 
   Dict( "constr" => IndBallL1,
         "wrong"  => ( (-rand(),), ),
-        "params" => ( (), (3.0,), (0.4,), (rand() + 0.1,) ),
-        "args"   => ( rand(15), randn(25), randn(35), randn(60) )
+        "params" => ( (), (3.0,), (0.4,), (rand() + 0.1,), (rand() + 0.1,) ),
+        "args"   => ( rand(15), randn(25), randn(35), randn(60), randn(20,30) )
       ),
 
   Dict( "constr" => IndBallL2,
@@ -103,8 +103,8 @@ stuff = [
 
   Dict( "constr" => IndSimplex,
         "wrong"  => ( (-rand(),) ),
-        "params" => ( (), ),
-        "args"   => ( randn(20), )
+        "params" => ( (), (1.0+rand(), ), () ),
+        "args"   => ( randn(20), randn(30), randn(10,10) )
       ),
 
   Dict( "constr" => IndSOC,
@@ -162,8 +162,8 @@ stuff = [
       ),
 
   Dict( "constr" => NormLinf,
-        "params" => ( (), (rand(),), (), (rand(),) ),
-        "args"   => ( randn(10), randn(20), rand(Complex{Float64}, 10), rand(Complex{Float64}, 20) )
+        "params" => ( (), (rand(),), (), (rand(),), (rand(),) ),
+        "args"   => ( randn(10), randn(20), rand(Complex{Float64}, 10), rand(Complex{Float64}, 20), randn(10,10) )
       ),
 
   Dict( "constr" => NuclearNorm,
@@ -176,6 +176,12 @@ stuff = [
         "wrong"  => ( (-rand(),), ),
         "params" => ( (), (rand(),), (rand(20),), (rand(30),), (rand(),) ),
         "args"   => ( randn(10), randn(10), randn(20), rand(Complex{Float64}, 30), rand(Complex{Float64}, 50) )
+      ),
+
+  Dict( "constr" => LeastSquares,
+        "wrong"  => ( (randn(3,5), randn(3), -rand()), (randn(3,5), randn(4), rand()) ),
+        "params" => ( (randn(10,25), randn(10)), (randn(40,13), randn(40), rand()), (sprandn(100,1000,0.05), randn(100), rand()) ),
+        "args"   => ( randn(25), randn(13), randn(1000) )
       )
 ]
 
