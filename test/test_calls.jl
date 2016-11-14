@@ -180,8 +180,8 @@ stuff = [
 
   Dict( "constr" => LeastSquares,
         "wrong"  => ( (randn(3,5), randn(3), -rand()), (randn(3,5), randn(4), rand()) ),
-        "params" => ( (randn(10,25), randn(10)), (randn(40,13), randn(40), rand()), (sprandn(100,1000,0.05), randn(100), rand()) ),
-        "args"   => ( randn(25), randn(13), randn(1000) )
+        "params" => ( (randn(10,25), randn(10)), (randn(40,13), randn(40), rand()), (rand(Complex{Float64},25,10), rand(Complex{Float64},25)), (sprandn(100,1000,0.05), randn(100), rand()) ),
+        "args"   => ( randn(25), randn(13), rand(Complex{Float64},10), randn(1000) )
       )
 ]
 

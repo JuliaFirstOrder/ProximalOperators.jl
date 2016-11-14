@@ -61,15 +61,12 @@ julia> fx = prox!(f, x, 0.5) # in-place equivalent to x, fx = prox(f, x, 0.5)
 julia> fy = prox!(f, x, y, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
 ```
 
-## Contributing
-
-If you wish to contribute to the repository,
-see the [to do list](https://github.com/kul-forbes/ProximalOperators.jl/blob/master/TODO.md).
-
 ## References
 
-1. Neal Parikh and Stephen Boyd, [*Proximal Algorithms*](http://dx.doi.org/10.1561/2400000003).
-Foundations and Trends in Optimization 1, 3 (2014), 127-239.
+1. N. Parikh and S. Boyd (2014), [*Proximal Algorithms*](http://dx.doi.org/10.1561/2400000003),
+Foundations and Trends in Optimization, vol. 1, no. 3, pp. 127-239.
+
+2. S. Boyd, N. Parikh, E. Chu, B. Peleato and J. Eckstein (2011), [*Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers*](http://dx.doi.org/10.1561/2200000016), Foundations and Trends in Machine Learning, vol. 3, no. 1, pp. 1-122.
 
 ## Credits
 

@@ -2,9 +2,9 @@
 
 stuff = [
   Dict( "constr" => LeastSquares,
-        "params" => ( (randn(20, 10), randn(20)), (randn(15, 40), randn(15), rand()), (sprandn(100,1000,0.05), randn(100), rand()) ),
-        "args"   => ( randn(10), randn(40), randn(1000) ),
-        "gammas" => ( rand(), rand(), rand() ),
+        "params" => ( (randn(20, 10), randn(20)), (randn(15, 40), randn(15), rand()), (rand(Complex{Float64}, 15, 40), rand(Complex{Float64}, 15), rand()), (sprandn(100,1000,0.05), randn(100), rand()) ),
+        "args"   => ( randn(10), randn(40), rand(Complex{Float64}, 40), randn(1000) ),
+        "gammas" => ( rand(), rand(), rand(), rand() ),
         "test"   => (f, x, gamma, y) -> norm(y + gamma*f.lambda*(f.A'*(f.A*y-f.b)) - x) <= 1e-10
       )
 ]
