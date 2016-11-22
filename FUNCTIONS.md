@@ -55,3 +55,9 @@ Name            | Description                                          | Propert
 ----------------|------------------------------------------------------|----------------
 `DistL2`        | Euclidean distance from a convex set                 | convex
 `SqrDistL2`     | Squared Euclidean distance from a convex set         | convex
+
+### Other functions
+
+Name            | Description                                          | Properties
+----------------|------------------------------------------------------|----------------
+`Maximum`       | Maximum coordinate of a vector                       | convex

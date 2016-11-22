@@ -14,8 +14,7 @@ export prox, prox!
 export ProximableFunction
 
 export IndAffine, IndHalfspace,
-       IndBallLinf, IndBallL0, IndBallL1, IndBallL2,
-       IndBallRank,
+       IndBallLinf, IndBallL0, IndBallL1, IndBallL2, IndBallRank,
        IndBox, IndNonnegative, IndNonpositive,
        IndExpPrimal, IndExpDual, IndPSD, IndSOC,
        IndFree,
@@ -25,6 +24,7 @@ export IndAffine, IndHalfspace,
        HingeLoss,
        LogBarrier,
        LeastSquares,
+       Maximum,
        NormL0, NormL1, NormL2, NormL21, NormLinf, NuclearNorm, SqrNormL2, ElasticNet,
        DistL2, SqrDistL2,
        Zero
@@ -76,6 +76,8 @@ include("functions/indSphereL2.jl")
 include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
+include("functions/sumLargest.jl")
+include("functions/maximum.jl")
 include("functions/normLinf.jl")
 include("functions/leastSquares.jl")
 

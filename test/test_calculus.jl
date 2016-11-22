@@ -68,6 +68,11 @@ stuff = [
   Dict( "funcs"  => (IndNonpositive(), IndBox(-Inf, 0.0)),
         "args"   => ( randn(50), randn(50), randn(50) ),
         "gammas" => ( 1.0, rand(), 5.0*rand() )
+      ),
+
+  Dict( "funcs"  => (lambda -> (SqrNormL2(lambda), Conjugate(SqrNormL2(1.0/lambda))))(0.1+5.0*rand()),
+        "args"   => ( randn(50), randn(50), randn(50) ),
+        "gammas" => ( 1.0, rand(), 5.0*rand() )
       )
 ]
 

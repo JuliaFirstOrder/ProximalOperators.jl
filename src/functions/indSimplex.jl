@@ -1,12 +1,12 @@
-# indicator of the probability simplex
+# indicator of a simplex
 
 """
-  IndSimplex(a::Real=1.0)
+  IndSimplex(a::Union{Real, Integer}=1.0)
 
 Returns the function `g = ind{x : x ⩾ 0, sum(x) = a}`.
 """
 
-immutable IndSimplex{T <: Real} <: IndicatorConvex
+immutable IndSimplex{T <: Union{Real, Integer}} <: IndicatorConvex
   a::T
   function IndSimplex(a::T)
     if a <= 0
@@ -17,7 +17,7 @@ immutable IndSimplex{T <: Real} <: IndicatorConvex
   end
 end
 
-IndSimplex{T <: Real}(a::T=1.0) = IndSimplex{T}(a)
+IndSimplex{T <: Union{Real, Integer}}(a::T=1.0) = IndSimplex{T}(a)
 
 @compat function (f::IndSimplex){T <: Real}(x::AbstractArray{T,1})
   if all(x .>= 0) && abs(sum(x)-f.a) <= 1e-14
@@ -60,7 +60,7 @@ fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = a, +∞ otherwise"
 fun_params(f::IndSimplex) = "a = $(f.a)"
 
 function prox_naive{T <: Real}(f::IndSimplex, x::AbstractArray{T}, gamma::Real=1.0)
-  low = 0.0
+  low = minimum(x)
   upp = maximum(x)
   v = x
   s = Inf

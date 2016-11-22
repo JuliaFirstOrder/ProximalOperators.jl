@@ -103,8 +103,8 @@ stuff = [
 
   Dict( "constr" => IndSimplex,
         "wrong"  => ( (-rand(),) ),
-        "params" => ( (), (1.0+rand(), ), () ),
-        "args"   => ( randn(20), randn(30), randn(10,10) )
+        "params" => ( (), (1.0+rand(),), (), (5.0,) ),
+        "args"   => ( randn(20), randn(30), randn(10,10), randn(10) )
       ),
 
   Dict( "constr" => IndSOC,
@@ -162,6 +162,7 @@ stuff = [
       ),
 
   Dict( "constr" => NormLinf,
+        "wrong"  => ( (-rand(),), ),
         "params" => ( (), (rand(),), (), (rand(),), (rand(),) ),
         "args"   => ( randn(10), randn(20), rand(Complex{Float64}, 10), rand(Complex{Float64}, 20), randn(10,10) )
       ),
@@ -182,6 +183,18 @@ stuff = [
         "wrong"  => ( (randn(3,5), randn(3), -rand()), (randn(3,5), randn(4), rand()) ),
         "params" => ( (randn(10,25), randn(10)), (randn(40,13), randn(40), rand()), (rand(Complex{Float64},25,10), rand(Complex{Float64},25)), (sprandn(100,1000,0.05), randn(100), rand()) ),
         "args"   => ( randn(25), randn(13), rand(Complex{Float64},10), randn(1000) )
+      ),
+
+  # Dict( "constr" => SumLargest,
+  #       "wrong"  => ( (-1,), (0,), (1, -2.0), (2, 0.0), (2, -rand()) ),
+  #       "params" => ( (), (1,), (5, 3.2), (3, rand()) ),
+  #       "args"   => ( randn(10), randn(20), randn(5,10), randn(8,17) )
+  #     ),
+
+  Dict( "constr" => Maximum,
+        "wrong"  => ( (-rand(),), ),
+        "params" => ( (), (rand(),), (), (rand()) ),
+        "args"   => ( randn(10), randn(20), randn(5,10), randn(8,17) )
       )
 ]
 

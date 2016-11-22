@@ -18,17 +18,17 @@ fun_dom(f::Postcomposition) = fun_dom(f.f)
 Postcomposition{T <: ProximableFunction, S <: Real}(f::T, a::S=1.0, b::S=0.0) = Postcomposition{T, S}(f, a, b)
 
 @compat function (g::Postcomposition){T <: RealOrComplex}(x::AbstractArray{T})
-  return g.a * g.f(x) + g.b
+  return g.a*g.f(x) + g.b
 end
 
 function prox!{T <: RealOrComplex}(g::Postcomposition, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  v = prox!(g.f, x, y, g.a * gamma)
-  return g.a * v + g.b
+  v = prox!(g.f, x, y, g.a*gamma)
+  return g.a*v + g.b
 end
 
 function prox_naive{T <: RealOrComplex}(g::Postcomposition, x::AbstractArray{T}, gamma::Real=1.0)
-  y, v = prox_naive(g.f, x, g.a * gamma)
-  return y, g.a * v + g.b
+  y, v = prox_naive(g.f, x, g.a*gamma)
+  return y, g.a*v + g.b
 end
 
 is_prox_accurate(f::Postcomposition) = is_prox_accurate(f.f)

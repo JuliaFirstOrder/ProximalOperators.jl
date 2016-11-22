@@ -10,13 +10,11 @@ NormLinf{R <: Real}(lambda::R=1.0) = Postcomposition(Conjugate(IndBallL1(one(R))
 
 @compat function (f::Conjugate{IndBallL1{R}}){R <: Real, S <: RealOrComplex}(x::AbstractArray{S})
   # follows from the definition of conjugate function and properties of norms
-  return vecnorm(x, Inf)/(f.f.r)
+  # although it is not really needed since with the above constructor one makes f.f.r = 1.0
+  # but just in case one constructs the conjugate of a different L1 ball...
+  return vecnorm(x, Inf)*(f.f.r)
 end
 
 fun_name{R <: Real}(f::Postcomposition{Conjugate{IndBallL1{R}}, R}) = "weighted L-infinity norm"
 fun_expr{R <: Real}(f::Postcomposition{Conjugate{IndBallL1{R}}, R}) = "x ↦ λ||x||_∞ = λ⋅max(abs(x))"
-fun_params{R <: Real}(f::Postcomposition{Conjugate{IndBallL1{R}}, R}) = "λ = $(f.a)"
-
-function prox_naive{T <: RealOrComplex}(f::Postcomposition{Conjugate{IndBallL1}}, x::AbstractArray{T,1}, gamma::Real=1.0)
-  return prox_naive(f.g, x, gamma)
-end
+fun_params{R <: Real}(f::Postcomposition{Conjugate{IndBallL1{R}}, R}) = "λ = $(f.a*(f.f.f.r))"
