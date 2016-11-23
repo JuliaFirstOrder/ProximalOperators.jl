@@ -1,39 +1,24 @@
 # Separable sum
 
-immutable SeparableSum{T <: ElementwiseFunction} <: SeparableFunction
-  g::T
+immutable SeparableSum{P<:ProximableFunction, I<:AbstractArray} <: ProximableFunction
+	prox_col::Vector{P}
+	ind_col::Array{I}
+
+	function (::Type{SeparableSum}){P,I}(a::Vector{P},b::Array{I})
+		new{P,I}(a, b)
+	end
 end
 
-@compat function (f::SeparableSum){T <: RealOrComplex}(x::AbstractArray{T})
+
+function prox!{T <: RealOrComplex, R <: Real}(f::SeparableSum, x::AbstractArray{T}, 
+					      y::AbstractArray{T}, gamma::R=1.0)
   v = 0.0
-  z = zeros(T, 1)
-  for k in eachindex(x)
-    z[1] = x[k]
-    v += f.g(z)
+  for i in eachindex(f.prox_col)
+	  z = y[f.ind_col[i]]
+	  g = prox!(f.prox_col[i],x[f.ind_col[i]],z,gamma)
+	  y[f.ind_col[i]] = z
+	  v += g
   end
   return v
-end
 
-function prox!{T <: RealOrComplex, R <: Real}(f::SeparableSum, x::AbstractArray{T}, y::AbstractArray{T}, gamma::R=1.0)
-  v = 0.0
-  z = zeros(T, 1)
-  for k in eachindex(x)
-    z[1] = x[k]
-    v += prox!(f.g, z, gamma)
-    y[k] = z[1]
-  end
-  return v
 end
-
-function prox!{T <: RealOrComplex, R <: Real}(f::SeparableSum, x::AbstractArray{T}, y::AbstractArray{T}, gamma::AbstractArray{R})
-  v = 0.0
-  z = zeros(T, 1)
-  for k in eachindex(x)
-    z[1] = x[k]
-    v += prox!(f.g, z, gamma[k])
-    y[k] = z[1]
-  end
-  return v
-end
-
-is_prox_accurate(f::SeparableSum) = is_prox_accurate(f.g)

@@ -31,7 +31,8 @@ export IndAffine, IndHalfspace,
 
 export Conjugate,
        Postcomposition,
-       Precomposition
+       Precomposition,
+       SeparableSum
 
 abstract ProximableFunction
 abstract NormFunction <: ProximableFunction
