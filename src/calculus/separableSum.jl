@@ -1,45 +1,39 @@
-# Separable sum
 
-immutable SeparableSum{P<:ProximableFunction, I<:AbstractArray} <: ProximableFunction
+immutable SeparableSum{P<: ProximableFunction} <: ProximableFunction
 	prox_col::Vector{P}
-	ind_col::Array{I}
-	dim::Int64
+end
 
-	function (::Type{SeparableSum}){P,I}(a::Vector{P},b::Array{I}, dim::Int64 = 1)
-		if length(a)!= length(b)
-			error("length(prox_col) must conicide with length(ind_col)")
-		else
-			new{P,I}(a, b, dim)
+function SeparableSum(pr::Vector{DataType}, lambdas::Vector)
+	prox_col = Vector{ProximableFunction}(length(lambdas)) 
+	if length(pr)!=length(lambdas)
+		error("lambda vector and proximal operator vecor must have the same lenght")
+	else
+		for i in eachindex(pr)
+			prox_col[i] = pr[i](lambdas[i])
 		end
+		return SeparableSum(prox_col)
 	end
+
 end
 
-function SeparableSum(p::Pair...; dim::Int64 = 1)
-
-	a = Vector{ProximableFunction}(length(p))
-	b = Vector{AbstractArray}(length(p))
-
-	for i in eachindex(p)
-		a[i] = p[i].first
-		b[i]  = p[i].second
-	end
-	return SeparableSum(a, b, dim)
-	
-end
-
-function prox!{T <: RealOrComplex, R <: Real}(f::SeparableSum, x::AbstractArray{T}, 
-					      y::AbstractArray{T}, gamma::R=1.0)
+function prox!{R <: Real}(f::SeparableSum, x::Vector, 
+			  y::Vector, gamma::R=1.0)
   v = 0.0
-  nd = ndims(x)
-
   for i in eachindex(f.prox_col)
-	  z = slicedim(y,f.dim,f.ind_col[i])
-	  g = prox!(f.prox_col[i],slicedim(x,f.dim,f.ind_col[i]),z,gamma)
-	  y[[ n==f.dim ? f.ind_col[i] : indices(y,n) for n in 1:nd ]...] = z
+	  g = prox!(f.prox_col[i],x[i],y[i],gamma)
 	  v += g
   end
   return v
 
+end
+
+function prox(f::SeparableSum, x::Vector, gamma::Real=1.0)
+	y = Vector(length(x))
+	for i in eachindex(x)
+		y[i] = similar(x[i])
+	end
+	fy = prox!(f, x, y, gamma)
+	return y, fy
 end
 
 function Base.show(io::IO, f::SeparableSum)  

@@ -32,6 +32,7 @@ export IndAffine, IndHalfspace,
 export Conjugate,
        Postcomposition,
        Precomposition,
+       SlicedSeparableSum,
        SeparableSum
 
 abstract ProximableFunction
@@ -45,6 +46,7 @@ abstract IndicatorConvexCone <: IndicatorConvex
 abstract SeparableFunction <: ProximableFunction
 abstract ElementwiseFunction <: ProximableFunction
 include("calculus/separableSum.jl")
+include("calculus/slicedSeparableSum.jl")
 include("functions/absoluteValue.jl")
 ################################################################################
 
