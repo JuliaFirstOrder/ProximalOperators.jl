@@ -14,7 +14,7 @@ M2 = M1.==false
 
 f = SlicedSeparableSum(prox_col,ind_col)
 #test second constructor and mask
-ff = SlicedSeparableSum(prox_col[1]=>M1,prox_col[2]=>M2)
+ff = SlicedSeparableSum([prox_col[1] => M1, prox_col[2] => M2])
 y,fy = prox(f,x,1.)
 yy,fyy = prox(ff,x,1.)
 
@@ -30,9 +30,9 @@ y2,fy2 = prox(prox_col[2],x[ind_col[2]],1.)
 X1,X2 = randn(10,10),randn(10,10)
 X = [X1 X2]
 
-f = SlicedSeparableSum([NormL1(1.),NormL21(0.1)],[1:10,11:20],2 )
+f = SlicedSeparableSum([NormL1(1.), NormL21(0.1)], [1:10,11:20], 2)
 #test second constructor
-ff = SlicedSeparableSum(NormL1(1.)=> 1:10, NormL21(0.1)=> 11:20; dim =2 )
+ff = SlicedSeparableSum([NormL1(1.) => 1:10, NormL21(0.1) => 11:20], 2)
 
 y,fy = prox(f,X,1.)
 yy,fyy = prox(ff,X,1.)
@@ -46,5 +46,5 @@ y2,fy2 = prox(NormL21(0.1),X2,1.)
 @test norm((fy1+fy2)-fy)<1e-11
 @test norm(y-[y1 y2])<1e-11
 
-show(ff)
-show(SlicedSeparableSum(repmat([NormL1(1.)],6),repmat([1:10],6),2 ))
+println(ff)
+println(SlicedSeparableSum(repmat([NormL1(1.)],6),repmat([1:10],6),2 ))
