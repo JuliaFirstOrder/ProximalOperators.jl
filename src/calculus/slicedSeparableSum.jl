@@ -1,34 +1,37 @@
 # Separable sum
 
-immutable SlicedSeparableSum <: ProximableFunction
-	fs::Array
-	is::Array
+immutable SlicedSeparableSum{S <: Union{AbstractArray, Tuple}, T <: Union{AbstractArray, Tuple}} <: ProximableFunction
+	fs::S
+	is::T
 	dim::Integer
 
-	function SlicedSeparableSum(a::Array, b::Array, dim::Integer=1)
-		if size(a) != size(b)
-			error("size(fs) must coincide with size(is)")
+	function SlicedSeparableSum(a::S, b::T, dim::Integer)
+		if length(a) != length(b)
+			error("length(fs) must coincide with length(is)")
 		else
 			new(a, b, dim)
 		end
 	end
+end
 
-	function SlicedSeparableSum(ps::Array, dim::Integer=1)
-		a = Array{ProximableFunction}(length(ps))
-		b = Array{AbstractArray}(length(ps))
-		for i in eachindex(ps)
-			a[i] = ps[i].first
-			b[i] = ps[i].second
-		end
-		new(a, b, dim)
+SlicedSeparableSum{S <: Union{AbstractArray, Tuple}, T <: Union{AbstractArray, Tuple}}(a::S, b::T, dim::Integer=1) =
+	SlicedSeparableSum{S, T}(a, b, dim)
+
+function SlicedSeparableSum{T <: Union{AbstractArray, Tuple}}(ps::T, dim::Integer=1)
+	a = Array{ProximableFunction}(length(ps))
+	b = Array{AbstractArray}(length(ps))
+	for i = 1:length(ps)
+		a[i] = ps[i].first
+		b[i] = ps[i].second
 	end
+	SlicedSeparableSum{typeof(a),typeof(b)}(a, b, dim)
 end
 
 function prox!{T <: RealOrComplex}(f::SlicedSeparableSum, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   v = 0.0
   nd = ndims(x)
 
-  for i in eachindex(f.fs)
+  for i = 1:length(f.fs)
 	  z = slicedim(y,f.dim,f.is[i])
 	  g = prox!(f.fs[i],slicedim(x,f.dim,f.is[i]),z,gamma)
 	  y[[ n==f.dim ? f.is[i] : indices(y,n) for n in 1:nd ]...] = z

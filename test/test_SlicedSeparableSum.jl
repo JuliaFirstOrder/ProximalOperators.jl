@@ -6,8 +6,8 @@ x = randn(100)
 y0 = randn(100)
 y = copy(y0)
 
-prox_col = [NormL1(0.1),IndBallL0(1)]
-ind_col = [1:50,51:100]
+prox_col = (NormL1(0.1),IndBallL0(1))
+ind_col = (1:50,51:100)
 M1 = ones(Bool,size(x))
 M1[51:end] = false
 M2 = M1.==false
