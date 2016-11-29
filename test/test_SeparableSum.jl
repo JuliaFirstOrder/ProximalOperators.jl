@@ -6,7 +6,7 @@ y0 = randn(size(x))
 Y0 = randn(size(X))+im*randn(size(X))
 y, Y = copy(y0),copy(Y0)
 
-lambdas = [abs(randn(size(x))), 0.1]
+lambdas = (abs(randn(size(x))), 0.1)
 prox_col = (NormL1(lambdas[1]), NormL2(lambdas[2]))
 
 # testing constructors

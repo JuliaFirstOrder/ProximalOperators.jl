@@ -4,7 +4,7 @@ immutable SeparableSum{T <: Union{AbstractArray, Tuple}} <: ProximableFunction
 	fs::T
 end
 
-@compat function (f::SeparableSum)(x::Union{AbstractArray, Tuple})
+@compat function (f::SeparableSum{S}){S <: AbstractArray}(x::Tuple)
 	sum = 0.0
   for k in eachindex(f.fs)
 		sum += f.fs[k](x[k])
@@ -12,9 +12,25 @@ end
 	return sum
 end
 
-function prox!{T <: Union{AbstractArray, Tuple}}(f::SeparableSum, x::T, y::T, gamma::Real=1.0)
+@compat function (f::SeparableSum{S}){S <: Tuple}(x::Tuple)
+	sum = 0.0
+  for k = 1:length(f.fs)
+		sum += f.fs[k](x[k])
+	end
+	return sum
+end
+
+function prox!{S <: AbstractArray, T <: Union{AbstractArray, Tuple}}(f::SeparableSum{S}, x::T, y::T, gamma::Real=1.0)
   sum = 0.0
   for k in eachindex(f.fs)
+	  sum += prox!(f.fs[k], x[k], y[k], gamma)
+  end
+  return sum
+end
+
+function prox!{S <: Tuple, T <: Union{AbstractArray, Tuple}}(f::SeparableSum{S}, x::T, y::T, gamma::Real=1.0)
+  sum = 0.0
+  for k = 1:length(f.fs)
 	  sum += prox!(f.fs[k], x[k], y[k], gamma)
   end
   return sum
