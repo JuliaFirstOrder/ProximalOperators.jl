@@ -14,7 +14,7 @@ M2 = M1.==false
 
 f = SlicedSeparableSum(prox_col,ind_col)
 #test second constructor and mask
-ff = SlicedSeparableSum([prox_col[1] => M1, prox_col[2] => M2])
+ff = SlicedSeparableSum([(prox_col[1], M1), (prox_col[2], M2)])
 y,fy = prox(f,x,1.)
 yy,fyy = prox(ff,x,1.)
 

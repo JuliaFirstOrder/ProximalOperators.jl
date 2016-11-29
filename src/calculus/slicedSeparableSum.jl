@@ -21,8 +21,8 @@ function SlicedSeparableSum{T <: Union{AbstractArray, Tuple}}(ps::T, dim::Intege
 	a = Array{ProximableFunction}(length(ps))
 	b = Array{AbstractArray}(length(ps))
 	for i = 1:length(ps)
-		a[i] = ps[i].first
-		b[i] = ps[i].second
+		a[i] = ps[i][1]
+		b[i] = ps[i][2]
 	end
 	SlicedSeparableSum{typeof(a),typeof(b)}(a, b, dim)
 end
