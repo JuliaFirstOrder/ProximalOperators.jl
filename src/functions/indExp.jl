@@ -24,7 +24,7 @@ EXP_POLAR_CALL_TOL = 1e-3
 EXP_PROJ_TOL = 1e-15
 EXP_PROJ_MAXIT = 100
 
-@compat function (f::IndExpPrimal){R <: Real}(x::AbstractArray{R,1})
+function (f::IndExpPrimal){R <: Real}(x::AbstractArray{R,1})
   if (x[2] > 0.0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_PRIMAL_CALL_TOL) ||
      (x[1] <= EXP_PRIMAL_CALL_TOL && abs(x[2]) <= EXP_PRIMAL_CALL_TOL && x[3] >= -EXP_PRIMAL_CALL_TOL)
     return 0.0
@@ -32,7 +32,7 @@ EXP_PROJ_MAXIT = 100
   return +Inf
 end
 
-@compat function (f::Conjugate{IndExpPrimal}){R <: Real}(x::AbstractArray{R,1})
+function (f::Conjugate{IndExpPrimal}){R <: Real}(x::AbstractArray{R,1})
   if (x[1] > 0.0 && x[1]*exp(x[2]/x[1]) <= -exp(1)*x[3]+EXP_POLAR_CALL_TOL) ||
      (abs(x[1]) <= EXP_POLAR_CALL_TOL && x[2] <= EXP_POLAR_CALL_TOL && x[3] <= EXP_POLAR_CALL_TOL)
     return 0.0

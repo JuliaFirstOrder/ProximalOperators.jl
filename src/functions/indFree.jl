@@ -17,7 +17,7 @@ Returns the identically zero function.
 
 typealias Zero IndFree
 
-@compat function (f::IndFree)(x::AbstractArray)
+function (f::IndFree)(x::AbstractArray)
   return 0.0
 end
 

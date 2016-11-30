@@ -17,7 +17,7 @@ Returns the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 
 # Note that (1) is proper only if x ∈ Rⁿ for n ⩾ r.
 SumLargest{I <: Integer, R <: Real}(k::I=1, lambda::R=1.0) = Postcomposition(Conjugate(IndSimplex(k)), lambda)
 
-@compat function (f::Conjugate{IndSimplex{I}}){I <: Integer, S <: Real}(x::AbstractArray{S})
+function (f::Conjugate{IndSimplex{I}}){I <: Integer, S <: Real}(x::AbstractArray{S})
   if f.f.a == 1
     return maximum(x)
   end

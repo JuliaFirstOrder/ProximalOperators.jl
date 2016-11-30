@@ -8,7 +8,7 @@ Returns the function `g(x) = λ⋅max(abs(x))`, for a nonnegative parameter `λ 
 
 NormLinf{R <: Real}(lambda::R=1.0) = Postcomposition(Conjugate(IndBallL1(one(R))), lambda)
 
-@compat function (f::Conjugate{IndBallL1{R}}){R <: Real, S <: RealOrComplex}(x::AbstractArray{S})
+function (f::Conjugate{IndBallL1{R}}){R <: Real, S <: RealOrComplex}(x::AbstractArray{S})
   # follows from the definition of conjugate function and properties of norms
   # although it is not really needed since with the above constructor one makes f.f.r = 1.0
   # but just in case one constructs the conjugate of a different L1 ball...

@@ -16,7 +16,7 @@ either a scalar or an array of the same dimension as the function argument.
 
 IndPoint{T <: Union{Real, Complex, AbstractArray}}(p::T=0.0) = IndPoint{T}(p)
 
-@compat function (f::IndPoint){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::IndPoint){T <: RealOrComplex}(x::AbstractArray{T})
   if vecnorm(x-f.p, Inf) > 1e-14
     return +Inf
   end

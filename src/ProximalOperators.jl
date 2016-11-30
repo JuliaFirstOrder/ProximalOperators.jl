@@ -41,18 +41,13 @@ abstract IndicatorFunction <: ProximableFunction
 abstract IndicatorConvex <: IndicatorFunction
 abstract IndicatorConvexCone <: IndicatorConvex
 
-################################################################################
-# experimental stuff
-abstract SeparableFunction <: ProximableFunction
-abstract ElementwiseFunction <: ProximableFunction
-include("calculus/separableSum.jl")
-include("calculus/slicedSeparableSum.jl")
-include("functions/absoluteValue.jl")
-################################################################################
+include("utilities/symmetricpacked.jl")
 
 include("calculus/conjugate.jl")
 include("calculus/postcomposition.jl")
 include("calculus/precomposition.jl")
+include("calculus/separableSum.jl")
+include("calculus/slicedSeparableSum.jl")
 
 include("functions/distL2.jl")
 include("functions/elasticNet.jl")
@@ -83,8 +78,6 @@ include("functions/sumLargest.jl")
 include("functions/maximum.jl")
 include("functions/normLinf.jl")
 include("functions/leastSquares.jl")
-
-include("compatibility.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
   println(io, "description : ", fun_name(f))

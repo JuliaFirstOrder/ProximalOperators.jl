@@ -19,7 +19,7 @@ end
 
 IndSimplex{T <: Union{Real, Integer}}(a::T=1.0) = IndSimplex{T}(a)
 
-@compat function (f::IndSimplex){T <: Real}(x::AbstractArray{T,1})
+function (f::IndSimplex){T <: Real}(x::AbstractArray{T,1})
   if all(x .>= 0) && abs(sum(x)-f.a) <= 1e-14
     return 0.0
   end

@@ -27,11 +27,11 @@ Returns the function `g(x) = (1/2)(Î».*x)'x`, for an array of real parameters `Î
 
 SqrNormL2{T <: AbstractArray}(lambda::T) = SqrNormL2{T}(lambda)
 
-@compat function (f::SqrNormL2{S}){S <: Real, T <: RealOrComplex}(x::AbstractArray{T})
+function (f::SqrNormL2{S}){S <: Real, T <: RealOrComplex}(x::AbstractArray{T})
   return (f.lambda/2)*vecnorm(x)^2
 end
 
-@compat function (f::SqrNormL2{S}){S <: AbstractArray, T <: RealOrComplex}(x::AbstractArray{T})
+function (f::SqrNormL2{S}){S <: AbstractArray, T <: RealOrComplex}(x::AbstractArray{T})
   sqnorm = 0.0
   for k in eachindex(x)
     sqnorm += f.lambda[k]*abs2(x[k])

@@ -20,7 +20,7 @@ end
 
 HingeLoss{T <: AbstractArray, R <: Real}(b::T, mu::R=1.0) = HingeLoss{T, R}(b, mu)
 
-@compat function (f::HingeLoss){T <: Real}(x::AbstractArray{T})
+function (f::HingeLoss){T <: Real}(x::AbstractArray{T})
   return (f.mu)*sum(max(0.0, 1-(f.b).*x))
 end
 

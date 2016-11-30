@@ -14,7 +14,7 @@ end
 
 SqrDistL2{R <: Real}(ind::IndicatorConvex, lambda::R=1.0) = SqrDistL2{R}(ind, lambda)
 
-@compat function (f::SqrDistL2){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::SqrDistL2){T <: RealOrComplex}(x::AbstractArray{T})
   p, = prox(f.ind, x)
   return (f.lambda/2)*vecnorm(x-p)^2
 end

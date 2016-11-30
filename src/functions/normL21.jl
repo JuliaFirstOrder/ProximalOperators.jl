@@ -22,7 +22,7 @@ end
 
 NormL21{R <: Real, I <: Integer}(lambda::R=1.0, dim::I=1) = NormL21{R, I}(lambda, dim)
 
-@compat function (f::NormL21){T <: RealOrComplex}(X::AbstractArray{T,2})
+function (f::NormL21){T <: RealOrComplex}(X::AbstractArray{T,2})
   nslice = 0.0
   n21X = 0.0
   if f.dim == 1

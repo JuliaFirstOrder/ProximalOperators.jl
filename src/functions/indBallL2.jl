@@ -19,7 +19,7 @@ end
 
 IndBallL2{R <: Real}(r::R=1.0) = IndBallL2{R}(r)
 
-@compat function (f::IndBallL2){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::IndBallL2){T <: RealOrComplex}(x::AbstractArray{T})
   if vecnorm(x) - f.r > 1e-14
     return +Inf
   end

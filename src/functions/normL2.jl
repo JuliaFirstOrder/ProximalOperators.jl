@@ -19,7 +19,7 @@ end
 
 NormL2{R <: Real}(lambda::R=1.0) = NormL2{R}(lambda)
 
-@compat function (f::NormL2)(x::AbstractArray)
+function (f::NormL2)(x::AbstractArray)
   return f.lambda*vecnorm(x)
 end
 

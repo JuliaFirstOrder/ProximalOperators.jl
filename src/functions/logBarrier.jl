@@ -21,7 +21,7 @@ Returns the function `g(x) = -mu*sum(log(a*x_i+b), i=1,...,n)`.
 
 LogBarrier{T <: Real}(a::T=1.0, b::T=0.0, mu::T=1.0) = LogBarrier{T}(a, b, mu)
 
-@compat function (f::LogBarrier){T <: Real}(x::AbstractArray{T,1})
+function (f::LogBarrier){T <: Real}(x::AbstractArray{T,1})
   sumf = 0.0
   v = 0.0
   for i in eachindex(x)

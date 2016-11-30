@@ -19,7 +19,7 @@ end
 
 IndSphereL2{R <: Real}(r::R=1.0) = IndSphereL2{R}(r)
 
-@compat function (f::IndSphereL2){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::IndSphereL2){T <: RealOrComplex}(x::AbstractArray{T})
   if abs(vecnorm(x) - f.r)/f.r > 1e-14
     return +Inf
   end

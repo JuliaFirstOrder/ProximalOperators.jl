@@ -1,26 +1,26 @@
 # separable sum
 
-immutable SeparableSum{S <: Union{AbstractArray, Tuple}} <: ProximableFunction
+immutable SeparableSum{S <: AbstractArray} <: ProximableFunction
 	fs::S
 end
 
-@compat function (f::SeparableSum{S}){S <: Union{AbstractArray, Tuple}, T <: Union{AbstractArray, Tuple}}(x::T)
+function (f::SeparableSum{S}){S <: AbstractArray, T <: AbstractArray}(x::T)
 	sum = 0.0
-  for k = 1:length(f.fs)
+  for k in eachindex(f.fs)
 		sum += f.fs[k](x[k])
 	end
 	return sum
 end
 
-function prox!{S <: Union{AbstractArray, Tuple}, T <: Union{AbstractArray, Tuple}}(f::SeparableSum{S}, x::T, y::T, gamma::Real=1.0)
+function prox!{S <: AbstractArray, T <: AbstractArray}(f::SeparableSum{S}, x::T, y::T, gamma::Real=1.0)
   sum = 0.0
-  for k = 1:length(f.fs)
+  for k in eachindex(f.fs)
 	  sum += prox!(f.fs[k], x[k], y[k], gamma)
   end
   return sum
 end
 
-function prox{T <: Union{AbstractArray, Tuple}}(f::SeparableSum, x::T, gamma::Real=1.0)
+function prox{T <: AbstractArray}(f::SeparableSum, x::T, gamma::Real=1.0)
 	y = map(similar, x)
 	fy = prox!(f, x, y, gamma)
 	return y, fy

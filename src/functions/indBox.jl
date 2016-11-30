@@ -38,7 +38,7 @@ IndBox_lb{T <: AbstractArray, S}(f::IndBox{T, S}, i) = f.lb[i]
 IndBox_ub{T, S <: Real}(f::IndBox{T, S}, i) = f.ub
 IndBox_ub{T, S <: AbstractArray}(f::IndBox{T, S}, i) = f.ub[i]
 
-@compat function (f::IndBox){R <: Real}(x::AbstractArray{R})
+function (f::IndBox){R <: Real}(x::AbstractArray{R})
   for k in eachindex(x)
     if x[k] < IndBox_lb(f,k) || x[k] > IndBox_ub(f,k)
       return +Inf

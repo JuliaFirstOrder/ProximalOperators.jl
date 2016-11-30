@@ -22,7 +22,7 @@ Precomposition{T <: ProximableFunction, S <: Real}(f::T, a::S=1.0, b::S=0.0) = P
 
 fun_dom(f::Precomposition) = fun_dom(f.f)
 
-@compat function (g::Precomposition{T, S, V}){T <: ProximableFunction, S <: Real, V <: Union{Real, AbstractArray}, R <: RealOrComplex}(x::AbstractArray{R})
+function (g::Precomposition{T, S, V}){T <: ProximableFunction, S <: Real, V <: Union{Real, AbstractArray}, R <: RealOrComplex}(x::AbstractArray{R})
   return g.f((g.a)*x + g.b)
 end
 

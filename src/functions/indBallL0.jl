@@ -19,7 +19,7 @@ end
 
 IndBallL0{I <: Integer}(r::I) = IndBallL0{I}(r)
 
-@compat function (f::IndBallL0){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::IndBallL0){T <: RealOrComplex}(x::AbstractArray{T})
   if countnz(x) > f.r
     return +Inf
   end

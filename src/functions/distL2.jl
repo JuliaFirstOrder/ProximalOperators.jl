@@ -14,7 +14,7 @@ end
 
 DistL2{R <: Real}(ind::IndicatorConvex, lambda::R=1.0) = DistL2{R}(ind, lambda)
 
-@compat function (f::DistL2){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::DistL2){T <: RealOrComplex}(x::AbstractArray{T})
   p, = prox(f.ind, x)
   return f.lambda*vecnorm(x-p)
 end

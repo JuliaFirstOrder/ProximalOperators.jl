@@ -19,7 +19,7 @@ end
 
 NuclearNorm{R <: Real}(lambda::R=1.0) = NuclearNorm{R}(lambda)
 
-@compat function (f::NuclearNorm){T <: RealOrComplex}(X::AbstractArray{T,2})
+function (f::NuclearNorm){T <: RealOrComplex}(X::AbstractArray{T,2})
   U, S, V = svd(X);
   return f.lambda * sum(S);
 end

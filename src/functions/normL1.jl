@@ -31,11 +31,11 @@ parameters `λ_i ⩾ 0`.
 
 NormL1{A <: AbstractArray}(lambda::A) = NormL1{A}(lambda)
 
-@compat function (f::NormL1{R}){R <: Real}(x::AbstractArray)
+function (f::NormL1{R}){R <: Real}(x::AbstractArray)
   return f.lambda*vecnorm(x,1)
 end
 
-@compat function (f::NormL1{A}){A <: AbstractArray}(x::AbstractArray)
+function (f::NormL1{A}){A <: AbstractArray}(x::AbstractArray)
   return vecnorm(f.lambda.*x,1)
 end
 

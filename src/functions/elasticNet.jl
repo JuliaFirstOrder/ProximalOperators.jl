@@ -20,7 +20,7 @@ end
 
 ElasticNet{R <: Real}(mu::R=1.0, lambda::R=1.0) = ElasticNet{R}(mu, lambda)
 
-@compat function (f::ElasticNet){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::ElasticNet){T <: RealOrComplex}(x::AbstractArray{T})
   return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2
 end
 

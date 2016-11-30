@@ -19,7 +19,7 @@ end
 
 NormL0{R <: Real}(lambda::R=1.0) = NormL0{R}(lambda)
 
-@compat function (f::NormL0){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::NormL0){T <: RealOrComplex}(x::AbstractArray{T})
   return f.lambda*countnz(x)
 end
 

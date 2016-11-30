@@ -21,7 +21,7 @@ IndBallRank{I <: Integer}(r::I=1) = IndBallRank{I}(r)
 
 if VERSION < v"0.5-"
 
-@compat function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
+function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r
     return 0.0
@@ -70,7 +70,7 @@ end
 
 else
 
-@compat function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
+function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r return 0.0 end
   svdobj = svds(x, nsv=f.r+1)[1]

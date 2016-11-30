@@ -32,7 +32,7 @@ end
 LeastSquares{R <: RealOrComplex}(A::AbstractArray{R,2}, b::AbstractArray{R,1}, lambda::Real=1.0) =
   LeastSquares{R}(A, b, lambda)
 
-@compat function (f::LeastSquares{R}){R <: RealOrComplex}(x::AbstractArray{R,1})
+function (f::LeastSquares{R}){R <: RealOrComplex}(x::AbstractArray{R,1})
   return (f.lambda/2)*vecnorm(f.A*x - f.b, 2)^2
 end
 

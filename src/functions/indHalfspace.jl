@@ -17,7 +17,7 @@ end
 
 IndHalfspace{T <: AbstractArray, R <: Real}(a::T, b::R) = IndHalfspace{T, R}(a, b)
 
-@compat function (f::IndHalfspace){T <: Real}(x::AbstractArray{T})
+function (f::IndHalfspace){T <: Real}(x::AbstractArray{T})
   s = vecdot(f.a,x)-f.b
   if s <= 1e-14
     return 0.0

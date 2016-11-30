@@ -32,7 +32,7 @@ IndAffine{T <: RealOrComplex}(A::AbstractArray{T,2}, b::AbstractArray{T,1}) =
 IndAffine{T <: RealOrComplex}(a::AbstractArray{T,1}, b::T) =
   IndAffine{T}(a', [b])
 
-@compat function (f::IndAffine){T <: RealOrComplex}(x::AbstractArray{T,1})
+function (f::IndAffine){T <: RealOrComplex}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable
   if norm(f.A*x - f.b, Inf) <= 1e-14
     return 0.0
