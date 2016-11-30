@@ -4,7 +4,7 @@ immutable SeparableSum{S <: AbstractArray} <: ProximableFunction
 	fs::S
 end
 
-function (f::SeparableSum{S}){S <: AbstractArray, T <: AbstractArray}(x::T)
+function (f::SeparableSum{S}){S <: AbstractArray}(x::AbstractArray)
 	sum = 0.0
   for k in eachindex(f.fs)
 		sum += f.fs[k](x[k])
@@ -12,7 +12,7 @@ function (f::SeparableSum{S}){S <: AbstractArray, T <: AbstractArray}(x::T)
 	return sum
 end
 
-function prox!{S <: AbstractArray, T <: AbstractArray}(f::SeparableSum{S}, x::T, y::T, gamma::Real=1.0)
+function prox!{S <: AbstractArray}(f::SeparableSum{S}, x::AbstractArray, y::AbstractArray, gamma::Real=1.0)
   sum = 0.0
   for k in eachindex(f.fs)
 	  sum += prox!(f.fs[k], x[k], y[k], gamma)
@@ -20,7 +20,7 @@ function prox!{S <: AbstractArray, T <: AbstractArray}(f::SeparableSum{S}, x::T,
   return sum
 end
 
-function prox{T <: AbstractArray}(f::SeparableSum, x::T, gamma::Real=1.0)
+function prox(f::SeparableSum, x::AbstractArray, gamma::Real=1.0)
 	y = map(similar, x)
 	fy = prox!(f, x, y, gamma)
 	return y, fy
