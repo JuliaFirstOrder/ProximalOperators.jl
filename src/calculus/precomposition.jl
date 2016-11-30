@@ -27,10 +27,10 @@ function (g::Precomposition{T, S, V}){T <: ProximableFunction, S <: Real, V <: U
 end
 
 function prox!{T <: RealOrComplex, R <: Real}(g::Precomposition, x::AbstractArray{T}, y::AbstractArray{T}, gamma::R=1.0)
-  y[:] = g.a .* x + g.b
+  y .= g.a .* x + g.b
   v = prox!(g.f, y, y, (g.a .* g.a) * gamma)
-  y[:] -= g.b
-  y[:] ./= g.a
+  y .-= g.b
+  y ./= g.a
   return v
 end
 
