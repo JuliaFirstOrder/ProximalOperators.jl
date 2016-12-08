@@ -14,6 +14,7 @@ Name            | Type of set                             | Properties
 `IndBallL1`     | L1 norm ball                            | convex
 `IndBallL2`     | Euclidean ball                          | convex
 `IndBallRank`   | Set of matrices with given rank         | nonconvex
+`IndBinary`     | Indicator of a binary set               | nonconvex
 `IndBox`        | Box                                     | convex
 `IndExpPrimal`  | Indicator of (primal) exponential cone  | convex
 `IndExpDual`    | Indicator of (dual) exponential cone    | convex

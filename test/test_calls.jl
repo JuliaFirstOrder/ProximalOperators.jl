@@ -195,6 +195,11 @@ stuff = [
         "wrong"  => ( (-rand(),), ),
         "params" => ( (), (rand(),), (), (rand()) ),
         "args"   => ( randn(10), randn(20), randn(5,10), randn(8,17) )
+      ),
+
+  Dict( "constr" => IndBinary,
+        "params" => ( (), (randn(), randn()), (randn(), randn(10)), (randn(10), randn()), (randn(10), randn(10)) ),
+        "args"   => ( randn(10), randn(10), randn(10), randn(10), randn(10) )
       )
 ]
 
