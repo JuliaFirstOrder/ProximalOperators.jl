@@ -198,8 +198,8 @@ stuff = [
       ),
 
   Dict( "constr" => IndBinary,
-        "params" => ( (), (randn(), randn()), (randn(), randn(10)), (randn(10), randn()), (randn(10), randn(10)) ),
-        "args"   => ( randn(10), randn(10), randn(10), randn(10), randn(10) )
+        "params" => ( (), (randn(), randn()), (randn(), randn(10)), (randn(10), randn()), (randn(10), randn(10)), (randn(), randn(5,5)) ),
+        "args"   => ( randn(10), randn(10), randn(10), randn(10), randn(10), randn(5,5) )
       )
 ]
 
