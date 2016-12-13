@@ -18,7 +18,7 @@ export IndAffine, IndHalfspace,
        IndFree,
        IndPoint, IndZero,
        IndSimplex,
-       IndSphereL2, IndBinary,
+       IndSphereL2, IndSphereSqrL2, IndBinary,
        HingeLoss,
        LogBarrier,
        LeastSquares,
@@ -70,6 +70,7 @@ include("functions/indPSD.jl")
 include("functions/indSimplex.jl")
 include("functions/indSOC.jl")
 include("functions/indSphereL2.jl")
+include("functions/indSphereSqrL2.jl")
 include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")

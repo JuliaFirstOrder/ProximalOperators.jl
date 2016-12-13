@@ -118,6 +118,12 @@ stuff = [
         "args"   => ( randn(10), randn(20) )
       ),
 
+  Dict( "constr" => IndSphereSqrL2,
+        "wrong"  => ( (-rand(),), ),
+        "params" => ( (rand(),), (sqrt(20),) ),
+        "args"   => ( randn(10), randn(20) )
+      ),
+
   Dict( "constr" => IndPSD,
         "params" => ( (), () ),
         "args"   => ( Symmetric(randn(5,5)), Symmetric(rand(20,20)) ),
