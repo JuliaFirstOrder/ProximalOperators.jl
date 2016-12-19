@@ -3,7 +3,7 @@ immutable FirmThreshold{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   tau::T
   function FirmThreshold(lambda::T, tau::T )
- 
+
 	  if !(eltype(lambda) <: Real)
 	          error("λ must be real")
 	  end
@@ -34,7 +34,7 @@ FirmThreshold{A <: AbstractArray}(lambda::A,tau::A) = FirmThreshold{A}(lambda,ta
 
 function (f::FirmThreshold{R}){R <: Real}(x::AbstractArray)
   fy = 0.
-  for i in eachindex(x) 
+  for i in eachindex(x)
 	  fy += abs(x[i]) < f.lambda ? f.tau*(f.lambda*abs(x[i]) -0.5*real(dot(x[i],x[i]))) : 0.5*f.tau*f.lambda^2
   end
   return fy
@@ -42,15 +42,15 @@ end
 
 function (f::FirmThreshold{A}){A <: AbstractArray}(x::AbstractArray)
   fy = 0.
-  for i in eachindex(x) 
-	  fy += abs(x[i]) < f.lambda[i] ? f.tau[i]*(f.lambda[i]*abs(x[i]) - 0.5*real(dot(x[i],x[i]))) : 0.5*f.tau[i]*f.lambda[i]^2 
+  for i in eachindex(x)
+	  fy += abs(x[i]) < f.lambda[i] ? f.tau[i]*(f.lambda[i]*abs(x[i]) - 0.5*real(dot(x[i],x[i]))) : 0.5*f.tau[i]*f.lambda[i]^2
   end
   return fy
 end
 
 function prox!{A <: AbstractArray, R <: RealOrComplex}(f::FirmThreshold{A}, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
   fy = zero(R)
-  for i in eachindex(x) 
+  for i in eachindex(x)
 	  y[i] = abs(x[i]) < f.lambda[i]*f.tau[i] ? 0 : ( abs(x[i]) >= f.lambda[i] ? x[i] : (x[i]-f.lambda[i]*f.tau[i]*sign(x[i]))/(1-f.tau[i])  )
   end
   return f(y)
@@ -58,7 +58,7 @@ end
 
 function prox!{T <: Real, R <: RealOrComplex}(f::FirmThreshold{T}, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
   fy = zero(R)
-  for i in eachindex(x) 
+  for i in eachindex(x)
 	  y[i] = abs(x[i]) < f.lambda*f.tau ? 0 : ( abs(x[i]) >= f.lambda ? x[i] : (x[i]-f.lambda*f.tau*sign(x[i]))/(1-f.tau)  )
   end
   return f(y)
@@ -76,7 +76,7 @@ function prox_naive{A<: Real,T <: RealOrComplex}(f::FirmThreshold{A}, x::Abstrac
   for i in eachindex(x)
 	  if abs(x[i]) < f.lambda*f.tau
 		  y[i] = 0
-	  elseif abs(x[i]) >= f.lambda 
+	  elseif abs(x[i]) >= f.lambda
 		  y[i] = x[i]
 	  else
 		  y[i] = (x[i]-f.lambda*f.tau*sign(x[i]))/(1-f.tau)
@@ -99,7 +99,7 @@ function prox_naive{A<: AbstractArray,T <: RealOrComplex}(f::FirmThreshold{A}, x
   for i in eachindex(x)
 	  if abs(x[i]) < f.lambda[i]*f.tau[i]
 		  y[i] = 0
-	  elseif abs(x[i]) >= f.lambda[i] 
+	  elseif abs(x[i]) >= f.lambda[i]
 		  y[i] = x[i]
 	  else
 		  y[i] = (x[i]-f.lambda[i]*f.tau[i]*sign(x[i]))/(1-f.tau[i])
@@ -115,4 +115,3 @@ function prox_naive{A<: AbstractArray,T <: RealOrComplex}(f::FirmThreshold{A}, x
   end
   return y, fy
 end
-
