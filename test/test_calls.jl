@@ -118,12 +118,6 @@ stuff = [
         "args"   => ( randn(10), randn(20) )
       ),
 
-  Dict( "constr" => IndSphereSqrL2,
-        "wrong"  => ( (-rand(),), ),
-        "params" => ( (rand(),), (sqrt(20),) ),
-        "args"   => ( randn(10), randn(20) )
-      ),
-
   Dict( "constr" => IndPSD,
         "params" => ( (), () ),
         "args"   => ( Symmetric(randn(5,5)), Symmetric(rand(20,20)) ),
@@ -155,6 +149,12 @@ stuff = [
         "wrong"  => ( (-rand(),), (-rand(10),) ),
         "params" => ( (), (rand(),), (rand(20),), (rand(30),), (rand(),) ),
         "args"   => ( randn(10), randn(10), randn(20), rand(Complex{Float64},30), rand(Complex{Float64}, 50) )
+      ),
+
+  Dict( "constr" => FirmThreshold,
+        "wrong"  => ( (-rand(),0.9*rand()+1e-3), (-rand(10),0.9*rand(10)+1e-3), (rand(),5*rand()), (rand(10),10*rand(10)), (rand(5),0.9*rand(10)), ),
+	"params" => ( (), (rand(),), (rand(20),0.9*rand(20)+1e-3), (rand(30),0.9*rand(30)+1e-3,), (rand(),0.9*rand()+1e-3) ),
+	"args"   => ( randn(10), randn(10), randn(20), rand(Complex{Float64},30), rand(Complex{Float64}, 50) )
       ),
 
   Dict( "constr" => NormL2,

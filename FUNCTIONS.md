@@ -27,7 +27,6 @@ Name            | Type of set                             | Properties
 `IndSimplex`    | Simplex                                 | convex
 `IndSOC`        | Second-order cone                       | convex
 `IndSphereL2`   | Euclidean sphere                        | nonconvex
-`IndSphereSqrL2`| Squared Euclidean sphere                | nonconvex
 `IndZero`       | Indicator of the zero singleton         | convex
 
 ### Norms, pseudo-norms, regularization functions
@@ -42,6 +41,7 @@ Name            | Description                         | Properties
 `NormLinf`      | L-infinity norm                     | convex
 `NuclearNorm`   | Nuclear norm                        | convex
 `SqrNormL2`     | Squared Euclidean norm              | convex
+`FirmThreshold` | Firm Threshold regularization       | nonconvex
 
 ### Penalties
 

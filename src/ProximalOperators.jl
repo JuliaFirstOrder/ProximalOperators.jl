@@ -18,12 +18,13 @@ export IndAffine, IndHalfspace,
        IndFree,
        IndPoint, IndZero,
        IndSimplex,
-       IndSphereL2, IndSphereSqrL2, IndBinary,
+       IndSphereL2, IndBinary,
        HingeLoss,
        LogBarrier,
        LeastSquares,
        Maximum,
        NormL0, NormL1, NormL2, NormL21, NormLinf, NuclearNorm, SqrNormL2, ElasticNet,
+       FirmThreshold,
        DistL2, SqrDistL2,
        Zero
 
@@ -49,6 +50,7 @@ include("calculus/slicedSeparableSum.jl")
 
 include("functions/distL2.jl")
 include("functions/elasticNet.jl")
+include("functions/firmThreshold.jl")
 include("functions/logBarrier.jl")
 include("functions/normL2.jl")
 include("functions/normL1.jl")
@@ -70,7 +72,6 @@ include("functions/indPSD.jl")
 include("functions/indSimplex.jl")
 include("functions/indSOC.jl")
 include("functions/indSphereL2.jl")
-include("functions/indSphereSqrL2.jl")
 include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
