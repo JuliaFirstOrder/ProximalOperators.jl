@@ -23,7 +23,9 @@ function (g::Regularize){T <: RealOrComplex}(x::AbstractArray{T})
 end
 
 function prox!{T <: RealOrComplex}(g::Regularize, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  v = prox!(g.f, x./(1+gamma*g.rho)+g.a./(1/(gamma*g.rho)+1), y, gamma/(1+gamma*g.rho))
+  gr= g.rho*gamma
+  gr2= 1/(1+gr)
+  v = prox!(g.f, gr2.*(x+gr.*g.a), y, gr2*gamma)
   return v + g.rho/2*vecnorm(y-g.a)^2
 end
 
