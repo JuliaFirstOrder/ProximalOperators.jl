@@ -36,5 +36,5 @@ end
 
 fun_name(f::Regularize) = string("Regularized ", fun_name(f.f))
 fun_dom(f::Regularize) = fun_dom(f.f)
-fun_expr(f::Regularize) = string(fun_expr(f.f),"+(ρ/2)||x||^2")
-fun_params(f::Regularize) = "ρ = $(f.rho), λ = $(f.f.lambda)"
+fun_expr(f::Regularize) = string(fun_expr(f.f),"+(ρ/2)||x-a||^2")
+fun_params(f::Regularize) = "ρ = $(f.rho), λ = $(f.f.lambda), a = $( typeof(f.a)<:Real ? f.a :typeof(f.a) )"
