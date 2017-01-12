@@ -33,7 +33,8 @@ export Conjugate,
        Precomposition,
        SlicedSeparableSum,
        SeparableSum,
-       Tilt
+       Tilt,
+       Regularize
 
 abstract ProximableFunction
 abstract NormFunction <: ProximableFunction
@@ -49,6 +50,7 @@ include("calculus/precomposition.jl")
 include("calculus/separableSum.jl")
 include("calculus/slicedSeparableSum.jl")
 include("calculus/tilt.jl")
+include("calculus/regularize.jl")
 
 include("functions/distL2.jl")
 include("functions/elasticNet.jl")

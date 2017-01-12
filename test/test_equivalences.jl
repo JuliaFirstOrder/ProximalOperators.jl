@@ -68,3 +68,22 @@ for i = 1:N
   y2 = mu*gamma*(z./b) + x
   @test vecnorm(y1-y2, Inf)/(1+norm(y1, Inf)) <= TOL_ASSERT
 end
+
+################################################################################
+### testing regularize
+################################################################################
+
+println("testing regularized NormL1 vs. Elastic Net")
+
+lambda = rand()
+rho = rand()
+g = Regularize(NormL1(lambda),rho)
+show(g)
+println()
+
+x = randn(10)
+y,f = prox(g,x)
+y2,f2 = prox(ElasticNet(lambda,rho),x)
+
+@test norm(f-f2)<TOL_ASSERT
+@test norm(y-y2)<TOL_ASSERT
