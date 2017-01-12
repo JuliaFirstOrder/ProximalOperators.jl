@@ -73,6 +73,16 @@ stuff = [
   Dict( "funcs"  => (lambda -> (SqrNormL2(lambda), Conjugate(SqrNormL2(1.0/lambda))))(0.1+5.0*rand()),
         "args"   => ( randn(50), randn(50), randn(50) ),
         "gammas" => ( 1.0, rand(), 5.0*rand() )
+      ),
+
+  Dict( "funcs"  => ((A, b) -> (LeastSquares(A, b), Tilt(LeastSquares(A, zeros(size(A, 1))), -A'*b, 0.5*vecdot(b, b))))(randn(10,20), randn(10)),
+        "args"   => ( randn(20), randn(20), randn(20) ),
+        "gammas" => ( 1.0, rand(), 5.0*rand() )
+      ),
+
+  Dict( "funcs"  => ((lambda, rho) -> (ElasticNet(lambda,rho), Regularize(NormL1(lambda),rho)))(rand(), rand()),
+        "args"   => ( randn(20), randn(20), randn(20) ),
+        "gammas" => ( 1.0, rand(), 5.0*rand() )
       )
 ]
 
