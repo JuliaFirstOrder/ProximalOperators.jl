@@ -206,7 +206,18 @@ stuff = [
   Dict( "constr" => IndBinary,
         "params" => ( (), (randn(), randn()), (randn(), randn(10)), (randn(10), randn()), (randn(10), randn(10)), (randn(), randn(5,5)) ),
         "args"   => ( randn(10), randn(10), randn(10), randn(10), randn(10), randn(5,5) )
-      )
+      ),
+
+  Dict( "constr" => Regularize,
+        "wrong"  => ( (NormL1(), -rand()), ),
+        "params" => ( (NormL1(), rand()), (NormL1(rand()), rand()), (NormL1(), rand(), randn(20)), (NormL1(rand()), rand(), randn(20)) ),
+        "args"   => ( randn(10), randn(5,10), randn(20), randn(20) )
+      ),
+
+  Dict( "constr" => Tilt,
+        "params" => ( (LeastSquares(randn(20, 10), randn(20)), randn(10)), ),
+        "args"   => ( randn(10) )
+      ),
 ]
 
 for i = 1:length(stuff)

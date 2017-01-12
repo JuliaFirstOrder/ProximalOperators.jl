@@ -6,8 +6,6 @@ immutable Tilt{T <: ProximableFunction, S <: AbstractArray, R <: Real} <: Proxim
   b::R
 end
 
-fun_dom(f::Tilt) = fun_dom(f.f)
-
 Tilt{T <: ProximableFunction, S <: AbstractArray}(f::T, a::S) = Tilt{T, S, eltype(a)}(f, a, 0.0)
 
 function (g::Tilt){T <: RealOrComplex}(x::AbstractArray{T})
@@ -25,3 +23,8 @@ function prox_naive{T <: RealOrComplex}(g::Tilt, x::AbstractArray{T}, gamma::Rea
 end
 
 is_prox_accurate(f::Tilt) = is_prox_accurate(f.f)
+
+fun_name(f::Tilt) = string("Tilted ", fun_name(f.f))
+fun_dom(f::Tilt) = fun_dom(f.f)
+fun_expr(f::Tilt) = string(fun_expr(f.f)," + a'x")
+fun_params(f::Tilt) = string(fun_expr(f.f), ", a = $(typeof(f.a))")

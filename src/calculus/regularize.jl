@@ -30,7 +30,7 @@ function prox!{T <: RealOrComplex}(g::Regularize, x::AbstractArray{T}, y::Abstra
 end
 
 function prox_naive{T <: RealOrComplex}(g::Regularize, x::AbstractArray{T}, gamma::Real=1.0)
-  y, v = prox_naive(g.f, x./(1+gamma*g.rho)+g.a./(1/(gamma*g.rho)+1), y, gamma/(1+gamma*g.rho))
+  y, v = prox_naive(g.f, x./(1+gamma*g.rho)+g.a./(1/(gamma*g.rho)+1), gamma/(1+gamma*g.rho))
   return y, v + g.rho/2*vecnorm(y-g.a)^2
 end
 
