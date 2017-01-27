@@ -26,9 +26,9 @@ stuff = [
       ),
 
   Dict( "constr" => HuberLoss,
-        "params" => ( (), (rand(),), (rand(), rand()) ),
-        "args"   => ( randn(10), randn(8, 10), randn(20) ),
-        "gammas" => ( rand(), rand(), rand() ),
+        "params" => ( (), (rand(),), (rand(), rand()), (rand(), rand()) ),
+        "args"   => ( randn(10), randn(8, 10), randn(20), rand(Complex{Float64}, 12, 15) ),
+        "gammas" => ( rand(), rand(), rand(), rand() ),
         # test optimality condition of prox
         "test"   => (f, x, gamma, y) -> isapprox((x-y)/gamma, (vecnorm(y) <= f.rho ? f.mu*y : f.rho*f.mu*y/vecnorm(y)))
       ),

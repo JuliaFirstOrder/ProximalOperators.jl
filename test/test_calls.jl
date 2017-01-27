@@ -221,8 +221,8 @@ stuff = [
 
   Dict( "constr" => HuberLoss,
         "wrong"  => ( (-rand(), ), (rand(), -rand()), (-rand(), rand()), (-rand(), -rand()) ),
-        "params" => ( (), (rand(), ), (rand(), rand()) ),
-        "args"   => ( randn(10), randn(5, 8), randn(20) )
+        "params" => ( (), (rand(), ), (rand(), rand()), (rand(), rand()) ),
+        "args"   => ( randn(10), randn(5, 8), randn(20), rand(Complex{Float64}, 8, 12) )
       ),
 ]
 

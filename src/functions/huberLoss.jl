@@ -20,7 +20,7 @@ end
 
 HuberLoss{R <: Real}(rho::R=1.0, mu::R=1.0) = HuberLoss{R}(rho, mu)
 
-function (f::HuberLoss){T <: Real}(x::AbstractArray{T})
+function (f::HuberLoss){T <: Union{Real, Complex}}(x::AbstractArray{T})
   normx = vecnorm(x)
   if normx <= f.rho
     return (f.mu/2)*normx^2
@@ -29,7 +29,7 @@ function (f::HuberLoss){T <: Real}(x::AbstractArray{T})
   end
 end
 
-function prox!{T <: Real}(f::HuberLoss, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: Union{Real, Complex}}(f::HuberLoss, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
   normx = vecnorm(x)
   mugam = f.mu*gamma
   scal = (1-min(mugam/(1+mugam), mugam*f.rho/(normx)))
@@ -45,11 +45,11 @@ function prox!{T <: Real}(f::HuberLoss, x::AbstractArray{T}, y::AbstractArray{T}
 end
 
 fun_name(f::HuberLoss) = "Huber loss"
-fun_dom(f::HuberLoss) = "AbstractArray{Real}"
+fun_dom(f::HuberLoss) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::HuberLoss) = "x ↦ (μ/2)||x||^2 if ||x||⩽ρ, μρ(||x||-ρ/2) otherwise"
 fun_params(f::HuberLoss) = string("ρ = $(f.rho), μ = $(f.mu)")
 
-function prox_naive{T <: Real}(f::HuberLoss, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive{T <: Union{Real, Complex}}(f::HuberLoss, x::AbstractArray{T}, gamma::Real=1.0)
   y = (1-min(f.mu*gamma/(1+f.mu*gamma), f.mu*gamma*f.rho/(vecnorm(x))))*x
   if vecnorm(y) <= f.rho
     return y, (f.mu/2)*vecnorm(y)^2
