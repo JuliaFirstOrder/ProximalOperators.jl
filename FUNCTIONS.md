@@ -48,6 +48,7 @@ Name            | Description                         | Properties
 Name            | Description                         | Properties
 ----------------|-------------------------------------|-----------------
 `HingeLoss`     | Hinge loss function                 | convex
+`HuberLoss`     | Huber loss function                 | convex
 `LogBarrier`    | Logarithmic barrier                 | convex
 `LeastSquares`  | Sum-of-residual-squares             | convex
 
