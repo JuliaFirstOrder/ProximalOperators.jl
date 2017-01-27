@@ -19,7 +19,7 @@ export IndAffine, IndHalfspace,
        IndPoint, IndZero,
        IndSimplex,
        IndSphereL2, IndBinary,
-       HingeLoss,
+       HingeLoss, HuberLoss,
        LogBarrier,
        LeastSquares,
        Maximum,
@@ -62,6 +62,7 @@ include("functions/normL21.jl")
 include("functions/normL0.jl")
 include("functions/nuclearNorm.jl")
 include("functions/hingeLoss.jl")
+include("functions/huberLoss.jl")
 include("functions/indAffine.jl")
 include("functions/indBallL0.jl")
 include("functions/indBallL1.jl")

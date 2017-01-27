@@ -24,6 +24,14 @@ stuff = [
         # test y belonging to the L1 ball
         "test"   => (f, x, gamma, y) -> vecnorm(y, 1) <= (1+1e-12)*f.r
       ),
+
+  Dict( "constr" => HuberLoss,
+        "params" => ( (), (rand(),), (rand(), rand()) ),
+        "args"   => ( randn(10), randn(8, 10), randn(20) ),
+        "gammas" => ( rand(), rand(), rand() ),
+        # test optimality condition of prox
+        "test"   => (f, x, gamma, y) -> isapprox((x-y)/gamma, (vecnorm(y) <= f.rho ? f.mu*y : f.rho*f.mu*y/vecnorm(y)))
+      ),
 ]
 
 for i = 1:length(stuff)
