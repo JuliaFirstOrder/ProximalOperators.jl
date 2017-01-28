@@ -19,57 +19,6 @@ end
 
 IndBallRank{I <: Integer}(r::I=1) = IndBallRank{I}(r)
 
-if VERSION < v"0.5-"
-
-function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
-  maxr = minimum(size(x))
-  if maxr <= f.r
-    return 0.0
-  end
-  u, s, v = svds(x, nsv=f.r+1)
-  # the tolerance in the following line should be customizable
-  if s[end]/s[1] <= 1e-14 return 0.0 end
-  return +Inf
-end
-
-function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
-  maxr = minimum(size(x))
-  if maxr <= f.r
-    y[:] = x
-    return 0.0
-  end
-  u, s, v = svds(x, nsv=f.r)
-  for i = 1:size(x,1)
-    for j = 1:size(x,2)
-      y[i,j] = 0.0
-      for k = 1:f.r
-        y[i,j] += u[i,k]*s[k]*v[j,k]
-      end
-    end
-  end
-  return 0.0
-end
-
-function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
-  maxr = minimum(size(x))
-  if maxr <= f.r
-    y[:] = x
-    return 0.0
-  end
-  u, s, v = svds(x, nsv=f.r)
-  for i = 1:size(x,1)
-    for j = 1:size(x,2)
-      y[i,j] = 0.0
-      for k = 1:f.r
-        y[i,j] += u[i,k]*s[k]*conj(v[j,k])
-      end
-    end
-  end
-  return 0.0
-end
-
-else
-
 function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r return 0.0 end
@@ -115,8 +64,6 @@ function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractA
     end
   end
   return 0.0
-end
-
 end
 
 fun_name(f::IndBallRank) = "indicator of the set of rank-r matrices"

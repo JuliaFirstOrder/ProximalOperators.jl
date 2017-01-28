@@ -218,6 +218,12 @@ stuff = [
         "params" => ( (LeastSquares(randn(20, 10), randn(20)), randn(10)), ),
         "args"   => ( randn(10) )
       ),
+
+  Dict( "constr" => HuberLoss,
+        "wrong"  => ( (-rand(), ), (rand(), -rand()), (-rand(), rand()), (-rand(), -rand()) ),
+        "params" => ( (), (rand(), ), (rand(), rand()), (rand(), rand()) ),
+        "args"   => ( randn(10), randn(5, 8), randn(20), rand(Complex{Float64}, 8, 12) )
+      ),
 ]
 
 for i = 1:length(stuff)
