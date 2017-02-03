@@ -1,5 +1,11 @@
 # Tilting (addition with affine function)
 
+"""
+  Tilt(f::ProximableFunction, a::AbstractArray, b::Real)
+
+Given function `f`, returns `g(x) = f(x) + <a,x> + b`.
+"""
+
 immutable Tilt{T <: ProximableFunction, S <: AbstractArray, R <: Real} <: ProximableFunction
   f::T
   a::S
@@ -26,5 +32,5 @@ is_prox_accurate(f::Tilt) = is_prox_accurate(f.f)
 
 fun_name(f::Tilt) = string("Tilted ", fun_name(f.f))
 fun_dom(f::Tilt) = fun_dom(f.f)
-fun_expr(f::Tilt) = string(fun_expr(f.f)," + a'x")
-fun_params(f::Tilt) = string(fun_expr(f.f), ", a = $(typeof(f.a))")
+fun_expr(f::Tilt) = string(fun_expr(f.f)," + a'x + b")
+fun_params(f::Tilt) = string(fun_expr(f.f), ", a = $(typeof(f.a))", ", b = $(f.b)")
