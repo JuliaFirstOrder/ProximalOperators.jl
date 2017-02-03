@@ -1,4 +1,4 @@
-# Separable sum
+# Separable sum, using slices of an array as variables
 
 immutable SlicedSeparableSum{S <: AbstractArray, T <: AbstractArray} <: ProximableFunction
 	fs::S

@@ -224,6 +224,11 @@ stuff = [
         "params" => ( (), (rand(), ), (rand(), rand()), (rand(), rand()) ),
         "args"   => ( randn(10), randn(5, 8), randn(20), rand(Complex{Float64}, 8, 12) )
       ),
+
+  Dict( "constr" => SumPositive,
+        "params" => ( (), (), (), (), () ),
+        "args"   => ( randn(3), randn(10), randn(12,19), randn(4,3), randn(17) )
+      ),
 ]
 
 for i = 1:length(stuff)

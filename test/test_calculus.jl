@@ -83,6 +83,11 @@ stuff = [
   Dict( "funcs"  => ((lambda, rho) -> (ElasticNet(lambda,rho), Regularize(NormL1(lambda),rho)))(rand(), rand()),
         "args"   => ( randn(20), randn(20), randn(20) ),
         "gammas" => ( 1.0, rand(), 5.0*rand() )
+      ),
+
+  Dict( "funcs"  => ((b, mu) -> (HingeLoss(b, mu), Postcomposition(Precomposition(SumPositive(), -b, 1.0), mu)))([0.5+rand(10); -0.5-rand(10)], 0.5+rand()),
+        "args"   => ( randn(20), randn(20), randn(20) ),
+        "gammas" => ( 1.0, rand(), 5.0*rand() )
       )
 ]
 

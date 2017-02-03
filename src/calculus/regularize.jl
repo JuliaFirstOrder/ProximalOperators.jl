@@ -1,4 +1,3 @@
-
 # Regularize
 
 immutable Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, AbstractArray}} <: ProximableFunction

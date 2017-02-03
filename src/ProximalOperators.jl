@@ -19,7 +19,7 @@ export IndAffine, IndHalfspace,
        IndPoint, IndZero,
        IndSimplex,
        IndSphereL2, IndBinary,
-       HingeLoss, HuberLoss,
+       SumPositive, HingeLoss, HuberLoss,
        LogBarrier,
        LeastSquares,
        Maximum,
@@ -81,6 +81,7 @@ include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
 include("functions/sumLargest.jl")
+include("functions/sumPositive.jl")
 include("functions/maximum.jl")
 include("functions/normLinf.jl")
 include("functions/leastSquares.jl")
