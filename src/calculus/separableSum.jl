@@ -1,4 +1,4 @@
-# separable sum
+# Separable sum, using arrays of arrays as variables
 
 immutable SeparableSum{S <: AbstractArray} <: ProximableFunction
 	fs::S

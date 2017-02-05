@@ -19,7 +19,7 @@ export IndAffine, IndHalfspace,
        IndPoint, IndZero,
        IndSimplex,
        IndSphereL2, IndBinary,
-       HingeLoss, HuberLoss,
+       SumPositive, HingeLoss, HuberLoss,
        LogBarrier,
        LeastSquares,
        Maximum,
@@ -81,6 +81,7 @@ include("functions/indHalfspace.jl")
 include("functions/sqrDistL2.jl")
 include("functions/sqrNormL2.jl")
 include("functions/sumLargest.jl")
+include("functions/sumPositive.jl")
 include("functions/maximum.jl")
 include("functions/normLinf.jl")
 include("functions/leastSquares.jl")
@@ -105,7 +106,7 @@ is_prox_accurate(f::ProximableFunction) = true
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0`, that is
 
-  y = argmin_z { f(z) + 1/(2γ)||z-x||^2 }
+  y = argmin_z { f(z) + 1/(2γ)||z-x||² }
 
 and returns `y` and `f(y)`.
 """
@@ -136,7 +137,7 @@ end
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0` *in place*, that is
 
-  x ← argmin_z { f(z) + 1/(2γ)||z-x||^2 }
+  x ← argmin_z { f(z) + 1/(2γ)||z-x||² }
 
 and returns `f(x)`.
 """

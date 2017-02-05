@@ -3,7 +3,7 @@
 """
   ElasticNet(λ::Real=1.0, μ::Real=1.0)
 
-Returns the function `g(x) = μ||x||_1 + (λ/2)||x||^2`, for a real parameters `μ, λ ⩾ 0`.
+Returns the function `g(x) = μ||x||_1 + (λ/2)||x||²`, for a real parameters `μ, λ ⩾ 0`.
 """
 
 immutable ElasticNet{R <: Real} <: ProximableFunction
@@ -52,7 +52,7 @@ end
 
 fun_name(f::ElasticNet) = "elastic-net regularization"
 fun_dom(f::ElasticNet) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||^2"
+fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||²"
 fun_params(f::ElasticNet) = "μ = $(f.mu), λ = $(f.lambda)"
 
 function prox_naive{T <: RealOrComplex}(f::ElasticNet, x::AbstractArray{T}, gamma::Real=1.0)

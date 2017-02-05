@@ -1,5 +1,10 @@
-
 # Regularize
+
+"""
+  Regularize(f::ProximableFunction, rho::Real, a::AbstractArray)
+
+Given function `f`, returns `g(x) = f(x) + (rho/2)||x-a||²`.
+"""
 
 immutable Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, AbstractArray}} <: ProximableFunction
   f::T
@@ -14,9 +19,9 @@ immutable Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, Abstra
   end
 end
 
-Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, AbstractArray}}(f::T, rho::S, a::A) = Regularize{T, S, A}(f, rho, a)
+Regularize{T <: ProximableFunction, S <: Real, A <: AbstractArray}(f::T, rho::S, a::A) = Regularize{T, S, A}(f, rho, a)
 
-Regularize{T <: ProximableFunction, S <: Real}(f::T, rho::S=1.0) = Regularize{T, S, S}(f, rho, 0.0)
+Regularize{T <: ProximableFunction, S <: Real}(f::T, rho::S=1.0, a::S=0.0) = Regularize{T, S, S}(f, rho, a)
 
 function (g::Regularize){T <: RealOrComplex}(x::AbstractArray{T})
 	return g.f(x) + g.rho/2*vecnorm(x-g.a)^2
@@ -36,5 +41,5 @@ end
 
 fun_name(f::Regularize) = string("Regularized ", fun_name(f.f))
 fun_dom(f::Regularize) = fun_dom(f.f)
-fun_expr(f::Regularize) = string(fun_expr(f.f),"+(ρ/2)||x-a||^2")
+fun_expr(f::Regularize) = string(fun_expr(f.f),"+(ρ/2)||x-a||²")
 fun_params(f::Regularize) = "ρ = $(f.rho), λ = $(f.f.lambda), a = $( typeof(f.a)<:Real ? f.a :typeof(f.a) )"

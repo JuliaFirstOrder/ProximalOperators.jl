@@ -41,7 +41,11 @@ function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArra
     for j = 1:size(x,2)
       y[i,j] = 0.0
       for k = 1:f.r
-        y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][j,k]
+          if VERSION > v"0.5"
+              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][k,j]
+          else
+              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][j,k]
+          end
       end
     end
   end
@@ -57,9 +61,13 @@ function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractA
   svdobj = svds(x, nsv=f.r)[1]
   for i = 1:size(x,1)
     for j = 1:size(x,2)
-      y[i,j] = 0.0
+      y[i,j] = 0.0 + 0.0im
       for k = 1:f.r
-        y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*conj(svdobj[:Vt][j,k])
+          if VERSION > v"0.5"
+              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][k,j]
+          else
+              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*conj(svdobj[:Vt][j,k])
+          end
       end
     end
   end

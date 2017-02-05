@@ -1,4 +1,10 @@
-# Postcomposition
+# Postcomposition with scaling and sum
+
+"""
+  Postcomposition(f::ProximableFunction, a::Real=1.0, b::Real=0.0)
+
+Returns the function `g(x) = a*f(x) + b`.
+"""
 
 immutable Postcomposition{T <: ProximableFunction, S <: Real} <: ProximableFunction
   f::T
@@ -13,7 +19,7 @@ immutable Postcomposition{T <: ProximableFunction, S <: Real} <: ProximableFunct
   end
 end
 
-fun_dom(f::Postcomposition) = fun_dom(f.f)
+is_prox_accurate(f::Postcomposition) = is_prox_accurate(f.f)
 
 Postcomposition{T <: ProximableFunction, S <: Real}(f::T, a::S=1.0, b::S=0.0) = Postcomposition{T, S}(f, a, b)
 
@@ -31,4 +37,7 @@ function prox_naive{T <: RealOrComplex}(g::Postcomposition, x::AbstractArray{T},
   return y, g.a*v + g.b
 end
 
-is_prox_accurate(f::Postcomposition) = is_prox_accurate(f.f)
+fun_name(f::Postcomposition) = string("Postcomposition of ", fun_name(f.f))
+fun_dom(f::Postcomposition) = fun_dom(f.f)
+fun_expr(f::Postcomposition) = "x ↦ a*f(x)+b"
+fun_params(f::Postcomposition) = string("f(x) = ", fun_expr(f.f), ", a = $(f.a), b = $(f.b)")

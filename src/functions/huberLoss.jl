@@ -3,7 +3,7 @@
 """
   HuberLoss(rho::Real=1.0, mu::Real=1.0)
 
-Returns the function `g(x) = (mu/2)||x||^2 if ||x|| ⩽ rho, and rho*mu*(||x||-rho/2) otherwise`.
+Returns the function `g(x) = (mu/2)||x||² if ||x|| ⩽ rho, and rho*mu*(||x||-rho/2) otherwise`.
 """
 
 immutable HuberLoss{R <: Real} <: ProximableFunction
@@ -46,7 +46,7 @@ end
 
 fun_name(f::HuberLoss) = "Huber loss"
 fun_dom(f::HuberLoss) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::HuberLoss) = "x ↦ (μ/2)||x||^2 if ||x||⩽ρ, μρ(||x||-ρ/2) otherwise"
+fun_expr(f::HuberLoss) = "x ↦ (μ/2)||x||² if ||x||⩽ρ, μρ(||x||-ρ/2) otherwise"
 fun_params(f::HuberLoss) = string("ρ = $(f.rho), μ = $(f.mu)")
 
 function prox_naive{T <: Union{Real, Complex}}(f::HuberLoss, x::AbstractArray{T}, gamma::Real=1.0)
