@@ -64,7 +64,7 @@ function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractA
       y[i,j] = 0.0 + 0.0im
       for k = 1:f.r
           if VERSION > v"0.5"
-              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*conj(svdobj[:Vt][k,j])
+              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][k,j]
           else
               y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*conj(svdobj[:Vt][j,k])
           end
