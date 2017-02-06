@@ -2,19 +2,19 @@
 
 ### General
 
-* Add more tests, especially with `Array{Complex}` variables.
-* Implement iterative routines to evaluate general proximal mappings.
-* For separable functions it makes sense to have `gamma::Array`.
+* Tests, tests, tests. Especially with `Array{Complex}` variables.
+* For separable functions it makes sense to have `gamma::Array`. (Work in progress: see [sumPositive.jl](https://github.com/kul-forbes/ProximalOperators.jl/blob/master/src/functions/sumPositive.jl).)
+* Make a list of functions with their mathematical expression, properties (e.g.: separable/non-separable).
+* Documentation, documentation, documentation.
 
 ### Functions
 
 * Generic quadratic function.
 * Indicator of L1 norm ball. (TODO: faster projection [Duchi et al. 2008](http://dl.acm.org/citation.cfm?id=1390191) or [Condat 2016](http://link.springer.com/article/10.1007/s10107-015-0946-6).)
-* Sum of k-largest components. (TODO: fix, see `SumLargest.jl`.)
+* Sum of k-largest components. (TODO: fix, see [sumLargest.jl](https://github.com/kul-forbes/ProximalOperators.jl/blob/master/src/functions/sumLargest.jl).)
 * Ky-Fan (k)-norms. (Should be easy once one has the previous)
 * Numerical evaluation of `prox` for generic smooth function
 
 ### Calculus rules
 
-* (Block-)Diagonal pre-scaling and translation. (For (block-)separable functions. Requires `gamma::Array`, see above.)
 * Pre-composition with a generic affine mapping.
