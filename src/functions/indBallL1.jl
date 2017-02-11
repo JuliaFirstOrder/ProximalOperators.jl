@@ -67,7 +67,7 @@ fun_params(f::IndBallL1) = "r = $(f.r)"
 function prox_naive{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0)
   # do a simple bisection (aka binary search) on λ
   L = 0.0
-  U = maxabs(x)
+  U = maximum(abs, x)
   λ = L
   v = 0.0
   maxit = 120

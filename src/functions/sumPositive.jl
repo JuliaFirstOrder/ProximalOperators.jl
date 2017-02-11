@@ -48,6 +48,6 @@ end
 function prox_naive{T <: Real}(f::SumPositive, x::AbstractArray{T}, gamma::AbstractArray{T})
   y = copy(x)
   indpos = x .> 0.0
-  y[indpos] = max(0.0, x[indpos]-gamma[indpos])
-  return y, sum(max(0.0, y))
+  y[indpos] = max.(0.0, x[indpos]-gamma[indpos])
+  return y, sum(max.(0.0, y))
 end
