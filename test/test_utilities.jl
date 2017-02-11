@@ -19,9 +19,9 @@ a_copy = copy(a); W2, Z2 = ProximalOperators.dspevV!('L',a_copy)
 A1 = Z1*diagm(W1)*Z1'
 A2 = Z2*diagm(W2)*Z2'
 
-@test all((W1-W_ref)./(1+abs(W_ref)) .<= 1e-8)
-@test all((A1-A_ref)./(1+abs(A_ref)) .<= 1e-8)
-@test all((W2-W_ref)./(1+abs(W_ref)) .<= 1e-8)
-@test all((A2-A_ref)./(1+abs(A_ref)) .<= 1e-8)
+@test all((W1-W_ref)./(1+abs.(W_ref)) .<= 1e-8)
+@test all((A1-A_ref)./(1+abs.(A_ref)) .<= 1e-8)
+@test all((W2-W_ref)./(1+abs.(W_ref)) .<= 1e-8)
+@test all((A2-A_ref)./(1+abs.(A_ref)) .<= 1e-8)
 
 end

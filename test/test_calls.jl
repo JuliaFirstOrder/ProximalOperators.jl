@@ -21,7 +21,7 @@ stuff = [
 
   Dict( "constr" => HingeLoss,
         "wrong"  => ( (randn(10), -rand()), ),
-        "params" => ( (sign(randn(10)), ), (sign(randn(20)), 0.1+rand()) ),
+        "params" => ( (sign.(randn(10)), ), (sign.(randn(20)), 0.1+rand()) ),
         "args"   => ( randn(10), randn(20) )
       ),
 
