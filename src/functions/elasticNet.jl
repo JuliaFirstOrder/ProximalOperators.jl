@@ -56,6 +56,6 @@ fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||²"
 fun_params(f::ElasticNet) = "μ = $(f.mu), λ = $(f.lambda)"
 
 function prox_naive{T <: RealOrComplex}(f::ElasticNet, x::AbstractArray{T}, gamma::Real=1.0)
-  uz = max(0, abs(x) - gamma*f.mu)/(1 + f.lambda*gamma);
+  uz = max.(0, abs.(x) - gamma*f.mu)/(1 + f.lambda*gamma);
   return sign.(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
 end

@@ -7,36 +7,36 @@ stuff = [
       ),
 
   Dict( "funcs"  => (lambda -> (NormL1(lambda), Conjugate(IndBallLinf(lambda))))(0.1+10.0*rand()),
-        "args"   => ( 5.0*sign(randn(10)) + 5.0*randn(10),
-                      5.0*sign(randn(20)) + 5.0*randn(20) ),
+        "args"   => ( 5.0*sign.(randn(10)) + 5.0*randn(10),
+                      5.0*sign.(randn(20)) + 5.0*randn(20) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
   Dict( "funcs"  => (lambda -> (IndBallLinf(lambda), Conjugate(NormL1(lambda))))(0.1+10.0*rand()),
-        "args"   => ( 5.0*sign(randn(10)) + 5.0*randn(10),
-                      5.0*sign(randn(20)) + 5.0*randn(20) ),
+        "args"   => ( 5.0*sign.(randn(10)) + 5.0*randn(10),
+                      5.0*sign.(randn(20)) + 5.0*randn(20) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
   Dict( "funcs"  => (lambda -> (NormL1(lambda), Conjugate(IndBox(-lambda,lambda))))(0.1+10.0*rand(30)),
-        "args"   => ( 5.0*sign(randn(30)) + 5.0*randn(30), ),
+        "args"   => ( 5.0*sign.(randn(30)) + 5.0*randn(30), ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
   Dict( "funcs"  => (lambda -> (IndBox(-lambda,lambda), Conjugate(NormL1(lambda))))(0.1+10.0*rand(30)),
-        "args"   => ( 5.0*sign(randn(30)) + 5.0*randn(30), ),
+        "args"   => ( 5.0*sign.(randn(30)) + 5.0*randn(30), ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
   Dict( "funcs"  => (lambda -> (NormL2(lambda), Conjugate(IndBallL2(lambda))))(0.1+10.0*rand()),
-        "args"   => ( 5.0*sign(randn(10)) + 5.0*randn(10),
-                      5.0*sign(randn(20)) + 5.0*randn(20) ),
+        "args"   => ( 5.0*sign.(randn(10)) + 5.0*randn(10),
+                      5.0*sign.(randn(20)) + 5.0*randn(20) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
   Dict( "funcs"  => (lambda -> (IndBallL2(lambda), Conjugate(NormL2(lambda))))(0.1+10.0*rand()),
-        "args"   => ( 5.0*sign(randn(10)) + 5.0*randn(10),
-                      5.0*sign(randn(20)) + 5.0*randn(20) ),
+        "args"   => ( 5.0*sign.(randn(10)) + 5.0*randn(10),
+                      5.0*sign.(randn(20)) + 5.0*randn(20) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
