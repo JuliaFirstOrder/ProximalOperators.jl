@@ -25,7 +25,7 @@ function prox!{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, Y::HermOrSym{T}, 
   n = size(X, 1);
   F = eigfact(X);
   for i in eachindex(F.values)
-    F.values[i] = max(0,F.values[i]);
+    F.values[i] = max.(0.0, F.values[i]);
   end
   for i = 1:n
     for j = 1:n
@@ -45,7 +45,7 @@ fun_params(f::IndPSD) = "none"
 
 function prox_naive{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0)
   F = eigfact(X);
-  return F.vectors * diagm(max(0.0, F.values)) * F.vectors', 0.0;
+  return F.vectors * diagm(max.(0.0, F.values)) * F.vectors', 0.0;
 end
 
 ### Below: with AbstractVector argument
@@ -64,7 +64,7 @@ end
 function prox!(f::IndPSD, x::AbstractVector{Float64}, y::AbstractVector{Float64}, gamma::Real=1.0)
   y[:] = x              # Copy x since dspev! corrupts input
   (W, Z) = dspevV!('L', y)
-  W = max(W, 0)         # NonNeg eigenvalues
+  W = max.(W, 0.0)         # NonNeg eigenvalues
   M = Z.*W'             # Equivalent to Z*diagm(W) without constructing W matrix
   M = M*Z'              # Now let M = Z*diagm(W)*Z'
   n = length(W)
