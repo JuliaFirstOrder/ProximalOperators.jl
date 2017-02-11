@@ -40,7 +40,7 @@ stuff = [
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
-  Dict( "funcs"  => ((a, b, mu) -> (LogBarrier(a, b, mu), Postcomposition(Precomposition(LogBarrier(), a, b), mu)))(2.0, 0.5, 1.0),
+  Dict( "funcs"  => ((a, b, mu) -> (LogBarrier(a, b, mu), Postcompose(Precompose(LogBarrier(), a, b), mu)))(2.0, 0.5, 1.0),
         "args"   => ( rand(10), rand(10) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
@@ -85,7 +85,7 @@ stuff = [
         "gammas" => ( 1.0, rand(), 5.0*rand() )
       ),
 
-  Dict( "funcs"  => ((b, mu) -> (HingeLoss(b, mu), Postcomposition(Precomposition(SumPositive(), -b, 1.0), mu)))([0.5+rand(10); -0.5-rand(10)], 0.5+rand()),
+  Dict( "funcs"  => ((b, mu) -> (HingeLoss(b, mu), Postcompose(Precompose(SumPositive(), -b, 1.0), mu)))([0.5+rand(10); -0.5-rand(10)], 0.5+rand()),
         "args"   => ( randn(20), randn(20), randn(20) ),
         "gammas" => ( 1.0, rand(), 5.0*rand() )
       )

@@ -15,7 +15,7 @@ Returns the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 
 # by adding a second argument to the constructor. Then in the following line we
 # should replace IndSimplex(k) with IndSimplex(k, 1.0).
 # Note that (1) is proper only if x ∈ Rⁿ for n ⩾ r.
-SumLargest{I <: Integer, R <: Real}(k::I=1, lambda::R=1.0) = Postcomposition(Conjugate(IndSimplex(k)), lambda)
+SumLargest{I <: Integer, R <: Real}(k::I=1, lambda::R=1.0) = Postcompose(Conjugate(IndSimplex(k)), lambda)
 
 function (f::Conjugate{IndSimplex{I}}){I <: Integer, S <: Real}(x::AbstractArray{S})
   if f.f.a == 1
@@ -32,6 +32,6 @@ function (f::Conjugate{IndSimplex{I}}){I <: Integer, S <: Real}(x::AbstractArray
   return v
 end
 
-fun_name{I <: Integer, R <: Real}(f::Postcomposition{Conjugate{IndSimplex{I}}, R}) = "sum of k largest components"
-fun_expr{I <: Integer, R <: Real}(f::Postcomposition{Conjugate{IndSimplex{I}}, R}) = "x ↦ λ⋅sum(x_[1], ..., x_[k])"
-fun_params{I <: Integer, R <: Real}(f::Postcomposition{Conjugate{IndSimplex{I}}, R}) = "k = $(f.f.f.a), λ = $(f.a)"
+fun_name{I <: Integer, R <: Real}(f::Postcompose{Conjugate{IndSimplex{I}}, R}) = "sum of k largest components"
+fun_expr{I <: Integer, R <: Real}(f::Postcompose{Conjugate{IndSimplex{I}}, R}) = "x ↦ λ⋅sum(x_[1], ..., x_[k])"
+fun_params{I <: Integer, R <: Real}(f::Postcompose{Conjugate{IndSimplex{I}}, R}) = "k = $(f.f.f.a), λ = $(f.a)"

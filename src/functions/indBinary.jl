@@ -6,7 +6,7 @@
 Returns the function `g = ind{x : x_i == low || x_i == high}`.
 """
 
-immutable IndBinary{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: IndicatorFunction
+immutable IndBinary{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: IndicatorNonconvex
   low::T
   high::S
 end

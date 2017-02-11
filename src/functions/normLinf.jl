@@ -6,7 +6,7 @@
 Returns the function `g(x) = λ⋅max(abs(x))`, for a nonnegative parameter `λ ⩾ 0`.
 """
 
-NormLinf{R <: Real}(lambda::R=1.0) = Postcomposition(Conjugate(IndBallL1(one(R))), lambda)
+NormLinf{R <: Real}(lambda::R=1.0) = Postcompose(Conjugate(IndBallL1(one(R))), lambda)
 
 function (f::Conjugate{IndBallL1{R}}){R <: Real, S <: RealOrComplex}(x::AbstractArray{S})
   # follows from the definition of conjugate function and properties of norms
@@ -15,6 +15,6 @@ function (f::Conjugate{IndBallL1{R}}){R <: Real, S <: RealOrComplex}(x::Abstract
   return vecnorm(x, Inf)*(f.f.r)
 end
 
-fun_name{R <: Real}(f::Postcomposition{Conjugate{IndBallL1{R}}, R}) = "weighted L-infinity norm"
-fun_expr{R <: Real}(f::Postcomposition{Conjugate{IndBallL1{R}}, R}) = "x ↦ λ||x||_∞ = λ⋅max(abs(x))"
-fun_params{R <: Real}(f::Postcomposition{Conjugate{IndBallL1{R}}, R}) = "λ = $(f.a*(f.f.f.r))"
+fun_name{R <: Real}(f::Postcompose{Conjugate{IndBallL1{R}}, R}) = "weighted L-infinity norm"
+fun_expr{R <: Real}(f::Postcompose{Conjugate{IndBallL1{R}}, R}) = "x ↦ λ||x||_∞ = λ⋅max(abs(x))"
+fun_params{R <: Real}(f::Postcompose{Conjugate{IndBallL1{R}}, R}) = "λ = $(f.a*(f.f.f.r))"

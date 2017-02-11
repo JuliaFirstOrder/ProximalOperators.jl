@@ -1,6 +1,6 @@
 # L1 norm (times a constant, or weighted)
 
-immutable NormL1{T <: Union{Real, AbstractArray}} <: NormFunction
+immutable NormL1{T <: Union{Real, AbstractArray}} <: ProximableConvex
   lambda::T
   function NormL1(lambda::T)
     if !(eltype(lambda) <: Real)

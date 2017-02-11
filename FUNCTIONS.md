@@ -26,6 +26,7 @@ Name            | Type of set                             | Properties
 `IndPSD`        | Positive semidefinite cone              | convex
 `IndSimplex`    | Simplex                                 | convex
 `IndSOC`        | Second-order cone                       | convex
+`IndRotatedSOC` | Rotated second-order cone               | convex
 `IndSphereL2`   | Euclidean sphere                        | nonconvex
 `IndZero`       | Indicator of the zero singleton         | convex
 
