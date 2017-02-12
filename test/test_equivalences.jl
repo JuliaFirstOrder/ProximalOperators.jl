@@ -18,8 +18,8 @@ for i = 1:N
   f = IndSimplex(r)
   g = IndBallL1(r)
 
-  y1, fy1 = prox(f, abs(x))
-  y1 = sign(x).*y1
+  y1, fy1 = prox(f, abs.(x))
+  y1 = sign.(x).*y1
   y2, gy2 = prox(g, x)
 
   @test vecnorm(y1-y2,Inf)/(1+vecnorm(y1,Inf)) <= TOL_ASSERT
@@ -55,7 +55,7 @@ N = 10
 # prox(g, x, gamma) = (prox(f, 1-b.*x, mu*gamma) - 1)./(-b)
 #   = x + mu*gamma*prox(h, (1-b.*x)/(mu*gamma), 1/(mu*gamma))./b
 
-b = sign(randn(n))
+b = sign.(randn(n))
 mu = 0.1+rand()
 g = HingeLoss(b, mu)
 h = IndBox(0, 1)

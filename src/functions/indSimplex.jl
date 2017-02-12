@@ -69,7 +69,7 @@ function prox_naive{T <: Real}(f::IndSimplex, x::AbstractArray{T}, gamma::Real=1
       break
     end
     alpha = (low+upp)/2
-    v = max(x - alpha, 0.0)
+    v = max.(x - alpha, 0.0)
     s = sum(v) - f.a
     if s <= 0
       upp = alpha

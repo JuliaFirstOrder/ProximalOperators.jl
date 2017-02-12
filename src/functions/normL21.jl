@@ -8,7 +8,7 @@ where x_i are the columns of X if dim == 1, or the rows of X if dim == 2.
 In words, it is the (weighted) sum of the Euclidean norm of the columns (rows) of X.
 """
 
-immutable NormL21{R <: Real, I <: Integer} <: NormFunction
+immutable NormL21{R <: Real, I <: Integer} <: ProximableConvex
   lambda::R
   dim::I
   function NormL21(lambda::R, dim::I)
@@ -87,6 +87,6 @@ fun_expr(f::NormL21) = "x ↦ λsum(||x_i||)"
 fun_params(f::NormL21) = "λ = $(f.lambda), dim = $(f.dim)"
 
 function prox_naive{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, gamma::Real=1.0)
-  Y = max(0, 1-f.lambda*gamma./sqrt(sum(abs(X).^2, f.dim))).*X
-  return Y, f.lambda*sum(sqrt(sum(abs(Y).^2, f.dim)))
+  Y = max.(0, 1-f.lambda*gamma./sqrt.(sum(abs.(X).^2, f.dim))).*X
+  return Y, f.lambda*sum(sqrt.(sum(abs.(Y).^2, f.dim)))
 end

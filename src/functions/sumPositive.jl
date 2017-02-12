@@ -9,7 +9,7 @@ Returns the function `g(x) = sum(max(0, x))`.
 immutable SumPositive <: ProximableFunction end
 
 function (f::SumPositive){T <: Real}(x::AbstractArray{T})
-  return sum(max(0.0, x))
+  return sum(max.(0.0, x))
 end
 
 function prox!{T <: Real}(f::SumPositive, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
@@ -28,8 +28,8 @@ fun_expr(f::SumPositive) = "x ↦ sum(max(0, x))"
 function prox_naive{T <: Real}(f::SumPositive, x::AbstractArray{T}, gamma::Real=1.0)
   y = copy(x)
   indpos = x .> 0.0
-  y[indpos] = max(0.0, x[indpos]-gamma)
-  return y, sum(max(0.0, y))
+  y[indpos] = max.(0.0, x[indpos]-gamma)
+  return y, sum(max.(0.0, y))
 end
 
 # ######################### #
@@ -48,6 +48,6 @@ end
 function prox_naive{T <: Real}(f::SumPositive, x::AbstractArray{T}, gamma::AbstractArray{T})
   y = copy(x)
   indpos = x .> 0.0
-  y[indpos] = max(0.0, x[indpos]-gamma[indpos])
-  return y, sum(max(0.0, y))
+  y[indpos] = max.(0.0, x[indpos]-gamma[indpos])
+  return y, sum(max.(0.0, y))
 end

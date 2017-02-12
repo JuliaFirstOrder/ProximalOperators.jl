@@ -6,7 +6,7 @@
 Returns the function `g = ind{x : countnz(x) ⩽ r}`, for an integer parameter `r > 0`.
 """
 
-immutable IndBallL0{I <: Integer} <: IndicatorFunction
+immutable IndBallL0{I <: Integer} <: IndicatorNonconvex
   r::I
   function IndBallL0(r::I)
     if r <= 0
@@ -50,7 +50,7 @@ fun_expr(f::IndBallL0) = "x ↦ 0 if countnz(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL0) = "r = $(f.r)"
 
 function prox_naive{T <: RealOrComplex}(f::IndBallL0, x::AbstractArray{T}, gamma::Real=1.0)
-  p = sortperm(abs(x)[:], rev=true)
+  p = sortperm(abs.(x)[:], rev=true)
   y = similar(x)
   y[p[1:f.r]] = x[p[1:f.r]]
   y[p[f.r+1:end]] = 0.0

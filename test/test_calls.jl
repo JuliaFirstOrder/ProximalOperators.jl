@@ -21,7 +21,7 @@ stuff = [
 
   Dict( "constr" => HingeLoss,
         "wrong"  => ( (randn(10), -rand()), ),
-        "params" => ( (sign(randn(10)), ), (sign(randn(20)), 0.1+rand()) ),
+        "params" => ( (sign.(randn(10)), ), (sign.(randn(20)), 0.1+rand()) ),
         "args"   => ( randn(10), randn(20) )
       ),
 
@@ -108,6 +108,11 @@ stuff = [
       ),
 
   Dict( "constr" => IndSOC,
+        "params" => ( (), (), (), (), (), (), () ),
+        "args"   => ( [rand(), -rand()], [-rand(), rand()], rand(3), rand(5), randn(10), randn(20), randn(30) )
+      ),
+
+  Dict( "constr" => IndRotatedSOC,
         "params" => ( (), (), (), (), (), (), () ),
         "args"   => ( [rand(), -rand()], [-rand(), rand()], rand(3), rand(5), randn(10), randn(20), randn(30) )
       ),

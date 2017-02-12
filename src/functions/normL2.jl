@@ -6,7 +6,7 @@
 Returns the function `g(x) = λ||x||_2`, for a real parameter `λ ⩾ 0`.
 """
 
-immutable NormL2{R <: Real} <: NormFunction
+immutable NormL2{R <: Real} <: ProximableConvex
   lambda::R
   function NormL2(lambda::R)
     if lambda < 0

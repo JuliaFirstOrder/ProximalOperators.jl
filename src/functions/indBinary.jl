@@ -6,7 +6,7 @@
 Returns the function `g = ind{x : x_i == low || x_i == high}`.
 """
 
-immutable IndBinary{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: IndicatorFunction
+immutable IndBinary{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: IndicatorNonconvex
   low::T
   high::S
 end
@@ -46,8 +46,8 @@ fun_name(f::IndBinary) = "indicator of binary array"
 fun_dom(f::IndBinary) = "AbstractArray{Real}"
 
 function prox_naive{T <: Real}(f::IndBinary, x::AbstractArray{T}, gamma::Real=1.0)
-  distlow = abs(x-f.low)
-  disthigh = abs(x-f.high)
+  distlow = abs.(x-f.low)
+  disthigh = abs.(x-f.high)
   indlow = distlow .< disthigh
   indhigh = distlow .>= disthigh
   y = f.low.*indlow + f.high.*indhigh

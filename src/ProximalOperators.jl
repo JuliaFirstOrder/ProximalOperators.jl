@@ -14,7 +14,7 @@ export ProximableFunction
 export IndAffine, IndHalfspace,
        IndBallLinf, IndBallL0, IndBallL1, IndBallL2, IndBallRank,
        IndBox, IndNonnegative, IndNonpositive,
-       IndExpPrimal, IndExpDual, IndPSD, IndSOC,
+       IndExpPrimal, IndExpDual, IndPSD, IndSOC, IndRotatedSOC,
        IndFree,
        IndPoint, IndZero,
        IndSimplex,
@@ -29,24 +29,24 @@ export IndAffine, IndHalfspace,
        Zero
 
 export Conjugate,
-       Postcomposition,
-       Precomposition,
+       Postcompose,
+       Precompose,
        SlicedSeparableSum,
        SeparableSum,
        Tilt,
        Regularize
 
 abstract ProximableFunction
-abstract NormFunction <: ProximableFunction
-abstract IndicatorFunction <: ProximableFunction
-abstract IndicatorConvex <: IndicatorFunction
+abstract ProximableConvex <: ProximableFunction
+abstract IndicatorConvex <: ProximableConvex
 abstract IndicatorConvexCone <: IndicatorConvex
+abstract IndicatorNonconvex <: ProximableFunction
 
 include("utilities/symmetricpacked.jl")
 
 include("calculus/conjugate.jl")
-include("calculus/postcomposition.jl")
-include("calculus/precomposition.jl")
+include("calculus/postcompose.jl")
+include("calculus/precompose.jl")
 include("calculus/separableSum.jl")
 include("calculus/slicedSeparableSum.jl")
 include("calculus/tilt.jl")

@@ -35,11 +35,11 @@ function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T}, y::Abstrac
     n = length(x)
     p = []
     if ndims(x) == 1
-      p = abs(x)
+      p = abs.(x)
     else
-      p = abs(x)[:]
+      p = abs.(x)[:]
     end
-    sort!(p,rev=true)
+    sort!(p, rev=true)
     s = 0.0
     @inbounds for i = 1:n-1
       s = s + p[i]
@@ -67,13 +67,13 @@ fun_params(f::IndBallL1) = "r = $(f.r)"
 function prox_naive{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0)
   # do a simple bisection (aka binary search) on λ
   L = 0.0
-  U = maxabs(x)
+  U = maximum(abs, x)
   λ = L
   v = 0.0
   maxit = 120
   for iter in range(1, maxit)
     λ = 0.5*(L + U)
-    v = sum(max(abs(x) - λ, 0.0))
+    v = sum(max.(abs.(x) - λ, 0.0))
     # modify lower or upper bound
     (v < f.r) ? U = λ : L = λ
     # exit condition
@@ -81,5 +81,5 @@ function prox_naive{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T}, gamma
       break
     end
   end
-  return sign(x).*max(0.0, abs(x)-λ), 0.0
+  return sign.(x).*max.(0.0, abs.(x)-λ), 0.0
 end

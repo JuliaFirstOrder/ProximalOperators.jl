@@ -1,6 +1,6 @@
 # L1 norm (times a constant, or weighted)
 
-immutable NormL1{T <: Union{Real, AbstractArray}} <: NormFunction
+immutable NormL1{T <: Union{Real, AbstractArray}} <: ProximableConvex
   lambda::T
   function NormL1(lambda::T)
     if !(eltype(lambda) <: Real)
@@ -45,7 +45,7 @@ function prox!{A <: AbstractArray, R <: Real}(f::NormL1{A}, x::AbstractArray{R},
     gl = gamma*f.lambda[i]
     y[i] = x[i] + (x[i] <= -gl ? gl : (x[i] >= gl ? -gl : -x[i]))
   end
-  return sum(f.lambda .* abs(y))
+  return sum(f.lambda .* abs.(y))
 end
 
 function prox!{A <: AbstractArray, R <: Real}(f::NormL1{A}, x::AbstractArray{Complex{R}}, y::AbstractArray{Complex{R}}, gamma::Real=1.0)
@@ -54,7 +54,7 @@ function prox!{A <: AbstractArray, R <: Real}(f::NormL1{A}, x::AbstractArray{Com
     gl = gamma*f.lambda[i]
     y[i] = sign(x[i])*(abs(x[i]) <= gl ? 0 : abs(x[i]) - gl)
   end
-  return sum(f.lambda .* abs(y))
+  return sum(f.lambda .* abs.(y))
 end
 
 function prox!{T <: Real, R <: Real}(f::NormL1{T}, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
@@ -85,6 +85,6 @@ fun_params{R <: Real}(f::NormL1{R}) = "λ = $(f.lambda)"
 fun_params{A <: AbstractArray}(f::NormL1{A}) = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
 
 function prox_naive{T <: RealOrComplex}(f::NormL1, x::AbstractArray{T}, gamma::Real=1.0)
-  y = sign(x).*max(0.0, abs(x)-gamma*f.lambda)
+  y = sign.(x).*max.(0.0, abs.(x)-gamma*f.lambda)
   return y, vecnorm(f.lambda.*y,1)
 end

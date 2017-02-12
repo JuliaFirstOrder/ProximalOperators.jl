@@ -6,4 +6,4 @@
 Returns the function `g(x) = mu * sum(max(0, 1 - b_i * x_i), i=1,...,n )`.
 """
 
-HingeLoss{T <: AbstractArray, R <: Real}(b::T, mu::R=1.0) = Postcomposition(Precomposition(SumPositive(), -b, 1.0), mu)
+HingeLoss{T <: AbstractArray, R <: Real}(b::T, mu::R=1.0) = Postcompose(Precompose(SumPositive(), -b, 1.0), mu)

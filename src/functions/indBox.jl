@@ -97,6 +97,6 @@ fun_params(f::IndBox) =
           "ub = ", typeof(f.ub) <: AbstractArray ? string(typeof(f.ub), " of size ", size(f.ub)) : f.ub)
 
 function prox_naive{R <: Real}(f::IndBox, x::AbstractArray{R}, gamma::Real=1.0)
-  y = min(f.ub, max(f.lb, x))
+  y = min.(f.ub, max.(f.lb, x))
   return y, 0.0
 end
