@@ -56,7 +56,7 @@ fun_params(f::LogBarrier) = "a = $(f.a), b = $(f.b), μ = $(f.mu)"
 function prox_naive{T <: Real}(f::LogBarrier, x::AbstractArray{T,1}, gamma::Real=1.0)
   asqr = f.a*f.a
   z = f.a*x + f.b
-  y = ((z + sqrt(z.*z + 4*gamma*f.mu*asqr))/2 - f.b)/f.a
-  fy = -f.mu * sum(log(f.a*y+f.b))
+  y = ((z + sqrt.(z.*z + 4*gamma*f.mu*asqr))/2 - f.b)/f.a
+  fy = -f.mu * sum(log.(f.a*y+f.b))
   return y, fy
 end

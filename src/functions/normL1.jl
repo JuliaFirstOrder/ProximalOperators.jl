@@ -85,6 +85,6 @@ fun_params{R <: Real}(f::NormL1{R}) = "λ = $(f.lambda)"
 fun_params{A <: AbstractArray}(f::NormL1{A}) = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
 
 function prox_naive{T <: RealOrComplex}(f::NormL1, x::AbstractArray{T}, gamma::Real=1.0)
-  y = sign(x).*max.(0.0, abs.(x)-gamma*f.lambda)
+  y = sign.(x).*max.(0.0, abs.(x)-gamma*f.lambda)
   return y, vecnorm(f.lambda.*y,1)
 end
