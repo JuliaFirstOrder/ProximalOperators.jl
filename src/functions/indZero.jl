@@ -15,7 +15,7 @@ function (f::IndZero){T <: RealOrComplex}(x::AbstractArray{T})
       return Inf
     end
   end
-  return Inf
+  return 0.0
 end
 
 function prox!{T <: RealOrComplex}(f::IndZero, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)

@@ -37,11 +37,3 @@ fun_params(f::IndPoint) =
 function prox_naive{T <: RealOrComplex}(f::IndPoint, x::AbstractArray{T}, gamma::Real=1.0)
   return f.p, 0.0
 end
-
-"""
-  IndZero()
-
-Returns the function `g = ind{x = 0}`.
-"""
-
-IndZero() = IndPoint()
