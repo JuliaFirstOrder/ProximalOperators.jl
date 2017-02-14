@@ -6,7 +6,7 @@
 Returns the indicator of the second-order cone (ice-cream cone) of R^n.
 """
 
-immutable IndSOC <: IndicatorConvex end
+immutable IndSOC <: IndicatorConvexCone end
 
 function (f::IndSOC){T <: Real}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable

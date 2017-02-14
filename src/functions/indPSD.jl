@@ -8,7 +8,7 @@ The argument to the function can be either a Symmetric or Hermitian object.
 From Julia 0.5, the argument can also be an AbstractVector{Float64} holding a symmetric matrix in (lower triangular) packed storage.
 """
 
-immutable IndPSD <: IndicatorConvex end
+immutable IndPSD <: IndicatorConvexCone end
 
 function (f::IndPSD){T <: RealOrComplex}(X::HermOrSym{T})
   F = eigfact(X);

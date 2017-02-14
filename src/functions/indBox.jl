@@ -69,26 +69,6 @@ Returns the indicator function of an infinity-norm ball, that is function
 
 IndBallLinf{R <: Real}(r::R=1.0) = IndBox(-r, r)
 
-"""
-  IndNonnegative()
-
-Returns the indicator function the nonnegative orthant, that is
-
-  `g(x) = 0 if x ⩾ 0, +∞ otherwise`
-"""
-
-IndNonnegative() = IndBox(0.0, +Inf)
-
-"""
-  IndNonpositive()
-
-Returns the indicator function the nonpositive orthant, that is
-
-  `g(x) = 0 if x ⩽ 0, +∞ otherwise`
-"""
-
-IndNonpositive() = IndBox(-Inf, 0.0)
-
 fun_name(f::IndBox) = "indicator of a box"
 fun_dom(f::IndBox) = "AbstractArray{Real}"
 fun_expr(f::IndBox) = "x ↦ 0 if all(lb ⩽ x ⩽ ub), +∞ otherwise"

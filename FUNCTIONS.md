@@ -16,19 +16,19 @@ Name            | Type of set                             | Properties
 `IndBallRank`   | Set of matrices with given rank         | nonconvex
 `IndBinary`     | Indicator of a binary set               | nonconvex
 `IndBox`        | Box                                     | convex
-`IndExpPrimal`  | Indicator of (primal) exponential cone  | convex
-`IndExpDual`    | Indicator of (dual) exponential cone    | convex
-`IndFree`       | Indicator of the free cone              | convex
+`IndExpPrimal`  | Indicator of (primal) exponential cone  | convex cone
+`IndExpDual`    | Indicator of (dual) exponential cone    | convex cone
+`IndFree`       | Indicator of the free cone              | convex cone
 `IndHalfspace`  | Halfspace                               | convex
-`IndNonnegative`| Nonnegative orthant                     | convex
-`IndNonpositive`| Nonpositive orthant                     | convex
+`IndNonnegative`| Nonnegative orthant                     | convex cone
+`IndNonpositive`| Nonpositive orthant                     | convex cone
 `IndPoint`      | Indicator of a singleton                | convex
-`IndPSD`        | Positive semidefinite cone              | convex
+`IndPSD`        | Positive semidefinite cone              | convex cone
 `IndSimplex`    | Simplex                                 | convex
-`IndSOC`        | Second-order cone                       | convex
-`IndRotatedSOC` | Rotated second-order cone               | convex
+`IndSOC`        | Second-order cone                       | convex cone
+`IndRotatedSOC` | Rotated second-order cone               | convex cone
 `IndSphereL2`   | Euclidean sphere                        | nonconvex
-`IndZero`       | Indicator of the zero singleton         | convex
+`IndZero`       | Indicator of the zero singleton         | convex cone
 
 ### Norms, pseudo-norms, regularization functions
 
