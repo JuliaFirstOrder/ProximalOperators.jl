@@ -7,7 +7,7 @@ Returns the indicator function of the whole space, or "free cone", i.e.,
 a function which is identically zero.
 """
 
-immutable IndFree <: IndicatorConvex end
+immutable IndFree <: IndicatorConvexCone end
 
 """
   Zero()
