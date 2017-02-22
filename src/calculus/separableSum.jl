@@ -12,19 +12,25 @@ function (f::SeparableSum{S}){S <: AbstractArray}(x::AbstractArray)
 	return sum
 end
 
-function prox!{S <: AbstractArray}(f::SeparableSum{S}, x::AbstractArray, y::AbstractArray, gamma::Real=1.0)
+function prox!(fs::AbstractArray, xs::AbstractArray, ys::AbstractArray, gamma::Real=1.0)
   sum = 0.0
-  for k in eachindex(f.fs)
-	  sum += prox!(f.fs[k], x[k], y[k], gamma)
+  for k in eachindex(fs)
+	  sum += prox!(fs[k], xs[k], ys[k], gamma)
   end
   return sum
 end
 
-function prox(f::SeparableSum, x::AbstractArray, gamma::Real=1.0)
-	y = map(similar, x)
-	fy = prox!(f, x, y, gamma)
-	return y, fy
+function prox(fs::AbstractArray, xs::AbstractArray, gamma::Real=1.0)
+	ys = map(similar, xs)
+	fsy = prox!(fs, xs, ys, gamma)
+	return ys, fsy
 end
+
+prox!(f::SeparableSum, xs::AbstractArray, ys::AbstractArray, gamma::Real=1.0) =
+	prox!(f.fs, xs, ys, gamma)
+
+prox(f::SeparableSum, xs::AbstractArray, gamma::Real=1.0) =
+	prox(f.fs, xs, gamma)
 
 fun_name(f::SeparableSum) = "separable sum"
 function fun_dom(f::SeparableSum)
