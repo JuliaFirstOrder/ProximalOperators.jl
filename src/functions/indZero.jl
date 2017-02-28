@@ -18,12 +18,14 @@ function (f::IndZero){T <: RealOrComplex}(x::AbstractArray{T})
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndZero, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndZero, x::AbstractArray{T}, gamma::Real=1.0)
   for k in eachindex(x)
     y[k] = zero(T)
   end
   return 0.0
 end
+
+prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndZero, x::AbstractArray{T}, gamma::AbstractArray) = prox!(y, f, x, 1.0)
 
 fun_name(f::IndZero) = "indicator of the zero cone"
 fun_dom(f::IndZero) = "AbstractArray{Real}, AbstractArray{Complex}"

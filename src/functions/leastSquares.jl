@@ -47,7 +47,7 @@ function factor_step!{R <: RealOrComplex}(f::LeastSquares{R}, gamma::Real)
   f.gamma = gamma
 end
 
-function prox!{R <: RealOrComplex}(f::LeastSquares{R}, x::AbstractArray{R,1}, y::AbstractArray{R,1}, gamma::Real=1.0)
+function prox!{R <: RealOrComplex}(y::AbstractArray{R,1}, f::LeastSquares{R}, x::AbstractArray{R,1}, gamma::Real=1.0)
   # if gamma different from f.gamma then call factor_step!
   if gamma != f.gamma
     factor_step!(f, gamma)

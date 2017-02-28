@@ -6,11 +6,11 @@
 Returns the function `g(x) = a*f(x) + b`.
 """
 
-immutable Postcompose{T <: ProximableFunction, S <: Real} <: ProximableFunction
+immutable Postcompose{T <: ProximableFunction, R <: Real} <: ProximableFunction
   f::T
-  a::S
-  b::S
-  function Postcompose(f::T, a::S, b::S)
+  a::R
+  b::R
+  function Postcompose(f::T, a::R, b::R)
     if a <= 0.0
       error("parameter a must be positive")
     else
@@ -21,14 +21,14 @@ end
 
 is_prox_accurate(f::Postcompose) = is_prox_accurate(f.f)
 
-Postcompose{T <: ProximableFunction, S <: Real}(f::T, a::S=1.0, b::S=0.0) = Postcompose{T, S}(f, a, b)
+Postcompose{T <: ProximableFunction, R <: Real}(f::T, a::R=one(R), b::R=zero(R)) = Postcompose{T, R}(f, a, b)
 
 function (g::Postcompose){T <: RealOrComplex}(x::AbstractArray{T})
   return g.a*g.f(x) + g.b
 end
 
-function prox!{T <: RealOrComplex}(g::Postcompose, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  v = prox!(g.f, x, y, g.a*gamma)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma::Real=1.0)
+  v = prox!(y, g.f, x, g.a*gamma)
   return g.a*v + g.b
 end
 

@@ -24,7 +24,7 @@ function SlicedSeparableSum{T <: Tuple}(ps::AbstractArray{T}, dim::Integer=1)
 		a[i] = ps[i][1]
 		b[i] = ps[i][2]
 	end
-	SlicedSeparableSum{typeof(a),typeof(b)}(a, b, dim)
+	SlicedSeparableSum{typeof(a), typeof(b)}(a, b, dim)
 end
 
 function SlicedSeparableSum{P <: Pair}(p::AbstractArray{P}, dim::Integer = 1)
@@ -45,14 +45,14 @@ function (f::SlicedSeparableSum{S}){S <: AbstractArray, T <: AbstractArray}(x::T
 	return sum
 end
 
-function prox!{T <: RealOrComplex}(f::SlicedSeparableSum, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::SlicedSeparableSum, x::AbstractArray{T}, gamma::Real=1.0)
   v = 0.0
   nd = ndims(x)
 
   for i in eachindex(f.fs)
-	  z = slicedim(y,f.dim,f.is[i])
-	  g = prox!(f.fs[i],slicedim(x,f.dim,f.is[i]),z,gamma)
-	  y[[ n==f.dim ? f.is[i] : indices(y,n) for n in 1:nd ]...] = z
+	  z = slicedim(y, f.dim, f.is[i])
+	  g = prox!(z, f.fs[i], slicedim(x, f.dim, f.is[i]), gamma)
+	  y[[ n==f.dim ? f.is[i] : indices(y, n) for n in 1:nd ]...] = z
 	  v += g
   end
   return v

@@ -5,7 +5,7 @@ __precompile__()
 module ProximalOperators
 
 typealias RealOrComplex Union{Real, Complex}
-typealias HermOrSym{T,S} Union{Hermitian{T,S}, Symmetric{T,S}}
+typealias HermOrSym{T, S} Union{Hermitian{T, S}, Symmetric{T, S}}
 
 export prox, prox!
 
@@ -116,35 +116,22 @@ and returns `y` and `f(y)`.
 
 function prox(f::ProximableFunction, x::AbstractArray, gamma::Real=1.0)
   y = similar(x)
-  fy = prox!(f, x, y, gamma)
+  fy = prox!(y, f, x, gamma)
   return y, fy
 end
 
 """
-  prox!(f::ProximableFunction, x::AbstractArray, y::AbstractArray, γ::Real=1.0)
+  prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
 
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0`, and writes the result in `y`. Returns `f(y)`.
 """
 
-function prox!(f::ProximableFunction, x::AbstractArray, y::AbstractArray, gamma::Real=1.0)
+function prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, gamma::Real=1.0)
   throw(MethodException(
-    "prox! is not implemented for f::", typeof(f),
-    ", x::", typeof(x), ", y::", typeof(y), ", gamma::", typeof(gamma)
+    "prox! is not implemented for y::", typeof(y), ", f::", typeof(f),
+    ", x::", typeof(x), ", gamma::", typeof(gamma)
   ))
 end
-
-"""
-  prox!(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
-
-Computes the proximal point of `x` with respect to function `f`
-and parameter `γ > 0` *in place*, that is
-
-  x ← argmin_z { f(z) + 1/(2γ)||z-x||² }
-
-and returns `f(x)`.
-"""
-
-prox!(f::ProximableFunction, x::AbstractArray, gamma::Real=1.0) = prox!(f, x, x, gamma)
 
 end

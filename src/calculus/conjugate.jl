@@ -15,12 +15,12 @@ fun_dom(f::Conjugate) = fun_dom(f.f)
 # only prox! is provided here, call method would require being able to compute
 # an element of the subdifferential of the conjugate
 
-function prox!{R <: Real}(g::Conjugate, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
+function prox!{R <: Real}(y::AbstractArray{R}, g::Conjugate, x::AbstractArray{R}, gamma::Real=1.0)
   # need to make a copy, doing this in place is probably not possible in general:
   # if object_id(x) == object_id(y), then prox! causes the loss of x (which is needed afterwards)
   x_copy = copy(x)
   # Moreau identity
-  v = prox!(g.f, x/gamma, y, 1.0/gamma)
+  v = prox!(y, g.f, x/gamma, 1.0/gamma)
   v = vecdot(x_copy,y) - gamma*vecdot(y,y) - v
   for k in eachindex(y)
     y[k] = x_copy[k] - gamma*y[k]
@@ -30,9 +30,9 @@ end
 
 # complex case, need to cast inner products to real
 
-function prox!{R <: Real}(g::Conjugate, x::AbstractArray{Complex{R}}, y::AbstractArray{Complex{R}}, gamma::Real=1.0)
+function prox!{R <: Real}(y::AbstractArray{Complex{R}}, g::Conjugate, x::AbstractArray{Complex{R}}, gamma::Real=1.0)
   x_copy = copy(x)
-  v = prox!(g.f, x/gamma, y, 1.0/gamma)
+  v = prox!(y, g.f, x/gamma, 1.0/gamma)
   v = real(vecdot(x_copy,y)) - gamma*real(vecdot(y,y)) - v
   for k in eachindex(y)
     y[k] = x_copy[k] - gamma*y[k]
@@ -42,15 +42,15 @@ end
 
 # special case for indicator of convex cones (the conjugate is also an indicator function)
 
-prox!{R <: Real, C <: IndicatorConvexCone}(g::Conjugate{C}, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0) =
-  prox_conjugate_convex_cone!(g.f, x, y, gamma)
+prox!{R <: Real, C <: IndicatorConvexCone}(y::AbstractArray{R}, g::Conjugate{C}, x::AbstractArray{R}, gamma::R=one(R)) =
+  prox_conjugate_convex_cone!(y, g.f, x, gamma)
 
-prox!{R <: Real, C <: IndicatorConvexCone}(g::Conjugate{C}, x::AbstractArray{Complex{R}}, y::AbstractArray{Complex{R}}, gamma::Real=1.0) =
-  prox_conjugate_convex_cone!(g.f, x, y, gamma)
+prox!{R <: Real, C <: IndicatorConvexCone}(y::AbstractArray{Complex{R}}, g::Conjugate{C}, x::AbstractArray{Complex{R}}, gamma::R=one(R)) =
+  prox_conjugate_convex_cone!(y, g.f, x, gamma)
 
-function prox_conjugate_convex_cone!{T <: RealOrComplex, C <: IndicatorConvexCone}(f::C, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox_conjugate_convex_cone!{T <: RealOrComplex, C <: IndicatorConvexCone}(y::AbstractArray{T}, f::C, x::AbstractArray{T}, gamma::Real=1.0)
   x_copy = copy(x)
-  prox!(f, x/gamma, y, 1.0/gamma)
+  prox!(y, f, x/gamma, 1.0/gamma)
   for k in eachindex(y)
     y[k] = x_copy[k] - gamma*y[k]
   end

@@ -16,15 +16,35 @@ either a scalar or an array of the same dimension as the function argument.
 
 IndPoint{T <: Union{Real, Complex, AbstractArray}}(p::T=0.0) = IndPoint{T}(p)
 
-function (f::IndPoint){T <: RealOrComplex}(x::AbstractArray{T})
-  if vecnorm(x-f.p, Inf) > 1e-14
-    return +Inf
+function (f::IndPoint{R}){R <: RealOrComplex, T <: RealOrComplex}(x::AbstractArray{T})
+  for k in eachindex(x)
+    if abs(x[k] - f.p) > 1e-14
+      return +Inf
+    end
   end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndPoint, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
-  y[:] = f.p
+function (f::IndPoint{A}){A <: AbstractArray, T <: RealOrComplex}(x::AbstractArray{T})
+  for k in eachindex(x)
+    if abs(x[k] - f.p[k]) > 1e-14
+      return +Inf
+    end
+  end
+  return 0.0
+end
+
+function prox!{R <: RealOrComplex, T <: RealOrComplex}(y::AbstractArray{T}, f::IndPoint{R}, x::AbstractArray{T}, gamma::Real=1.0)
+  for k in eachindex(x)
+    y[k] = f.p
+  end
+  return 0.0
+end
+
+function prox!{A <: AbstractArray, T <: RealOrComplex}(y::AbstractArray{T}, f::IndPoint{A}, x::AbstractArray{T}, gamma::Real=1.0)
+  for k in eachindex(x)
+    y[k] = f.p[k]
+  end
   return 0.0
 end
 

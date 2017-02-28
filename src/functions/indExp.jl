@@ -65,7 +65,7 @@ end
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-function prox!{R <: Real}(f::IndExpPrimal, x::AbstractArray{R,1}, y::AbstractArray{R,1}, gamma::Real=1.0)
+function prox!{R <: Real}(y::AbstractArray{R,1}, f::IndExpPrimal, x::AbstractArray{R,1}, gamma::Real=1.0)
   r = x[1]
   s = x[2]
   t = x[3]

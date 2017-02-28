@@ -19,7 +19,7 @@ function (f::SqrDistL2){T <: RealOrComplex}(x::AbstractArray{T})
   return (f.lambda/2)*vecnorm(x-p)^2
 end
 
-function prox!{T <: RealOrComplex}(f::SqrDistL2, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}, gamma::Real=1.0)
   p, = prox(f.ind, x)
   sqrd = (f.lambda/2)*vecnorm(x-p)^2
   c1 = 1/(1+f.lambda*gamma)

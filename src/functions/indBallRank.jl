@@ -30,7 +30,7 @@ function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T,2}, f::IndBallRank, x::AbstractArray{T,2}, gamma::Real=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
@@ -52,7 +52,7 @@ function prox!{T <: Real}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArra
   return 0.0
 end
 
-function prox!{T <: Complex}(f::IndBallRank, x::AbstractArray{T,2}, y::AbstractArray{T,2}, gamma::Real=1.0)
+function prox!{T <: Complex}(y::AbstractArray{T,2}, f::IndBallRank, x::AbstractArray{T,2}, gamma::Real=1.0)
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x

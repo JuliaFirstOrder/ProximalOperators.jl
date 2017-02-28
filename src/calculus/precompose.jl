@@ -22,27 +22,27 @@ immutable Precompose{T <: ProximableFunction, R <: Union{Real, AbstractArray}, S
   end
 end
 
-Precompose{T <: ProximableFunction, S <: Real}(f::T, a::S=1.0, b::S=0.0) = Precompose{T, S, S}(f, a, b)
+Precompose{T <: ProximableFunction, S <: Real}(f::T, a::S=one(S), b::S=zero(S)) = Precompose{T, S, S}(f, a, b)
 
-Precompose{T <: ProximableFunction, R <: AbstractArray, S <: Real}(f::T, a::R, b::S=1.0) = Precompose{T, R, S}(f, a, b)
+Precompose{T <: ProximableFunction, R <: AbstractArray, S <: Real}(f::T, a::R, b::S=zero(S)) = Precompose{T, R, S}(f, a, b)
 
 Precompose{T <: ProximableFunction, R <: Union{AbstractArray, Real}, S <: AbstractArray}(f::T, a::R, b::S) = Precompose{T, R, S}(f, a, b)
 
 is_prox_accurate(f::Precompose) = is_prox_accurate(f.f)
 
-function (g::Precompose{T, S, V}){T <: ProximableFunction, S <: Union{Real, AbstractArray}, V <: Union{Real, AbstractArray}, R <: RealOrComplex}(x::AbstractArray{R})
+function (g::Precompose){T <: RealOrComplex}(x::AbstractArray{T})
   return g.f((g.a).*x .+ g.b)
 end
 
-function prox!{T <: RealOrComplex, R <: Real}(g::Precompose, x::AbstractArray{T}, y::AbstractArray{T}, gamma::R=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::Precompose, x::AbstractArray{T}, gamma::Real=1.0)
   y .= g.a .* x .+ g.b
-  v = prox!(g.f, y, y, (g.a .* g.a) .* gamma)
+  v = prox!(y, g.f, y, (g.a .* g.a) .* gamma)
   y .-= g.b
   y ./= g.a
   return v
 end
 
-function prox_naive{T <: RealOrComplex, R <: Real}(g::Precompose, x::AbstractArray{T}, gamma::R=1.0)
+function prox_naive{T <: RealOrComplex}(g::Precompose, x::AbstractArray{T}, gamma::Real=1.0)
   z = g.a .* x + g.b
   y, fy = prox_naive(g.f, z, (g.a .* g.a) * gamma)
   return (y - g.b)./g.a, fy

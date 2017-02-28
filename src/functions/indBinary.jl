@@ -27,7 +27,7 @@ function (f::IndBinary){T <: Real}(x::AbstractArray{T})
   return 0.0
 end
 
-function prox!{T <: Real}(f::IndBinary, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T}, f::IndBinary, x::AbstractArray{T}, gamma::Real=1.0)
   low = 0.0
   high = 0.0
   for k in eachindex(x)

@@ -34,7 +34,7 @@ function (f::LogBarrier){T <: Real}(x::AbstractArray{T,1})
   return -f.mu*sumf
 end
 
-function prox!{T <: Real}(f::LogBarrier, x::AbstractArray{T,1}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T,1}, gamma::Real=1.0)
   par = 4*gamma*f.mu*f.a*f.a
   sumf = 0.0
   z = 0.0

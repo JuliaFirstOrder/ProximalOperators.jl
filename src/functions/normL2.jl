@@ -23,7 +23,7 @@ function (f::NormL2)(x::AbstractArray)
   return f.lambda*vecnorm(x)
 end
 
-function prox!{T <: RealOrComplex}(f::NormL2, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T}, gamma::Real=1.0)
   vecnormx = vecnorm(x)
   scale = max(0, 1-f.lambda*gamma/vecnormx)
   for i in eachindex(x)
