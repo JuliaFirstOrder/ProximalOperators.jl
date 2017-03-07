@@ -101,7 +101,7 @@ end
 
 fun_name(f::IndRotatedSOC) = "indicator of the rotated second-order cone"
 fun_dom(f::IndRotatedSOC) = "AbstractArray{Real,1}"
-fun_expr(f::IndRotatedSOC) = "x ↦ 0 if x[1] ⩾ 0, x[2] ⩾ 0, norm(x[3:end])² ⩾ 2*x[1]*x[2], +∞ otherwise"
+fun_expr(f::IndRotatedSOC) = "x ↦ 0 if x[1] ⩾ 0, x[2] ⩾ 0, norm(x[3:end])² ⩽ 2*x[1]*x[2], +∞ otherwise"
 fun_params(f::IndRotatedSOC) = "none"
 
 function prox_naive{T <: Real}(f::IndRotatedSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
