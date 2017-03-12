@@ -62,7 +62,7 @@ end
 Returns the indicator of the *rotated* second-order cone of R^n, that is {(p,q,x) : norm(x)^2 ⩽ 2pq, p ⩾ 0, q ⩾ 0}
 """
 
-immutable IndRotatedSOC <: IndicatorConvex end
+immutable IndRotatedSOC <: IndicatorConvexCone end
 
 function (f::IndRotatedSOC){T <: Real}(x::AbstractArray{T,1})
   if x[1] >= -1e-14 && x[2] >= -1e-14 && norm(x[3:end])^2 - 2*x[1]*x[2] <= 1e-14
@@ -74,8 +74,8 @@ end
 function prox!{T <: Real}(f::IndRotatedSOC, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
   # sin(pi/4) = cos(pi/4) = 0.7071067811865475
   # rotate x ccw by pi/4
-  x1 = 0.7071067811865475*x[1] - 0.7071067811865475*x[2]
-  x2 = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
+  x1 = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
+  x2 = 0.7071067811865475*x[1] - 0.7071067811865475*x[2]
   # project rotated x onto SOC
   nx = sqrt(x2^2+norm(x[3:end])^2)
   t = x1
@@ -101,14 +101,14 @@ end
 
 fun_name(f::IndRotatedSOC) = "indicator of the rotated second-order cone"
 fun_dom(f::IndRotatedSOC) = "AbstractArray{Real,1}"
-fun_expr(f::IndRotatedSOC) = "x ↦ 0 if x[1] ⩾ 0, x[2] ⩾ 0, norm(x[3:end])² ⩾ 2*x[1]*x[2], +∞ otherwise"
+fun_expr(f::IndRotatedSOC) = "x ↦ 0 if x[1] ⩾ 0, x[2] ⩾ 0, norm(x[3:end])² ⩽ 2*x[1]*x[2], +∞ otherwise"
 fun_params(f::IndRotatedSOC) = "none"
 
 function prox_naive{T <: Real}(f::IndRotatedSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
   g = IndSOC()
   z = copy(x)
-  z[1] = 0.7071067811865475*x[1] - 0.7071067811865475*x[2]
-  z[2] = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
+  z[1] = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
+  z[2] = 0.7071067811865475*x[1] - 0.7071067811865475*x[2]
   y, = prox_naive(g, z, gamma)
   y1 = 0.7071067811865475*y[1] + 0.7071067811865475*y[2]
   y2 = 0.7071067811865475*y[1] - 0.7071067811865475*y[2]
