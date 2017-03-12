@@ -102,6 +102,7 @@ fun_expr(  f) = "n/a"
 fun_params(f) = "n/a"
 
 is_prox_accurate(f::ProximableFunction) = true
+is_separable(f::ProximableFunction) = false
 
 """
   prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
@@ -114,7 +115,7 @@ and parameter `γ > 0`, that is
 and returns `y` and `f(y)`.
 """
 
-function prox(f::ProximableFunction, x::AbstractArray, gamma::Real=1.0)
+function prox(f::ProximableFunction, x::AbstractArray, gamma::Union{Real, AbstractArray}=1.0)
   y = similar(x)
   fy = prox!(y, f, x, gamma)
   return y, fy
@@ -127,7 +128,7 @@ Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0`, and writes the result in `y`. Returns `f(y)`.
 """
 
-function prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, gamma::Real=1.0)
+function prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, gamma::Union{Real, AbstractArray}=1.0)
   throw(MethodException(
     "prox! is not implemented for y::", typeof(y), ", f::", typeof(f),
     ", x::", typeof(x), ", gamma::", typeof(gamma)

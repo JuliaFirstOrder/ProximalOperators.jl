@@ -9,6 +9,8 @@ a function which is identically zero.
 
 immutable IndFree <: IndicatorConvexCone end
 
+is_separable(f::IndFree) = true
+
 """
   Zero()
 

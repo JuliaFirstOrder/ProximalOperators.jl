@@ -12,6 +12,9 @@ immutable Tilt{T <: ProximableFunction, S <: AbstractArray, R <: Real} <: Proxim
   b::R
 end
 
+is_separable(f::Tilt) = is_separable(f.f)
+is_prox_accurate(f::Tilt) = is_prox_accurate(f.f)
+
 Tilt{T <: ProximableFunction, S <: AbstractArray}(f::T, a::S) = Tilt{T, S, eltype(a)}(f, a, 0.0)
 
 function (g::Tilt){T <: RealOrComplex}(x::AbstractArray{T})
@@ -27,8 +30,6 @@ function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::Tilt, x::AbstractArra
   v = prox!(y, g.f, x - gamma.*g.a, gamma)
   return v + vecdot(g.a, y) + g.b
 end
-
-is_prox_accurate(f::Tilt) = is_prox_accurate(f.f)
 
 fun_name(f::Tilt) = string("Tilted ", fun_name(f.f))
 fun_dom(f::Tilt) = fun_dom(f.f)

@@ -7,6 +7,8 @@ immutable IndPoint{T <: Union{Real, Complex, AbstractArray}} <: IndicatorConvex
   end
 end
 
+is_separable(f::IndPoint) = true
+
 """
   IndPoint(p=0.0)
 
@@ -48,6 +50,8 @@ function prox!{A <: AbstractArray, T <: RealOrComplex}(y::AbstractArray{T}, f::I
   return 0.0
 end
 
+prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndPoint, x::AbstractArray{T}, gamma::AbstractArray) = prox!(y, f, x, 1.0)
+
 fun_name(f::IndPoint) = "indicator of a point"
 fun_dom(f::IndPoint) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndPoint) = "x ↦ 0 if x = p, +∞ otherwise"
@@ -57,3 +61,5 @@ fun_params(f::IndPoint) =
 function prox_naive{T <: RealOrComplex}(f::IndPoint, x::AbstractArray{T}, gamma::Real=1.0)
   return f.p, 0.0
 end
+
+prox_naive(f::IndPoint, x::AbstractArray, gamma::AbstractArray) = prox_naive(f, x, 1.0)

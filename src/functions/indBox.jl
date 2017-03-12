@@ -23,6 +23,8 @@ immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray
   end
 end
 
+is_separable(f::IndBox) = true
+
 IndBox{T <: Real}(lb::T, ub::T) = IndBox{T, T}(lb, ub)
 
 IndBox{T <: AbstractArray, S <: Real}(lb::T, ub::S) = IndBox{T, S}(lb, ub)

@@ -9,6 +9,8 @@ Returns the indicator function of the zero point, or "zero cone", i.e.,
 
 immutable IndZero <: IndicatorConvexCone end
 
+is_separable(f::IndZero) = true
+
 function (f::IndZero){T <: RealOrComplex}(x::AbstractArray{T})
   for k in eachindex(x)
     if x[k] != zero(T)
@@ -35,3 +37,5 @@ fun_params(f::IndZero) = "none"
 function prox_naive(f::IndZero, x::AbstractArray, gamma::Real=1.0)
   return zero(x), 0.0
 end
+
+prox_naive(f::IndZero, x::AbstractArray, gamma::AbstractArray) = prox_naive(f, x, 1.0)

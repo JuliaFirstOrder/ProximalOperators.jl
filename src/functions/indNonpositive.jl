@@ -10,6 +10,7 @@ Returns the indicator function the nonpositive orthant, that is
 
 immutable IndNonpositive <: IndicatorConvexCone end
 
+is_separable(f::IndNonpositive) = true
 
 function (f::IndNonpositive){R <: Real}(x::AbstractArray{R})
   for k in eachindex(x)

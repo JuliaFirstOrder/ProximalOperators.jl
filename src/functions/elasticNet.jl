@@ -18,6 +18,8 @@ immutable ElasticNet{R <: Real} <: ProximableFunction
   end
 end
 
+is_separable(f::ElasticNet) = true
+
 ElasticNet{R <: Real}(mu::R=1.0, lambda::R=1.0) = ElasticNet{R}(mu, lambda)
 
 function (f::ElasticNet){R <: RealOrComplex}(x::AbstractArray{R})
@@ -82,11 +84,11 @@ fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||²"
 fun_params(f::ElasticNet) = "μ = $(f.mu), λ = $(f.lambda)"
 
 function prox_naive{R <: RealOrComplex}(f::ElasticNet, x::AbstractArray{R}, gamma::Real=1.0)
-  uz = max.(0, abs.(x) - gamma*f.mu)/(1 + f.lambda*gamma);
+  uz = max.(0, abs.(x) - gamma*f.mu)/(1 + f.lambda*gamma)
   return sign.(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
 end
 
 function prox_naive{R <: RealOrComplex}(f::ElasticNet, x::AbstractArray{R}, gamma::AbstractArray)
-  uz = max.(0, abs.(x) - gamma.*f.mu)./(1 + f.lambda*gamma);
+  uz = max.(0, abs.(x) - gamma.*f.mu)./(1 + f.lambda*gamma)
   return sign.(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
 end
