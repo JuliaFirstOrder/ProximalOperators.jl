@@ -14,7 +14,7 @@ immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
   A::AbstractArray{T,2}
   b::AbstractArray{T,1}
   R::AbstractArray{T,2}
-  function IndAffine(A::AbstractArray{T,2}, b::AbstractArray{T,1})
+  function IndAffine{T}(A::AbstractArray{T,2}, b::AbstractArray{T,1}) where {T <: RealOrComplex}
     if size(A,1) > size(A,2)
       error("A must be full row rank")
     end

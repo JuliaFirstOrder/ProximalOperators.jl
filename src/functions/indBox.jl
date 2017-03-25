@@ -11,7 +11,7 @@ Bounds are allowed to take values `-Inf` and `+Inf`.
 immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: IndicatorConvex
   lb::T
   ub::S
-  function IndBox(lb::T, ub::S)
+  function IndBox{T,S}(lb::T, ub::S) where {T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
     if !(eltype(lb) <: Real && eltype(ub) <: Real)
       error("lb and ub must be real")
     end

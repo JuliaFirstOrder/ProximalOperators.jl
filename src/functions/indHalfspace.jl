@@ -9,7 +9,7 @@ Returns the function `g = ind{x : <a,x> ⩽ b}`.
 immutable IndHalfspace{T <: AbstractArray, R <: Real} <: IndicatorConvex
   a::T
   b::R
-  function IndHalfspace(a::T, b::R)
+  function IndHalfspace{T,R}(a::T, b::R) where {T <: AbstractArray, R <: Real}
     norma = vecnorm(a)
     new(a/norma, b/norma)
   end

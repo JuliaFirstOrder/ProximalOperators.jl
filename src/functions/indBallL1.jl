@@ -8,7 +8,7 @@ Returns the function `g = ind{x : ‖x‖_1 ⩽ r}`, for a real parameter `r > 0
 
 immutable IndBallL1{R <: Real} <: IndicatorConvex
   r::R
-  function IndBallL1(r::R)
+  function IndBallL1{R}(r::R) where {R <: Real}
     if r <= 0
       error("parameter r must be positive")
     else

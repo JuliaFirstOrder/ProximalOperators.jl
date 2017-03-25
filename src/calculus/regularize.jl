@@ -10,7 +10,7 @@ immutable Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, Abstra
   f::T
   rho::S
   a::A
-  function Regularize(f::T, rho::S, a::A)
+  function Regularize{T,S,A}(f::T, rho::S, a::A) where {T <: ProximableFunction, S <: Real, A <: Union{Real, AbstractArray}}
     if rho <= 0.0
       error("parameter ρ must be positive")
     else

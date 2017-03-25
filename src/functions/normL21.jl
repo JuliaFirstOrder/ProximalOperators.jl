@@ -11,7 +11,7 @@ In words, it is the (weighted) sum of the Euclidean norm of the columns (rows) o
 immutable NormL21{R <: Real, I <: Integer} <: ProximableConvex
   lambda::R
   dim::I
-  function NormL21(lambda::R, dim::I)
+  function NormL21{R,I}(lambda::R, dim::I) where {R <: Real, I <: Integer}
     if lambda < 0
       error("parameter λ must be nonnegative")
     else

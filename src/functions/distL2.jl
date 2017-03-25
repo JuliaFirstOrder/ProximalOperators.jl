@@ -3,7 +3,7 @@
 immutable DistL2{R <: Real} <: ProximableFunction
   ind::IndicatorConvex
   lambda::R
-  function DistL2(ind::IndicatorConvex, lambda::R)
+  function DistL2{R}(ind::IndicatorConvex, lambda::R) where {R <: Real}
     if lambda < 0
       error("parameter λ must be nonnegative")
     else

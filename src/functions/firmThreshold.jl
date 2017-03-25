@@ -2,7 +2,7 @@
 immutable FirmThreshold{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   tau::T
-  function FirmThreshold(lambda::T, tau::T )
+  function FirmThreshold{T}(lambda::T, tau::T ) where {T <: Union{Real, AbstractArray}}
 
 	  if !(eltype(lambda) <: Real)
 	          error("λ must be real")

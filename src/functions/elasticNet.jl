@@ -9,7 +9,7 @@ Returns the function `g(x) = μ||x||_1 + (λ/2)||x||²`, for a real parameters `
 immutable ElasticNet{R <: Real} <: ProximableFunction
   mu::R
   lambda::R
-  function ElasticNet(mu::R, lambda::R)
+  function ElasticNet{R}(mu::R, lambda::R) where {R <: Real}
     if lambda < 0 || mu < 0
       error("parameters μ, λ must be nonnegative")
     else

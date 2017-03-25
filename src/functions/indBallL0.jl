@@ -8,7 +8,7 @@ Returns the function `g = ind{x : countnz(x) ⩽ r}`, for an integer parameter `
 
 immutable IndBallL0{I <: Integer} <: IndicatorNonconvex
   r::I
-  function IndBallL0(r::I)
+  function IndBallL0{I}(r::I) where {I <: Integer}
     if r <= 0
       error("parameter r must be a positive integer")
     else

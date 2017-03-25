@@ -2,7 +2,7 @@
 
 immutable IndPoint{T <: Union{Real, Complex, AbstractArray}} <: IndicatorConvex
   p::T
-  function IndPoint(p::T)
+  function IndPoint{T}(p::T) where {T <: Union{Real, Complex, AbstractArray}}
     new(p)
   end
 end

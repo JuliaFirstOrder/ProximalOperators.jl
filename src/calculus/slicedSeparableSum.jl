@@ -3,14 +3,14 @@
 immutable SlicedSeparableSum{S <: AbstractArray, T <: AbstractArray} <: ProximableFunction
 	fs::S
 	idxs::T
-	function SlicedSeparableSum(fs, idxs)
+	function SlicedSeparableSum{S,T}(fs::S, idxs::T)  where {S <: AbstractArray, T <: AbstractArray}
 		if size(fs) != size(idxs)
 			error("size(fs) must coincide with size(idxs)")
 		else
 			verify_idx = true
 			for i in eachindex(idxs)
 				verify_idx *=
-				all([typeof(t) <: AbstractArray{Int,1} || 
+				all([typeof(t) <: AbstractArray{Int,1} ||
 	                             typeof(t) <: Colon for t in idxs[i]])
 			end
 			verify_idx ? new(fs, idxs) :error("invalid index")
@@ -29,7 +29,7 @@ function (f::SlicedSeparableSum{S}){S <: AbstractArray, T <: AbstractArray}(x::T
 	return sum
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, 
+function prox!{T <: RealOrComplex}(y::AbstractArray{T},
 				   f::SlicedSeparableSum, x::AbstractArray{T}, gamma::Real=1.0)
   v = 0.0
   for k in eachindex(f.fs)

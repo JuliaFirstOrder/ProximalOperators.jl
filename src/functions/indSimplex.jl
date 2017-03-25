@@ -8,7 +8,7 @@ Returns the function `g = ind{x : x ⩾ 0, sum(x) = a}`.
 
 immutable IndSimplex{T <: Union{Real, Integer}} <: IndicatorConvex
   a::T
-  function IndSimplex(a::T)
+  function IndSimplex{T}(a::T) where {T <: Union{Real, Integer}}
     if a <= 0
       error("parameter a must be positive")
     else

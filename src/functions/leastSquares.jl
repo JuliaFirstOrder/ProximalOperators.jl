@@ -14,7 +14,7 @@ type LeastSquares{R <: RealOrComplex} <: ProximableConvex
   gamma::Real
   S::AbstractArray{R,2}
   U::Union{LinAlg.Cholesky, SparseArrays.CHOLMOD.Factor}
-  function LeastSquares(A::AbstractArray{R,2}, b::AbstractArray{R,1}, lambda::Real)
+  function LeastSquares{R}(A::AbstractArray{R,2}, b::AbstractArray{R,1}, lambda::Real) where {R <: RealOrComplex}
     if size(A, 1) != length(b)
       error("A and b have incompatible dimensions")
     end

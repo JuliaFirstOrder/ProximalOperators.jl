@@ -8,7 +8,7 @@ Returns the function `g = ind{x : ||x|| = r}`, for a real parameter `r > 0`.
 
 immutable IndSphereL2{R <: Real} <: IndicatorNonconvex
   r::R
-  function IndSphereL2(r::R)
+  function IndSphereL2{R}(r::R) where {R <: Real}
     if r <= 0
       error("parameter r must be positive")
     else

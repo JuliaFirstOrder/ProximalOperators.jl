@@ -8,7 +8,7 @@ Returns the function `λ∑σ_i(X)`, where `σ_i(X)` is i-th singular value of m
 
 immutable NuclearNorm{R <: Real} <: ProximableConvex
   lambda::R
-  function NuclearNorm(lambda::R)
+  function NuclearNorm{R}(lambda::R) where {R <: Real}
     if lambda < 0
       error("parameter λ must be nonnegative")
     else

@@ -8,7 +8,7 @@ Returns the function `g = ind{X : rank(X) ⩽ r}`, for an integer parameter `r >
 
 immutable IndBallRank{I <: Integer} <: IndicatorNonconvex
   r::I
-  function IndBallRank(r::I)
+  function IndBallRank{I}(r::I) where {I <: Integer}
     if r <= 0
       error("parameter r must be a positive integer")
     else

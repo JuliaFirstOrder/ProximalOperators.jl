@@ -8,7 +8,7 @@ Returns the function `g(x) = λ||x||_2`, for a real parameter `λ ⩾ 0`.
 
 immutable NormL2{R <: Real} <: ProximableConvex
   lambda::R
-  function NormL2(lambda::R)
+  function NormL2{R}(lambda::R) where {R <: Real}
     if lambda < 0
       error("parameter λ must be nonnegative")
     else

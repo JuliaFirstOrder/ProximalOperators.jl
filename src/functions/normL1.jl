@@ -2,7 +2,7 @@
 
 immutable NormL1{T <: Union{Real, AbstractArray}} <: ProximableConvex
   lambda::T
-  function NormL1(lambda::T)
+  function NormL1{T}(lambda::T) where {T <: Union{Real, AbstractArray}}
     if !(eltype(lambda) <: Real)
       error("λ must be real")
     end

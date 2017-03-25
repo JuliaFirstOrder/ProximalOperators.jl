@@ -4,8 +4,8 @@ __precompile__()
 
 module ProximalOperators
 
-typealias RealOrComplex Union{Real, Complex}
-typealias HermOrSym{T, S} Union{Hermitian{T, S}, Symmetric{T, S}}
+const RealOrComplex = Union{Real, Complex}
+const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
 
 export prox, prox!
 
@@ -37,11 +37,11 @@ export Conjugate,
        Tilt,
        Regularize
 
-abstract ProximableFunction
-abstract ProximableConvex <: ProximableFunction
-abstract IndicatorConvex <: ProximableConvex
-abstract IndicatorConvexCone <: IndicatorConvex
-abstract IndicatorNonconvex <: ProximableFunction
+abstract type  ProximableFunction end
+abstract type  ProximableConvex <: ProximableFunction end
+abstract type  IndicatorConvex <: ProximableConvex end
+abstract type  IndicatorConvexCone <: IndicatorConvex end
+abstract type  IndicatorNonconvex <: ProximableFunction end
 
 include("utilities/symmetricpacked.jl")
 
