@@ -33,12 +33,7 @@ function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL1, x::Abstrac
     return 0.0
   else # do a projection of abs(x) onto simplex then recover signs
     n = length(x)
-    p = []
-    if ndims(x) == 1
-      p = abs.(x)
-    else
-      p = abs.(x)[:]
-    end
+    p = abs.(view(x,:))
     sort!(p, rev=true)
     s = 0.0
     @inbounds for i = 1:n-1
