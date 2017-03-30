@@ -2,7 +2,8 @@
 
 ### General
 
-* Tests, tests, tests. Especially with `Array{Complex}` variables.
+* Tests, tests, tests. Especially with `Array{Complex}` variables and `gamma::Array`.
+* Organization of the tests could also be re-thought: it would be nice to have only a batch of tests of the type "do this, then verify these properties".
 * For separable functions it makes sense to have `gamma::Array`. (Work in progress: see [sumPositive.jl](https://github.com/kul-forbes/ProximalOperators.jl/blob/master/src/functions/sumPositive.jl).)
 * Make a list of functions with their mathematical expression, properties (e.g.: separable/non-separable).
 * Documentation, documentation, documentation.
@@ -17,4 +18,4 @@
 
 ### Calculus rules
 
-* Pre-composition with a generic affine mapping.
+* Pre-composition with a generic affine mapping. (Work in progress.)

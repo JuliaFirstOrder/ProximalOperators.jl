@@ -6,7 +6,7 @@
 Returns the function `g(x) = sum(max(0, x))`.
 """
 
-immutable SumPositive <: ProximableFunction end
+immutable SumPositive <: ProximableConvex end
 
 function (f::SumPositive){T <: Real}(x::AbstractArray{T})
   return sum(max.(0.0, x))

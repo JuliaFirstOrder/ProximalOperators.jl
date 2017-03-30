@@ -17,7 +17,7 @@ Returns the indicator function of the dual exponential cone, that is
 `cl{(u,v,w) : u < 0, -u⋅exp(v/u) ⩽ w⋅exp(1)}`.
 """
 
-IndExpDual() = Precompose(Conjugate(IndExpPrimal()), -1.0)
+IndExpDual() = PrecomposeDiagonal(Conjugate(IndExpPrimal()), -1.0)
 
 EXP_PRIMAL_CALL_TOL = 1e-6
 EXP_POLAR_CALL_TOL = 1e-3
@@ -156,12 +156,12 @@ fun_dom(f::IndExpPrimal) = "AbstractArray{Real}"
 fun_expr(f::IndExpPrimal) = "x ↦ 0 if x ∈ cl{(r,s,t) : s > 0, s*exp(r/s) ⩽ t}, +∞ otherwise"
 fun_params(f::IndExpPrimal) = "none"
 
-fun_name{R <: Real}(f::Precompose{Conjugate{IndExpPrimal}, R}) = "indicator of the exponential cone (dual)"
-fun_expr{R <: Real}(f::Precompose{Conjugate{IndExpPrimal}, R}) = "x ↦ 0 if x ∈ cl{(u,v,w) : u < 0, -u*exp(v/u) ⩽ w*exp(1)}, +∞ otherwise"
-fun_params{R <: Real}(f::Precompose{Conjugate{IndExpPrimal}, R}) = "none"
+fun_name{R <: Real}(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) = "indicator of the exponential cone (dual)"
+fun_expr{R <: Real}(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) = "x ↦ 0 if x ∈ cl{(u,v,w) : u < 0, -u*exp(v/u) ⩽ w*exp(1)}, +∞ otherwise"
+fun_params{R <: Real}(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) = "none"
 
 prox_naive{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, gamma::Real=1.0) =
   prox(f, x, gamma) # we don't have a much simpler way to do this yet
 
-prox_naive{R <: Real}(f::Precompose{Conjugate{IndExpPrimal}}, x::AbstractArray{R}, gamma::Real=1.0) =
+prox_naive{R <: Real}(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}}, x::AbstractArray{R}, gamma::Real=1.0) =
   prox(f, x, gamma) # we don't have a much simpler way to do this yet

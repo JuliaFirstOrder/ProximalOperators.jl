@@ -30,7 +30,8 @@ export IndAffine, IndHalfspace,
 
 export Conjugate,
        Postcompose,
-       Precompose,
+       PrecomposeDiagonal,
+       PrecomposeGramDiagonal,
        SlicedSeparableSum,
        SeparableSum,
        Tilt,
@@ -46,7 +47,8 @@ include("utilities/symmetricpacked.jl")
 
 include("calculus/conjugate.jl")
 include("calculus/postcompose.jl")
-include("calculus/precompose.jl")
+include("calculus/precomposeDiagonal.jl")
+include("calculus/precomposeGramDiagonal.jl")
 include("calculus/separableSum.jl")
 include("calculus/slicedSeparableSum.jl")
 include("calculus/tilt.jl")

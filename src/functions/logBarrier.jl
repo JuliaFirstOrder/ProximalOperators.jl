@@ -1,6 +1,6 @@
 # logarithmic barrier function
 
-immutable LogBarrier{T <: Real} <: ProximableFunction
+immutable LogBarrier{T <: Real} <: ProximableConvex
   a::T
   b::T
   mu::T

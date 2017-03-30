@@ -1,6 +1,6 @@
 # squared L2 norm (times a constant, or weighted)
 
-immutable SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableFunction
+immutable SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableConvex
   lambda::T
   function SqrNormL2(lambda::T)
     if any(lambda .< 0)

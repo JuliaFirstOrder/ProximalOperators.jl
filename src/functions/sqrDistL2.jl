@@ -1,6 +1,6 @@
 # squared Euclidean distance from a set
 
-immutable SqrDistL2{R <: Real} <: ProximableFunction
+immutable SqrDistL2{R <: Real} <: ProximableConvex
   ind::IndicatorConvex
   lambda::R
   function SqrDistL2(ind::IndicatorConvex, lambda::R)

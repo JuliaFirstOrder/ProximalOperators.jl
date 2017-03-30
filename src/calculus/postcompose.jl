@@ -19,6 +19,7 @@ immutable Postcompose{T <: ProximableFunction, R <: Real} <: ProximableFunction
   end
 end
 
+is_separable(f::Postcompose) = is_separable(f.f)
 is_prox_accurate(f::Postcompose) = is_prox_accurate(f.f)
 
 Postcompose{T <: ProximableFunction, R <: Real}(f::T, a::R=one(R), b::R=zero(R)) = Postcompose{T, R}(f, a, b)
@@ -27,12 +28,12 @@ function (g::Postcompose){T <: RealOrComplex}(x::AbstractArray{T})
   return g.a*g.f(x) + g.b
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)
   v = prox!(y, g.f, x, g.a*gamma)
   return g.a*v + g.b
 end
 
-function prox_naive{T <: RealOrComplex}(g::Postcompose, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive{T <: RealOrComplex}(g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)
   y, v = prox_naive(g.f, x, g.a*gamma)
   return y, g.a*v + g.b
 end
