@@ -26,7 +26,7 @@ function (f::IndBallL2){T <: RealOrComplex}(x::AbstractArray{T})
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndBallL2, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL2, x::AbstractArray{T}, gamma::Real=1.0)
   scal = f.r/vecnorm(x)
   if scal > 1
     y[:] = x

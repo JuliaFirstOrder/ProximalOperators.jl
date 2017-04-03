@@ -1,6 +1,6 @@
 # squared L2 norm (times a constant, or weighted)
 
-immutable SqrNormL2{T <: Union{Real,AbstractArray}} <: ProximableFunction
+immutable SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableConvex
   lambda::T
   function SqrNormL2(lambda::T)
     if any(lambda .< 0)
@@ -39,7 +39,7 @@ function (f::SqrNormL2{S}){S <: AbstractArray, T <: RealOrComplex}(x::AbstractAr
   return 0.5*sqnorm
 end
 
-function prox!{S <: Real, T <: RealOrComplex}(f::SqrNormL2{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{S <: Real, T <: RealOrComplex}(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Real=1.0)
   gl = gamma*f.lambda
   sqny = 0.0
   for k in eachindex(x)
@@ -49,7 +49,7 @@ function prox!{S <: Real, T <: RealOrComplex}(f::SqrNormL2{S}, x::AbstractArray{
   return (f.lambda/2)*sqny
 end
 
-function prox!{S <: AbstractArray, T <: RealOrComplex}(f::SqrNormL2{S}, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{S <: AbstractArray, T <: RealOrComplex}(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Real=1.0)
   wsqny = 0.0
   for k in eachindex(x)
     y[k] = x[k]/(1+gamma*f.lambda[k])

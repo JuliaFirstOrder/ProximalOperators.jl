@@ -26,7 +26,7 @@ function (f::IndSimplex){T <: Real}(x::AbstractArray{T,1})
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndSimplex, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T}, f::IndSimplex, x::AbstractArray{T}, gamma::Real=1.0)
 # Implements Algorithm 1 in Condat, "Fast projection onto the simplex and the l1 ball", Mathematical Programming, 158:575–585, 2016.
 # We should consider implementing the other algorithms reviewed there, and the one proposed in the paper.
   n = length(x)

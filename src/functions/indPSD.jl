@@ -21,7 +21,7 @@ function (f::IndPSD){T <: RealOrComplex}(X::HermOrSym{T})
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, Y::HermOrSym{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0)
   n = size(X, 1);
   F = eigfact(X);
   for i in eachindex(F.values)
@@ -61,7 +61,7 @@ function (f::IndPSD){T <: Float64}(x::AbstractVector{T})
   return 0.0
 end
 
-function prox!(f::IndPSD, x::AbstractVector{Float64}, y::AbstractVector{Float64}, gamma::Real=1.0)
+function prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}, gamma::Real=1.0)
   y[:] = x              # Copy x since dspev! corrupts input
   (W, Z) = dspevV!('L', y)
   W = max.(W, 0.0)         # NonNeg eigenvalues

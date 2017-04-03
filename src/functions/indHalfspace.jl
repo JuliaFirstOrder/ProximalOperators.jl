@@ -25,7 +25,7 @@ function (f::IndHalfspace){T <: Real}(x::AbstractArray{T})
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndHalfspace, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T}, f::IndHalfspace, x::AbstractArray{T}, gamma::Real=1.0)
   s = vecdot(f.a,x)-f.b
   if s <= 0
     y[:] = x

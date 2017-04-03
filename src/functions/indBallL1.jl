@@ -26,7 +26,7 @@ function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T})
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0)
   # TODO: a faster algorithm
   if vecnorm(x,1) - f.r < 1e-14
     y[:] = x[:]

@@ -48,7 +48,7 @@ function (f::FirmThreshold{A}){A <: AbstractArray}(x::AbstractArray)
   return fy
 end
 
-function prox!{A <: AbstractArray, R <: RealOrComplex}(f::FirmThreshold{A}, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
+function prox!{A <: AbstractArray, R <: RealOrComplex}(y::AbstractArray{R}, f::FirmThreshold{A}, x::AbstractArray{R}, gamma::Real=1.0)
   fy = zero(R)
   for i in eachindex(x)
 	  y[i] = abs(x[i]) < f.lambda[i]*f.tau[i] ? 0 : ( abs(x[i]) >= f.lambda[i] ? x[i] : (x[i]-f.lambda[i]*f.tau[i]*sign(x[i]))/(1-f.tau[i])  )
@@ -56,7 +56,7 @@ function prox!{A <: AbstractArray, R <: RealOrComplex}(f::FirmThreshold{A}, x::A
   return f(y)
 end
 
-function prox!{T <: Real, R <: RealOrComplex}(f::FirmThreshold{T}, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
+function prox!{T <: Real, R <: RealOrComplex}(y::AbstractArray{R}, f::FirmThreshold{T}, x::AbstractArray{R}, gamma::Real=1.0)
   fy = zero(R)
   for i in eachindex(x)
 	  y[i] = abs(x[i]) < f.lambda*f.tau ? 0 : ( abs(x[i]) >= f.lambda ? x[i] : (x[i]-f.lambda*f.tau*sign(x[i]))/(1-f.tau)  )

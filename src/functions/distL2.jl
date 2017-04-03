@@ -14,12 +14,12 @@ end
 
 DistL2{R <: Real}(ind::IndicatorConvex, lambda::R=1.0) = DistL2{R}(ind, lambda)
 
-function (f::DistL2){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::DistL2){R <: RealOrComplex}(x::AbstractArray{R})
   p, = prox(f.ind, x)
   return f.lambda*vecnorm(x-p)
 end
 
-function prox!{T <: RealOrComplex}(f::DistL2, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{R <: RealOrComplex}(y::AbstractArray{R}, f::DistL2, x::AbstractArray{R}, gamma::Real=1.0)
   p, = prox(f.ind, x)
   d = vecnorm(x-p)
   gamlam = (gamma*f.lambda)
@@ -39,7 +39,7 @@ fun_dom(f::DistL2) = fun_dom(f.ind)
 fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
 fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
-function prox_naive{T <: RealOrComplex}(f::DistL2, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive{R <: RealOrComplex}(f::DistL2, x::AbstractArray{R}, gamma::Real=1.0)
   p, = prox(f.ind, x)
   d = vecnorm(x-p)
   gamlam = gamma*f.lambda

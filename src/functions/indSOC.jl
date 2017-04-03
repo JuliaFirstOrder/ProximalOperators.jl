@@ -16,7 +16,7 @@ function (f::IndSOC){T <: Real}(x::AbstractArray{T,1})
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndSOC, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
   nx = norm(x[2:end])
   t = x[1]
   if t <= -nx
@@ -71,7 +71,7 @@ function (f::IndRotatedSOC){T <: Real}(x::AbstractArray{T,1})
   return +Inf
 end
 
-function prox!{T <: Real}(f::IndRotatedSOC, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndRotatedSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
   # sin(pi/4) = cos(pi/4) = 0.7071067811865475
   # rotate x ccw by pi/4
   x1 = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
