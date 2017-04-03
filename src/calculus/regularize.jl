@@ -1,9 +1,9 @@
 # Regularize
 
 """
-  Regularize(f::ProximableFunction, rho::Real, a::AbstractArray)
+  Regularize(f::ProximableFunction, ρ::Real, a::AbstractArray)
 
-Given function `f`, returns `g(x) = f(x) + (rho/2)||x-a||²`.
+Given function `f`, returns `g(x) = f(x) + (ρ/2)||x-a||²`.
 """
 
 immutable Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, AbstractArray}} <: ProximableFunction
