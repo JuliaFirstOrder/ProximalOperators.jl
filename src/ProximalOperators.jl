@@ -5,7 +5,7 @@ __precompile__()
 module ProximalOperators
 
 typealias RealOrComplex Union{Real, Complex}
-typealias HermOrSym{T,S} Union{Hermitian{T,S}, Symmetric{T,S}}
+typealias HermOrSym{T, S} Union{Hermitian{T, S}, Symmetric{T, S}}
 
 export prox, prox!
 
@@ -30,7 +30,8 @@ export IndAffine, IndHalfspace,
 
 export Conjugate,
        Postcompose,
-       Precompose,
+       PrecomposeDiagonal,
+#        PrecomposeGramDiagonal,
        SlicedSeparableSum,
        SeparableSum,
        Tilt,
@@ -46,7 +47,8 @@ include("utilities/symmetricpacked.jl")
 
 include("calculus/conjugate.jl")
 include("calculus/postcompose.jl")
-include("calculus/precompose.jl")
+include("calculus/precomposeDiagonal.jl")
+# include("calculus/precomposeGramDiagonal.jl")
 include("calculus/separableSum.jl")
 include("calculus/slicedSeparableSum.jl")
 include("calculus/tilt.jl")
@@ -102,6 +104,7 @@ fun_expr(  f) = "n/a"
 fun_params(f) = "n/a"
 
 is_prox_accurate(f::ProximableFunction) = true
+is_separable(f::ProximableFunction) = false
 
 """
   prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
@@ -114,37 +117,24 @@ and parameter `γ > 0`, that is
 and returns `y` and `f(y)`.
 """
 
-function prox(f::ProximableFunction, x::AbstractArray, gamma::Real=1.0)
+function prox(f::ProximableFunction, x::AbstractArray, gamma::Union{Real, AbstractArray}=1.0)
   y = similar(x)
-  fy = prox!(f, x, y, gamma)
+  fy = prox!(y, f, x, gamma)
   return y, fy
 end
 
 """
-  prox!(f::ProximableFunction, x::AbstractArray, y::AbstractArray, γ::Real=1.0)
+  prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
 
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0`, and writes the result in `y`. Returns `f(y)`.
 """
 
-function prox!(f::ProximableFunction, x::AbstractArray, y::AbstractArray, gamma::Real=1.0)
+function prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, gamma::Union{Real, AbstractArray}=1.0)
   throw(MethodException(
-    "prox! is not implemented for f::", typeof(f),
-    ", x::", typeof(x), ", y::", typeof(y), ", gamma::", typeof(gamma)
+    "prox! is not implemented for y::", typeof(y), ", f::", typeof(f),
+    ", x::", typeof(x), ", gamma::", typeof(gamma)
   ))
 end
-
-"""
-  prox!(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
-
-Computes the proximal point of `x` with respect to function `f`
-and parameter `γ > 0` *in place*, that is
-
-  x ← argmin_z { f(z) + 1/(2γ)||z-x||² }
-
-and returns `f(x)`.
-"""
-
-prox!(f::ProximableFunction, x::AbstractArray, gamma::Real=1.0) = prox!(f, x, x, gamma)
 
 end

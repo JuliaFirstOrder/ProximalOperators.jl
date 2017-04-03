@@ -10,6 +10,7 @@ Returns the indicator function the nonpositive orthant, that is
 
 immutable IndNonpositive <: IndicatorConvexCone end
 
+is_separable(f::IndNonpositive) = true
 
 function (f::IndNonpositive){R <: Real}(x::AbstractArray{R})
   for k in eachindex(x)
@@ -20,7 +21,7 @@ function (f::IndNonpositive){R <: Real}(x::AbstractArray{R})
   return 0.0
 end
 
-function prox!{R <: Real}(f::IndNonpositive, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
+function prox!{R <: Real}(y::AbstractArray{R}, f::IndNonpositive, x::AbstractArray{R}, gamma::Real=1.0)
   for k in eachindex(x)
     if x[k] > 0
       y[k] = zero(R)
@@ -31,6 +32,8 @@ function prox!{R <: Real}(f::IndNonpositive, x::AbstractArray{R}, y::AbstractArr
   return 0.0
 end
 
+prox!{R <: Real}(y::AbstractArray{R}, f::IndNonpositive, x::AbstractArray{R}, gamma::AbstractArray) = prox!(y, f, x, 1.0)
+
 fun_name(f::IndNonpositive) = "indicator of the Nonpositive cone"
 fun_dom(f::IndNonpositive) = "AbstractArray{Real}"
 fun_expr(f::IndNonpositive) = "x ↦ 0 if all(0 ⩾ x), +∞ otherwise"
@@ -40,3 +43,5 @@ function prox_naive{R <: Real}(f::IndNonpositive, x::AbstractArray{R}, gamma::Re
   y = min.(zero(R), x)
   return y, 0.0
 end
+
+prox_naive{R <: Real}(f::IndNonpositive, x::AbstractArray{R}, gamma::AbstractArray) = prox_naive(f, x, 1.0)

@@ -6,7 +6,7 @@
 Returns the function `g(x) = (mu/2)||x||² if ||x|| ⩽ rho, and rho*mu*(||x||-rho/2) otherwise`.
 """
 
-immutable HuberLoss{R <: Real} <: ProximableFunction
+immutable HuberLoss{R <: Real} <: ProximableConvex
   rho::R
   mu::R
   function HuberLoss(rho::R, mu::R)
@@ -29,7 +29,7 @@ function (f::HuberLoss){T <: Union{Real, Complex}}(x::AbstractArray{T})
   end
 end
 
-function prox!{T <: Union{Real, Complex}}(f::HuberLoss, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}, gamma::Real=1.0)
   normx = vecnorm(x)
   mugam = f.mu*gamma
   scal = (1-min(mugam/(1+mugam), mugam*f.rho/(normx)))

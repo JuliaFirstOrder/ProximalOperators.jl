@@ -40,7 +40,7 @@ function (f::IndAffine){T <: RealOrComplex}(x::AbstractArray{T,1})
   return +Inf
 end
 
-function prox!{T <: RealOrComplex}(f::IndAffine, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T,1}, f::IndAffine, x::AbstractArray{T,1}, gamma::Real=1.0)
   res = f.A*x - f.b
   y[:] = x - f.A'*(f.R\(f.R'\res))
   return 0.0

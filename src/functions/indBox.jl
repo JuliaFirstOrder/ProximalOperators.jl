@@ -23,6 +23,8 @@ immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray
   end
 end
 
+is_separable(f::IndBox) = true
+
 IndBox{T <: Real}(lb::T, ub::T) = IndBox{T, T}(lb, ub)
 
 IndBox{T <: AbstractArray, S <: Real}(lb::T, ub::S) = IndBox{T, S}(lb, ub)
@@ -47,7 +49,7 @@ function (f::IndBox){R <: Real}(x::AbstractArray{R})
   return 0.0
 end
 
-function prox!{R <: Real}(f::IndBox, x::AbstractArray{R}, y::AbstractArray{R}, gamma::Real=1.0)
+function prox!{R <: Real}(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=one(R))
   for k in eachindex(x)
     if x[k] < IndBox_lb(f,k)
       y[k] = IndBox_lb(f,k)
@@ -59,6 +61,8 @@ function prox!{R <: Real}(f::IndBox, x::AbstractArray{R}, y::AbstractArray{R}, g
   end
   return 0.0
 end
+
+prox!{R <: Real}(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) = prox!(y, f, x, one(R))
 
 """
   IndBallLinf(r::Real=1.0)
@@ -80,3 +84,5 @@ function prox_naive{R <: Real}(f::IndBox, x::AbstractArray{R}, gamma::Real=1.0)
   y = min.(f.ub, max.(f.lb, x))
   return y, 0.0
 end
+
+prox_naive{R <: Real}(f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) = prox_naive(f, x, 1.0)

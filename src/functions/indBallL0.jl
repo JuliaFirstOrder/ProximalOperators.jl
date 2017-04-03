@@ -26,7 +26,7 @@ function (f::IndBallL0){T <: RealOrComplex}(x::AbstractArray{T})
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(f::IndBallL0, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL0, x::AbstractArray{T}, gamma::Real=1.0)
   p = []
   if ndims(x) == 1
     p = selectperm(x, 1:f.r, by=abs, rev=true)

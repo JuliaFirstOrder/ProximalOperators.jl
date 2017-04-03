@@ -226,7 +226,7 @@ stuff = [
 
   Dict( "constr" => Tilt,
         "params" => ( (LeastSquares(randn(20, 10), randn(20)), randn(10)), ),
-        "args"   => ( randn(10) )
+        "args"   => ( randn(10), )
       ),
 
   Dict( "constr" => HuberLoss,
@@ -260,40 +260,19 @@ for i = 1:length(stuff)
     println(f)
 
 ##### just call f
-    try
-      call_test(f, x)
-    catch e
-      if isa(e, MethodError)
-        println("(not defined)")
-        continue
-      end
-    end
+    fx = call_test(f, x)
 
 ##### compute prox with default gamma
     y, fy = prox_test(f, x)
-
-    # compare with naive implementation
-    y_naive, fy_naive = ProximalOperators.prox_naive(f, x)
-    @test vecnorm(y_naive - y, Inf)/(1+vecnorm(y_naive, Inf)) <= TOL_ASSERT
-
-    if ProximalOperators.is_prox_accurate(f)
-      @test fy_naive == fy || abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT
-      f_at_y = f(y)
-      @test f_at_y == fy || abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT
-    end
 
 ##### compute prox with random gamma
     gam = 5*rand()
     y, fy = prox_test(f, x, gam)
 
-    # compare with naive implementation
-    y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gam)
-    @test vecnorm(y_naive - y, Inf)/(1+vecnorm(y_naive, Inf)) <= TOL_ASSERT
-
-    if ProximalOperators.is_prox_accurate(f)
-      @test fy_naive == fy || abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT
-      f_at_y = f(y)
-      @test f_at_y == fy || abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT
+##### compute prox with multiple random gammas
+    if ProximalOperators.is_separable(f)
+      gam = 0.5+2*rand(size(x))
+      y, fy = prox_test(f, x, gam)
     end
 
   end

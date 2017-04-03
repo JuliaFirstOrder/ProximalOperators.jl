@@ -6,13 +6,13 @@
 Returns the function `g(x) = sum(max(0, x))`.
 """
 
-immutable SumPositive <: ProximableFunction end
+immutable SumPositive <: ProximableConvex end
 
 function (f::SumPositive){T <: Real}(x::AbstractArray{T})
   return sum(max.(0.0, x))
 end
 
-function prox!{T <: Real}(f::SumPositive, x::AbstractArray{T}, y::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T}, gamma::Real=1.0)
   fsum = 0.0
   for i in eachindex(x)
     y[i] = x[i] < gamma ? (x[i] > 0.0 ? 0.0 : x[i]) : x[i]-gamma
@@ -36,7 +36,7 @@ end
 # Prox with multiple gammas #
 # ######################### #
 
-function prox!{T <: Real}(f::SumPositive, x::AbstractArray{T}, y::AbstractArray{T}, gamma::AbstractArray{T})
+function prox!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T}, gamma::AbstractArray{T})
   fsum = 0.0
   for i in eachindex(x)
     y[i] = x[i] < gamma[i] ? (x[i] > 0.0 ? 0.0 : x[i]) : x[i]-gamma[i]
