@@ -1,12 +1,12 @@
 # Conjugate
 
 """
-  Conjugate(f::ProximableConvex)
+  Conjugate(f::ProximableFunction)
 
 Returns the conjugate function of `f`, that is `f*(x) = sup{y'x - f(y)}`.
 """
 
-immutable Conjugate{T <: ProximableConvex} <: ProximableConvex
+immutable Conjugate{T <: ProximableFunction} <: ProximableConvex
   f::T
 end
 
