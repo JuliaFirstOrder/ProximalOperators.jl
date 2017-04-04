@@ -7,9 +7,9 @@ end
 function (f::SeparableSum{S}){S <: AbstractArray}(x::AbstractArray)
 	sum = 0.0
   for k in eachindex(f.fs)
-		sum += f.fs[k](x[k])
-	end
-	return sum
+	  sum += f.fs[k](x[k])
+  end
+  return sum
 end
 
 function prox!(ys::AbstractArray, fs::AbstractArray, xs::AbstractArray, gamma::Real=1.0)
