@@ -55,7 +55,7 @@ and only returns the function value at the proximal point:
 
 ```julia
 julia> fx = prox!(f, x, 0.5) # in-place equivalent to x, fx = prox(f, x, 0.5)
-julia> fy = prox!(f, x, y, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
+julia> fy = prox!(y, f, x, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
 ```
 
 ## References
