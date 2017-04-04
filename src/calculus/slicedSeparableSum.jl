@@ -10,7 +10,7 @@ immutable SlicedSeparableSum{S <: AbstractArray, T <: AbstractArray} <: Proximab
 			verify_idx = true
 			for i in eachindex(idxs)
 				verify_idx *=
-				all([typeof(t) <: AbstractArray{Int64,1} || 
+				all([typeof(t) <: AbstractArray{Int,1} || 
 	                             typeof(t) <: Colon for t in idxs[i]])
 			end
 			verify_idx ? new(fs, idxs) :error("invalid index")
