@@ -54,7 +54,6 @@ julia> y, fy = prox(f, x, 0.5) # last argument is 1.0 if absent
 and only returns the function value at the proximal point:
 
 ```julia
-julia> fx = prox!(f, x, 0.5) # in-place equivalent to x, fx = prox(f, x, 0.5)
 julia> fy = prox!(y, f, x, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
 ```
 
