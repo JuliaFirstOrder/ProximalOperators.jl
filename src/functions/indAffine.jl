@@ -10,11 +10,11 @@ Returns the function `g = ind{x : Ax = b}`.
 Returns the function `g = ind{x : dot(a,x) = b}`.
 """
 
-immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
-  A::AbstractArray{T,2}
-  b::AbstractArray{T,1}
-  R::AbstractArray{T,2}
-  function IndAffine{T}(A::AbstractArray{T,2}, b::AbstractArray{T,1}) where {T <: RealOrComplex}
+immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}} <: IndicatorConvex
+  A::M
+  b::V
+  R::M
+  function IndAffine{T,M,V}(A::M, b::V) where {T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}}
     if size(A,1) > size(A,2)
       error("A must be full row rank")
     end
@@ -26,11 +26,11 @@ immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
   end
 end
 
-IndAffine{T <: RealOrComplex}(A::AbstractArray{T,2}, b::AbstractArray{T,1}) =
-  IndAffine{T}(A, b)
+IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}}(A::M, b::V) =
+  IndAffine{T,M,V}(A, b)
 
-IndAffine{T <: RealOrComplex}(a::AbstractArray{T,1}, b::T) =
-  IndAffine{T}(a', [b])
+IndAffine{T,V<:AbstractArray{T,1}}(a::V, b::T) =
+  IndAffine(reshape(a,1,:), [b])
 
 function (f::IndAffine){T <: RealOrComplex}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable

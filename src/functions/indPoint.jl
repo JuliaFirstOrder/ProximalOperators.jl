@@ -1,8 +1,8 @@
 # indicator of a point
 
-immutable IndPoint{T <: Union{Real, Complex, AbstractArray}} <: IndicatorConvex
+immutable IndPoint{T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}} <: IndicatorConvex
   p::T
-  function IndPoint{T}(p::T) where {T <: Union{Real, Complex, AbstractArray}}
+  function IndPoint{T}(p::T) where {T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}}
     new(p)
   end
 end
@@ -16,7 +16,7 @@ Returns the function `g = ind{x = p}`. Parameter `p` can be
 either a scalar or an array of the same dimension as the function argument.
 """
 
-IndPoint{T <: Union{Real, Complex, AbstractArray}}(p::T=0.0) = IndPoint{T}(p)
+IndPoint{T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}}(p::T=0.0) = IndPoint{T}(p)
 
 function (f::IndPoint{R}){R <: RealOrComplex, T <: RealOrComplex}(x::AbstractArray{T})
   for k in eachindex(x)

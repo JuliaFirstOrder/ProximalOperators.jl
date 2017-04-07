@@ -10,7 +10,7 @@ immutable PrecomposeDiagonal{T <: ProximableConvex, R <: Union{Real, AbstractArr
   f::T
   a::R
   b::S
-  function PrecomposeDiagonal(f::T, a::R, b::S)
+  function PrecomposeDiagonal{T,R,S}(f::T, a::R, b::S) where {T <: ProximableConvex, R <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
     if !(eltype(a) <: Real)
       error("a must have real elements")
     end

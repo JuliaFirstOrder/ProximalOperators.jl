@@ -1,5 +1,5 @@
 # Euclidean distance from a set
-
+#TODO fix abstract type
 immutable DistL2{R <: Real} <: ProximableFunction
   ind::IndicatorConvex
   lambda::R

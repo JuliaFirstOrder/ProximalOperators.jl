@@ -1,5 +1,5 @@
 # squared Euclidean distance from a set
-
+#TODO fix abstract type
 immutable SqrDistL2{R <: Real} <: ProximableConvex
   ind::IndicatorConvex
   lambda::R
