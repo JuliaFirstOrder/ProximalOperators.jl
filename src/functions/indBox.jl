@@ -8,15 +8,15 @@ either scalars or arrays of the same dimension as `x`, and must satisfy `lb <= u
 Bounds are allowed to take values `-Inf` and `+Inf`.
 """
 
-immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: IndicatorConvex
+immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
   lb::T
   ub::S
   function IndBox{T,S}(lb::T, ub::S) where {T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
     if !(eltype(lb) <: Real && eltype(ub) <: Real)
-      error("lb and ub must be real")
+      error("`lb` and `ub` must be real")
     end
     if any(lb .> ub)
-      error("lb and ub must satisfy lb <= ub")
+      error("`lb` and `ub` must satisfy `lb <= ub`")
     else
       new(lb, ub)
     end
@@ -24,6 +24,9 @@ immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray
 end
 
 is_separable(f::IndBox) = true
+is_convex(f::IndBox) = true
+is_set(f::IndBox) = true
+is_cone(f::IndBox) = all((f.lb .== -Inf) .+ (f.ub .== +Inf) .> 0)
 
 IndBox{T <: Real}(lb::T, ub::T) = IndBox{T, T}(lb, ub)
 

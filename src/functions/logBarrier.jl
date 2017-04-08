@@ -1,6 +1,6 @@
 # logarithmic barrier function
 
-immutable LogBarrier{T <: Real} <: ProximableConvex
+immutable LogBarrier{T <: Real} <: ProximableFunction
   a::T
   b::T
   mu::T
@@ -14,6 +14,7 @@ immutable LogBarrier{T <: Real} <: ProximableConvex
 end
 
 is_separable(f::LogBarrier) = true
+is_convex(f::LogBarrier) = true
 
 """
   LogBarrier(a::Real=1.0, b::Real=0.0, mu::Real=1.0)

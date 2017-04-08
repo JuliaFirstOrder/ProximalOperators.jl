@@ -8,7 +8,7 @@ where x_i are the columns of X if dim == 1, or the rows of X if dim == 2.
 In words, it is the (weighted) sum of the Euclidean norm of the columns (rows) of X.
 """
 
-immutable NormL21{R <: Real, I <: Integer} <: ProximableConvex
+immutable NormL21{R <: Real, I <: Integer} <: ProximableFunction
   lambda::R
   dim::I
   function NormL21{R,I}(lambda::R, dim::I) where {R <: Real, I <: Integer}
@@ -19,6 +19,8 @@ immutable NormL21{R <: Real, I <: Integer} <: ProximableConvex
     end
   end
 end
+
+is_convex(f::NormL21) = true
 
 NormL21{R <: Real, I <: Integer}(lambda::R=1.0, dim::I=1) = NormL21{R, I}(lambda, dim)
 

@@ -18,6 +18,12 @@ immutable SlicedSeparableSum{S <: AbstractArray, T <: AbstractArray} <: Proximab
 	end
 end
 
+is_separable(f::SlicedSeparableSum) = all(is_separable.(f.fs))
+is_prox_accurate(f::SlicedSeparableSum) = all(is_prox_accurate.(f.fs))
+is_convex(f::SlicedSeparableSum) = all(is_convex.(f.fs))
+is_set(f::SlicedSeparableSum) = all(is_set.(f.fs))
+is_cone(f::SlicedSeparableSum) = all(is_cone.(f.fs))
+
 SlicedSeparableSum{S <: AbstractArray, T <: AbstractArray}(a::S, b::T) =
 SlicedSeparableSum{S, T}(a, b)
 

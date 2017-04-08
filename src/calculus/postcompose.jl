@@ -12,7 +12,7 @@ immutable Postcompose{T <: ProximableFunction, R <: Real} <: ProximableFunction
   b::R
   function Postcompose{T,R}(f::T, a::R, b::R) where {T <: ProximableFunction, R <: Real}
     if a <= 0.0
-      error("parameter a must be positive")
+      error("parameter `a` must be positive")
     else
       new(f, a, b)
     end
@@ -21,6 +21,9 @@ end
 
 is_separable(f::Postcompose) = is_separable(f.f)
 is_prox_accurate(f::Postcompose) = is_prox_accurate(f.f)
+is_convex(f::Postcompose) = is_convex(f.f)
+is_set(f::Postcompose) = is_set(f.f)
+is_cone(f::Postcompose) = is_cone(f.f)
 
 Postcompose{T <: ProximableFunction, R <: Real}(f::T, a::R=one(R), b::R=zero(R)) = Postcompose{T, R}(f, a, b)
 

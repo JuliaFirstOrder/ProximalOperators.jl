@@ -6,7 +6,7 @@
 Returns the function `g = ind{X : rank(X) ⩽ r}`, for an integer parameter `r > 0`.
 """
 
-immutable IndBallRank{I <: Integer} <: IndicatorNonconvex
+immutable IndBallRank{I <: Integer} <: ProximableFunction
   r::I
   function IndBallRank{I}(r::I) where {I <: Integer}
     if r <= 0
@@ -16,6 +16,8 @@ immutable IndBallRank{I <: Integer} <: IndicatorNonconvex
     end
   end
 end
+
+is_set(f::IndBallRank) = false
 
 IndBallRank{I <: Integer}(r::I=1) = IndBallRank{I}(r)
 

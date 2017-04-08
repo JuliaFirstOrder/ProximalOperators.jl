@@ -6,7 +6,7 @@
 Returns the function `g = ind{x : countnz(x) ⩽ r}`, for an integer parameter `r > 0`.
 """
 
-immutable IndBallL0{I <: Integer} <: IndicatorNonconvex
+immutable IndBallL0{I <: Integer} <: ProximableFunction
   r::I
   function IndBallL0{I}(r::I) where {I <: Integer}
     if r <= 0
@@ -16,6 +16,8 @@ immutable IndBallL0{I <: Integer} <: IndicatorNonconvex
     end
   end
 end
+
+is_set(f::IndBallL0) = true
 
 IndBallL0{I <: Integer}(r::I) = IndBallL0{I}(r)
 

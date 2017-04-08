@@ -6,7 +6,7 @@
 Returns the function `g = ind{x : x ⩾ 0, sum(x) = a}`.
 """
 
-immutable IndSimplex{T <: Union{Real, Integer}} <: IndicatorConvex
+immutable IndSimplex{T <: Union{Real, Integer}} <: ProximableFunction
   a::T
   function IndSimplex{T}(a::T) where {T <: Union{Real, Integer}}
     if a <= 0
@@ -16,6 +16,9 @@ immutable IndSimplex{T <: Union{Real, Integer}} <: IndicatorConvex
     end
   end
 end
+
+is_convex(f::IndSimplex) = true
+is_set(f::IndSimplex) = true
 
 IndSimplex{T <: Union{Real, Integer}}(a::T=1.0) = IndSimplex{T}(a)
 

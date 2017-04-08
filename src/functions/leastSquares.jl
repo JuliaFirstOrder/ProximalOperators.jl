@@ -5,8 +5,9 @@
 
 Returns the function `f(x) = (λ/2)⋅||Ax-b||^2`.
 """
+<<<<<<< HEAD
 #TODO Fix abstract Array types, Union type, Real, and not Immutable?
-type LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}, F<:Factorization} <: ProximableConvex
+type LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}, F<:Factorization} <: ProximableFunction
   A::M
   b::V
   Atb::V
@@ -14,7 +15,8 @@ type LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:Abstr
   gamma::R
   S::M
   U::F
-  function LeastSquares{RC,R,M,V,F}(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}, F<:Factorization}
+  function LeastSquares{RC,R,M,V,F}(A::M, b::V, lambda::R)
+      where {RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}, F<:Factorization}
     if size(A, 1) != length(b)
       error("A and b have incompatible dimensions")
     end
@@ -40,8 +42,7 @@ type LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:Abstr
   end
 end
 
-#Infer type of factor
-
+is_convex(f::LeastSquares) = true
 
 LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}}(A::M, b::V, lambda::R=1.0) =
   LeastSquares{RC,R,M,V}(A, b, lambda)

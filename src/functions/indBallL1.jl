@@ -6,7 +6,7 @@
 Returns the function `g = ind{x : ‖x‖_1 ⩽ r}`, for a real parameter `r > 0`.
 """
 
-immutable IndBallL1{R <: Real} <: IndicatorConvex
+immutable IndBallL1{R <: Real} <: ProximableFunction
   r::R
   function IndBallL1{R}(r::R) where {R <: Real}
     if r <= 0
@@ -16,6 +16,9 @@ immutable IndBallL1{R <: Real} <: IndicatorConvex
     end
   end
 end
+
+is_convex(f::IndBallL1) = true
+is_set(f::IndBallL1) = true
 
 IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
 

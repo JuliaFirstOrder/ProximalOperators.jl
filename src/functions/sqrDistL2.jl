@@ -1,9 +1,11 @@
 # squared Euclidean distance from a set
-#TODO fix abstract type
-immutable SqrDistL2{R <: Real} <: ProximableConvex
-  ind::IndicatorConvex
+immutable SqrDistL2{R <: Real, T<:ProximableFunction} <: ProximableFunction
+  ind::T
   lambda::R
-  function SqrDistL2{R}(ind::IndicatorConvex, lambda::R) where {R <: Real}
+  function SqrDistL2{R,T}(ind::T, lambda::R) where {R <: Real, T<:ProximableFunction}
+    if !is_convex(ind) || !is_set(ind)
+      error("`ind` must be the indicator of a convex set")
+    end
     if lambda < 0
       error("parameter λ must be nonnegative")
     else
@@ -12,7 +14,10 @@ immutable SqrDistL2{R <: Real} <: ProximableConvex
   end
 end
 
-SqrDistL2{R <: Real}(ind::IndicatorConvex, lambda::R=1.0) = SqrDistL2{R}(ind, lambda)
+is_prox_accurate(f::SqrDistL2) = is_prox_accurate(f.ind)
+is_convex(f::SqrDistL2) = true
+
+SqrDistL2{R <: Real, T <: ProximableFunction}(ind::T, lambda::R=1.0) = SqrDistL2{R, T}(ind, lambda)
 
 function (f::SqrDistL2){T <: RealOrComplex}(x::AbstractArray{T})
   p, = prox(f.ind, x)

@@ -11,7 +11,7 @@ immutable ElasticNet{R <: Real} <: ProximableFunction
   lambda::R
   function ElasticNet{R}(mu::R, lambda::R) where {R <: Real}
     if lambda < 0 || mu < 0
-      error("parameters μ, λ must be nonnegative")
+      error("parameters `μ` and `λ` must be nonnegative")
     else
       new(mu, lambda)
     end
@@ -19,6 +19,8 @@ immutable ElasticNet{R <: Real} <: ProximableFunction
 end
 
 is_separable(f::ElasticNet) = true
+is_prox_accurate(f::ElasticNet) = true
+is_convex(f::ElasticNet) = true
 
 ElasticNet{R <: Real}(mu::R=1.0, lambda::R=1.0) = ElasticNet{R}(mu, lambda)
 

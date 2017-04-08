@@ -1,6 +1,6 @@
 # indicator of a point
 
-immutable IndPoint{T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}} <: IndicatorConvex
+immutable IndPoint{T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}} <: ProximableFunction
   p::T
   function IndPoint{T}(p::T) where {T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}}
     new(p)
@@ -8,6 +8,8 @@ immutable IndPoint{T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}} <:
 end
 
 is_separable(f::IndPoint) = true
+is_convex(f::IndPoint) = true
+is_cone(f::IndPoint) = norm(f.p) == 0
 
 """
   IndPoint(p=0.0)

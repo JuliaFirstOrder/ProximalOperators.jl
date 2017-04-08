@@ -37,11 +37,7 @@ export Conjugate,
        Tilt,
        Regularize
 
-abstract type  ProximableFunction end
-abstract type  ProximableConvex <: ProximableFunction end
-abstract type  IndicatorConvex <: ProximableConvex end
-abstract type  IndicatorConvexCone <: IndicatorConvex end
-abstract type  IndicatorNonconvex <: ProximableFunction end
+abstract type ProximableFunction end
 
 include("utilities/symmetricpacked.jl")
 
@@ -105,6 +101,9 @@ fun_params(f) = "n/a"
 
 is_prox_accurate(f::ProximableFunction) = true
 is_separable(f::ProximableFunction) = false
+is_convex(f::ProximableFunction) = false
+is_set(f::ProximableFunction) = is_cone(f)
+is_cone(f::ProximableFunction) = false
 
 """
   prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)

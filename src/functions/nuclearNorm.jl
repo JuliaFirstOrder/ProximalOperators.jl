@@ -6,7 +6,7 @@
 Returns the function `λ∑σ_i(X)`, where `σ_i(X)` is i-th singular value of matrix X.
 """
 
-immutable NuclearNorm{R <: Real} <: ProximableConvex
+immutable NuclearNorm{R <: Real} <: ProximableFunction
   lambda::R
   function NuclearNorm{R}(lambda::R) where {R <: Real}
     if lambda < 0
@@ -16,6 +16,8 @@ immutable NuclearNorm{R <: Real} <: ProximableConvex
     end
   end
 end
+
+is_convex(f::NuclearNorm) = true
 
 NuclearNorm{R <: Real}(lambda::R=1.0) = NuclearNorm{R}(lambda)
 
