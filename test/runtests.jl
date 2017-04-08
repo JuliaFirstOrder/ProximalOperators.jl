@@ -1,6 +1,8 @@
 using ProximalOperators
 using Base.Test
 
+srand(0)
+
 TOL_ASSERT = 1e-12
 
 # measures time and returns the result of the call method
