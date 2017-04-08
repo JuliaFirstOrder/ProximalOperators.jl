@@ -5,7 +5,7 @@ TOL_ASSERT = 1e-12
 
 # measures time and returns the result of the call method
 function call_test(f, x)
-  print("* call                        : ");
+  print("* call        : ");
   try
     @time fx = f(x)
     @test typeof(fx) == eltype(real(x))
@@ -27,6 +27,12 @@ function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
   @test typeof(fy) == eltype(real(x))
   @test vecnorm(yf_prealloc - yf, Inf)/(1+vecnorm(yf, Inf)) <= TOL_ASSERT
   @test vecnorm(y_naive - yf, Inf)/(1+vecnorm(yf, Inf)) <= TOL_ASSERT
+  if ProximalOperators.is_cone(f)
+    @test ProximalOperators.is_set(f)
+  end
+  if ProximalOperators.is_set(f)
+    @test fy_prealloc == 0
+  end
   if ProximalOperators.is_prox_accurate(f)
     @test fy_prealloc == fy || abs(fy_prealloc - fy)/(1+abs(fy)) <= TOL_ASSERT
     @test fy_naive == fy || abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT

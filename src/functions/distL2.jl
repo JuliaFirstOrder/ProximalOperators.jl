@@ -1,18 +1,24 @@
 # Euclidean distance from a set
 
-immutable DistL2{R <: Real} <: ProximableFunction
-  ind::IndicatorConvex
+immutable DistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
+  ind::T
   lambda::R
-  function DistL2(ind::IndicatorConvex, lambda::R)
+  function DistL2(ind::T, lambda::R)
+    if !is_set(ind) && !is_convex(ind)
+      error("`ind` must be a convex set")
+    end
     if lambda < 0
-      error("parameter λ must be nonnegative")
+      error("parameter `λ` must be nonnegative")
     else
       new(ind, lambda)
     end
   end
 end
 
-DistL2{R <: Real}(ind::IndicatorConvex, lambda::R=1.0) = DistL2{R}(ind, lambda)
+is_prox_accurate(f::DistL2) = is_prox_accurate(f.ind)
+is_convex(f::DistL2) = is_convex(f.ind)
+
+DistL2{R <: Real, T <: ProximableFunction}(ind::T, lambda::R=1.0) = DistL2{R, T}(ind, lambda)
 
 function (f::DistL2){R <: RealOrComplex}(x::AbstractArray{R})
   p, = prox(f.ind, x)

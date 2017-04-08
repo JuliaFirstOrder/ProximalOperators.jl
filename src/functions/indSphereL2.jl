@@ -6,7 +6,7 @@
 Returns the function `g = ind{x : ||x|| = r}`, for a real parameter `r > 0`.
 """
 
-immutable IndSphereL2{R <: Real} <: IndicatorNonconvex
+immutable IndSphereL2{R <: Real} <: ProximableFunction
   r::R
   function IndSphereL2(r::R)
     if r <= 0
@@ -16,6 +16,8 @@ immutable IndSphereL2{R <: Real} <: IndicatorNonconvex
     end
   end
 end
+
+is_set(f::IndSphereL2) = true
 
 IndSphereL2{R <: Real}(r::R=1.0) = IndSphereL2{R}(r)
 

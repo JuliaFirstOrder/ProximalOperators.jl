@@ -7,9 +7,11 @@ Returns the indicator function of the zero point, or "zero cone", i.e.,
   `g(x) = 0 if x = 0, +∞ otherwise`
 """
 
-immutable IndZero <: IndicatorConvexCone end
+immutable IndZero <: ProximableFunction end
 
 is_separable(f::IndZero) = true
+is_convex(f::IndZero) = true
+is_cone(f::IndZero) = true
 
 function (f::IndZero){T <: RealOrComplex}(x::AbstractArray{T})
   for k in eachindex(x)

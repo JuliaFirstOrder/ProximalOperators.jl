@@ -6,7 +6,7 @@
 Returns the function `g = ind{x : <a,x> ⩽ b}`.
 """
 
-immutable IndHalfspace{T <: AbstractArray, R <: Real} <: IndicatorConvex
+immutable IndHalfspace{T <: AbstractArray, R <: Real} <: ProximableFunction
   a::T
   b::R
   function IndHalfspace(a::T, b::R)
@@ -14,6 +14,10 @@ immutable IndHalfspace{T <: AbstractArray, R <: Real} <: IndicatorConvex
     new(a/norma, b/norma)
   end
 end
+
+is_convex(f::IndHalfspace) = true
+is_set(f::IndHalfspace) = true
+is_cone(f::IndHalfspace) = (f.b == 0)
 
 IndHalfspace{T <: AbstractArray, R <: Real}(a::T, b::R) = IndHalfspace{T, R}(a, b)
 

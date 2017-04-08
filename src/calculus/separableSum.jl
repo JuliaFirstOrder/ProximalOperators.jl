@@ -4,6 +4,12 @@ immutable SeparableSum{S <: AbstractArray} <: ProximableFunction
 	fs::S
 end
 
+is_separable(f::SeparableSum) = all(is_separable.(f.fs))
+is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
+is_convex(f::SeparableSum) = all(is_convex.(f.fs))
+is_set(f::SeparableSum) = all(is_set.(f.fs))
+is_cone(f::SeparableSum) = all(is_cone.(f.fs))
+
 function (f::SeparableSum{S}){S <: AbstractArray}(x::AbstractArray)
 	sum = 0.0
   for k in eachindex(f.fs)

@@ -8,7 +8,10 @@ Returns the indicator function of the primal exponential cone, that is
 `cl{(r,s,t) : s > 0, s⋅exp(r/s) ⩽ t}`.
 """
 
-immutable IndExpPrimal <: IndicatorConvexCone end
+immutable IndExpPrimal <: ProximableFunction end
+
+is_convex(f::IndExpPrimal) = true
+is_cone(f::IndExpPrimal) = true
 
 """
   IndExpDual()

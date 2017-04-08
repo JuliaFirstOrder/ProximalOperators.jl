@@ -14,6 +14,9 @@ end
 
 is_separable(f::Tilt) = is_separable(f.f)
 is_prox_accurate(f::Tilt) = is_prox_accurate(f.f)
+is_convex(f::Tilt) = is_convex(f.f)
+is_set(f::Tilt) = false
+is_cone(f::Tilt) = false
 
 Tilt{T <: ProximableFunction, S <: AbstractArray}(f::T, a::S) = Tilt{T, S, eltype(a)}(f, a, 0.0)
 
