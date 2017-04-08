@@ -10,7 +10,7 @@ Returns the function `g = ind{x : Ax = b}`.
 Returns the function `g = ind{x : dot(a,x) = b}`.
 """
 
-immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
+immutable IndAffine{T <: RealOrComplex} <: ProximableFunction
   A::AbstractArray{T,2}
   b::AbstractArray{T,1}
   R::AbstractArray{T,2}
@@ -25,6 +25,10 @@ immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
     new(A, b, R)
   end
 end
+
+is_convex(f::IndAffine) = true
+is_set(f::IndAffine) = true
+is_cone(f::IndAffine) = all(f.b .== 0)
 
 IndAffine{T <: RealOrComplex}(A::AbstractArray{T,2}, b::AbstractArray{T,1}) =
   IndAffine{T}(A, b)

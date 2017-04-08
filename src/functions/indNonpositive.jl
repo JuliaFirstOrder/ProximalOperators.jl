@@ -8,9 +8,11 @@ Returns the indicator function the nonpositive orthant, that is
   `g(x) = 0 if x ⩽ 0, +∞ otherwise`
 """
 
-immutable IndNonpositive <: IndicatorConvexCone end
+immutable IndNonpositive <: ProximableFunction end
 
 is_separable(f::IndNonpositive) = true
+is_convex(f::IndNonpositive) = true
+is_cone(f::IndNonpositive) = true
 
 function (f::IndNonpositive){R <: Real}(x::AbstractArray{R})
   for k in eachindex(x)

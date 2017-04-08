@@ -6,7 +6,7 @@
 Returns the indicator of the second-order cone (ice-cream cone) of R^n.
 """
 
-immutable IndSOC <: IndicatorConvexCone end
+immutable IndSOC <: ProximableFunction end
 
 function (f::IndSOC){T <: Real}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable
@@ -15,6 +15,9 @@ function (f::IndSOC){T <: Real}(x::AbstractArray{T,1})
   end
   return +Inf
 end
+
+is_convex(f::IndSOC) = true
+is_set(f::IndSOC) = true
 
 function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
   nx = norm(x[2:end])
@@ -62,7 +65,7 @@ end
 Returns the indicator of the *rotated* second-order cone of R^n, that is {(p,q,x) : norm(x)^2 ⩽ 2pq, p ⩾ 0, q ⩾ 0}
 """
 
-immutable IndRotatedSOC <: IndicatorConvexCone end
+immutable IndRotatedSOC <: ProximableFunction end
 
 function (f::IndRotatedSOC){T <: Real}(x::AbstractArray{T,1})
   if x[1] >= -1e-14 && x[2] >= -1e-14 && norm(x[3:end])^2 - 2*x[1]*x[2] <= 1e-14
@@ -70,6 +73,9 @@ function (f::IndRotatedSOC){T <: Real}(x::AbstractArray{T,1})
   end
   return +Inf
 end
+
+is_convex(f::IndRotatedSOC) = true
+is_set(f::IndRotatedSOC) = true
 
 function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndRotatedSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
   # sin(pi/4) = cos(pi/4) = 0.7071067811865475

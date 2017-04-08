@@ -6,7 +6,7 @@
 Returns the function `f(x) = (λ/2)⋅||Ax-b||^2`.
 """
 
-type LeastSquares{R <: RealOrComplex} <: ProximableConvex
+type LeastSquares{R <: RealOrComplex} <: ProximableFunction
   A::AbstractArray{R,2}
   b::AbstractArray{R,1}
   Atb::AbstractArray{R,1}
@@ -28,6 +28,8 @@ type LeastSquares{R <: RealOrComplex} <: ProximableConvex
     end
   end
 end
+
+is_convex(f::LeastSquares) = true
 
 LeastSquares{R <: RealOrComplex}(A::AbstractArray{R,2}, b::AbstractArray{R,1}, lambda::Real=1.0) =
   LeastSquares{R}(A, b, lambda)

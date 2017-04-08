@@ -6,7 +6,7 @@
 Returns the function `g(x) = (mu/2)||x||² if ||x|| ⩽ rho, and rho*mu*(||x||-rho/2) otherwise`.
 """
 
-immutable HuberLoss{R <: Real} <: ProximableConvex
+immutable HuberLoss{R <: Real} <: ProximableFunction
   rho::R
   mu::R
   function HuberLoss(rho::R, mu::R)
@@ -17,6 +17,8 @@ immutable HuberLoss{R <: Real} <: ProximableConvex
     end
   end
 end
+
+is_convex(f::HuberLoss) = true
 
 HuberLoss{R <: Real}(rho::R=1.0, mu::R=1.0) = HuberLoss{R}(rho, mu)
 

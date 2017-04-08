@@ -12,7 +12,7 @@ immutable Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, Abstra
   a::A
   function Regularize(f::T, rho::S, a::A)
     if rho <= 0.0
-      error("parameter ρ must be positive")
+      error("parameter `ρ` must be positive")
     else
       new(f, rho, a)
     end
@@ -21,6 +21,7 @@ end
 
 is_separable(f::Regularize) = is_separable(f.f)
 is_prox_accurate(f::Regularize) = is_prox_accurate(f.f)
+is_convex(f::Regularize) = is_convex(f.f)
 
 Regularize{T <: ProximableFunction, S <: Real, A <: AbstractArray}(f::T, rho::S, a::A) = Regularize{T, S, A}(f, rho, a)
 
