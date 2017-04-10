@@ -20,7 +20,7 @@ end
 is_convex(f::IndBallL1) = true
 is_set(f::IndBallL1) = true
 
-IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
+IndBallL1{R <: Real}(r::R=one(R)) = IndBallL1{R}(r)
 
 function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T})
   if vecnorm(x,1) - f.r > 1e-14
@@ -29,7 +29,7 @@ function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T})
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!{R<: Real, T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0)
   # TODO: a faster algorithm
   if vecnorm(x,1) - f.r < 1e-14
     y[:] = x[:]
@@ -38,20 +38,20 @@ function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL1, x::Abstrac
     n = length(x)
     p = abs.(view(x,:))
     sort!(p, rev=true)
-    s = 0.0
+    s = zero(R)
     @inbounds for i = 1:n-1
       s = s + p[i]
       tmax = (s - f.r)/i
       if tmax >= p[i+1]
         @inbounds for j in eachindex(x)
-          y[j] = sign(x[j])*max(abs(x[j])-tmax, 0.0)
+          y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
         end
         return 0.0
       end
     end
     tmax = (s + p[n] - f.r)/n
     @inbounds for j in eachindex(x)
-      y[j] = sign(x[j])*max(abs(x[j])-tmax, 0.0)
+      y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
     end
     return 0.0
   end

@@ -10,7 +10,6 @@ Returns the function `g = ind{x : Ax = b}`.
 Returns the function `g = ind{x : dot(a,x) = b}`.
 """
 
-<<<<<<< HEAD
 immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}} <: ProximableFunction
   A::M
   b::V
@@ -33,18 +32,18 @@ IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}}(A::M
 IndAffine{T,V<:AbstractArray{T,1}}(a::V, b::T) =
   IndAffine(reshape(a,1,:), [b])
 
-function (f::IndAffine){T <: RealOrComplex}(x::AbstractArray{T,1})
+function (f::IndAffine){R<:Real, T <: RealOrComplex{R}}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable
-  if norm(f.A*x - f.b, Inf) <= 1e-14
-    return 0.0
+  if norm(f.A*x - f.b, Inf) <= func_tol(R)
+    return zero(R)
   end
-  return +Inf
+  return typemax(R)
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T,1}, f::IndAffine, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!{R<:Real, T <: RealOrComplex{R}}(y::AbstractArray{T,1}, f::IndAffine, x::AbstractArray{T,1}, gamma::R=one(R))
   res = f.A*x - f.b
   y[:] = x - f.A'*(f.R\(f.R'\res))
-  return 0.0
+  return zero(R)
 end
 
 fun_name(f::IndAffine) = "indicator of an affine subspace"
@@ -54,8 +53,8 @@ fun_params(f::IndAffine) =
   string( "A = ", typeof(f.A), " of size ", size(f.A), ", ",
           "b = ", typeof(f.b), " of size ", size(f.b))
 
-function prox_naive{T <: RealOrComplex}(f::IndAffine, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox_naive{R<:Real, T <: RealOrComplex{R}}(f::IndAffine, x::AbstractArray{T,1}, gamma::R=one(R))
   res = f.A*x - f.b
   y = x - f.A'*(f.R\(f.R'\res))
-  return y, 0.0
+  return y, zero(R)
 end
