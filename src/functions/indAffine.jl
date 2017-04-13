@@ -37,11 +37,8 @@ IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}}(A::M
 IndAffine{T<:RealOrComplex, M<:SparseMatrixCSC, V<:AbstractArray{T,1}}(A::M, b::V) =
   IndAffine{T,M,V,SparseArrays.SPQR.Factorization{T}}(A, b)
 
-IndAffine{T,V<:AbstractArray{T,1}}(a::V, b::T) =
+IndAffine{T<:RealOrComplex,V<:AbstractArray{T,1}}(a::V, b::T) =
   IndAffine(reshape(a,1,:), [b])
-
-IndAffine{T <: RealOrComplex}(a::AbstractArray{T,1}, b::T) =
-  IndAffine(a', [b])
 
 function (f::IndAffine){R<:Real, T <: RealOrComplex{R}}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable

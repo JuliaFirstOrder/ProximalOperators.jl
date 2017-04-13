@@ -20,7 +20,7 @@ end
 is_convex(f::IndBallL1) = true
 is_set(f::IndBallL1) = true
 
-IndBallL1{R <: Real}(r::R=one(R)) = IndBallL1{R}(r)
+IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
 
 function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T})
   if vecnorm(x,1) - f.r > 1e-14
