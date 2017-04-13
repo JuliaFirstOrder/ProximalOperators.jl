@@ -4,7 +4,7 @@ __precompile__()
 
 module ProximalOperators
 
-const RealOrComplex = Union{Real, Complex}
+const RealOrComplex{T<:Real} = Union{T, Complex{T}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
 
 export prox, prox!
