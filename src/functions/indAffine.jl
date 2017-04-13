@@ -10,10 +10,10 @@ Returns the function `g = ind{x : Ax = b}`.
 Returns the function `g = ind{x : dot(a,x) = b}`.
 """
 
-immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
+immutable IndAffine{T <: RealOrComplex, V} <: IndicatorConvex
   A::AbstractArray{T,2}
   b::AbstractArray{T,1}
-  R::AbstractArray{T,2}
+  R::V
   function IndAffine(A::AbstractArray{T,2}, b::AbstractArray{T,1})
     if size(A,1) > size(A,2)
       error("A must be full row rank")
@@ -21,16 +21,24 @@ immutable IndAffine{T <: RealOrComplex} <: IndicatorConvex
     normrows = vec(sqrt.(sum(abs2.(A), 2)))
     A = (1./normrows).*A # normalize rows of A
     b = (1./normrows).*b # and b accordingly
-    Q, R = qr(A')
-    new(A, b, R)
+    if !issparse(A)
+      Q, R = qr(A')
+      new(A, b, R)
+    else
+      F = qrfact(A')
+      new(A, b, F)
+    end
   end
 end
 
-IndAffine{T <: RealOrComplex}(A::AbstractArray{T,2}, b::AbstractArray{T,1}) =
-  IndAffine{T}(A, b)
+IndAffine{T <: RealOrComplex, V<:DenseArray}(A::V, b::AbstractArray{T,1}) =
+  IndAffine{T,V}(A, b)
+
+IndAffine{T <: RealOrComplex, V<:SparseMatrixCSC}(A::V, b::AbstractArray{T,1}) =
+  IndAffine{T,SparseArrays.SPQR.Factorization{Float64}}(A, b)
 
 IndAffine{T <: RealOrComplex}(a::AbstractArray{T,1}, b::T) =
-  IndAffine{T}(a', [b])
+  IndAffine(a', [b])
 
 function (f::IndAffine){T <: RealOrComplex}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable
@@ -40,9 +48,20 @@ function (f::IndAffine){T <: RealOrComplex}(x::AbstractArray{T,1})
   return +Inf
 end
 
-function prox!{T <: RealOrComplex}(f::IndAffine, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex, T2, V<:DenseArray}(f::IndAffine{T2,V}, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
   res = f.A*x - f.b
   y[:] = x - f.A'*(f.R\(f.R'\res))
+  return 0.0
+end
+
+function prox!{T <: RealOrComplex, T2, V<:SparseArrays.SPQR.Factorization}(f::IndAffine{T2,V}, x::AbstractArray{T,1}, y::AbstractArray{T,1}, gamma::Real=1.0)
+  RTX_EQUALS_ETB = Int32(3)
+  RETX_EQUALS_B  = Int32(1)
+  spsolve = SparseArrays.SPQR.solve
+  RES = SparseArrays.CHOLMOD.Dense(f.A*x - f.b)
+  #We actually store a factor in f.R, not only R
+  RRres = convert(typeof(y), spsolve(RETX_EQUALS_B, f.R, spsolve(RTX_EQUALS_ETB, f.R, RES)))
+  y .= x .- f.A'RRres
   return 0.0
 end
 
