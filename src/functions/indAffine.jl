@@ -10,27 +10,38 @@ Returns the function `g = ind{x : Ax = b}`.
 Returns the function `g = ind{x : dot(a,x) = b}`.
 """
 
-immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}} <: ProximableFunction
+immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}, F} <: ProximableFunction
   A::M
   b::V
-  R::M
-  function IndAffine{T,M,V}(A::M, b::V) where {T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}}
+  R::F
+  function IndAffine{T,M,V,F}(A::M, b::V) where {T<:RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}, F}
     if size(A,1) > size(A,2)
       error("A must be full row rank")
     end
     normrows = vec(sqrt.(sum(abs2.(A), 2)))
     A = (1./normrows).*A # normalize rows of A
     b = (1./normrows).*b # and b accordingly
-    Q, R = qr(A')
-    new(A, b, R)
+    if !issparse(A)
+      Q, R = qr(A')
+      new(A, b, R)
+    else
+      RF = qrfact(A') #Save QR=AE factorization
+      new(A, b, RF)
+    end
   end
 end
 
 IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}}(A::M, b::V) =
-  IndAffine{T,M,V}(A, b)
+  IndAffine{T,M,V,M}(A, b)
+
+IndAffine{T<:RealOrComplex, M<:SparseMatrixCSC, V<:AbstractArray{T,1}}(A::M, b::V) =
+  IndAffine{T,M,V,SparseArrays.SPQR.Factorization{T}}(A, b)
 
 IndAffine{T,V<:AbstractArray{T,1}}(a::V, b::T) =
   IndAffine(reshape(a,1,:), [b])
+
+IndAffine{T <: RealOrComplex}(a::AbstractArray{T,1}, b::T) =
+  IndAffine(a', [b])
 
 function (f::IndAffine){R<:Real, T <: RealOrComplex{R}}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable
@@ -40,9 +51,20 @@ function (f::IndAffine){R<:Real, T <: RealOrComplex{R}}(x::AbstractArray{T,1})
   return typemax(R)
 end
 
-function prox!{R<:Real, T <: RealOrComplex{R}}(y::AbstractArray{T,1}, f::IndAffine, x::AbstractArray{T,1}, gamma::R=one(R))
+function prox!{R<:Real, T<:RealOrComplex{R}, M<:DenseArray, V<:AbstractArray{T,1}}(y::V, f::IndAffine{T,M,V,M}, x::V, gamma::R=one(R))
   res = f.A*x - f.b
   y[:] = x - f.A'*(f.R\(f.R'\res))
+  return zero(R)
+end
+
+function prox!{R<:Real, T<:RealOrComplex{R}, M<:AbstractSparseArray, V<:AbstractArray{T,1}, F<:SparseArrays.SPQR.Factorization}(y::V, f::IndAffine{T,M,V,F}, x::V, gamma::R=one(R))
+  RTX_EQUALS_ETB = Int32(3)
+  RETX_EQUALS_B  = Int32(1)
+  spsolve = SparseArrays.SPQR.solve
+  RES = SparseArrays.CHOLMOD.Dense(f.A*x - f.b)
+  # QR=AE so tmp = R'\E'res, RRres = E*R\(tmp), i.e. RRres = E*R\(R'\(E'res))
+  RRres = convert(typeof(y), spsolve(RETX_EQUALS_B, f.R, spsolve(RTX_EQUALS_ETB, f.R, RES)))
+  y .= x .- f.A'RRres
   return zero(R)
 end
 
