@@ -105,7 +105,6 @@ is_convex(f::ProximableFunction) = false
 is_set(f::ProximableFunction) = is_cone(f)
 is_cone(f::ProximableFunction) = false
 
-func_tol{T<:AbstractFloat}(::Type{T}) = 100*eps(T)
 """
   prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
 

@@ -42,7 +42,7 @@ IndAffine{T<:RealOrComplex,V<:AbstractArray{T,1}}(a::V, b::T) =
 
 function (f::IndAffine){R<:Real, T <: RealOrComplex{R}}(x::AbstractArray{T,1})
   # the tolerance in the following line should be customizable
-  if norm(f.A*x - f.b, Inf) <= func_tol(R)
+  if norm(f.A*x - f.b, Inf) <= 1e-14
     return zero(R)
   end
   return typemax(R)
