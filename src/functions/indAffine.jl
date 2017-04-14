@@ -25,8 +25,8 @@ immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{
       Q, R = qr(A')
       new(A, b, R)
     else
-      RF = qrfact(A') #Save QR=AE factorization
-      new(A, b, RF)
+      qlessQR = qrfactqless(A') #Save QR=AE factorization
+      new(A, b, qlessQR)
     end
   end
 end
@@ -35,7 +35,7 @@ IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}}(A::M
   IndAffine{T,M,V,M}(A, b)
 
 IndAffine{T<:RealOrComplex, M<:SparseMatrixCSC, V<:AbstractArray{T,1}}(A::M, b::V) =
-  IndAffine{T,M,V,SparseArrays.SPQR.Factorization{T}}(A, b)
+  IndAffine{T,M,V,QlessQR{T}}(A, b)
 
 IndAffine{T<:RealOrComplex,V<:AbstractArray{T,1}}(a::V, b::T) =
   IndAffine(reshape(a,1,:), [b])
@@ -54,14 +54,14 @@ function prox!{R<:Real, T<:RealOrComplex{R}, M<:DenseArray, V<:AbstractArray{T,1
   return zero(R)
 end
 
-function prox!{R<:Real, T<:RealOrComplex{R}, M<:AbstractSparseArray, V<:AbstractArray{T,1}, F<:SparseArrays.SPQR.Factorization}(y::V, f::IndAffine{T,M,V,F}, x::V, gamma::R=one(R))
-  RTX_EQUALS_ETB = Int32(3)
-  RETX_EQUALS_B  = Int32(1)
-  spsolve = SparseArrays.SPQR.solve
-  RES = SparseArrays.CHOLMOD.Dense(f.A*x - f.b)
-  # QR=AE so tmp = R'\E'res, RRres = E*R\(tmp), i.e. RRres = E*R\(R'\(E'res))
-  RRres = convert(typeof(y), spsolve(RETX_EQUALS_B, f.R, spsolve(RTX_EQUALS_ETB, f.R, RES)))
-  y .= x .- f.A'RRres
+function prox!{R<:Real, T<:RealOrComplex{R}, M<:AbstractSparseArray, V<:AbstractArray{T,1}, F<:QlessQR}(y::V, f::IndAffine{T,M,V,F}, x::V, gamma::R=one(R))
+  p = f.R.p   #Sparsity preserving permutation Vector
+  FR = f.R.R  #Upper Triangular
+  res = f.A*x - f.b
+  permute!(res,p)
+  A_ldiv_B!(FR,Ac_ldiv_B!(FR,res)) #res = FR\(FR'\res)  #TODO Should probably be done with 
+  permute!(res,p)
+  y .= x - f.A'*res
   return zero(R)
 end
 

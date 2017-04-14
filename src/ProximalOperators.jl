@@ -40,6 +40,7 @@ export Conjugate,
 abstract type ProximableFunction end
 
 include("utilities/symmetricpacked.jl")
+include("utilities/qlessqr.jl")
 
 include("calculus/conjugate.jl")
 include("calculus/postcompose.jl")
