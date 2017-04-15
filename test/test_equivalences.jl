@@ -87,3 +87,22 @@ y2,f2 = prox(ElasticNet(lambda,rho),x)
 
 @test norm(f-f2)<TOL_ASSERT
 @test norm(y-y2)<TOL_ASSERT
+
+################################################################################
+### testing IndAffine
+################################################################################
+
+println("testing sparse IndAffine vs. full IndAffine")
+
+A = sprand(50,100, 0.1)
+b = randn(50)
+
+g1 = IndAffine(A, b)
+g2 = IndAffine(full(A), b)
+
+x = randn(100)
+y1, f1 = prox(g1, x)
+y2, f2 = prox(g2, x)
+
+@test norm(f1-f2)<TOL_ASSERT
+@test norm(y1-y2)<TOL_ASSERT

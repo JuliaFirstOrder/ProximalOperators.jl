@@ -2,6 +2,7 @@
 
 """
   IndAffine(A::Array{Real,2}, b::Array{Real,1})
+  IndAffine(A::SparseMatrixCSC, b::AbstractArray{Real,1})
 
 Returns the function `g = ind{x : Ax = b}`.
 
@@ -75,5 +76,12 @@ fun_params(f::IndAffine) =
 function prox_naive{R<:Real, T <: RealOrComplex{R}}(f::IndAffine, x::AbstractArray{T,1}, gamma::R=one(R))
   res = f.A*x - f.b
   y = x - f.A'*(f.R\(f.R'\res))
+  return y, zero(R)
+end
+
+#Not really naive, comparison is done to non-sparse in tests
+function prox_naive{R<:Real, T <: RealOrComplex{R}, M<:AbstractSparseArray}(f::IndAffine{T,M}, x::AbstractArray{T,1}, gamma::R=one(R))
+  res = SparseArrays.CHOLMOD.Dense(f.A*x - f.b)
+  y = x - f.A'*convert(typeof(x), SparseArrays.SPQR.solve(Int32(1), f.R, SparseArrays.SPQR.solve(Int32(3), f.R, res)))
   return y, zero(R)
 end
