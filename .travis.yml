@@ -12,3 +12,4 @@ notifications:
 #   - julia -e 'Pkg.clone(pwd()); Pkg.build("ProximalOperators"); Pkg.test("ProximalOperators"; coverage=true)'
 after_success:
   - julia -e 'cd(Pkg.dir("ProximalOperators")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
+  - julia -e 'cd(Pkg.dir("ProximalOperators")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
