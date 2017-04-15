@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/kul-forbes/ProximalOperators.jl.svg?branch=master)](https://travis-ci.org/kul-forbes/ProximalOperators.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/00rk6ip0y0t2wj8t?svg=true)](https://ci.appveyor.com/project/lostella/prox-jl)
 [![Coverage Status](https://coveralls.io/repos/github/kul-forbes/ProximalOperators.jl/badge.svg?branch=master)](https://coveralls.io/github/kul-forbes/ProximalOperators.jl?branch=master)
+[![codecov](https://codecov.io/gh/kul-forbes/ProximalOperators.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kul-forbes/ProximalOperators.jl)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/ProximalOperators-jl/Lobby)
 
 Proximal operators for nonsmooth optimization in Julia.
