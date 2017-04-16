@@ -4,7 +4,7 @@ immutable DistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R
   function DistL2(ind::T, lambda::R)
-    if !is_set(ind) && !is_convex(ind)
+    if !is_set(ind) || !is_convex(ind)
       error("`ind` must be a convex set")
     end
     if lambda < 0
