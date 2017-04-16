@@ -35,15 +35,13 @@ function (f::SlicedSeparableSum{S}){S <: AbstractArray, T <: AbstractArray}(x::T
 	return sum
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T},
-				   f::SlicedSeparableSum, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::SlicedSeparableSum, x::AbstractArray{T}, gamma::Real=1.0)
   v = 0.0
   for k in eachindex(f.fs)
 	  g = prox!(view(y,f.idxs[k]...), f.fs[k], view(x,f.idxs[k]...), gamma)
 	  v += g
   end
   return v
-
 end
 
 fun_name(f::SlicedSeparableSum) = "sliced separable sum"
@@ -63,4 +61,15 @@ function fun_params(f::SlicedSeparableSum)
 	# end
 	# return s
 	return "n/a" # for now
+end
+
+function prox_naive(f::SlicedSeparableSum, x::AbstractArray, gamma)
+	fy = 0;
+	y = deepsimilar(x);
+	for k in eachindex(f.fs)
+		y1, fy1 = prox_naive(f.fs[k], x[f.idxs[k]...], gamma)
+		y[f.idxs[k]...] = y1
+		fy += fy1
+	end
+	return y, fy
 end
