@@ -48,7 +48,9 @@ function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
 end
 
 println("*********************************************************************")
-include("test_utilities.jl")
+include("test_deepArrays.jl")
+println("*********************************************************************")
+include("test_symmetricpacked.jl")
 println("*********************************************************************")
 include("test_calls.jl")
 println("*********************************************************************")
