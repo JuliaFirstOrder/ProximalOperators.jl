@@ -1,6 +1,6 @@
 # L1 norm (times a constant, or weighted)
 
-immutable NormL1{T <: Union{Real, AbstractArray}} <: ProximableConvex
+immutable NormL1{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   function NormL1(lambda::T)
     if !(eltype(lambda) <: Real)
@@ -15,6 +15,7 @@ immutable NormL1{T <: Union{Real, AbstractArray}} <: ProximableConvex
 end
 
 is_separable(f::NormL1) = true
+is_convex(f::NormL1) = true
 
 """
   NormL1(λ::Real=1.0)

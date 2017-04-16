@@ -6,10 +6,12 @@
 Returns the function `g = ind{x : x_i == low || x_i == high}`.
 """
 
-immutable IndBinary{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: IndicatorNonconvex
+immutable IndBinary{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
   low::T
   high::S
 end
+
+is_set(f::IndBinary) = true
 
 IndBinary{T <: Real}(low::T=0.0, high::T=1.0) = IndBinary{T, T}(low, high)
 

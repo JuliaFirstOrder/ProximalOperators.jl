@@ -8,7 +8,7 @@ The argument to the function can be either a Symmetric or Hermitian object.
 From Julia 0.5, the argument can also be an AbstractVector{Float64} holding a symmetric matrix in (lower triangular) packed storage.
 """
 
-immutable IndPSD <: IndicatorConvexCone end
+immutable IndPSD <: ProximableFunction end
 
 function (f::IndPSD){T <: RealOrComplex}(X::HermOrSym{T})
   F = eigfact(X);
@@ -20,6 +20,9 @@ function (f::IndPSD){T <: RealOrComplex}(X::HermOrSym{T})
   end
   return 0.0
 end
+
+is_convex(f::IndPSD) = true
+is_cone(f::IndPSD) = true
 
 function prox!{T <: RealOrComplex}(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0)
   n = size(X, 1);
