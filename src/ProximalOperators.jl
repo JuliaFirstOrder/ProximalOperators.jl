@@ -39,6 +39,7 @@ export Conjugate,
 
 abstract ProximableFunction
 
+include("utilities/deepArrays.jl")
 include("utilities/symmetricpacked.jl")
 
 include("calculus/conjugate.jl")

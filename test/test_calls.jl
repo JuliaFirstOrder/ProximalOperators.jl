@@ -239,6 +239,16 @@ stuff = [
         "params" => ( (), (), (), (), () ),
         "args"   => ( randn(3), randn(10), randn(12,19), randn(4,3), randn(17) )
       ),
+
+  Dict( "constr" => SeparableSum,
+        "params" => ( ([NormL2(2.0), NormL1(1.5), NormL2(0.5)], ), ),
+        "args"   => ( [randn(5), randn(15), randn(10)], )
+      ),
+
+  Dict( "constr" => SlicedSeparableSum,
+        "params" => ( ([NormL2(2.0), NormL1(1.5), NormL2(0.5)], [(1:5,), (6:20,), (21:30,)]), ),
+        "args"   => ( randn(30), )
+      ),
 ]
 
 for i = 1:length(stuff)

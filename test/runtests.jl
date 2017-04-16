@@ -10,7 +10,7 @@ function call_test(f, x)
   print("* call        : ");
   try
     @time fx = f(x)
-    @test typeof(fx) == eltype(real(x))
+    # @test typeof(fx) == eltype(real(x))
     return fx
   catch e
     if isa(e, MethodError)
@@ -24,11 +24,11 @@ end
 # then tests equality of the results and returns them if they agree
 function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
   print("* prox        : "); @time yf, fy = prox(f, x, gamma)
-  print("* prox!       : "); yf_prealloc = copy(x); @time fy_prealloc = prox!(yf_prealloc, f, x, gamma)
+  print("* prox!       : "); yf_prealloc = deepcopy(x); @time fy_prealloc = prox!(yf_prealloc, f, x, gamma)
   print("* prox_naive  : "); @time y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gamma)
-  @test typeof(fy) == eltype(real(x))
-  @test vecnorm(yf_prealloc - yf, Inf)/(1+vecnorm(yf, Inf)) <= TOL_ASSERT
-  @test vecnorm(y_naive - yf, Inf)/(1+vecnorm(yf, Inf)) <= TOL_ASSERT
+  # @test typeof(fy) == eltype(real(x))
+  @test ProximalOperators.deepmaxabs(yf_prealloc - yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
+  @test ProximalOperators.deepmaxabs(y_naive - yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
   if ProximalOperators.is_cone(f)
     @test ProximalOperators.is_set(f)
   end
