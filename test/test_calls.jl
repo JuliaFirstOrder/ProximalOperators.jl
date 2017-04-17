@@ -2,15 +2,15 @@
 
 stuff = [
   Dict( "constr" => DistL2,
-        "wrong"  => ( (IndBallL2(), -rand()), ),
-        "params" => ( (IndSOC(),), (IndNonnegative(), rand()) ),
-        "args"   => ( randn(10), randn(10) )
+        "wrong"  => ( (IndBallL2(), -rand()), (IndBinary(),) ),
+        "params" => ( (IndSOC(),), (IndNonnegative(), rand()), (IndZero(),), (IndZero(),), (IndBox(-1, 1),), (IndBox(-1, 1),) ),
+        "args"   => ( randn(10), randn(10), 1e-1*randn(10), randn(10), 0.5*randn(10), randn(10) )
       ),
 
   Dict( "constr" => SqrDistL2,
-        "wrong"  => ( (IndBallL2(), -rand()), ),
-        "params" => ( (IndSimplex(),), (IndNonnegative(), rand()) ),
-        "args"   => ( randn(10), randn(10) )
+        "wrong"  => ( (IndBallL2(), -rand()), (IndBinary(),) ),
+        "params" => ( (IndSimplex(),), (IndNonnegative(), rand()), (IndZero(),), (IndZero(),), (IndBox(-1, 1),), (IndBox(-1, 1),) ),
+        "args"   => ( randn(10), randn(10), 1e-1*randn(10), randn(10), 0.5*randn(10), randn(10) )
       ),
 
   Dict( "constr" => ElasticNet,
@@ -238,6 +238,16 @@ stuff = [
   Dict( "constr" => SumPositive,
         "params" => ( (), (), (), (), () ),
         "args"   => ( randn(3), randn(10), randn(12,19), randn(4,3), randn(17) )
+      ),
+
+  Dict( "constr" => SeparableSum,
+        "params" => ( ([NormL2(2.0), NormL1(1.5), NormL2(0.5)], ), ),
+        "args"   => ( [randn(5), randn(15), randn(10)], )
+      ),
+
+  Dict( "constr" => SlicedSeparableSum,
+        "params" => ( ([NormL2(2.0), NormL1(1.5), NormL2(0.5)], [(1:5,), (6:20,), (21:30,)]), ),
+        "args"   => ( randn(30), )
       ),
 ]
 

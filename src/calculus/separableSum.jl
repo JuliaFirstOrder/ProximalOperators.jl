@@ -4,6 +4,8 @@ immutable SeparableSum{S <: AbstractArray} <: ProximableFunction
 	fs::S
 end
 
+SeparableSum(fs::Vararg{ProximableFunction}) = SeparableSum([fs...])
+
 is_separable(f::SeparableSum) = all(is_separable.(f.fs))
 is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
 is_convex(f::SeparableSum) = all(is_convex.(f.fs))
@@ -55,4 +57,15 @@ function fun_params(f::SeparableSum)
 	# end
 	# return s
 	return "n/a" # for now
+end
+
+function prox_naive(f::SeparableSum, xs::AbstractArray, gamma::Real=1.0)
+	fys = 0.0
+	ys = [];
+  for k in eachindex(f.fs)
+	  y, fy = prox_naive(f.fs[k], xs[k], gamma)
+		fys += fy;
+		append!(ys, [y]);
+  end
+	return ys, fys
 end
