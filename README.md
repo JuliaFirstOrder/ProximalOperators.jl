@@ -23,7 +23,7 @@ Remember to `Pkg.update()` to keep the package up to date.
 
 With `using ProximalOperators` the package exports the `prox` and `prox!` methods to evaluate the proximal mapping of several functions.
 
-**[Here](https://github.com/kul-forbes/ProximalOperators.jl/blob/master/FUNCTIONS.md)** is a list of the available functions.
+**[Here](FUNCTIONS.md)** is a list of the available functions.
 
 For example, you can create the L1-norm as follows.
 
@@ -57,6 +57,10 @@ and only returns the function value at the proximal point:
 ```julia
 julia> fy = prox!(y, f, x, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
 ```
+
+## Examples
+
+See the **[demos](demos/)** folder for examples on how to use `ProximalOperators` in algorithms.
 
 ## References
 
