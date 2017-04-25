@@ -88,6 +88,11 @@ stuff = [
   Dict( "funcs"  => ((b, mu) -> (HingeLoss(b, mu), Postcompose(PrecomposeDiagonal(SumPositive(), -b, 1.0), mu)))([0.5+rand(10); -0.5-rand(10)], 0.5+rand()),
         "args"   => ( randn(20), randn(20), randn(20) ),
         "gammas" => ( 1.0, rand(), 5.0*rand() )
+      ),
+
+  Dict( "funcs"  => ((A, b) -> (Postcompose(LeastSquares(A, b), 15.0, 6.5), Postcompose(Postcompose(LeastSquares(A, b), 5.0, 1.5), 3.0, 2.0)))(randn(10, 20), randn(10)),
+        "args"   => ( randn(20), randn(20), randn(20) ),
+        "gammas" => ( 1.0, rand(), 5.0*rand() )
       )
 ]
 
