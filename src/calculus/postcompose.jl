@@ -27,6 +27,8 @@ is_cone(f::Postcompose) = is_cone(f.f)
 
 Postcompose{T <: ProximableFunction, R <: Real}(f::T, a::R=one(R), b::R=zero(R)) = Postcompose{T, R}(f, a, b)
 
+Postcompose{T <: ProximableFunction, R <: Real}(f::Postcompose{T, R}, a::R=one(R), b::R=zero(R)) = Postcompose{T, R}(f.f, a*f.a, b+a*f.b)
+
 function (g::Postcompose){T <: RealOrComplex}(x::AbstractArray{T})
   return g.a*g.f(x) + g.b
 end
