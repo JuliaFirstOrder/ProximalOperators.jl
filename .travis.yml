@@ -5,7 +5,6 @@ os:
   - osx
 julia:
   - 0.5
-  - nightly
 notifications:
   email: false
 # script:
