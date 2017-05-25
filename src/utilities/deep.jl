@@ -1,4 +1,4 @@
-# Generalized length, dot product, norm, similar and deepcopy for tuples
+# Generalized similar, length, vecdot, vecnorm, maxabs, zeros for tuples
 
 deepsimilar(x::Tuple) = deepsimilar.(x)
 
@@ -24,6 +24,6 @@ deepmaxabs(x::Tuple) = maximum(deepmaxabs.(x))
 
 deepmaxabs{R <: Number}(x::AbstractArray{R}) = maximum(abs, x)
 
-deepzeros(t::Tuple, s::Tuple) = zeros.(t, s)
+deepzeros(t::Tuple, s::Tuple) = deepzeros.(t, s)
 
-deepzeros(t::Type, s::AbstractArray) = zeros(t, s)
+deepzeros(t::Type, n::NTuple{N, Integer} where {N}) = zeros(t, n)

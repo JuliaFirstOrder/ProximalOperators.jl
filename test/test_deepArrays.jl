@@ -20,3 +20,5 @@ ProximalOperators.deepcopy!(y, x)
 @test ProximalOperators.deepvecnorm(x) ≈ deepvecnorm_x
 @test ProximalOperators.deepvecdot(x, y) ≈ deepvecnorm_x^2
 @test ProximalOperators.deepmaxabs(x .- y) == 0
+
+t1 = ProximalOperators.deepzeros((Float32, Float64), ((3, ), (4, )) )
