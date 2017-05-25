@@ -27,8 +27,8 @@ function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
   print("* prox!       : "); yf_prealloc = deepcopy(x); @time fy_prealloc = prox!(yf_prealloc, f, x, gamma)
   print("* prox_naive  : "); @time y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gamma)
   # @test typeof(fy) == eltype(real(x))
-  @test ProximalOperators.deepmaxabs(yf_prealloc - yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
-  @test ProximalOperators.deepmaxabs(y_naive - yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
+  @test ProximalOperators.deepmaxabs(yf_prealloc .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
+  @test ProximalOperators.deepmaxabs(y_naive .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
   if ProximalOperators.is_cone(f)
     @test ProximalOperators.is_set(f)
   end

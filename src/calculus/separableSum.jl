@@ -1,10 +1,10 @@
-# Separable sum, using arrays of arrays as variables
+# Separable sum, using tuples of arrays as variables
 
-immutable SeparableSum{S <: AbstractArray} <: ProximableFunction
-	fs::S
+immutable SeparableSum{T <: Tuple} <: ProximableFunction
+	fs::T
 end
 
-SeparableSum(fs::Vararg{ProximableFunction}) = SeparableSum([fs...])
+SeparableSum(fs::Tuple) = SeparableSum{typeof(fs)}(fs)
 
 is_separable(f::SeparableSum) = all(is_separable.(f.fs))
 is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
@@ -12,60 +12,46 @@ is_convex(f::SeparableSum) = all(is_convex.(f.fs))
 is_set(f::SeparableSum) = all(is_set.(f.fs))
 is_cone(f::SeparableSum) = all(is_cone.(f.fs))
 
-function (f::SeparableSum{S}){S <: AbstractArray}(x::AbstractArray)
+function (f::SeparableSum)(x::Tuple)
 	sum = 0.0
-  for k in eachindex(f.fs)
+  for k in eachindex(x)
 	  sum += f.fs[k](x[k])
   end
   return sum
 end
 
-function prox!(ys::AbstractArray, fs::AbstractArray, xs::AbstractArray, gamma::Real=1.0)
+function prox!{T <: Tuple}(ys::T, fs::Tuple, xs::T, gamma::Real=1.0)
   sum = 0.0
-  for k in eachindex(fs)
+  for k in eachindex(xs)
 	  sum += prox!(ys[k], fs[k], xs[k], gamma)
   end
   return sum
 end
 
-function prox(fs::AbstractArray, xs::AbstractArray, gamma::Real=1.0)
-	ys = map(similar, xs)
+function prox(fs::Tuple, xs::Tuple, gamma::Real=1.0)
+	ys = deepsimilar(xs)
 	fsy = prox!(ys, fs, xs, gamma)
 	return ys, fsy
 end
 
-prox!(ys::AbstractArray, f::SeparableSum, xs::AbstractArray, gamma::Real=1.0) =
+prox!{T <: Tuple}(ys::T, f::SeparableSum, xs::T, gamma::Real=1.0) =
 	prox!(ys, f.fs, xs, gamma)
 
-prox(f::SeparableSum, xs::AbstractArray, gamma::Real=1.0) =
+prox(f::SeparableSum, xs::Tuple, gamma::Real=1.0) =
 	prox(f.fs, xs, gamma)
 
 fun_name(f::SeparableSum) = "separable sum"
-function fun_dom(f::SeparableSum)
-	# s = ""
-	# for k in eachindex(f.fs)
-	# 	s = string(s, fun_dom(f.fs[k]), " × ")
-	# end
-	# return s
-	return "n/a" # for now
-end
+fun_dom(f::SeparableSum) = "n/a"
 fun_expr(f::SeparableSum) = "(x₁,…,xᵣ) ↦ f[1](x₁) + … + f[r](xᵣ)"
-function fun_params(f::SeparableSum)
-	# s = "r = $(size(f.fs)), "
-	# for k in eachindex(f.fs)
-	# 	s = string(s, "f[$(k)] = $(typeof(f.fs[k])), ")
-	# end
-	# return s
-	return "n/a" # for now
-end
+fun_params(f::SeparableSum) = "n/a"
 
-function prox_naive(f::SeparableSum, xs::AbstractArray, gamma::Real=1.0)
+function prox_naive(f::SeparableSum, xs::Tuple, gamma::Real=1.0)
 	fys = 0.0
 	ys = [];
-  for k in eachindex(f.fs)
+  for k in eachindex(xs)
 	  y, fy = prox_naive(f.fs[k], xs[k], gamma)
 		fys += fy;
 		append!(ys, [y]);
   end
-	return ys, fys
+	return Tuple(ys), fys
 end

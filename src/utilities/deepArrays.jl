@@ -1,61 +1,29 @@
-# Generalized length, dot product, norm, similar and deepcopy for nested Array objects
+# Generalized length, dot product, norm, similar and deepcopy for tuples
 
-function deepsimilar(x::AbstractArray)
-	y = similar(x)
-	for k in eachindex(x)
-    if length(x[k]) > 1
-      y[k] = deepsimilar(x[k])
-    else
-      y[k] = 0.0
-    end
-	end
-	return y
-end
-deepsimilar{T <: Number}(x::AbstractArray{T}) = similar(x)
+deepsimilar(x::Tuple) = deepsimilar.(x)
 
-function deepcopy!(y::AbstractArray, x::AbstractArray)
-	for k in eachindex(x)
-    if length(x[k]) > 1
-      deepcopy!(y[k],x[k])
-    else
-      y[k] = x[k]
-    end
-	end
-end
-deepcopy!{T <: Number}(y::AbstractArray{T}, x::AbstractArray{T}) = copy!(y,x)
+deepsimilar(x::AbstractArray) = similar(x)
 
-function deeplength(x::AbstractArray)
-  len = 0
-	for k in eachindex(x)
-		len += deeplength(x[k])
-	end
-	return len
-end
-deeplength{T <: Number}(x::AbstractArray{T}) = length(x)
-deeplength{T <: Number}(x::T) = 1
+deepcopy!{T <: Tuple}(y::T, x::T) = deepcopy!.(y, x)
 
-function deepvecdot(x::AbstractArray, y::AbstractArray)
-	out = 0.0
-	for k in eachindex(x)
-		out += deepvecdot(x[k], y[k])
-	end
-	return out
-end
+deepcopy!{R <: Number}(y::AbstractArray{R}, x::AbstractArray{R}) = copy!(y, x)
 
-deepvecdot{T <: Number}(x::AbstractArray{T}, y::AbstractArray{T}) = vecdot(x, y)
-deepvecdot{T <: Number}(x::T, y::T) = x*y
+deeplength(x::Tuple) = sum(deeplength.(x))
 
-deepvecnorm(x::AbstractArray) = sqrt(deepvecdot(x, x))
-deepvecnorm{T <: Number}(x::AbstractArray{T}) = vecnorm(x)
-deepvecnorm{T <: Number}(x::T) = abs(x)
+deeplength(x::AbstractArray) = length(x)
 
-function deepmaxabs(x::AbstractArray)
-	out = 0.0
-	for k in eachindex(x)
-		out = max(out, deepmaxabs(x[k]))
-	end
-	return out
-end
+deepvecdot{T <: Tuple}(x::T, y::T) = sum(deepvecdot.(x,y))
 
-deepmaxabs{T <: Number}(x::AbstractArray{T}) = maxabs(x)
-deepmaxabs{T <: Number}(x::T) = abs(x)
+deepvecdot{R <: Number}(x::AbstractArray{R}, y::AbstractArray{R}) = vecdot(x, y)
+
+deepvecnorm(x::Tuple) = sqrt(deepvecdot(x, x))
+
+deepvecnorm{R <: Number}(x::AbstractArray{R}) = vecnorm(x)
+
+deepmaxabs(x::Tuple) = maximum(deepmaxabs.(x))
+
+deepmaxabs{R <: Number}(x::AbstractArray{R}) = maximum(abs, x)
+
+deepzeros(t::Tuple, s::Tuple) = zeros.(t, s)
+
+deepzeros(t::Type, s::AbstractArray) = zeros(t, s)
