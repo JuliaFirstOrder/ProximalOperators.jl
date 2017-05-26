@@ -19,9 +19,9 @@ immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{
     if size(A,1) > size(A,2)
       error("A must be full row rank")
     end
-    normrows = vec(sqrt.(sum(abs2.(A), 2)))
-    A = (1./normrows).*A # normalize rows of A
-    b = (1./normrows).*b # and b accordingly
+    normrowsinv = 1./vec(sqrt.(sum(abs2.(A), 2)))
+    A = normrowsinv.*A # normalize rows of A
+    b = normrowsinv.*b # and b accordingly
     if !issparse(A)
       Q, R = qr(A')
       new(A, b, R)
