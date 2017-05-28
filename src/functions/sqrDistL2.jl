@@ -1,9 +1,8 @@
 # squared Euclidean distance from a set
-
-immutable SqrDistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
+immutable SqrDistL2{R <: Real, T<:ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R
-  function SqrDistL2(ind::T, lambda::R)
+  function SqrDistL2{R,T}(ind::T, lambda::R) where {R <: Real, T<:ProximableFunction}
     if !is_convex(ind) || !is_set(ind)
       error("`ind` must be the indicator of a convex set")
     end

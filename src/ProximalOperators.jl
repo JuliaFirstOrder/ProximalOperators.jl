@@ -4,8 +4,8 @@ __precompile__()
 
 module ProximalOperators
 
-typealias RealOrComplex Union{Real, Complex}
-typealias HermOrSym{T, S} Union{Hermitian{T, S}, Symmetric{T, S}}
+const RealOrComplex{T<:Real} = Union{T, Complex{T}}
+const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
 
 export prox, prox!
 
@@ -37,9 +37,9 @@ export Conjugate,
        Tilt,
        Regularize
 
-abstract ProximableFunction
+abstract type ProximableFunction end
 
-include("utilities/deepArrays.jl")
+include("utilities/deep.jl")
 include("utilities/symmetricpacked.jl")
 
 include("calculus/conjugate.jl")

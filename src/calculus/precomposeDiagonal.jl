@@ -10,7 +10,7 @@ immutable PrecomposeDiagonal{T <: ProximableFunction, R <: Union{Real, AbstractA
   f::T
   a::R
   b::S
-  function PrecomposeDiagonal(f::T, a::R, b::S)
+  function PrecomposeDiagonal{T,R,S}(f::T, a::R, b::S) where {T <: ProximableFunction, R <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
     if !is_convex(f)
       error("`f` must be convex")
     end

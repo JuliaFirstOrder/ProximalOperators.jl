@@ -8,7 +8,7 @@ Returns the function `g(x) = λ*countnz(x)`, for a nonnegative parameter `λ ⩾
 
 immutable NormL0{R <: Real} <: ProximableFunction
   lambda::R
-  function NormL0(lambda::R)
+  function NormL0{R}(lambda::R) where {R <: Real}
     if lambda < 0
       error("parameter λ must be nonnegative")
     else

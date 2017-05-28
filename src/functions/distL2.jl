@@ -1,5 +1,4 @@
 # Euclidean distance from a set
-
 immutable DistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R
