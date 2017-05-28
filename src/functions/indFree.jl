@@ -19,7 +19,7 @@ is_cone(f::IndFree) = true
 Returns the identically zero function.
 """
 
-typealias Zero IndFree
+const Zero = IndFree
 
 function (f::IndFree)(x::AbstractArray)
   return 0.0

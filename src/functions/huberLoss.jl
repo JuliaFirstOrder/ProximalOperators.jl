@@ -9,7 +9,7 @@ Returns the function `g(x) = (mu/2)||x||² if ||x|| ⩽ rho, and rho*mu*(||x||-r
 immutable HuberLoss{R <: Real} <: ProximableFunction
   rho::R
   mu::R
-  function HuberLoss(rho::R, mu::R)
+  function HuberLoss{R}(rho::R, mu::R) where {R <: Real}
     if rho <= 0.0 || mu <= 0.0
       error("parameters rho and mu must be positive")
     else
