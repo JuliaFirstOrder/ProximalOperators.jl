@@ -8,7 +8,7 @@ Returns the conjugate function of `f`, that is `f*(x) = sup{y'x - f(y)}`.
 
 immutable Conjugate{T <: ProximableFunction} <: ProximableFunction
   f::T
-  function Conjugate(f::T)
+  function Conjugate{T}(f::T) where {T<: ProximableFunction}
     if is_convex(f) == false
       error("`f` must be convex")
     end

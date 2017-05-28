@@ -3,7 +3,7 @@
 immutable SlicedSeparableSum{S <: AbstractArray, T <: AbstractArray} <: ProximableFunction
 	fs::S
 	idxs::T
-	function SlicedSeparableSum(fs, idxs)
+	function SlicedSeparableSum{S,T}(fs::S, idxs::T)  where {S <: AbstractArray, T <: AbstractArray}
 		if size(fs) != size(idxs)
 			error("size(fs) must coincide with size(idxs)")
 		else

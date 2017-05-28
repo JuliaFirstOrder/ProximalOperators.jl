@@ -4,7 +4,7 @@ immutable LogBarrier{T <: Real} <: ProximableFunction
   a::T
   b::T
   mu::T
-  function LogBarrier(a::T, b::T, mu::T)
+  function LogBarrier{T}(a::T, b::T, mu::T) where {T <: Real}
     if mu <= 0
       error("parameter mu must be positive")
     else
