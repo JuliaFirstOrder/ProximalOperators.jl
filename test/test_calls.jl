@@ -30,6 +30,11 @@ stuff = [
         "args"   => ( randn(10), randn(20) )
       ),
 
+  Dict( "constr" => IndAffine,
+        "params" => ( (sprand(50,100, 0.1), randn(50)), (sprand(Complex{Float64}, 50,100, 0.1), randn(50)+im*randn(50)), ),
+        "args"   => ( randn(100), randn(100)+im*randn(100), )
+      ),
+
   Dict( "constr" => IndBallLinf,
         "wrong"  => ( (-rand(),), ),
         "params" => ( (rand(),), ),
@@ -241,8 +246,8 @@ stuff = [
       ),
 
   Dict( "constr" => SeparableSum,
-        "params" => ( ([NormL2(2.0), NormL1(1.5), NormL2(0.5)], ), ),
-        "args"   => ( [randn(5), randn(15), randn(10)], )
+        "params" => ( ((NormL2(2.0), NormL1(1.5), NormL2(0.5)), ), ),
+        "args"   => ( (randn(5), randn(15), randn(10)), )
       ),
 
   Dict( "constr" => SlicedSeparableSum,

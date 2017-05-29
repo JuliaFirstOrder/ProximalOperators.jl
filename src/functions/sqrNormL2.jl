@@ -2,7 +2,7 @@
 
 immutable SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
-  function SqrNormL2(lambda::T)
+  function SqrNormL2{T}(lambda::T) where {T <: Union{Real,AbstractArray}}
     if any(lambda .< 0)
       error("coefficients in λ must be nonnegative")
     else
