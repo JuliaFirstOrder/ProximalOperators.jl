@@ -8,6 +8,9 @@ is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
 is_convex(f::SeparableSum) = all(is_convex.(f.fs))
 is_set(f::SeparableSum) = all(is_set.(f.fs))
 is_cone(f::SeparableSum) = all(is_cone.(f.fs))
+is_smooth(f::SeparableSum) = all(is_smooth.(f.fs))
+is_quadratic(f::SeparableSum) = all(is_quadratic.(f.fs))
+is_strongly_convex(f::SeparableSum) = all(is_strongly_convex.(f.fs))
 
 function (f::SeparableSum)(x::Tuple)
 	sum = 0.0
@@ -32,6 +35,17 @@ function prox!{T <: Tuple}(ys::T, fs::Tuple, xs::T, gamma::Tuple)
   end
   return sum
 end
+
+function gradient!{T <: Tuple}(grad::T, fs::Tuple, x::T)
+  val = 0.0
+  for k in eachindex(fs)
+    val += gradient!(grad[k], fs[k], x[k])
+  end
+  return val
+end
+
+gradient!{T <: Tuple}(grad::T, f::SeparableSum, x::T) =
+  gradient!(grad, f.fs, x)
 
 function prox(fs::Tuple, xs::Tuple, gamma::Union{Real, Tuple}=1.0)
 	ys = deepsimilar(xs)

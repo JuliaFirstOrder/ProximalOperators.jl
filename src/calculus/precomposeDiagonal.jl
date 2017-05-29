@@ -49,6 +49,13 @@ function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::PrecomposeDiagonal, x
   return v
 end
 
+function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T})
+  z = g.a .* x .+ g.b
+  v = gradient!(y, g.f, z)
+  y .*= g.a
+  return v
+end
+
 function prox_naive{T <: RealOrComplex}(g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)
   z = g.a .* x + g.b
   y, fy = prox_naive(g.f, z, (g.a .* g.a) .* gamma)

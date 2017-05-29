@@ -12,6 +12,9 @@ immutable SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableFunction
 end
 
 is_convex(f::SqrNormL2) = true
+is_smooth(f::SqrNormL2) = true
+is_quadratic(f::SqrNormL2) = true
+is_strongly_convex(f::SqrNormL2) = all(f.lambda .> 0)
 
 """
   SqrNormL2(λ::Real=1.0)
@@ -58,6 +61,11 @@ function prox!{S <: AbstractArray, T <: RealOrComplex}(y::AbstractArray{T}, f::S
     wsqny += f.lambda[k]*abs2(y[k])
   end
   return 0.5*wsqny
+end
+
+function gradient!{T <: RealOrComplex}(grad::AbstractArray{T}, f::SqrNormL2, x::AbstractArray{T})
+	grad .= (*).(f.lambda, x)
+	return 0.5*f.lambda*deepvecnorm(x)^2
 end
 
 fun_name(f::SqrNormL2) = "weighted squared Euclidean norm"

@@ -8,6 +8,7 @@ const RealOrComplex{T<:Real} = Union{T, Complex{T}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
 
 export prox, prox!
+export gradient, gradient!
 
 export ProximableFunction
 
@@ -43,6 +44,7 @@ include("utilities/deep.jl")
 include("utilities/symmetricpacked.jl")
 
 include("calculus/conjugate.jl")
+include("calculus/moreauEnvelope.jl")
 include("calculus/postcompose.jl")
 include("calculus/precomposeDiagonal.jl")
 # include("calculus/precomposeGramDiagonal.jl")
@@ -105,6 +107,10 @@ is_separable(f::ProximableFunction) = false
 is_convex(f::ProximableFunction) = false
 is_set(f::ProximableFunction) = is_cone(f)
 is_cone(f::ProximableFunction) = false
+is_smooth(f::ProximableFunction) = false
+is_quadratic(f::ProximableFunction) = false
+is_generalized_quadratic(f::ProximableFunction) = false
+is_strongly_convex(f::ProximableFunction) = false
 
 """
   prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
@@ -135,6 +141,16 @@ function prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, gamma:
     "prox! is not implemented for y::", typeof(y), ", f::", typeof(f),
     ", x::", typeof(x), ", gamma::", typeof(gamma)
   ))
+end
+
+function gradient{T <: Union{AbstractArray, Tuple}}(f::ProximableFunction, x::T)
+	y = deepsimilar(x)
+	fx = gradient!(y, f, x)
+	return y, fx
+end
+
+function gradient!(f::ProximableFunction, args...)
+	error("gradient not implemented for $f")
 end
 
 end
