@@ -105,11 +105,13 @@ fun_params(f) = "n/a"
 is_prox_accurate(f::ProximableFunction) = true
 is_separable(f::ProximableFunction) = false
 is_convex(f::ProximableFunction) = false
-is_set(f::ProximableFunction) = is_cone(f)
+is_singleton(f::ProximableFunction) = false
 is_cone(f::ProximableFunction) = false
+is_affine(f::ProximableFunction) = is_singleton(f)
+is_set(f::ProximableFunction) = is_cone(f) || is_affine(f)
 is_smooth(f::ProximableFunction) = false
 is_quadratic(f::ProximableFunction) = false
-is_generalized_quadratic(f::ProximableFunction) = false
+is_generalized_quadratic(f::ProximableFunction) = is_quadratic(f) || is_affine(f)
 is_strongly_convex(f::ProximableFunction) = false
 
 """

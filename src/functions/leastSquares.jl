@@ -40,6 +40,8 @@ type LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:Abstr
 end
 
 is_convex(f::LeastSquares) = true
+is_smooth(f::LeastSquares) = true
+is_quadratic(f::LeastSquares) = true
 
 LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}}(A::M, b::V, lambda::R=1.0) =
   LeastSquares{RC,R,M,V}(A, b, lambda)

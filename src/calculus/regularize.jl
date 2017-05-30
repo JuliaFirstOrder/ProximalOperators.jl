@@ -22,6 +22,10 @@ end
 is_separable(f::Regularize) = is_separable(f.f)
 is_prox_accurate(f::Regularize) = is_prox_accurate(f.f)
 is_convex(f::Regularize) = is_convex(f.f)
+is_smooth(f::Regularize) = is_smooth(f.f)
+is_quadratic(f::Regularize) = is_quadratic(f.f)
+is_generalized_quadratic(f::Regularize) = is_generalized_quadratic(f.f)
+is_strongly_convex(f::Regularize) = true
 
 Regularize{T <: ProximableFunction, S <: Real, A <: AbstractArray}(f::T, rho::S, a::A) = Regularize{T, S, A}(f, rho, a)
 

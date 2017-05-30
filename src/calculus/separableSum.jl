@@ -7,9 +7,12 @@ end
 is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
 is_convex(f::SeparableSum) = all(is_convex.(f.fs))
 is_set(f::SeparableSum) = all(is_set.(f.fs))
+is_singleton(f::SeparableSum) = all(is_singleton.(f.fs))
 is_cone(f::SeparableSum) = all(is_cone.(f.fs))
+is_affine(f::SeparableSum) = all(is_affine.(f.fs))
 is_smooth(f::SeparableSum) = all(is_smooth.(f.fs))
 is_quadratic(f::SeparableSum) = all(is_quadratic.(f.fs))
+is_generalized_quadratic(f::SeparableSum) = all(is_generalized_quadratic.(f.fs))
 is_strongly_convex(f::SeparableSum) = all(is_strongly_convex.(f.fs))
 
 function (f::SeparableSum)(x::Tuple)

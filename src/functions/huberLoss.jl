@@ -19,6 +19,7 @@ immutable HuberLoss{R <: Real} <: ProximableFunction
 end
 
 is_convex(f::HuberLoss) = true
+is_smooth(f::HuberLoss) = true
 
 HuberLoss{R <: Real}(rho::R=1.0, mu::R=1.0) = HuberLoss{R}(rho, mu)
 

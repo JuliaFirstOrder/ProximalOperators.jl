@@ -9,7 +9,9 @@ end
 
 is_separable(f::IndPoint) = true
 is_convex(f::IndPoint) = true
+is_singleton(f::IndPoint) = true
 is_cone(f::IndPoint) = norm(f.p) == 0
+is_affine(f::IndPoint) = true
 
 """
   IndPoint(p=0.0)

@@ -11,7 +11,10 @@ immutable IndFree <: ProximableFunction end
 
 is_separable(f::IndFree) = true
 is_convex(f::IndFree) = true
+is_affine(f::IndFree) = true
 is_cone(f::IndFree) = true
+is_smooth(f::IndFree) = true
+is_quadratic(f::IndFree) = true
 
 """
   Zero()

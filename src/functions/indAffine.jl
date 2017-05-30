@@ -11,7 +11,7 @@ Returns the function `g = ind{x : Ax = b}`.
 Returns the function `g = ind{x : dot(a,x) = b}`.
 """
 
-immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}, F} <: ProximableFunction
+immutable IndAffine{T <: RealOrComplex, M <: AbstractArray{T, 2}, V <: AbstractArray{T, 1}, F} <: ProximableFunction
   A::M
   b::V
   R::F
@@ -31,6 +31,10 @@ immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{
     end
   end
 end
+
+is_affine(f::IndAffine) = true
+is_cone(f::IndAffine) = norm(f.b) == 0.0
+is_generalized_quadratic(f::IndAffine) = true
 
 IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}}(A::M, b::V) =
   IndAffine{T,M,V,M}(A, b)
