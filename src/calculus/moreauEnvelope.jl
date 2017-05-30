@@ -15,6 +15,8 @@ MoreauEnvelope{R <: Real, T <: ProximableFunction}(lambda::R, g::T) = MoreauEnve
 
 is_convex(f::MoreauEnvelope) = is_convex(f.g)
 is_smooth(f::MoreauEnvelope) = is_convex(f.g)
+is_quadratic(f::ProximableFunction) = is_generalized_quadratic(f.g)
+is_strongly_convex(f::MoreauEnvelope) = is_strongly_convex(f.g)
 
 function (f::MoreauEnvelope)(x::AbstractArray)
 	if isnull(f.buf[1])
