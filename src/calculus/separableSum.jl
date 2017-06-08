@@ -41,6 +41,8 @@ function prox!{T <: Tuple}(ys::T, fs::Tuple, xs::T, gamma::Tuple)
   return sum
 end
 
+prox!{T <: Tuple}(ys::T, f::SeparableSum, xs::T, gamma::Union{Real, Tuple}=1.0) = prox!(ys, f.fs, xs, gamma)
+
 function gradient!{T <: Tuple}(grad::T, fs::Tuple, x::T)
   val = 0.0
   for k in eachindex(fs)
@@ -49,18 +51,7 @@ function gradient!{T <: Tuple}(grad::T, fs::Tuple, x::T)
   return val
 end
 
-gradient!{T <: Tuple}(grad::T, f::SeparableSum, x::T) =
-  gradient!(grad, f.fs, x)
-
-function prox(fs::Tuple, xs::Tuple, gamma::Union{Real, Tuple}=1.0)
-	ys = deepsimilar(xs)
-	fsy = prox!(ys, fs, xs, gamma)
-	return ys, fsy
-end
-
-prox!{T <: Tuple}(ys::T, f::SeparableSum, xs::T, gamma::Union{Real, Tuple}=1.0) = prox!(ys, f.fs, xs, gamma)
-
-prox(f::SeparableSum, xs::Tuple, gamma::Union{Real, Tuple}=1.0) = prox(f.fs, xs, gamma)
+gradient!{T <: Tuple}(grad::T, f::SeparableSum, x::T) = gradient!(grad, f.fs, x)
 
 fun_name(f::SeparableSum) = "separable sum"
 fun_dom(f::SeparableSum) = "n/a"

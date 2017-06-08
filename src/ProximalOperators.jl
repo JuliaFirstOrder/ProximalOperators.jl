@@ -1,4 +1,4 @@
-# ProximalOperators.jl - library of nonsmooth functions and associated proximal mappings
+# ProximalOperators.jl - library of commonly used functions in optimization, and associated proximal mappings and gradients
 
 __precompile__()
 
@@ -119,7 +119,7 @@ prox!
 Computes the gradient of `f` at `x`: be it `g`, the function returns `g` and `f(x)`.
 """
 
-function gradient{T <: Union{AbstractArray, Tuple}}(f::ProximableFunction, x::T)
+function gradient(f::ProximableFunction, x)
 	y = deepsimilar(x)
 	fx = gradient!(y, f, x)
 	return y, fx
