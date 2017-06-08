@@ -1,5 +1,7 @@
 # Precompose with diagonal scaling and translation
 
+export PrecomposeDiagonal
+
 """
   PrecomposeDiagonal(f::ProximableFunction, a::AbstractArray, b::AbstractArray)
 

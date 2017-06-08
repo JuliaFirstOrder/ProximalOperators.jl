@@ -1,5 +1,7 @@
 # nuclear Norm (times a constant)
 
+export NuclearNorm
+
 """
   NuclearNorm(λ::Real=1.0)
 

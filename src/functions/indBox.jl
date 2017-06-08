@@ -1,5 +1,7 @@
 # indicator of a generic box
 
+export IndBox, IndBallLinf
+
 """
   IndBox(lb, ub)
 

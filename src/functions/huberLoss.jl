@@ -1,5 +1,7 @@
 # Huber loss function
 
+export HuberLoss
+
 """
   HuberLoss(rho::Real=1.0, mu::Real=1.0)
 

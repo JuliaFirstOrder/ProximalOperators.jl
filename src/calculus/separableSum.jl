@@ -1,5 +1,7 @@
 # Separable sum, using tuples of arrays as variables
 
+export SeparableSum
+
 immutable SeparableSum{T <: Tuple} <: ProximableFunction
 	fs::T
 end

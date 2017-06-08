@@ -1,5 +1,7 @@
 # L1 norm (times a constant, or weighted)
 
+export NormL1
+
 immutable NormL1{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   function NormL1{T}(lambda::T) where {T <: Union{Real, AbstractArray}}

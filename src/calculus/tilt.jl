@@ -1,5 +1,7 @@
 # Tilting (addition with affine function)
 
+export Tilt
+
 """
   Tilt(f::ProximableFunction, a::AbstractArray, b::Real)
 

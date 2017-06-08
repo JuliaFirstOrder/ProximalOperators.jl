@@ -1,5 +1,7 @@
 # indicator of a halfspace
 
+export IndHalfspace
+
 """
   IndHalfspace(a::Array{Real}, b::Real)
 

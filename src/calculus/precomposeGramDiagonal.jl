@@ -1,5 +1,7 @@
 # Precompose with a Gram-diagonal linear mapping and translation
 
+# export PrecomposeGramDiagonal
+
 """
   PrecomposeGramDiagonal(f::ProximableFunction, L::Function, Ladj::Function, mu, b)
 
@@ -12,7 +14,7 @@ immutable PrecomposeGramDiagonal{T <: ProximableFunction, R <: Union{Real, Abstr
   Ladj::Function
   mu::R
   b::S
-  function PrecomposeGramDiagonal(f::T, L::Function, Ladj::Function, mu::R, b::S)
+  function PrecomposeGramDiagonal(f::T, L::Function, Ladj::Function, mu::R, b::S) where {T <: ProximableFunction, R <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
     if !(eltype(a) <: Real)
       error("a must have real elements")
     end
@@ -23,7 +25,7 @@ immutable PrecomposeGramDiagonal{T <: ProximableFunction, R <: Union{Real, Abstr
     if any(mu <= 0.0)
       error("elements of μ must be positive")
     else
-      new(f, L, Ladj, mu, b)
+      new{T, R, S}(f, L, Ladj, mu, b)
     end
   end
 end

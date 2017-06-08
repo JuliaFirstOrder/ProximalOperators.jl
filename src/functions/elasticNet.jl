@@ -1,5 +1,7 @@
 # elastic-net regularization
 
+export ElasticNet
+
 """
   ElasticNet(λ::Real=1.0, μ::Real=1.0)
 

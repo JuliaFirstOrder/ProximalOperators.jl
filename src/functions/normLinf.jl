@@ -1,5 +1,7 @@
 # L-infinity norm
 
+export NormLinf
+
 """
   NormLinf(λ::Real=1.0)
 

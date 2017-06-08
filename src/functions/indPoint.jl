@@ -1,5 +1,7 @@
 # indicator of a point
 
+export IndPoint
+
 immutable IndPoint{T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}} <: ProximableFunction
   p::T
   function IndPoint{T}(p::T) where {T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}}

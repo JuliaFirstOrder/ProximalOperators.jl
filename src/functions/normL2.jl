@@ -1,5 +1,7 @@
 # L2 norm (times a constant)
 
+export NormL2
+
 """
   NormL2(λ::Real=1.0)
 

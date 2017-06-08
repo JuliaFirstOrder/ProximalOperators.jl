@@ -1,5 +1,7 @@
 # indicator of a PSD
 
+export IndPSD
+
 """
   IndPSD()
 

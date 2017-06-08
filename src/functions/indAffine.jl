@@ -1,5 +1,7 @@
 # indicator of an affine set
 
+export IndAffine
+
 """
   IndAffine(A::Array{Real,2}, b::Array{Real,1})
   IndAffine(A::SparseMatrixCSC, b::AbstractArray{Real,1})

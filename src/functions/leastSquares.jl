@@ -1,5 +1,7 @@
 # least squares penalty
 
+export LeastSquares
+
 """
   LeastSquares(A, b, λ=1.0)
 

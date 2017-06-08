@@ -1,5 +1,7 @@
 # Regularize
 
+export Regularize
+
 """
   Regularize(f::ProximableFunction, ρ::Real, a::AbstractArray)
 

@@ -1,5 +1,7 @@
 # indicator of the free cone
 
+export IndFree
+
 """
   IndFree()
 

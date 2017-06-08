@@ -1,21 +1,23 @@
+export MoreauEnvelope
+
 immutable MoreauEnvelope{R <: Real, T <: ProximableFunction} <: ProximableFunction
-	lambda::R
 	g::T
+	lambda::R
 	# dirty trick to use in place prox! when evaluating the function
 	# not sure about that!
 	buf::AbstractVector{Nullable{AbstractArray}}
 end
 
-function MoreauEnvelope{R, T}(lambda::R, g::T) where {R <: Real, T <: ProximableFunction}
+function MoreauEnvelope{R, T}(g::T, lambda::R) where {R <: Real, T <: ProximableFunction}
 	if lambda <= 0 error("parameter lambda must be positive") end
-	MoreauEnvelope{R, T}(lambda, g, [ Nullable{AbstractArray}() ])
+	MoreauEnvelope{R, T}(g, lambda, [ Nullable{AbstractArray}() ])
 end
 
-MoreauEnvelope{R <: Real, T <: ProximableFunction}(lambda::R, g::T) = MoreauEnvelope{R, T}(lambda, g)
+MoreauEnvelope{R <: Real, T <: ProximableFunction}(g::T, lambda::R=1.0) = MoreauEnvelope{R, T}(g, lambda)
 
 is_convex(f::MoreauEnvelope) = is_convex(f.g)
 is_smooth(f::MoreauEnvelope) = is_convex(f.g)
-is_quadratic(f::ProximableFunction) = is_generalized_quadratic(f.g)
+is_quadratic(f::MoreauEnvelope) = is_generalized_quadratic(f.g)
 is_strongly_convex(f::MoreauEnvelope) = is_strongly_convex(f.g)
 
 function (f::MoreauEnvelope)(x::AbstractArray)

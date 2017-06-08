@@ -1,5 +1,7 @@
 # Postcompose with scaling and sum
 
+export Postcompose
+
 """
   Postcompose(f::ProximableFunction, a::Real=1.0, b::Real=0.0)
 

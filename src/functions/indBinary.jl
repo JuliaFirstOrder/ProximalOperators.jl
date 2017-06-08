@@ -1,5 +1,7 @@
 # indicator of the Cartesian product of real binary sets
 
+export IndBinary
+
 """
   IndBinary(low, high)
 

@@ -1,5 +1,7 @@
 # indicator of the L0 norm ball with given (integer) radius
 
+export IndBallL0
+
 """
   IndBallL0(r::Int=1)
 

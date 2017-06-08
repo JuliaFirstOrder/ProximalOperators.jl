@@ -1,5 +1,7 @@
 # indicator of second-order cones
 
+export IndSOC, IndRotatedSOC
+
 """
   IndSOC()
 

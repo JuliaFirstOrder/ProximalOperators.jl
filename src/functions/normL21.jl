@@ -1,5 +1,7 @@
 # L2,1 norm/Sum of norms of columns or rows (times a constant)
 
+export NormL21
+
 """
   NormL21(λ::Real=1.0, dim=1)
 

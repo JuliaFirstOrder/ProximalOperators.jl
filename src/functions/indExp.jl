@@ -1,6 +1,8 @@
 # indicator of the (primal) exponential cone
 # the dual exponential cone is obtained through calculus rules
 
+export IndExpPrimal, IndExpDual
+
 """
   IndExpPrimal()
 

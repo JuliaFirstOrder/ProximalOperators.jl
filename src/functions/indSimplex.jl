@@ -1,5 +1,7 @@
 # indicator of a simplex
 
+export IndSimplex
+
 """
   IndSimplex(a::Union{Real, Integer}=1.0)
 

@@ -1,5 +1,7 @@
 # indicator of the ball of matrices with (at most) a given rank
 
+export IndBallRank
+
 """
   IndBallRank(r::Int=1)
 

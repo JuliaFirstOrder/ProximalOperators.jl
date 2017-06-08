@@ -1,5 +1,7 @@
 # logarithmic barrier function
 
+export LogBarrier
+
 immutable LogBarrier{T <: Real} <: ProximableFunction
   a::T
   b::T

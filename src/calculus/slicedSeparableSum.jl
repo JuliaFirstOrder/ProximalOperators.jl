@@ -1,5 +1,7 @@
 # Separable sum, using slices of an array as variables
 
+export SlicedSeparableSum
+
 immutable SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N} <: ProximableFunction
   fs::S    # Tuple, where each element is a Vector with elements of the same type; the functions to prox on
   # Example: S = Tuple{Array{ProximalOperators.NormL1{Float64},1}, Array{ProximalOperators.NormL2{Float64},1}}

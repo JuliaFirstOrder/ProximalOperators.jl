@@ -1,5 +1,7 @@
 # Hinge loss function
 
+export HingeLoss
+
 """
   HingeLoss(b::Array{Real}, mu::Real=1.0)
 

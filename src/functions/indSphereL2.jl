@@ -1,5 +1,7 @@
 # indicator of the L2 norm sphere with given radius
 
+export IndSphereL2
+
 """
   IndSphereL2(r::Real=1.0)
 

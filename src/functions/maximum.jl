@@ -1,5 +1,7 @@
 # Max function
 
+export Maximum
+
 """
   Maximum(λ::Real=1.0)
 

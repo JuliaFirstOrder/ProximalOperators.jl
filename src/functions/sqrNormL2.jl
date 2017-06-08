@@ -1,5 +1,7 @@
 # squared L2 norm (times a constant, or weighted)
 
+export SqrNormL2
+
 immutable SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   function SqrNormL2{T}(lambda::T) where {T <: Union{Real,AbstractArray}}

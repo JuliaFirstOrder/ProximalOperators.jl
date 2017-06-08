@@ -1,5 +1,7 @@
 # L0 pseudo-norm (times a constant)
 
+export NormL0
+
 """
   NormL0(λ::Real=1.0)
 

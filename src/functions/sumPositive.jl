@@ -1,5 +1,7 @@
 # Sum of the positive components
 
+export SumPositive
+
 """
   SumPositive()
 

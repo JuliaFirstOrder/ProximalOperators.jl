@@ -1,5 +1,7 @@
 # indicator of nonnegative orthant
 
+export IndNonnegative
+
 """
   IndNonnegative()
 

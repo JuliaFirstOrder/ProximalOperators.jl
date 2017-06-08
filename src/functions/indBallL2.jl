@@ -1,5 +1,7 @@
 # indicator of the L2 norm ball with given radius
 
+export IndBallL2
+
 """
   IndBallL2(r::Real=1.0)
 

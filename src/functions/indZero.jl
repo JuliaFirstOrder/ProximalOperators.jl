@@ -1,5 +1,7 @@
 # indicator of the zero cone
 
+export IndZero
+
 """
   IndZero()
 

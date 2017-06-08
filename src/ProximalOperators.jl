@@ -12,32 +12,6 @@ export gradient, gradient!
 
 export ProximableFunction
 
-export IndAffine, IndHalfspace,
-       IndBallLinf, IndBallL0, IndBallL1, IndBallL2, IndBallRank,
-       IndBox, IndNonnegative, IndNonpositive,
-       IndExpPrimal, IndExpDual, IndPSD, IndSOC, IndRotatedSOC,
-       IndFree,
-       IndPoint, IndZero,
-       IndSimplex,
-       IndSphereL2, IndBinary,
-       SumPositive, HingeLoss, HuberLoss,
-       LogBarrier,
-       LeastSquares,
-       Maximum,
-       NormL0, NormL1, NormL2, NormL21, NormLinf, NuclearNorm, SqrNormL2, ElasticNet,
-       FirmThreshold,
-       DistL2, SqrDistL2,
-       Zero
-
-export Conjugate,
-       Postcompose,
-       PrecomposeDiagonal,
-#        PrecomposeGramDiagonal,
-       SlicedSeparableSum,
-       SeparableSum,
-       Tilt,
-       Regularize
-
 abstract type ProximableFunction end
 
 include("utilities/deep.jl")
@@ -47,7 +21,7 @@ include("calculus/conjugate.jl")
 include("calculus/moreauEnvelope.jl")
 include("calculus/postcompose.jl")
 include("calculus/precomposeDiagonal.jl")
-# include("calculus/precomposeGramDiagonal.jl")
+include("calculus/precomposeGramDiagonal.jl")
 include("calculus/separableSum.jl")
 include("calculus/slicedSeparableSum.jl")
 include("calculus/tilt.jl")
@@ -55,7 +29,6 @@ include("calculus/regularize.jl")
 
 include("functions/distL2.jl")
 include("functions/elasticNet.jl")
-include("functions/firmThreshold.jl")
 include("functions/logBarrier.jl")
 include("functions/normL2.jl")
 include("functions/normL1.jl")
@@ -115,7 +88,7 @@ is_generalized_quadratic(f::ProximableFunction) = is_quadratic(f) || is_affine(f
 is_strongly_convex(f::ProximableFunction) = false
 
 """
-  prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
+  prox(f::ProximableFunction, x, γ=1.0)
 
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0`, that is
@@ -125,25 +98,26 @@ and parameter `γ > 0`, that is
 and returns `y` and `f(y)`.
 """
 
-function prox(f::ProximableFunction, x::AbstractArray, gamma::Union{Real, AbstractArray}=1.0)
-  y = similar(x)
+function prox(f::ProximableFunction, x, gamma=1.0)
+  y = deepsimilar(x)
   fy = prox!(y, f, x, gamma)
   return y, fy
 end
 
 """
-  prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
+  prox!(y, f::ProximableFunction, x, γ=1.0)
 
 Computes the proximal point of `x` with respect to function `f`
 and parameter `γ > 0`, and writes the result in `y`. Returns `f(y)`.
 """
 
-function prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, gamma::Union{Real, AbstractArray}=1.0)
-  throw(MethodException(
-    "prox! is not implemented for y::", typeof(y), ", f::", typeof(f),
-    ", x::", typeof(x), ", gamma::", typeof(gamma)
-  ))
-end
+prox!
+
+"""
+  gradient(f::ProximableFunction, x, γ=1.0)
+
+Computes the gradient of `f` at `x`: be it `g`, the function returns `g` and `f(x)`.
+"""
 
 function gradient{T <: Union{AbstractArray, Tuple}}(f::ProximableFunction, x::T)
 	y = deepsimilar(x)
@@ -151,8 +125,12 @@ function gradient{T <: Union{AbstractArray, Tuple}}(f::ProximableFunction, x::T)
 	return y, fx
 end
 
-function gradient!(f::ProximableFunction, args...)
-	error("gradient not implemented for $f")
-end
+"""
+  gradient!(y, f::ProximableFunction, x)
+
+Computes the gradient of `f` at `x` and writes it to `y`. Returns `f(x)`.
+"""
+
+gradient!
 
 end

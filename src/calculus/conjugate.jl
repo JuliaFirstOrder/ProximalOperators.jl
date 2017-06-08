@@ -1,5 +1,7 @@
 # Conjugate
 
+export Conjugate
+
 """
   Conjugate(f::ProximableFunction)
 

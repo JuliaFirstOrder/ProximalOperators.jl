@@ -1,4 +1,7 @@
 # squared Euclidean distance from a set
+
+export SqrDistL2
+
 immutable SqrDistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R
