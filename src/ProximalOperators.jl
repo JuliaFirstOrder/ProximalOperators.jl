@@ -7,10 +7,11 @@ module ProximalOperators
 const RealOrComplex{T<:Real} = Union{T, Complex{T}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
 
-export prox, prox!
-export gradient, gradient!
-
 export ProximableFunction
+export prox, prox!
+export gradient!
+
+import Base: gradient
 
 abstract type ProximableFunction end
 
@@ -18,16 +19,17 @@ include("utilities/deep.jl")
 include("utilities/symmetricpacked.jl")
 
 include("calculus/conjugate.jl")
+include("calculus/distL2.jl")
 include("calculus/moreauEnvelope.jl")
 include("calculus/postcompose.jl")
 include("calculus/precomposeDiagonal.jl")
 include("calculus/precomposeGramDiagonal.jl")
+include("calculus/regularize.jl")
 include("calculus/separableSum.jl")
 include("calculus/slicedSeparableSum.jl")
+include("calculus/sqrDistL2.jl")
 include("calculus/tilt.jl")
-include("calculus/regularize.jl")
 
-include("functions/distL2.jl")
 include("functions/elasticNet.jl")
 include("functions/logBarrier.jl")
 include("functions/normL2.jl")
@@ -55,7 +57,7 @@ include("functions/indSimplex.jl")
 include("functions/indSOC.jl")
 include("functions/indSphereL2.jl")
 include("functions/indHalfspace.jl")
-include("functions/sqrDistL2.jl")
+include("functions/quadratic.jl")
 include("functions/sqrNormL2.jl")
 include("functions/sumLargest.jl")
 include("functions/sumPositive.jl")

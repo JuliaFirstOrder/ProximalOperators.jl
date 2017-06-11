@@ -7,7 +7,7 @@ export LeastSquares
 
 Returns the function `f(x) = (λ/2)⋅||Ax-b||^2`.
 """
-type LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}, F<:Factorization} <: ProximableFunction
+type LeastSquares{RC <: RealOrComplex, R <: Real, M <: AbstractArray{RC, 2}, V <: AbstractArray{RC, 1}, F <: Factorization} <: ProximableFunction
   A::M
   b::V
   Atb::V
@@ -32,9 +32,11 @@ type LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:Abstr
   function LeastSquares{RC,R,M,V}(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, I<:Integer, M<:SparseMatrixCSC{RC,I}, V<:AbstractArray{RC,1}}
     LeastSquares{RC,R,M,V,SparseArrays.CHOLMOD.Factor{RC}}(A,b,lambda)
   end
+
   function LeastSquares{RC,R,M,V}(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, M<:DenseArray{RC,2}, V<:AbstractArray{RC,1}}
     LeastSquares{RC,R,M,V,LinAlg.Cholesky{RC,Array{RC,2}}}(A,b,lambda)
   end
+
   function LeastSquares{RC,R,M,V}(A::M, b::V, lambda::R) where {RC <: AbstractArray, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}}
     warn("Could not infer type of Factorization for $M in LeastSquares, this type will be type-unstable")
     LeastSquares{RC,R,M,V,Factorization}(A,b,lambda)
@@ -65,6 +67,7 @@ function factor_step!{RC <: RealOrComplex, R, I<:Integer, M<:SparseMatrixCSC{RC,
   f.U = cholfact(f.S; shift=1.0/lamgam)
   f.gamma = gamma
 end
+
 #R<:Real needed to avoid ambiguity
 function prox!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,R,M,V,F}, x::AbstractArray{RC,1}, gamma::R=one(R))
   # if gamma different from f.gamma then call factor_step!
