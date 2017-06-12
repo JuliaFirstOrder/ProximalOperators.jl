@@ -6,6 +6,8 @@ immutable SeparableSum{T <: Tuple} <: ProximableFunction
 	fs::T
 end
 
+SeparableSum(fs::Vararg{ProximableFunction}) = SeparableSum((fs...))
+
 is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
 is_convex(f::SeparableSum) = all(is_convex.(f.fs))
 is_set(f::SeparableSum) = all(is_set.(f.fs))
@@ -55,7 +57,7 @@ gradient!{T <: Tuple}(grad::T, f::SeparableSum, x::T) = gradient!(grad, f.fs, x)
 
 fun_name(f::SeparableSum) = "separable sum"
 fun_dom(f::SeparableSum) = "n/a"
-fun_expr(f::SeparableSum) = "(x₁,…,xᵣ) ↦ f[1](x₁) + … + f[r](xᵣ)"
+fun_expr(f::SeparableSum) = "(x₁, …, xₖ) ↦ f₁(x₁) + … + fₖ(xₖ)"
 fun_params(f::SeparableSum) = "n/a"
 
 function prox_naive(f::SeparableSum, xs::Tuple, gamma::Union{Real, Tuple}=1.0)
