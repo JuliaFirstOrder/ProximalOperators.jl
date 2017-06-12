@@ -37,6 +37,11 @@ end
 
 prox!(y::AbstractArray, f::IndFree, x::AbstractArray, gamma::AbstractArray) = prox!(y, f, x, 1.0)
 
+function gradient!(y::AbstractArray, f::IndFree, x::AbstractArray)
+  y[:] = 0.0
+  return 0.0
+end
+
 fun_name(f::IndFree) = "indicator of the free cone"
 fun_dom(f::IndFree) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndFree) = "x ↦ 0"

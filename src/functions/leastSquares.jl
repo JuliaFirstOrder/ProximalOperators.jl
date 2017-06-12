@@ -85,6 +85,13 @@ function prox!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,R,M,
   return (f.lambda/2)*norm(f.A*y-f.b, 2)^2
 end
 
+function gradient!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,R,M,V,F}, x::AbstractArray{RC,1})
+  res = f.A*x - b
+  Ac_mul_B!(y, f.A, x)
+  y .*= f.lambda
+  fy = (f.lambda/2)*dot(res, res)
+end
+
 fun_name(f::LeastSquares) = "least-squares penalty"
 fun_dom{R <: Real}(f::LeastSquares{R}) = "AbstractArray{Real,1}"
 fun_dom{C <: Complex}(f::LeastSquares{C}) = "AbstractArray{Complex,1}"

@@ -49,6 +49,16 @@ function prox!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss, x::
   end
 end
 
+function gradient!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T})
+  normx = vecnorm(x)
+  if normx <= f.rho
+    y .= x
+  else
+    y .= (f.mu*f.rho)/normx .* x
+  end
+  return 0.0
+end
+
 fun_name(f::HuberLoss) = "Huber loss"
 fun_dom(f::HuberLoss) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::HuberLoss) = "x ↦ (μ/2)||x||² if ||x||⩽ρ, μρ(||x||-ρ/2) otherwise"
