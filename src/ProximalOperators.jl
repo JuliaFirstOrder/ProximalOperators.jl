@@ -15,6 +15,7 @@ import Base: gradient
 
 abstract type ProximableFunction end
 
+include("utilities/cg.jl")
 include("utilities/deep.jl")
 include("utilities/symmetricpacked.jl")
 
