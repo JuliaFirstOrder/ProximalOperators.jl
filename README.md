@@ -74,4 +74,5 @@ Foundations and Trends in Optimization, vol. 1, no. 3, pp. 127-239.
 ProximalOperators.jl is developed by
 [Lorenzo Stella](https://lostella.github.io)
 and [Niccolò Antonello](http://homes.esat.kuleuven.be/~nantonel/)
-at [KU Leuven, ESAT/Stadius](https://www.esat.kuleuven.be/stadius/).
+at [KU Leuven, ESAT/Stadius](https://www.esat.kuleuven.be/stadius/),
+and [Mattias Fält](http://www.control.lth.se/Staff/MattiasFalt.html) at [Lunds Universitet, Department of Automatic Control](http://www.control.lth.se/).

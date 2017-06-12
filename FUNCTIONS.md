@@ -42,7 +42,6 @@ Name            | Description                         | Properties
 `NormLinf`      | L-infinity norm                     | convex
 `NuclearNorm`   | Nuclear norm                        | convex
 `SqrNormL2`     | Squared Euclidean norm              | convex, separable
-`FirmThreshold` | Firm Threshold regularization       | nonconvex
 
 ### Penalties
 
