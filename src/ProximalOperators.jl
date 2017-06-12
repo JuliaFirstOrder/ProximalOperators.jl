@@ -15,21 +15,13 @@ import Base: gradient
 
 abstract type ProximableFunction end
 
+# Utilities
+
 include("utilities/cg.jl")
 include("utilities/deep.jl")
 include("utilities/symmetricpacked.jl")
 
-include("calculus/conjugate.jl")
-include("calculus/distL2.jl")
-include("calculus/moreauEnvelope.jl")
-include("calculus/postcompose.jl")
-include("calculus/precomposeDiagonal.jl")
-include("calculus/precomposeGramDiagonal.jl")
-include("calculus/regularize.jl")
-include("calculus/separableSum.jl")
-include("calculus/slicedSeparableSum.jl")
-include("calculus/sqrDistL2.jl")
-include("calculus/tilt.jl")
+# Basic functions
 
 include("functions/elasticNet.jl")
 include("functions/logBarrier.jl")
@@ -50,7 +42,6 @@ include("functions/indBox.jl")
 include("functions/indNonnegative.jl")
 include("functions/indNonpositive.jl")
 include("functions/indZero.jl")
-include("functions/indExp.jl")
 include("functions/indFree.jl")
 include("functions/indPoint.jl")
 include("functions/indPSD.jl")
@@ -60,11 +51,30 @@ include("functions/indSphereL2.jl")
 include("functions/indHalfspace.jl")
 include("functions/quadratic.jl")
 include("functions/sqrNormL2.jl")
-include("functions/sumLargest.jl")
 include("functions/sumPositive.jl")
 include("functions/maximum.jl")
-include("functions/normLinf.jl")
 include("functions/leastSquares.jl")
+
+# Calculus rules
+
+include("calculus/conjugate.jl")
+include("calculus/epicompose.jl")
+include("calculus/distL2.jl")
+include("calculus/moreauEnvelope.jl")
+include("calculus/postcompose.jl")
+include("calculus/precomposeDiagonal.jl")
+include("calculus/precomposeGramDiagonal.jl")
+include("calculus/regularize.jl")
+include("calculus/separableSum.jl")
+include("calculus/slicedSeparableSum.jl")
+include("calculus/sqrDistL2.jl")
+include("calculus/tilt.jl")
+
+# Functions obtain from basic + calculus
+
+include("functions/indExp.jl")
+include("functions/sumLargest.jl")
+include("functions/normLinf.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
   println(io, "description : ", fun_name(f))
