@@ -33,7 +33,7 @@ function prox!{R, RC, M, V, F}(y::AbstractArray{RC}, f::Quadratic{R, RC, M, V, F
     if gamma != f.gamma
       factor_step!(f, gamma)
     end
-    y[:] = f.fact\(x/gamma - f.q)
+    y .= f.fact\(x/gamma - f.q)
   else
     cg!(y, f.Q + I/gamma, x/gamma - f.q)
   end

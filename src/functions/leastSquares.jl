@@ -78,9 +78,9 @@ function prox!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,R,M,
   # solve step, two cases: (1) tall A, (2) fat A
   q = f.Atb + x/lamgam
   if size(f.A,1) >= size(f.A,2)
-    y[:] = f.U\q
+    y .= f.U\q
   else
-    y[:] = lamgam*(q - (f.A'*(f.U\(f.A*q))))
+    y .= lamgam*(q - (f.A'*(f.U\(f.A*q))))
   end
   return (f.lambda/2)*norm(f.A*y-f.b, 2)^2
 end
