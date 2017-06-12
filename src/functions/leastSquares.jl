@@ -28,19 +28,19 @@ type LeastSquares{RC <: RealOrComplex, R <: Real, M <: AbstractArray{RC, 2}, V <
       new(A, b, A'*b, lambda, -1, A*A')
     end
   end
+end
 
-  function LeastSquares{RC,R,M,V}(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, I<:Integer, M<:SparseMatrixCSC{RC,I}, V<:AbstractArray{RC,1}}
-    LeastSquares{RC,R,M,V,SparseArrays.CHOLMOD.Factor{RC}}(A,b,lambda)
-  end
+function LeastSquares(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, I<:Integer, M<:SparseMatrixCSC{RC,I}, V<:AbstractArray{RC,1}}
+  LeastSquares{RC,R,M,V,SparseArrays.CHOLMOD.Factor{RC}}(A,b,lambda)
+end
 
-  function LeastSquares{RC,R,M,V}(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, M<:DenseArray{RC,2}, V<:AbstractArray{RC,1}}
-    LeastSquares{RC,R,M,V,LinAlg.Cholesky{RC,Array{RC,2}}}(A,b,lambda)
-  end
+function LeastSquares(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, M<:DenseArray{RC,2}, V<:AbstractArray{RC,1}}
+  LeastSquares{RC,R,M,V,LinAlg.Cholesky{RC,Array{RC,2}}}(A,b,lambda)
+end
 
-  function LeastSquares{RC,R,M,V}(A::M, b::V, lambda::R) where {RC <: AbstractArray, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}}
-    warn("Could not infer type of Factorization for $M in LeastSquares, this type will be type-unstable")
-    LeastSquares{RC,R,M,V,Factorization}(A,b,lambda)
-  end
+function LeastSquares(A::M, b::V, lambda::R) where {RC <: AbstractArray, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}}
+  warn("Could not infer type of Factorization for $M in LeastSquares, this type will be type-unstable")
+  LeastSquares{RC,R,M,V,Factorization}(A,b,lambda)
 end
 
 is_convex(f::LeastSquares) = true
