@@ -2,6 +2,21 @@
 
 export NormL1
 
+"""
+**``L_1`` norm**
+
+    NormL1(λ=1.0)
+
+With a nonnegative scalar parameter λ, returns the function
+```math
+f(x) = λ\\cdot∑_i|x_i|.
+```
+With a nonnegative array parameter λ, returns the function
+```math
+f(x) = ∑_i λ_i|x_i|.
+```
+"""
+
 immutable NormL1{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   function NormL1{T}(lambda::T) where {T <: Union{Real, AbstractArray}}

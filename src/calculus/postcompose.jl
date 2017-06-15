@@ -3,9 +3,14 @@
 export Postcompose
 
 """
-  Postcompose(f::ProximableFunction, a::Real=1.0, b::Real=0.0)
+**Postcomposition with an affine transformation**
 
-Returns the function `g(x) = a*f(x) + b`.
+    Postcompose(f, a=1.0, b=0.0)
+
+Returns the function
+```math
+g(x) = a\\cdot f(x) + b.
+```
 """
 
 immutable Postcompose{T <: ProximableFunction, R <: Real} <: ProximableFunction

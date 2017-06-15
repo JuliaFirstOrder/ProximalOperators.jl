@@ -3,9 +3,15 @@
 export Regularize
 
 """
-  Regularize(f::ProximableFunction, ρ::Real, a::AbstractArray)
+**Regularize**
 
-Given function `f`, returns `g(x) = f(x) + (ρ/2)||x-a||²`.
+    Regularize(f, ρ=1.0, a=0.0)
+
+Given function `f`, and optional parameters `ρ` (positive) and `a`, returns
+```math
+g(x) = f(x) + \\tfrac{ρ}{2}\\|x-a\\|².
+```
+Parameter `a` can be either a scalar or an array.
 """
 
 immutable Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, AbstractArray}} <: ProximableFunction

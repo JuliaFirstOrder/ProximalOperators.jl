@@ -3,9 +3,15 @@
 export IndBallL1
 
 """
-  IndBallL1(r::Real=1.0)
+**Indicator of a ``L_1`` norm ball**
 
-Returns the function `g = ind{x : ‖x‖_1 ⩽ r}`, for a real parameter `r > 0`.
+    IndBallL1(r=1.0)
+
+Returns the indicator function of the set
+```math
+S = \\left\\{ x : ∑_i |x_i| \\leq r \\right\\}.
+```
+Parameter `r` must be positive.
 """
 
 immutable IndBallL1{R <: Real} <: ProximableFunction

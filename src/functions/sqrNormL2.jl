@@ -2,6 +2,21 @@
 
 export SqrNormL2
 
+"""
+**Squared Euclidean norm (weighted)**
+
+    SqrNormL2(λ=1.0)
+
+With a nonnegative scalar `λ`, returns the function
+```math
+f(x) = \\tfrac{λ}{2}\\|x\\|^2.
+```
+With a nonnegative array `λ`, returns the function
+```math
+f(x) = \\tfrac{1}{2}∑_i λ_i x_i^2.
+```
+"""
+
 immutable SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   function SqrNormL2{T}(lambda::T) where {T <: Union{Real,AbstractArray}}
@@ -18,19 +33,7 @@ is_smooth(f::SqrNormL2) = true
 is_quadratic(f::SqrNormL2) = true
 is_strongly_convex(f::SqrNormL2) = all(f.lambda .> 0)
 
-"""
-  SqrNormL2(λ::Real=1.0)
-
-Returns the function `g(x) = (λ/2)(x'x)`, for a real parameter `λ ⩾ 0`.
-"""
-
 SqrNormL2{T <: Real}(lambda::T=1.0) = SqrNormL2{T}(lambda)
-
-"""
-  SqrNormL2(λ::Array{Real})
-
-Returns the function `g(x) = (1/2)(λ.*x)'x`, for an array of real parameters `λ ⩾ 0`.
-"""
 
 SqrNormL2{T <: AbstractArray}(lambda::T) = SqrNormL2{T}(lambda)
 

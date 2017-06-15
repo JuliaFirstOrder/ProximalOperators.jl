@@ -3,9 +3,15 @@
 export NormL0
 
 """
-  NormL0(λ::Real=1.0)
+**``L_0`` pseudo-norm**
 
-Returns the function `g(x) = λ*countnz(x)`, for a nonnegative parameter `λ ⩾ 0`.
+    NormL0(λ=1.0)
+
+Returns the function
+```math
+f(x) = λ\\cdot\\mathrm{nnz}(x)
+```
+for a nonnegative parameter `λ`.
 """
 
 immutable NormL0{R <: Real} <: ProximableFunction

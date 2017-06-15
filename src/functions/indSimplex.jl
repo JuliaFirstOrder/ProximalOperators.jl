@@ -3,9 +3,15 @@
 export IndSimplex
 
 """
-  IndSimplex(a::Union{Real, Integer}=1.0)
+**Indicator of a simplex**
 
-Returns the function `g = ind{x : x ⩾ 0, sum(x) = a}`.
+    IndSimplex(a=1.0)
+
+Returns the indicator of the set
+```math
+S = \\left\\{ x : x \\geq 0, ∑_i x_i = a \\right\\}.
+```
+By default `a=1.0`, therefore ``S`` is the probability simplex.
 """
 
 immutable IndSimplex{T <: Union{Real, Integer}} <: ProximableFunction

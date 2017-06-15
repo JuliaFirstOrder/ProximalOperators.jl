@@ -3,9 +3,14 @@
 export NormL2
 
 """
-  NormL2(λ::Real=1.0)
+**``L_2`` norm**
 
-Returns the function `g(x) = λ||x||_2`, for a real parameter `λ ⩾ 0`.
+    NormL2(λ=1.0)
+
+With a nonnegative scalar parameter λ, returns the function
+```math
+f(x) = λ\\cdot\\sqrt\{x_1^2 + … + x_n^2\}.
+```
 """
 
 immutable NormL2{R <: Real} <: ProximableFunction

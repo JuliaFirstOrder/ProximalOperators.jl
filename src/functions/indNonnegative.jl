@@ -3,11 +3,14 @@
 export IndNonnegative
 
 """
-  IndNonnegative()
+**Indicator of the nonnegative orthant**
 
-Returns the indicator function the nonnegative orthant, that is
+    IndNonnegative()
 
-  `g(x) = 0 if x ⩾ 0, +∞ otherwise`
+Returns the indicator of the set
+```math
+C = \\{ x : x \\geq 0 \\}.
+```
 """
 
 immutable IndNonnegative <: ProximableFunction end

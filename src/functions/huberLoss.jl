@@ -3,9 +3,18 @@
 export HuberLoss
 
 """
-  HuberLoss(rho::Real=1.0, mu::Real=1.0)
+**Huber loss**
 
-Returns the function `g(x) = (mu/2)||x||² if ||x|| ⩽ rho, and rho*mu*(||x||-rho/2) otherwise`.
+    HuberLoss(ρ=1.0, μ=1.0)
+
+Returns the function
+```math
+f(x) = \\begin\{cases\}
+  \\tfrac{μ}{2}\\|x\\|^2 & \\text{if}\\ \\|x\\| ⩽ ρ \\\\
+  ρμ(\\|x\\| - \\tfrac{ρ}{2}) & \\text{otherwise},
+\\end\{cases\}
+```
+where `ρ` and `μ` are positive parameters.
 """
 
 immutable HuberLoss{R <: Real} <: ProximableFunction

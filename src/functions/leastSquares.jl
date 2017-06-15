@@ -3,10 +3,16 @@
 export LeastSquares
 
 """
-  LeastSquares(A, b, λ=1.0)
+**Least squares penalty**
 
-Returns the function `f(x) = (λ/2)⋅||Ax-b||^2`.
+    LeastSquares(A, b, λ=1.0)
+
+For a matrix `A`, a vector `b` and a scalar `λ`, returns the function
+```math
+f(x) = \\tfrac{\\lambda}{2}\\|Ax - b\\|^2.
+```
 """
+
 type LeastSquares{RC <: RealOrComplex, R <: Real, M <: AbstractArray{RC, 2}, V <: AbstractArray{RC, 1}, F <: Factorization} <: ProximableFunction
   A::M
   b::V

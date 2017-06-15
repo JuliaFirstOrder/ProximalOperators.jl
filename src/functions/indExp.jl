@@ -4,10 +4,14 @@
 export IndExpPrimal, IndExpDual
 
 """
-  IndExpPrimal()
+**Indicator of the (primal) exponential cone**
+
+    IndExpPrimal()
 
 Returns the indicator function of the primal exponential cone, that is
-`cl{(r,s,t) : s > 0, s⋅exp(r/s) ⩽ t}`.
+```math
+C = \\mathrm{cl} \\{ (r,s,t) : s > 0, s⋅e^{r/s} \\leq t \\} \\subset \\mathbb{R}^3.
+```
 """
 
 immutable IndExpPrimal <: ProximableFunction end
@@ -16,10 +20,14 @@ is_convex(f::IndExpPrimal) = true
 is_cone(f::IndExpPrimal) = true
 
 """
-  IndExpDual()
+**Indicator of the (dual) exponential cone**
+
+    IndExpDual()
 
 Returns the indicator function of the dual exponential cone, that is
-`cl{(u,v,w) : u < 0, -u⋅exp(v/u) ⩽ w⋅exp(1)}`.
+```math
+C = \\mathrm{cl} \\{ (u,v,w) : u < 0, -u⋅e^{v/u} \\leq w⋅e \\} \\subset \\mathbb{R}^3.
+```
 """
 
 IndExpDual() = PrecomposeDiagonal(Conjugate(IndExpPrimal()), -1.0)

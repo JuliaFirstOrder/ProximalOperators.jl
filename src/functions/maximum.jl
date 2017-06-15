@@ -3,9 +3,14 @@
 export Maximum
 
 """
-  Maximum(λ::Real=1.0)
+**Maximum coefficient**
 
-Returns the function `g(x) = λ⋅maximum(x)`, for a nonnegative parameter `λ ⩾ 0`.
+    Maximum(λ=1.0)
+
+For a nonnegative parameter `λ ⩾ 0`, returns the function
+```math
+f(x) = \\lambda \\cdot \\max \\{x_i : i = 1,\\ldots, n \\}.
+```
 """
 
 Maximum{R <: Real}(lambda::R=1.0) = SumLargest(one(Int32), lambda)

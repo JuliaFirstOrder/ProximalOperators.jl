@@ -3,9 +3,14 @@
 export Tilt
 
 """
-  Tilt(f::ProximableFunction, a::AbstractArray, b::Real)
+**Linear tilting**
 
-Given function `f`, returns `g(x) = f(x) + <a,x> + b`.
+    Tilt(f, a, b=0.0)
+
+Given function `f`, an array `a` and a constant `b` (optional), returns function
+```math
+g(x) = f(x) + \\langle a, x \\rangle + b.
+```
 """
 
 immutable Tilt{T <: ProximableFunction, S <: AbstractArray, R <: Real} <: ProximableFunction

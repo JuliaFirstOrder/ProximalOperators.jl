@@ -3,9 +3,15 @@
 export IndBallL2
 
 """
-  IndBallL2(r::Real=1.0)
+**Indicator of a Euclidean ball**
 
-Returns the function `g = ind{x : ||x|| ⩽ r}`, for a real parameter `r > 0`.
+    IndBallL2(r=1.0)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : \\|x\\| \\leq r \\},
+```
+where ``\\|\\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
 
 immutable IndBallL2{R <: Real} <: ProximableFunction

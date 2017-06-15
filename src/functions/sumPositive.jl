@@ -3,9 +3,14 @@
 export SumPositive
 
 """
-  SumPositive()
+**Sum of the positive coefficients**
 
-Returns the function `g(x) = sum(max(0, x))`.
+    SumPositive()
+
+Returns the function
+```math
+f(x) = ∑_i \\max\\{0, x_i\\}.
+```
 """
 
 immutable SumPositive <: ProximableFunction end

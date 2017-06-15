@@ -3,9 +3,14 @@
 export Conjugate
 
 """
-  Conjugate(f::ProximableFunction)
+**Convex conjugate**
 
-Returns the conjugate function of `f`, that is `f*(x) = sup{y'x - f(y)}`.
+    Conjugate(f)
+
+Returns the convex conjugate (also known as Fenchel conjugate, or Fenchel-Legendre transform) of function `f`, that is
+```math
+f^*(x) = \\sup_y \\{ \\langle y, x \\rangle - f(y) \\}.
+```
 """
 
 immutable Conjugate{T <: ProximableFunction} <: ProximableFunction

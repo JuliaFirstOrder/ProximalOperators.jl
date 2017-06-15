@@ -2,6 +2,17 @@
 
 export SeparableSum
 
+"""
+**Separable sum of functions**
+
+    SeparableSum(f₁,…,fₖ)
+
+Given functions `f₁` to `fₖ`, returns their separable sum, that is
+```math
+g(x_1,…,x_k) = ∑_\{i=1\}^k f_i(x_i).
+```
+"""
+
 immutable SeparableSum{T <: Tuple} <: ProximableFunction
 	fs::T
 end

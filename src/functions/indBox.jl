@@ -3,11 +3,15 @@
 export IndBox, IndBallLinf
 
 """
-  IndBox(lb, ub)
+**Indicator of a box**
 
-Returns the function `g = ind{x : lb ⩽ x ⩽ ub}`. Parameters `lb` and `ub` can be
-either scalars or arrays of the same dimension as `x`, and must satisfy `lb <= ub`.
-Bounds are allowed to take values `-Inf` and `+Inf`.
+    IndBox(low, up)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : low \\leq x \\leq up \\}.
+```
+Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space: they must satisfy `low <= up`, and are allowed to take values `-Inf` and `+Inf` to indicate unbounded coordinates.
 """
 
 immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
@@ -70,10 +74,15 @@ end
 prox!{R <: Real}(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) = prox!(y, f, x, one(R))
 
 """
-  IndBallLinf(r::Real=1.0)
+**Indicator of a ``L_∞`` norm ball**
 
-Returns the indicator function of an infinity-norm ball, that is function
-`g(x) = ind{maximum(abs(x)) ⩽ r}` for `r ⩾ 0`.
+    IndBallLinf(r=1.0)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : \\max (|x_i|) \\leq r \\}.
+```
+Parameter `r` must be positive.
 """
 
 IndBallLinf{R <: Real}(r::R=1.0) = IndBox(-r, r)

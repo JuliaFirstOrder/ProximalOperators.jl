@@ -3,9 +3,15 @@
 export NuclearNorm
 
 """
-  NuclearNorm(λ::Real=1.0)
+**Nuclear norm**
 
-Returns the function `λ∑σ_i(X)`, where `σ_i(X)` is i-th singular value of matrix X.
+    NuclearNorm(λ=1.0)
+
+Returns the function
+```math
+f(X) = λ ∑_i σ_i(X),
+```
+where `λ` is a positive parameter and ``σ_i(X)`` is ``i``-th singular value of matrix ``X``.
 """
 
 immutable NuclearNorm{R <: Real} <: ProximableFunction

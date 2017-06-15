@@ -2,6 +2,17 @@
 
 export Quadratic
 
+"""
+**Quadratic function**
+
+    Quadratic(Q, q)
+
+For a matrix `Q` (dense or sparse, symmetric and positive definite) and a vector `q`, returns the function
+```math
+f(x) = \\tfrac{1}{2}\\langle Qx, x\\rangle + \\langle q, x \\rangle.
+```
+"""
+
 type Quadratic{R <: Real, RC <: Union{R, Complex{R}}, M <: AbstractMatrix{RC}, V <: AbstractVector{RC}, F <: Factorization} <: ProximableFunction
   Q::M
   q::V
@@ -54,6 +65,7 @@ end
 function gradient!{R, RC, M, V, F}(y::AbstractArray{RC}, f::Quadratic{R, RC, M, V, F}, x::AbstractArray{RC})
   A_mul_B!(y, f.Q, x)
   y .+= f.q
+  return 0.5*(vecdot(x, y) + vecdot(x, f.q))
 end
 
 fun_name(f::Quadratic) = "Quadratic function"

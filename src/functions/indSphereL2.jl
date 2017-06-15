@@ -3,9 +3,15 @@
 export IndSphereL2
 
 """
-  IndSphereL2(r::Real=1.0)
+**Indicator of a Euclidean sphere**
 
-Returns the function `g = ind{x : ||x|| = r}`, for a real parameter `r > 0`.
+    IndSphereL2(r=1.0)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : \\|x\\| = r \\},
+```
+where ``\\|\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
 
 immutable IndSphereL2{R <: Real} <: ProximableFunction

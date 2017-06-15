@@ -3,9 +3,11 @@
 export IndFree
 
 """
-  IndFree()
+**Indicator of the free cone**
 
-Returns the indicator function of the whole space, or "free cone", i.e.,
+    IndFree()
+
+Returns the indicator function of the whole space, or "free cone", *i.e.*,
 a function which is identically zero.
 """
 
@@ -17,12 +19,6 @@ is_affine(f::IndFree) = true
 is_cone(f::IndFree) = true
 is_smooth(f::IndFree) = true
 is_quadratic(f::IndFree) = true
-
-"""
-  Zero()
-
-Returns the identically zero function.
-"""
 
 const Zero = IndFree
 

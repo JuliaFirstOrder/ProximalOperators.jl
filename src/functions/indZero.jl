@@ -3,10 +3,11 @@
 export IndZero
 
 """
-  IndZero()
+**Indicator of the zero cone**
 
-Returns the indicator function of the zero point, or "zero cone", i.e.,
-  `g(x) = 0 if x = 0, +∞ otherwise`
+    IndZero()
+
+Returns the indicator function of the set containing the origin, the "zero cone".
 """
 
 immutable IndZero <: ProximableFunction end

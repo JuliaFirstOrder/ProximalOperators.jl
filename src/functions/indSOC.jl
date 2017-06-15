@@ -3,9 +3,14 @@
 export IndSOC, IndRotatedSOC
 
 """
-  IndSOC()
+**Indicator of the second-order cone**
 
-Returns the indicator of the second-order cone (ice-cream cone) of R^n.
+    IndSOC()
+
+Returns the indicator of the second-order cone (also known as ice-cream cone or Lorentz cone), that is
+```math
+C = \\left\\{ (t, x) : \\|x\\| \\leq t \\right\\}.
+```
 """
 
 immutable IndSOC <: ProximableFunction end
@@ -62,9 +67,14 @@ end
 # ########################
 
 """
-  IndRotatedSOC()
+**Indicator of the rotated second-order cone**
 
-Returns the indicator of the *rotated* second-order cone of R^n, that is {(p,q,x) : norm(x)^2 ⩽ 2pq, p ⩾ 0, q ⩾ 0}
+    IndRotatedSOC()
+
+Returns the indicator of the *rotated* second-order cone (also known as ice-cream cone or Lorentz cone), that is
+```math
+C = \\left\\{ (p, q, x) : \\|x\\|^2 \\leq 2\\cdot pq, p \\geq 0, q \\geq 0 \\right\\}.
+```
 """
 
 immutable IndRotatedSOC <: ProximableFunction end
