@@ -8,6 +8,7 @@ makedocs(modules = [ProximalOperators],
          "Home" => "index.md",
          "Functions" => "functions.md",
          "Calculus rules" => "calculus.md",
+         "Prox and gradient" => "operators.md",
          "Demos" => "demos.md"
          ]
          )

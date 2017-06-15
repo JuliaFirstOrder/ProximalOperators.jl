@@ -103,14 +103,15 @@ is_generalized_quadratic(f::ProximableFunction) = is_quadratic(f) || is_affine(f
 is_strongly_convex(f::ProximableFunction) = false
 
 """
-  prox(f::ProximableFunction, x, γ=1.0)
+**Proximal mapping**
 
-Computes the proximal point of `x` with respect to function `f`
-and parameter `γ > 0`, that is
+    prox(f, x, γ=1.0)
 
-  y = argmin_z { f(z) + 1/(2γ)||z-x||² }
-
-and returns `y` and `f(y)`.
+Computes
+```math
+y = \\mathrm{prox}_{\\gamma f}(x) = \\arg\\min_z \\left\\{ f(z) + \\tfrac{1}{2\\gamma}\\|z-x\\|^2 \\right\\}.
+```
+The resulting point ``y`` is returned as first output, and ``f(y)`` as second output.
 """
 
 function prox(f::ProximableFunction, x, gamma=1.0)
@@ -120,18 +121,25 @@ function prox(f::ProximableFunction, x, gamma=1.0)
 end
 
 """
-  prox!(y, f::ProximableFunction, x, γ=1.0)
+**Proximal mapping (in-place)**
 
-Computes the proximal point of `x` with respect to function `f`
-and parameter `γ > 0`, and writes the result in `y`. Returns `f(y)`.
+    prox!(y, f, x, γ=1.0)
+
+Computes
+```math
+y = \\mathrm{prox}_{\\gamma f}(x) = \\arg\\min_z \\left\\{ f(z) + \\tfrac{1}{2\\gamma}\\|z-x\\|^2 \\right\\}.
+```
+The resulting point ``y`` is written to the (pre-allocated) array `y`, which must have the same shape/size as `x`, and the value the proximal point of ``x`` with respect to function ``f(y)`` is returned.
 """
 
 prox!
 
 """
-  gradient(f::ProximableFunction, x, γ=1.0)
+**Gradient mapping**
 
-Computes the gradient of `f` at `x`: be it `g`, the function returns `g` and `f(x)`.
+    gradient(f, x)
+
+For a differentiable function ``f``, returns ``\\nabla f(x)`` as first output, and ``f(x)`` as second output.
 """
 
 function gradient(f::ProximableFunction, x)
@@ -141,9 +149,11 @@ function gradient(f::ProximableFunction, x)
 end
 
 """
-  gradient!(y, f::ProximableFunction, x)
+**Gradient mapping (in-place)**
 
-Computes the gradient of `f` at `x` and writes it to `y`. Returns `f(x)`.
+    gradient!(y, f, x)
+
+For a differentiable function ``f``, writes ``\\nabla f(x)`` to `y`, which must be pre-allocated and have the same shape/size as `x`, and returns ``f(x)`` as output.
 """
 
 gradient!

@@ -1,8 +1,8 @@
 # Functions
 
-Here we list the available elementary functions, grouped by category. Each function is documented with its exact definition and the necessary parameters for construction. These functions can be modified and/or combined together to make new ones, by means of [calculus rules](calculus.md).
-
-In what follows ``\langle \cdot, \cdot \rangle`` indicates the standard Euclidean inner product, and ``\|\cdot\|`` is the associated norm.
+Here we list the available functions, grouped by category. Each function is documented with its exact definition and the necessary parameters for construction.
+The proximal mapping (and gradient, when defined) of such functions is computed by calling the [`prox`](@ref) and [`prox!`](@ref) methods (and [`gradient`](@ref), [`gradient!`](@ref), when defined).
+These functions can be modified and/or combined together to make new ones, by means of [calculus rules](calculus.md).
 
 ## Indicators of sets
 

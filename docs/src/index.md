@@ -28,8 +28,7 @@ For a function ``f`` and a stepsize ``\gamma > 0``, the *proximal operator* (or 
 ```
 and can be efficiently computed for many functions ``f`` used in applications.
 
-This operation is provided through the `prox` and `prox!` methods.
-ProximalOperators allows to pick function ``f`` from a [library of commonly used functions](functions.md), and to modify and combine them using [calculus rules](calculus.md) to obtain new ones.
+ProximalOperators allows to pick function ``f`` from a [library of commonly used functions](functions.md), and to modify and combine them using [calculus rules](calculus.md) to obtain new ones. The proximal mapping of ``f`` is then provided through the [`prox`](@ref) and [`prox!`](@ref) methods, as described [here](operators.md).
 
 For example, one can create the L1-norm as follows.
 
@@ -52,7 +51,7 @@ julia> f(x)
 52.5
 ```
 
-Method `prox` evaluates the proximal operator associated with a function,
+Method [`prox`](@ref) evaluates the proximal operator associated with a function,
 given a point and (optionally) a positive stepsize parameter,
 returning the proximal point `y` and the value of the function at `y`:
 
@@ -61,7 +60,7 @@ julia> y, fy = prox(f, x, 0.5) # last argument is 1.0 if absent
 ([0.0, 0.25, 1.25, 2.25, 3.25], 24.5)
 ```
 
-Method `prox!` evaluates the proximal operator *in place*,
+Method [`prox!`](@ref) evaluates the proximal operator *in place*,
 and only returns the function value at the proximal point (in this case `y` must be preallocated and have the same shape/size as `x`):
 
 ```jldoctest quickex1
