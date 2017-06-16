@@ -11,7 +11,7 @@ Given function `f`, and optional parameters `ρ` (positive) and `a`, returns
 ```math
 g(x) = f(x) + \\tfrac{ρ}{2}\\|x-a\\|².
 ```
-Parameter `a` can be either a scalar or an array.
+Parameter `a` can be either an array or a scalar, in which case it is subtracted component-wise from `x` in the above expression.
 """
 
 immutable Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, AbstractArray}} <: ProximableFunction

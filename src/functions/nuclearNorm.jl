@@ -9,7 +9,7 @@ export NuclearNorm
 
 Returns the function
 ```math
-f(X) = λ ∑_i σ_i(X),
+f(X) = \\|X\\|_* = λ ∑_i σ_i(X),
 ```
 where `λ` is a positive parameter and ``σ_i(X)`` is ``i``-th singular value of matrix ``X``.
 """
