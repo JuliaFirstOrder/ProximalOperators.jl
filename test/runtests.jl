@@ -47,27 +47,40 @@ function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
   return yf, fy
 end
 
-println("*********************************************************************")
-include("test_deep.jl")
-println("*********************************************************************")
-include("test_symmetricpacked.jl")
-println("*********************************************************************")
-include("test_cg.jl")
-println("*********************************************************************")
-include("test_quadratic.jl")
-println("*********************************************************************")
-include("test_calls.jl")
-println("*********************************************************************")
-include("test_calculus.jl")
-println("*********************************************************************")
-include("test_SeparableSum.jl")
-include("test_SlicedSeparableSum.jl")
-println("*********************************************************************")
-include("test_equivalences.jl")
-println("*********************************************************************")
-include("test_condition.jl")
-println("*********************************************************************")
-include("test_results.jl")
-println("*********************************************************************")
-include("test_demos.jl")
-println("*********************************************************************")
+@testset "ProximalOperators" begin
+
+@testset "Utilities" begin
+  include("test_deep.jl")
+  include("test_symmetricpacked.jl")
+  include("test_cg.jl")
+end
+
+@testset "Functions" begin
+  include("test_quadratic.jl")
+  include("test_calls.jl")
+end
+
+@testset "Calculus rules" begin
+  include("test_calculus.jl")
+  include("test_SeparableSum.jl")
+  include("test_SlicedSeparableSum.jl")
+  include("test_precompose.jl")
+end
+
+@testset "Equivalences" begin
+  include("test_equivalences.jl")
+end
+
+@testset "Conditions" begin
+  include("test_condition.jl")
+end
+
+@testset "Hardcoded" begin
+  include("test_results.jl")
+end
+
+@testset "Demos" begin
+  include("test_demos.jl")
+end
+
+end
