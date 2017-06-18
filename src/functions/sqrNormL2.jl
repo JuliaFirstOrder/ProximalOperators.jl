@@ -30,6 +30,7 @@ end
 
 is_convex(f::SqrNormL2) = true
 is_smooth(f::SqrNormL2) = true
+is_separable(f::SqrNormL2) = true
 is_quadratic(f::SqrNormL2) = true
 is_strongly_convex(f::SqrNormL2) = all(f.lambda .> 0)
 
@@ -68,6 +69,24 @@ function prox!{S <: AbstractArray, T <: RealOrComplex}(y::AbstractArray{T}, f::S
   return 0.5*wsqny
 end
 
+function prox!{S <: Real, T <: RealOrComplex}(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::AbstractArray)
+  sqny = 0.0
+  for k in eachindex(x)
+    y[k] = x[k]/(1+gamma[k]*f.lambda)
+    sqny += abs2(y[k])
+  end
+  return (f.lambda/2)*sqny
+end
+
+function prox!{S <: AbstractArray, T <: RealOrComplex}(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::AbstractArray)
+  wsqny = 0.0
+  for k in eachindex(x)
+    y[k] = x[k]/(1+gamma[k]*f.lambda[k])
+    wsqny += f.lambda[k]*abs2(y[k])
+  end
+  return 0.5*wsqny
+end
+
 function gradient!{T <: RealOrComplex}(grad::AbstractArray{T}, f::SqrNormL2, x::AbstractArray{T})
 	grad .= (*).(f.lambda, x)
 	return 0.5*f.lambda*deepvecnorm(x)^2
@@ -80,7 +99,7 @@ fun_expr{T <: AbstractArray}(f::SqrNormL2{T}) = "x ↦ (1/2)sum( λ_i (x_i)^2 )"
 fun_params{T <: Real}(f::SqrNormL2{T}) = "λ = $(f.lambda)"
 fun_params{T <: AbstractArray}(f::SqrNormL2{T}) = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
 
-function prox_naive{T <: RealOrComplex}(f::SqrNormL2, x::AbstractArray{T}, gamma::Real=1.0)
-  y = x./(1+f.lambda*gamma)
+function prox_naive{T <: RealOrComplex}(f::SqrNormL2, x::AbstractArray{T}, gamma=1.0)
+  y = x./(1+f.lambda.*gamma)
   return y, 0.5*real(vecdot(f.lambda.*y,y))
 end
