@@ -3,7 +3,9 @@
 export PrecomposeDiagonal
 
 """
-  PrecomposeDiagonal(f::ProximableFunction, a::AbstractArray, b::AbstractArray)
+**Precomposition with diagonal scaling/translation**
+
+    PrecomposeDiagonal(f, a, b)
 
 Returns the function `g(x) = f(a.*x + b)`. Function `f` must be separable, or `a` must be a scalar, for the `prox` of `g` to be computable.
 """
@@ -39,9 +41,9 @@ is_quadratic(f::PrecomposeDiagonal) = is_quadratic(f.f)
 is_generalized_quadratic(f::PrecomposeDiagonal) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::PrecomposeDiagonal) = is_strongly_convex(f.f)
 
-PrecomposeDiagonal{T <: ProximableFunction, S <: Real}(f::T, a::S=one(S), b::S=zero(S)) = PrecomposeDiagonal{T, S, S}(f, a, b)
+PrecomposeDiagonal{T <: ProximableFunction, S <: Real}(f::T, a::S=1.0, b::S=0.0) = PrecomposeDiagonal{T, S, S}(f, a, b)
 
-PrecomposeDiagonal{T <: ProximableFunction, R <: AbstractArray, S <: Real}(f::T, a::R, b::S=zero(S)) = PrecomposeDiagonal{T, R, S}(f, a, b)
+PrecomposeDiagonal{T <: ProximableFunction, R <: AbstractArray, S <: Real}(f::T, a::R, b::S=0.0) = PrecomposeDiagonal{T, R, S}(f, a, b)
 
 PrecomposeDiagonal{T <: ProximableFunction, R <: Union{AbstractArray, Real}, S <: AbstractArray}(f::T, a::R, b::S) = PrecomposeDiagonal{T, R, S}(f, a, b)
 
