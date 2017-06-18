@@ -31,7 +31,7 @@ is_set(f::IndBallL1) = true
 IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
 
 function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T})
-  if vecnorm(x,1) - f.r > 1e-14
+  if vecnorm(x,1) - f.r > 1e-12
     return +Inf
   end
   return 0.0
