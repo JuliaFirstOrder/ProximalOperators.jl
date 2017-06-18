@@ -37,6 +37,8 @@ Regularize
 
 ```@docs
 Postcompose
+Precompose
+PrecomposeDiagonal
 Tilt
 Translate
 ```

@@ -5,11 +5,15 @@ export Precompose
 """
 **Precomposition with linear mapping/translation**
 
-    Precompose(f, L, mu, b)
+    Precompose(f, L, μ, b)
 
-Returns the function `g(x) = f(L(x) + b)`. L is a linear mapping, implemented as an object having the `A_mul_B!` and `Ac_mul_B!` methods defined.
+Returns the function
+```math
+g(x) = f(Lx + b)
+```
+where ``f`` is a convex function and ``L`` is a linear mapping: this must satisfy ``LL^* = μI`` for ``μ ⩾ 0``. Furthermore, either ``f`` is separable or parameter `μ` is a scalar, for the `prox` of ``g`` to be computable.
 
-If L' indicates the adjoint mapping of L, then it must hold `L(L'(y)) = μ.*y` for `μ ⩾ 0`. Furthermore, either `f` is separable or `μ` is a scalar, for the `prox` of `g` to be computable.
+Parameter `L` defines ``L`` through the `A_mul_B!` and `Ac_mul_B!` methods. Therefore `L` can be an `AbstractMatrix` for example, but not necessarily.
 
 In this case, `prox` and `prox!` are computed according to Prop. 24.14 in Bauschke, Combettes "Convex Analisys and Monotone Operator Theory in Hilbert Spaces", 2nd edition, 2016. The same result is Prop. 23.32 in the 1st edition of the same book.
 """
