@@ -20,6 +20,7 @@ abstract type ProximableFunction end
 include("utilities/cg.jl")
 include("utilities/deep.jl")
 include("utilities/symmetricpacked.jl")
+include("utilities/uniformarrays.jl")
 
 # Basic functions
 
@@ -63,8 +64,8 @@ include("calculus/epicompose.jl")
 include("calculus/distL2.jl")
 include("calculus/moreauEnvelope.jl")
 include("calculus/postcompose.jl")
+include("calculus/precompose.jl")
 include("calculus/precomposeDiagonal.jl")
-include("calculus/precomposeGramDiagonal.jl")
 include("calculus/regularize.jl")
 include("calculus/separableSum.jl")
 include("calculus/slicedSeparableSum.jl")

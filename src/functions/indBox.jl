@@ -44,14 +44,9 @@ IndBox{T <: AbstractArray, S <: AbstractArray}(lb::T, ub::S) =
   size(lb) != size(ub) ? error("bounds must have the same dimensions, or at least one of them be scalar") :
   IndBox{T, S}(lb, ub)
 
-IndBox_lb{T <: Real, S}(f::IndBox{T, S}, i) = f.lb
-IndBox_lb{T <: AbstractArray, S}(f::IndBox{T, S}, i) = f.lb[i]
-IndBox_ub{T, S <: Real}(f::IndBox{T, S}, i) = f.ub
-IndBox_ub{T, S <: AbstractArray}(f::IndBox{T, S}, i) = f.ub[i]
-
 function (f::IndBox){R <: Real}(x::AbstractArray{R})
   for k in eachindex(x)
-    if x[k] < IndBox_lb(f,k) || x[k] > IndBox_ub(f,k)
+    if x[k] < get_kth_elem(f.lb, k) || x[k] > get_kth_elem(f.ub, k)
       return +Inf
     end
   end
@@ -60,10 +55,10 @@ end
 
 function prox!{R <: Real}(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=one(R))
   for k in eachindex(x)
-    if x[k] < IndBox_lb(f,k)
-      y[k] = IndBox_lb(f,k)
-    elseif x[k] > IndBox_ub(f,k)
-      y[k] = IndBox_ub(f,k)
+    if x[k] < get_kth_elem(f.lb, k)
+      y[k] = get_kth_elem(f.lb, k)
+    elseif x[k] > get_kth_elem(f.ub, k)
+      y[k] = get_kth_elem(f.ub, k)
     else
       y[k] = x[k]
     end
