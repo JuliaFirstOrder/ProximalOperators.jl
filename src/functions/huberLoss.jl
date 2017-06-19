@@ -62,10 +62,12 @@ function gradient!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss,
   normx = vecnorm(x)
   if normx <= f.rho
     y .= x
+    v = (f.mu/2)*normx^2
   else
     y .= (f.mu*f.rho)/normx .* x
+    v = f.rho*f.mu*(normx-f.rho/2)
   end
-  return 0.0
+  return v
 end
 
 fun_name(f::HuberLoss) = "Huber loss"

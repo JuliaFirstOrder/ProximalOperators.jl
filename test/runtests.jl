@@ -65,6 +65,7 @@ end
   include("test_SeparableSum.jl")
   include("test_SlicedSeparableSum.jl")
   include("test_precompose.jl")
+  include("test_moreauEnvelope.jl")
 end
 
 @testset "Equivalences" begin
