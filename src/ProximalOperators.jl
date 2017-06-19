@@ -60,7 +60,7 @@ include("functions/sumPositive.jl")
 # Calculus rules
 
 include("calculus/conjugate.jl")
-include("calculus/epicompose.jl")
+# include("calculus/epicompose.jl")
 include("calculus/distL2.jl")
 include("calculus/moreauEnvelope.jl")
 include("calculus/postcompose.jl")
