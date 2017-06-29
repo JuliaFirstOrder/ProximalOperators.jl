@@ -56,15 +56,16 @@ end
 end
 
 @testset "Functions" begin
-  include("test_quadratic.jl")
+  include("test_huberLoss.jl")
   include("test_leastSquares.jl")
+  include("test_quadratic.jl")
   include("test_calls.jl")
 end
 
 @testset "Calculus rules" begin
   include("test_calculus.jl")
-  include("test_SeparableSum.jl")
-  include("test_SlicedSeparableSum.jl")
+  include("test_separableSum.jl")
+  include("test_slicedSeparableSum.jl")
   include("test_precompose.jl")
   include("test_moreauEnvelope.jl")
 end

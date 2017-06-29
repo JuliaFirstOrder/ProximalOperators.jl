@@ -53,6 +53,14 @@ function (g::Precompose)(x::T) where {T <: Union{Tuple, AbstractArray}}
   return g.f(g.L*x .+ g.b)
 end
 
+function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::Precompose, x::AbstractArray{T})
+  res = g.L*x .+ g.b
+  gradres = similar(res)
+  v = gradient!(gradres, g.f, res)
+  Ac_mul_B!(y, g.L, gradres)
+  return v
+end
+
 function prox!(y::AbstractArray{C}, g::Precompose, x::AbstractArray{C}, gamma::R=one(R)) where {R <: Real, C <: Union{R, Complex{R}}}
   # See Prop. 24.14 in Bauschke, Combettes "Convex Analisys and Monotone Operator Theory in Hilbert Spaces", 2nd ed., 2016.
   # The same result is Prop. 23.32 in the 1st ed. of the same book.

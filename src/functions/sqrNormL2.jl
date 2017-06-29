@@ -50,6 +50,24 @@ function (f::SqrNormL2{S}){S <: AbstractArray, T <: RealOrComplex}(x::AbstractAr
   return 0.5*sqnorm
 end
 
+function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Real=1.0) where {S <: Real, T <: RealOrComplex}
+  sqnx = 0.0
+  for k in eachindex(x)
+    y[k] = f.lambda*x[k]
+    sqnx += abs2(x[k])
+  end
+  return (f.lambda/2)*sqnx
+end
+
+function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Real=1.0) where {S <: AbstractArray, T <: RealOrComplex}
+  sqnx = 0.0
+  for k in eachindex(x)
+    y[k] = f.lambda[k]*x[k]
+    sqnx += f.lambda[k]*abs2(x[k])
+  end
+  return 0.5*sqnx
+end
+
 function prox!{S <: Real, T <: RealOrComplex}(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Real=1.0)
   gl = gamma*f.lambda
   sqny = 0.0
@@ -85,11 +103,6 @@ function prox!{S <: AbstractArray, T <: RealOrComplex}(y::AbstractArray{T}, f::S
     wsqny += f.lambda[k]*abs2(y[k])
   end
   return 0.5*wsqny
-end
-
-function gradient!{T <: RealOrComplex}(grad::AbstractArray{T}, f::SqrNormL2, x::AbstractArray{T})
-	grad .= (*).(f.lambda, x)
-	return 0.5*f.lambda*deepvecnorm(x)^2
 end
 
 fun_name(f::SqrNormL2) = "weighted squared Euclidean norm"

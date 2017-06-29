@@ -43,6 +43,12 @@ function (g::Regularize){T <: RealOrComplex}(x::AbstractArray{T})
 	return g.f(x) + g.rho/2*vecnorm(x-g.a)^2
 end
 
+function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::Regularize, x::AbstractArray{T})
+  v = gradient!(y, g.f, x)
+  y .+= g.rho*(y-g.a)
+  return v + g.rho/2*vecnorm(y-g.a)^2
+end
+
 function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::Regularize, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)
   gr = g.rho*gamma
   gr2 = 1.0 ./ (1.0+gr)

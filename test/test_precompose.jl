@@ -115,22 +115,32 @@ g3 = Translate(SqrNormL2(diagA .* diagA), -b)
 x = randn(500)
 
 gx = 0.5*sum((diagA .* diagA) .* (x-b).^2)
+grad_gx = diagA.*diagA.*(x - b)
 
 @test abs(g1(x) - gx)/(1+abs(gx)) <= 1e-14
 @test abs(g2(x) - gx)/(1+abs(gx)) <= 1e-14
 @test abs(g3(x) - gx)/(1+abs(gx)) <= 1e-14
 
 call_test(g1, x)
-y1, gy1 = prox_test(g1, x, 1.0)
+grad_g1_x, g1_x = gradient(g1, x)
+@test abs(g1_x - gx) <= (1 + abs(gx))*1e-12
+@test norm(grad_gx - grad_g1_x, Inf) <= 1e-12
 
 call_test(g2, x)
-y2, gy2 = prox_test(g2, x, 1.0)
+grad_g2_x, g2_x = gradient(g2, x)
+@test abs(g2_x - gx) <= (1 + abs(gx))*1e-12
+@test norm(grad_gx - grad_g2_x, Inf) <= 1e-12
 
+y1, gy1 = prox_test(g1, x, 1.0)
+y2, gy2 = prox_test(g2, x, 1.0)
 @test abs(gy1 - gy2) <= (1 + abs(gy1))*1e-12
 @test vecnorm(y1 - y2) <= (1 + vecnorm(y1))*1e-12
 
 call_test(g3, x)
-y3, gy3 = prox_test(g3, x, 1.0)
+grad_g3_x, g3_x = gradient(g3, x)
+@test abs(g3_x - gx) <= (1 + abs(gx))*1e-12
+@test norm(grad_gx - grad_g3_x, Inf) <= 1e-12
 
+y3, gy3 = prox_test(g3, x, 1.0)
 @test abs(gy1 - gy3) <= (1 + abs(gy1))*1e-12
 @test vecnorm(y1 - y3) <= (1 + vecnorm(y1))*1e-12

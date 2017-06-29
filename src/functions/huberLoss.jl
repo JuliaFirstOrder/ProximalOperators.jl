@@ -43,6 +43,18 @@ function (f::HuberLoss){T <: Union{Real, Complex}}(x::AbstractArray{T})
   end
 end
 
+function gradient!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T})
+  normx = vecnorm(x)
+  if normx <= f.rho
+    y .= f.mu .* x
+    v = (f.mu/2)*normx^2
+  else
+    y .= (f.mu*f.rho)/normx .* x
+    v = f.rho*f.mu*(normx-f.rho/2)
+  end
+  return v
+end
+
 function prox!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}, gamma::Real=1.0)
   normx = vecnorm(x)
   mugam = f.mu*gamma
@@ -56,18 +68,6 @@ function prox!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss, x::
   else
     return f.rho*f.mu*(normy-f.rho/2)
   end
-end
-
-function gradient!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T})
-  normx = vecnorm(x)
-  if normx <= f.rho
-    y .= x
-    v = (f.mu/2)*normx^2
-  else
-    y .= (f.mu*f.rho)/normx .* x
-    v = f.rho*f.mu*(normx-f.rho/2)
-  end
-  return v
 end
 
 fun_name(f::HuberLoss) = "Huber loss"

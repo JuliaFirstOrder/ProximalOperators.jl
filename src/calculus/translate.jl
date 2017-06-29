@@ -32,6 +32,12 @@ function (g::Translate)(x::T) where {T <: Union{Tuple, AbstractArray}}
   return g.f(x .+ g.b)
 end
 
+function gradient!(y, g::Translate, x)
+  z = x .+ g.b
+  v = gradient!(y, g.f, z)
+  return v
+end
+
 function prox!(y, g::Translate, x, gamma=1.0)
   z = x .+ g.b
   v = prox!(y, g.f, z, gamma)

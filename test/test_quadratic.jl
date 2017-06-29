@@ -6,6 +6,9 @@ A = randn(n, k)
 Q = A*A'
 q = randn(n)
 f = Quadratic(Q, q)
+@test ProximalOperators.is_quadratic(f) == true
+@test ProximalOperators.is_generalized_quadratic(f) == true
+
 x = randn(n)
 
 grad_fx, fx = gradient(f, x)
@@ -17,6 +20,8 @@ prox_test(f, x)
 prox_test(f, x, 1.5)
 
 f = Quadratic(Q, q, true)
+@test ProximalOperators.is_quadratic(f) == true
+@test ProximalOperators.is_generalized_quadratic(f) == true
 
 call_test(f, x)
 prox_test(f, x)
@@ -26,6 +31,8 @@ prox_test(f, x, 2.1)
 
 Q = sparse(Q)
 f = Quadratic(Q, q)
+@test ProximalOperators.is_quadratic(f) == true
+@test ProximalOperators.is_generalized_quadratic(f) == true
 
 grad_fx, fx = gradient(f, x)
 @test abs(fx - 0.5*dot(x, Q*x) - dot(x, q)) <= 1e-12
@@ -36,6 +43,8 @@ prox_test(f, x)
 prox_test(f, x, 0.8)
 
 f = Quadratic(Q, q, true)
+@test ProximalOperators.is_quadratic(f) == true
+@test ProximalOperators.is_generalized_quadratic(f) == true
 
 call_test(f, x)
 prox_test(f, x)

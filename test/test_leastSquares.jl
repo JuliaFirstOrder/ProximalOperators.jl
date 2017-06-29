@@ -60,6 +60,10 @@ m, n = 30, 10
 A = randn(m, n)
 b = randn(m)
 f = LeastSquares(A, b)
+@test ProximalOperators.is_smooth(f) == true
+@test ProximalOperators.is_quadratic(f) == true
+@test ProximalOperators.is_generalized_quadratic(f) == true
+@test ProximalOperators.is_convex(f) == true
 x = randn(n)
 
 grad_fx, fx = gradient(f, x)
@@ -73,6 +77,10 @@ prox_test(f, x, 1.5)
 
 lam = 0.1 + rand()
 f = LeastSquares(A, b, lam)
+@test ProximalOperators.is_smooth(f) == true
+@test ProximalOperators.is_quadratic(f) == true
+@test ProximalOperators.is_generalized_quadratic(f) == true
+@test ProximalOperators.is_convex(f) == true
 
 grad_fx, fx = gradient(f, x)
 @test abs(fx - (lam/2)*norm(lsres)^2) <= 1e-12
@@ -88,6 +96,10 @@ m, n = 30, 10
 A = sprandn(m, n, 0.5)
 b = randn(m)
 f = LeastSquares(A, b)
+@test ProximalOperators.is_smooth(f) == true
+@test ProximalOperators.is_quadratic(f) == true
+@test ProximalOperators.is_generalized_quadratic(f) == true
+@test ProximalOperators.is_convex(f) == true
 x = randn(n)
 
 grad_fx, fx = gradient(f, x)
@@ -101,6 +113,10 @@ prox_test(f, x, 1.5)
 
 lam = 0.1 + rand()
 f = LeastSquares(A, b, lam)
+@test ProximalOperators.is_smooth(f) == true
+@test ProximalOperators.is_quadratic(f) == true
+@test ProximalOperators.is_generalized_quadratic(f) == true
+@test ProximalOperators.is_convex(f) == true
 
 grad_fx, fx = gradient(f, x)
 @test abs(fx - (lam/2)*norm(lsres)^2) <= 1e-12

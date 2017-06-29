@@ -55,18 +55,18 @@ function (g::PrecomposeDiagonal){T <: RealOrComplex}(x::AbstractArray{T})
   return g.f((g.a).*x .+ g.b)
 end
 
+function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T})
+  z = g.a .* x .+ g.b
+  v = gradient!(y, g.f, z)
+  y .*= g.a
+  return v
+end
+
 function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)
   z = g.a .* x .+ g.b
   v = prox!(y, g.f, z, (g.a .* g.a) .* gamma)
   y .-= g.b
   y ./= g.a
-  return v
-end
-
-function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T})
-  z = g.a .* x .+ g.b
-  v = gradient!(y, g.f, z)
-  y .*= g.a
   return v
 end
 

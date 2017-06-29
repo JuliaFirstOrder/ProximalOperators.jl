@@ -46,6 +46,12 @@ function (g::Postcompose){T <: RealOrComplex}(x::AbstractArray{T})
   return g.a*g.f(x) + g.b
 end
 
+function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T})
+  v = gradient!(y, g.f, x)
+  y .*= g.a
+  return g.a*v + g.b
+end
+
 function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)
   v = prox!(y, g.f, x, g.a*gamma)
   return g.a*v + g.b

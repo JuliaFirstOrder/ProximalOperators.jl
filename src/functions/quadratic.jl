@@ -27,6 +27,10 @@ type Quadratic{R <: Real, RC <: Union{R, Complex{R}}, M <: AbstractMatrix{RC}, V
   end
 end
 
+is_smooth(f::Quadratic) = true
+is_quadratic(f::Quadratic) = true
+is_prox_accurate(f::Quadratic) = !f.iter
+
 function Quadratic(Q::M, q::V, iter::Bool=false) where {R <: Real, RC <: Union{R, Complex{R}}, I <: Integer, M <: SparseMatrixCSC{RC, I}, V <: AbstractVector{RC}}
   Quadratic{R, RC, M, V, SparseArrays.CHOLMOD.Factor{RC}}(Q, q, iter)
 end
