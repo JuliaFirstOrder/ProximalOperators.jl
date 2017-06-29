@@ -23,16 +23,15 @@ immutable Precompose{T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R
   L::M
   mu::U
   b::V
-end
-
-function Precompose{T, R, C, U, V, M}(f::T, L::M, mu::U, b::V) where {T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{R, AbstractArray{R}}, V <: Union{C, AbstractArray{C}}, M}
-  if !is_convex(f)
-    error("f must be convex")
+  function Precompose{T, R, C, U, V, M}(f::T, L::M, mu::U, b::V) where {T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{R, AbstractArray{R}}, V <: Union{C, AbstractArray{C}}, M}
+    if !is_convex(f)
+      error("f must be convex")
+    end
+    if any(mu .<= 0.0)
+      error("elements of μ must be positive")
+    end
+    new(f, L, mu, b)
   end
-  if any(mu <= 0.0)
-    error("elements of μ must be positive")
-  end
-  new(f, L, mu, b)
 end
 
 is_prox_accurate(f::Precompose) = is_prox_accurate(f.f)

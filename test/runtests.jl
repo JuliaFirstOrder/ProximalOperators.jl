@@ -57,6 +57,7 @@ end
 
 @testset "Functions" begin
   include("test_quadratic.jl")
+  include("test_leastSquares.jl")
   include("test_calls.jl")
 end
 

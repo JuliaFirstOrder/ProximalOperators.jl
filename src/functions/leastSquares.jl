@@ -92,8 +92,8 @@ function prox!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,R,M,
 end
 
 function gradient!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,R,M,V,F}, x::AbstractArray{RC,1})
-  res = f.A*x - b
-  Ac_mul_B!(y, f.A, x)
+  res = f.A*x - f.b
+  Ac_mul_B!(y, f.A, res)
   y .*= f.lambda
   fy = (f.lambda/2)*dot(res, res)
 end
