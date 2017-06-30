@@ -50,7 +50,7 @@ function prox!{R, RC, M, V, F}(y::AbstractArray{RC}, f::Quadratic{R, RC, M, V, F
     end
     y .= f.fact\(x/gamma - f.q)
   else
-    cg!(y, f.Q + I/gamma, x/gamma - f.q)
+    cg!(y, f.Q, 1.0/gamma, x/gamma - f.q)
   end
   fy = 0.5*vecdot(y, f.Q*y) + vecdot(y, f.q)
   return fy
