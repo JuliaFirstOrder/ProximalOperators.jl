@@ -6,6 +6,12 @@ b = randn(m)
 f = LeastSquares(A, b)
 x = randn(n)
 
+predicates_test(f)
+
+@test ProximalOperators.is_smooth(f) == true
+@test ProximalOperators.is_quadratic(f) == true
+@test ProximalOperators.is_set(f) == false
+
 grad_fx, fx = gradient(f, x)
 lsres = A*x - b
 @test abs(fx - 0.5*norm(lsres)^2) <= 1e-12

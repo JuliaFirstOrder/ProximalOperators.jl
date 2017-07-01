@@ -32,7 +32,7 @@ is_prox_accurate(f::SqrDistL2) = is_prox_accurate(f.ind)
 is_convex(f::SqrDistL2) = true
 is_smooth(f::SqrDistL2) = true
 is_quadratic(f::SqrDistL2) = is_affine(f.ind)
-is_strongly_convex(f::SqrDistL2) = is_point(f.ind)
+is_strongly_convex(f::SqrDistL2) = is_singleton(f.ind)
 
 SqrDistL2{R <: Real, T <: ProximableFunction}(ind::T, lambda::R=1.0) = SqrDistL2{R, T}(ind, lambda)
 

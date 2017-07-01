@@ -1,5 +1,11 @@
 f = HuberLoss(1.5, 0.7)
 
+predicates_test(f)
+
+@test ProximalOperators.is_smooth(f) == true
+@test ProximalOperators.is_quadratic(f) == false
+@test ProximalOperators.is_set(f) == false
+
 x = randn(10)
 x = 1.6*x/vecnorm(x)
 

@@ -268,6 +268,8 @@ for i = 1:length(stuff)
     f = constr(params...)
     println(f)
 
+    predicates_test(f)
+
 ##### just call f
     fx = call_test(f, x)
 

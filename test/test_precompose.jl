@@ -9,6 +9,12 @@ Q, ~ = qr(A)
 
 g = Precompose(f, Q, 1.0)
 
+predicates_test(g)
+
+@test ProximalOperators.is_smooth(g) == false
+@test ProximalOperators.is_quadratic(g) == false
+@test ProximalOperators.is_set(g) == true
+
 x = randn(10)
 
 call_test(g, x)
