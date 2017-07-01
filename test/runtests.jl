@@ -81,6 +81,7 @@ end
   include("test_calculus.jl")
   include("test_moreauEnvelope.jl")
   include("test_precompose.jl")
+  include("test_postcompose.jl")
   include("test_regularize.jl")
   include("test_separableSum.jl")
   include("test_slicedSeparableSum.jl")

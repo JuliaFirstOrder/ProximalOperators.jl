@@ -55,8 +55,8 @@ stuff = [
 
   Dict( "constr" => IndBallL2,
         "wrong"  => ( (-rand(),), ),
-        "params" => ( (rand(),), (sqrt(20)) ),
-        "args"   => ( randn(10), randn(20), )
+        "params" => ( (rand(),), (sqrt(20),), (0.5,) ),
+        "args"   => ( randn(10), randn(20), 0.1*ones(10) )
       ),
 
   Dict( "constr" => IndBallRank,
