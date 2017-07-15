@@ -54,6 +54,7 @@ include("functions/normL21.jl")
 include("functions/normL0.jl")
 include("functions/nuclearNorm.jl")
 include("functions/quadratic.jl")
+include("functions/quadraticIterative.jl")
 include("functions/sqrNormL2.jl")
 include("functions/sumPositive.jl")
 

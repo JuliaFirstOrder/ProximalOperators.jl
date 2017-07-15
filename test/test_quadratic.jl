@@ -23,7 +23,7 @@ call_test(f, x)
 prox_test(f, x)
 prox_test(f, x, 1.5)
 
-f = Quadratic(Q, q, true)
+f = QuadraticIterative(Q, q)
 
 call_test(f, x)
 prox_test(f, x)
@@ -42,7 +42,7 @@ call_test(f, x)
 prox_test(f, x)
 prox_test(f, x, 0.8)
 
-f = Quadratic(Q, q, true)
+f = QuadraticIterative(Q, q)
 
 call_test(f, x)
 prox_test(f, x)

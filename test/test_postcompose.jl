@@ -10,9 +10,6 @@ x = 0.5*x/norm(x)
 gx = call_test(g, x)
 hx = call_test(h, x)
 
-println(gx)
-println(hx)
-
 @test abs(gx-hx)/(1+abs(gx)) <= 1e-12
 
 grad_gx, gx1 = gradient(g, x)
