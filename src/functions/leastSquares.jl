@@ -13,7 +13,7 @@ f(x) = \\tfrac{\\lambda}{2}\\|Ax - b\\|^2.
 ```
 """
 
-type LeastSquares{RC <: RealOrComplex, R <: Real, M <: AbstractArray{RC, 2}, V <: AbstractArray{RC, 1}, F <: Factorization} <: ProximableFunction
+type LeastSquares{R <: Real, RC <: Union{R, Complex{R}}, M <: AbstractArray{RC, 2}, V <: AbstractArray{RC, 1}, F <: Factorization} <: ProximableFunction
   A::M
   b::V
   Atb::V
@@ -21,7 +21,7 @@ type LeastSquares{RC <: RealOrComplex, R <: Real, M <: AbstractArray{RC, 2}, V <
   gamma::R
   S::M
   U::F
-  function LeastSquares{RC,R,M,V,F}(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}, F<:Factorization}
+  function LeastSquares{R, RC, M, V, F}(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}, F<:Factorization}
     if size(A, 1) != length(b)
       error("A and b have incompatible dimensions")
     end
@@ -36,46 +36,42 @@ type LeastSquares{RC <: RealOrComplex, R <: Real, M <: AbstractArray{RC, 2}, V <
   end
 end
 
-function LeastSquares(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, I<:Integer, M<:SparseMatrixCSC{RC,I}, V<:AbstractArray{RC,1}}
-  LeastSquares{RC,R,M,V,SparseArrays.CHOLMOD.Factor{RC}}(A,b,lambda)
+function LeastSquares(A::M, b::V, lambda::R=one(R)) where {R <: Real, RC <: Union{R, Complex{R}}, I <: Integer, M <: SparseMatrixCSC{RC, I}, V <: AbstractArray{RC, 1}}
+  LeastSquares{R, RC, M, V, SparseArrays.CHOLMOD.Factor{RC}}(A, b, lambda)
 end
 
-function LeastSquares(A::M, b::V, lambda::R) where {RC <: RealOrComplex, R<:Real, M<:DenseArray{RC,2}, V<:AbstractArray{RC,1}}
-  LeastSquares{RC,R,M,V,LinAlg.Cholesky{RC,Array{RC,2}}}(A,b,lambda)
+function LeastSquares(A::M, b::V, lambda::R=one(R)) where {R <: Real, RC <: Union{R, Complex{R}}, M <: DenseArray{RC, 2}, V <: AbstractArray{RC, 1}}
+  LeastSquares{R, RC, M, V, LinAlg.Cholesky{RC, Array{RC, 2}}}(A, b, lambda)
 end
 
-function LeastSquares(A::M, b::V, lambda::R) where {RC <: AbstractArray, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}}
+function LeastSquares(A::M, b::V, lambda::R=1.0) where {R <: Real, RC <: Union{R, Complex{R}}, M <: AbstractArray{RC, 2}, V <: AbstractArray{RC, 1}}
   warn("Could not infer type of Factorization for $M in LeastSquares, this type will be type-unstable")
-  LeastSquares{RC,R,M,V,Factorization}(A,b,lambda)
+  LeastSquares{R, RC, M, V, Factorization}(A, b, lambda)
 end
 
 is_convex(f::LeastSquares) = true
 is_smooth(f::LeastSquares) = true
 is_quadratic(f::LeastSquares) = true
 
-LeastSquares{RC <: RealOrComplex, R<:Real, M<:AbstractArray{RC,2}, V<:AbstractArray{RC,1}}(A::M, b::V, lambda::R=1.0) =
-  LeastSquares{RC,R,M,V}(A, b, lambda)
-
-function (f::LeastSquares{RC,R,M,V,F}){RC, R, M, V, F}(x::AbstractArray{RC,1})
+function (f::LeastSquares{R, RC, M, V, F})(x::AbstractArray{D, 1}) where {R, RC, M, V, F, D <: Union{R, Complex{R}}}
   return (f.lambda/2)*vecnorm(f.A*x - f.b, 2)^2
 end
 
-function factor_step!{RC, R, M, V ,F}(f::LeastSquares{RC,R,M,V,F}, gamma::R)
+function factor_step!(f::LeastSquares{R, RC, M, V, F}, gamma::R) where {R, RC, M, V, F}
   # factor step, two cases: (1) tall A, (2) fat A
   lamgam = f.lambda*gamma
   f.U = cholfact(f.S + I/lamgam)
   f.gamma = gamma
 end
 
-function factor_step!{RC <: RealOrComplex, R, I<:Integer, M<:SparseMatrixCSC{RC,I}, V, F}(f::LeastSquares{RC,R,M,V,F}, gamma::R)
+function factor_step!(f::LeastSquares{R, RC, M, V, F}, gamma::R) where {R, RC, I, M<:SparseMatrixCSC{RC, I}, V, F}
   # factor step, two cases: (1) tall A, (2) fat A
   lamgam = f.lambda*gamma
   f.U = cholfact(f.S; shift=1.0/lamgam)
   f.gamma = gamma
 end
 
-#R<:Real needed to avoid ambiguity
-function prox!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,R,M,V,F}, x::AbstractArray{RC,1}, gamma::R=one(R))
+function prox!(y::AbstractArray{D, 1}, f::LeastSquares{R, RC, M, V, F}, x::AbstractArray{D, 1}, gamma::R=one(R)) where {R, RC, M, V, F, D <: Union{R, Complex{R}}}
   # if gamma different from f.gamma then call factor_step!
   if gamma != f.gamma
     factor_step!(f, gamma)
@@ -91,7 +87,7 @@ function prox!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,R,M,
   return (f.lambda/2)*norm(f.A*y-f.b, 2)^2
 end
 
-function gradient!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,R,M,V,F}, x::AbstractArray{RC,1})
+function gradient!(y::AbstractArray{D, 1}, f::LeastSquares{R, RC, M, V, F}, x::AbstractArray{D, 1}) where {R, RC, M, V, F, D <: Union{R, Complex{R}}}
   res = f.A*x - f.b
   Ac_mul_B!(y, f.A, res)
   y .*= f.lambda
@@ -99,12 +95,10 @@ function gradient!{RC,R<:Real,M,V,F}(y::AbstractArray{RC,1}, f::LeastSquares{RC,
 end
 
 fun_name(f::LeastSquares) = "least-squares penalty"
-fun_dom{R <: Real}(f::LeastSquares{R}) = "AbstractArray{Real,1}"
-fun_dom{C <: Complex}(f::LeastSquares{C}) = "AbstractArray{Complex,1}"
 fun_expr(f::LeastSquares) = "x ↦ (λ/2)||A*x - b||^2"
 fun_params(f::LeastSquares) = string("λ = $(f.lambda), A = ", typeof(f.A), " of size ", size(f.A), ", b = ", typeof(f.b), " of size ", size(f.b))
 
-function prox_naive{R <: RealOrComplex}(f::LeastSquares, x::AbstractArray{R,1}, gamma::Real=1.0)
+function prox_naive(f::LeastSquares, x::AbstractArray, gamma=1.0)
   lamgam = f.lambda*gamma
   y = (f.A'*f.A + I/lamgam)\(f.Atb + x/lamgam)
   fy = (f.lambda/2)*norm(f.A*y-f.b)^2
