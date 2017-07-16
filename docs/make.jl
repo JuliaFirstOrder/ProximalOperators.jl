@@ -15,5 +15,7 @@ makedocs(
 )
 
 deploydocs(
-   repo   = "github.com/kul-forbes/ProximalOperators.jl.git"
+  repo   = "github.com/kul-forbes/ProximalOperators.jl.git",
+  julia  = "0.6",
+  osname = "osx"
 )
