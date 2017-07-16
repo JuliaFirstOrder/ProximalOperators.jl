@@ -73,8 +73,8 @@ function prox!(y::AbstractArray{C}, g::Precompose, x::AbstractArray{C}, gamma::R
   proxres = deepsimilar(res)
   v = prox!(proxres, g.f, res, g.mu.*gamma)
   proxres .-= res
+  proxres ./= g.mu
   Ac_mul_B!(y, g.L, proxres)
-  y ./= g.mu
   y .+= x
   return v
 end
@@ -82,7 +82,7 @@ end
 function prox_naive(g::Precompose, x::AbstractArray{C}, gamma::R=1.0) where {R <: Real, C <: Union{R, Complex{R}}}
   res = g.L*x + g.b
   proxres, v = prox_naive(g.f, res, g.mu .* gamma)
-  y = x + g.L'*(proxres - res)./g.mu
+  y = x + g.L'*((proxres - res)./g.mu)
   return y, v
 end
 

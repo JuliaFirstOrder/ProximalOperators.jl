@@ -137,16 +137,50 @@ grad_g2_x, g2_x = gradient(g2, x)
 @test abs(g2_x - gx) <= (1 + abs(gx))*1e-12
 @test norm(grad_gx - grad_g2_x, Inf) <= 1e-12
 
-y1, gy1 = prox_test(g1, x, 1.0)
-y2, gy2 = prox_test(g2, x, 1.0)
-@test abs(gy1 - gy2) <= (1 + abs(gy1))*1e-12
-@test vecnorm(y1 - y2) <= (1 + vecnorm(y1))*1e-12
-
 call_test(g3, x)
 grad_g3_x, g3_x = gradient(g3, x)
 @test abs(g3_x - gx) <= (1 + abs(gx))*1e-12
 @test norm(grad_gx - grad_g3_x, Inf) <= 1e-12
 
+y1, gy1 = prox_test(g1, x, 1.0)
+y2, gy2 = prox_test(g2, x, 1.0)
+@test abs(gy1 - gy2) <= (1 + abs(gy1))*1e-12
+@test vecnorm(y1 - y2) <= (1 + vecnorm(y1))*1e-12
+
 y3, gy3 = prox_test(g3, x, 1.0)
-@test abs(gy1 - gy3) <= (1 + abs(gy1))*1e-12
-@test vecnorm(y1 - y3) <= (1 + vecnorm(y1))*1e-12
+@test abs(gy2 - gy3) <= (1 + abs(gy2))*1e-12
+@test vecnorm(y2 - y3) <= (1 + vecnorm(y2))*1e-12
+
+# IndSOC composed with [I, I, I]
+
+f = IndSOC()
+A = [eye(3) eye(3) eye(3)]
+
+g = Precompose(f, A, 3.0)
+
+x = [0.4, 0.2, 0.4, 0.5, 0.3, 0.3, 0.6, 0.4, 0.2]
+
+@test g(x) == 0.0
+call_test(g, x)
+y, gy = prox_test(g, x, 1.0)
+
+x = [0.1, 0.2, 0.4, 0.2, 0.3, 0.3, 0.3, 0.4, 0.2]
+
+@test g(x) == Inf
+call_test(g, x)
+y, gy = prox_test(g, x, 1.0)
+
+# ElasticNet composed with [diag, diag, diag]
+
+f = ElasticNet()
+d = 1.0:10.0
+n = length(d)
+k = 3
+A = repmat(diagm(d), 1, k)
+
+g = Precompose(f, A, k*(Array(d).^2))
+
+x = randn(n*k)
+
+call_test(g, x)
+y, gy = prox_test(g, x, 1.0)
