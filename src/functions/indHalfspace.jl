@@ -1,9 +1,16 @@
 # indicator of a halfspace
 
-"""
-  IndHalfspace(a::Array{Real}, b::Real)
+export IndHalfspace
 
-Returns the function `g = ind{x : <a,x> ⩽ b}`.
+"""
+**Indicator of a halfspace**
+
+    IndHalfspace(a, b)
+
+For an array `a` and a scalar `b`, returns the indicator of set
+```math
+S = \\{x : \\langle a,x \\rangle \\leq b \\}.
+```
 """
 
 immutable IndHalfspace{R <: Real, T <: AbstractVector{R}} <: ProximableFunction

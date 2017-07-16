@@ -1,9 +1,20 @@
 # Huber loss function
 
-"""
-  HuberLoss(rho::Real=1.0, mu::Real=1.0)
+export HuberLoss
 
-Returns the function `g(x) = (mu/2)||x||² if ||x|| ⩽ rho, and rho*mu*(||x||-rho/2) otherwise`.
+"""
+**Huber loss**
+
+    HuberLoss(ρ=1.0, μ=1.0)
+
+Returns the function
+```math
+f(x) = \\begin\{cases\}
+  \\tfrac{μ}{2}\\|x\\|^2 & \\text{if}\\ \\|x\\| ⩽ ρ \\\\
+  ρμ(\\|x\\| - \\tfrac{ρ}{2}) & \\text{otherwise},
+\\end\{cases\}
+```
+where `ρ` and `μ` are positive parameters.
 """
 
 immutable HuberLoss{R <: Real} <: ProximableFunction
@@ -19,6 +30,7 @@ immutable HuberLoss{R <: Real} <: ProximableFunction
 end
 
 is_convex(f::HuberLoss) = true
+is_smooth(f::HuberLoss) = true
 
 HuberLoss{R <: Real}(rho::R=1.0, mu::R=1.0) = HuberLoss{R}(rho, mu)
 
@@ -29,6 +41,18 @@ function (f::HuberLoss){T <: Union{Real, Complex}}(x::AbstractArray{T})
   else
     return f.rho*f.mu*(normx-f.rho/2)
   end
+end
+
+function gradient!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T})
+  normx = vecnorm(x)
+  if normx <= f.rho
+    y .= f.mu .* x
+    v = (f.mu/2)*normx^2
+  else
+    y .= (f.mu*f.rho)/normx .* x
+    v = f.rho*f.mu*(normx-f.rho/2)
+  end
+  return v
 end
 
 function prox!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}, gamma::Real=1.0)

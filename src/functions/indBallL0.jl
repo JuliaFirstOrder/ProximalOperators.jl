@@ -1,9 +1,17 @@
 # indicator of the L0 norm ball with given (integer) radius
 
-"""
-  IndBallL0(r::Int=1)
+export IndBallL0
 
-Returns the function `g = ind{x : countnz(x) ⩽ r}`, for an integer parameter `r > 0`.
+"""
+**Indicator of a ``L_0`` pseudo-norm ball**
+
+    IndBallL0(r=1)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : \\mathrm{nnz}(x) \\leq r \\}.
+```
+Parameter `r` must be a positive integer.
 """
 
 immutable IndBallL0{I <: Integer} <: ProximableFunction

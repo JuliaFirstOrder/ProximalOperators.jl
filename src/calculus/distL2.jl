@@ -1,4 +1,18 @@
 # Euclidean distance from a set
+
+export DistL2
+
+"""
+**Distance from a convex set**
+
+    DistL2(ind_S)
+
+Given `ind_S` the indicator function of a convex set ``S``, and an optional positive parameter `λ`, returns the (weighted) Euclidean distance from ``S``, that is function
+```math
+g(x) = \\mathrm{dist}_S(x) = \\min \\{ \\|y - x\\| : y \\in S \\}.
+```
+"""
+
 immutable DistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R

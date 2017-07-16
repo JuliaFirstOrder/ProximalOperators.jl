@@ -12,6 +12,10 @@ deeplength(x::Tuple) = sum(deeplength.(x))
 
 deeplength(x::AbstractArray) = length(x)
 
+deepsize(x::Tuple) = map(deepsize, x)
+
+deepsize(x::AbstractArray) = size(x)
+
 deepvecdot{T <: Tuple}(x::T, y::T) = sum(deepvecdot.(x,y))
 
 deepvecdot{R <: Number}(x::AbstractArray{R}, y::AbstractArray{R}) = vecdot(x, y)

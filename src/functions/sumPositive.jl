@@ -1,9 +1,16 @@
 # Sum of the positive components
 
-"""
-  SumPositive()
+export SumPositive
 
-Returns the function `g(x) = sum(max(0, x))`.
+"""
+**Sum of the positive coefficients**
+
+    SumPositive()
+
+Returns the function
+```math
+f(x) = ∑_i \\max\\{0, x_i\\}.
+```
 """
 
 immutable SumPositive <: ProximableFunction end

@@ -1,5 +1,25 @@
 # Separable sum, using slices of an array as variables
 
+export SlicedSeparableSum
+
+"""
+**Sliced separable sum of functions**
+
+    SlicedSeparableSum((f₁,…,fₖ), (J₁,…,Jₖ))
+
+Returns the function
+```math
+g(x) = ∑_\{i=1\}^k f_i(x_{J_i}).
+```
+
+    SlicedSeparableSum(f, (J₁,…,Jₖ))
+
+Analogous to the previous one, but applies the same function `f` to all slices of the variable `x`:
+```math
+g(x) = ∑_\{i=1\}^k f(x_{J_i}).
+```
+"""
+
 immutable SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N} <: ProximableFunction
   fs::S    # Tuple, where each element is a Vector with elements of the same type; the functions to prox on
   # Example: S = Tuple{Array{ProximalOperators.NormL1{Float64},1}, Array{ProximalOperators.NormL2{Float64},1}}

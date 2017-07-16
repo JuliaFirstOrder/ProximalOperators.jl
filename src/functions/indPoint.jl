@@ -1,5 +1,19 @@
 # indicator of a point
 
+export IndPoint
+
+"""
+**Indicator of a singleton**
+
+    IndPoint(p=0.0)
+
+Returns the indicator of the set
+```math
+C = \\{p \\}.
+```
+Parameter `p` can be a scalar, in which case the unique element of `S` has uniform coefficients.
+"""
+
 immutable IndPoint{T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}} <: ProximableFunction
   p::T
   function IndPoint{T}(p::T) where {T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}}
@@ -9,14 +23,9 @@ end
 
 is_separable(f::IndPoint) = true
 is_convex(f::IndPoint) = true
+is_singleton(f::IndPoint) = true
 is_cone(f::IndPoint) = norm(f.p) == 0
-
-"""
-  IndPoint(p=0.0)
-
-Returns the function `g = ind{x = p}`. Parameter `p` can be
-either a scalar or an array of the same dimension as the function argument.
-"""
+is_affine(f::IndPoint) = true
 
 IndPoint{T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}}(p::T=0.0) = IndPoint{T}(p)
 

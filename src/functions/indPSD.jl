@@ -1,11 +1,18 @@
 # indicator of a PSD
 
-"""
-  IndPSD()
+export IndPSD
 
-Returns the function `g = ind{A : A ⪰ 0}`, i.e. the indicator of the positive semidefinite cone.
-The argument to the function can be either a Symmetric or Hermitian object.
-From Julia 0.5, the argument can also be an AbstractVector{Float64} holding a symmetric matrix in (lower triangular) packed storage.
+"""
+**Indicator of the set of positive semi-definite cone**
+
+    IndPSD()
+
+Returns the indicator of the set
+```math
+C = \\{ X : X \\succeq 0 \\}.
+```
+The argument to the function can be either a `Symmetric` or `Hermitian` object,
+or an object of type `AbstractVector{Float64}` holding a symmetric matrix in (lower triangular) packed storage.
 """
 
 immutable IndPSD <: ProximableFunction end

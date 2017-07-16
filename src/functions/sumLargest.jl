@@ -1,5 +1,7 @@
 # Sum of the largest k components
 
+# export SumLargest
+
 """
   SumLargest(k::Integer=1, λ::Real=1.0)
 

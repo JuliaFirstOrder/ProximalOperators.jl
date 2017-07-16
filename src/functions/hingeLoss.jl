@@ -1,9 +1,17 @@
 # Hinge loss function
 
-"""
-  HingeLoss(b::Array{Real}, mu::Real=1.0)
+export HingeLoss
 
-Returns the function `g(x) = mu * sum(max(0, 1 - b_i * x_i), i=1,...,n )`.
+"""
+**Hinge loss**
+
+  HingeLoss(b, μ=1.0)
+
+Returns the function
+```math
+f(x) = μ⋅∑_i \\max\\{0, 1 - b_i * x_i\\},
+```
+where `b` is an array and `μ` is a positive parameter.
 """
 
 HingeLoss{T <: AbstractArray, R <: Real}(b::T, mu::R=1.0) = Postcompose(PrecomposeDiagonal(SumPositive(), -b, 1.0), mu)

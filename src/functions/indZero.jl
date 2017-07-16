@@ -1,17 +1,22 @@
 # indicator of the zero cone
 
-"""
-  IndZero()
+export IndZero
 
-Returns the indicator function of the zero point, or "zero cone", i.e.,
-  `g(x) = 0 if x = 0, +∞ otherwise`
+"""
+**Indicator of the zero cone**
+
+    IndZero()
+
+Returns the indicator function of the set containing the origin, the "zero cone".
 """
 
 immutable IndZero <: ProximableFunction end
 
 is_separable(f::IndZero) = true
 is_convex(f::IndZero) = true
+is_singleton(f::IndZero) = true
 is_cone(f::IndZero) = true
+is_affine(f::IndZero) = true
 
 function (f::IndZero){T <: RealOrComplex}(x::AbstractArray{T})
   for k in eachindex(x)

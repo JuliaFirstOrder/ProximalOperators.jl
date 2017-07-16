@@ -1,4 +1,4 @@
-# ProximalOperators.jl - library of nonsmooth functions and associated proximal mappings
+# ProximalOperators.jl - library of commonly used functions in optimization, and associated proximal mappings and gradients
 
 __precompile__()
 
@@ -7,59 +7,24 @@ module ProximalOperators
 const RealOrComplex{T<:Real} = Union{T, Complex{T}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
 
-export prox, prox!
-
 export ProximableFunction
+export prox, prox!
+export gradient!
 
-export IndAffine, IndHalfspace,
-       IndBallLinf, IndBallL0, IndBallL1, IndBallL2, IndBallRank,
-       IndBox, IndNonnegative, IndNonpositive,
-       IndExpPrimal, IndExpDual, IndPSD, IndSOC, IndRotatedSOC,
-       IndFree,
-       IndPoint, IndZero,
-       IndSimplex,
-       IndSphereL2, IndBinary,
-       SumPositive, HingeLoss, HuberLoss,
-       LogBarrier,
-       LeastSquares,
-       Maximum,
-       NormL0, NormL1, NormL2, NormL21, NormLinf, NuclearNorm, SqrNormL2, ElasticNet,
-       FirmThreshold,
-       DistL2, SqrDistL2,
-       Zero
-
-export Conjugate,
-       Postcompose,
-       PrecomposeDiagonal,
-#        PrecomposeGramDiagonal,
-       SlicedSeparableSum,
-       SeparableSum,
-       Tilt,
-       Regularize
+import Base: gradient
 
 abstract type ProximableFunction end
 
+# Utilities
+
+include("utilities/cg.jl")
 include("utilities/deep.jl")
 include("utilities/symmetricpacked.jl")
+include("utilities/uniformarrays.jl")
 
-include("calculus/conjugate.jl")
-include("calculus/postcompose.jl")
-include("calculus/precomposeDiagonal.jl")
-# include("calculus/precomposeGramDiagonal.jl")
-include("calculus/separableSum.jl")
-include("calculus/slicedSeparableSum.jl")
-include("calculus/tilt.jl")
-include("calculus/regularize.jl")
+# Basic functions
 
-include("functions/distL2.jl")
 include("functions/elasticNet.jl")
-include("functions/firmThreshold.jl")
-include("functions/logBarrier.jl")
-include("functions/normL2.jl")
-include("functions/normL1.jl")
-include("functions/normL21.jl")
-include("functions/normL0.jl")
-include("functions/nuclearNorm.jl")
 include("functions/hingeLoss.jl")
 include("functions/huberLoss.jl")
 include("functions/indAffine.jl")
@@ -69,24 +34,51 @@ include("functions/indBallL2.jl")
 include("functions/indBallRank.jl")
 include("functions/indBinary.jl")
 include("functions/indBox.jl")
+include("functions/indFree.jl")
+include("functions/indHalfspace.jl")
 include("functions/indNonnegative.jl")
 include("functions/indNonpositive.jl")
-include("functions/indZero.jl")
-include("functions/indExp.jl")
-include("functions/indFree.jl")
 include("functions/indPoint.jl")
 include("functions/indPSD.jl")
 include("functions/indSimplex.jl")
 include("functions/indSOC.jl")
 include("functions/indSphereL2.jl")
-include("functions/indHalfspace.jl")
-include("functions/sqrDistL2.jl")
-include("functions/sqrNormL2.jl")
-include("functions/sumLargest.jl")
-include("functions/sumPositive.jl")
-include("functions/maximum.jl")
-include("functions/normLinf.jl")
+include("functions/indZero.jl")
 include("functions/leastSquares.jl")
+include("functions/linear.jl")
+include("functions/logBarrier.jl")
+include("functions/maximum.jl")
+include("functions/normL2.jl")
+include("functions/normL1.jl")
+include("functions/normL21.jl")
+include("functions/normL0.jl")
+include("functions/nuclearNorm.jl")
+include("functions/quadratic.jl")
+include("functions/quadraticIterative.jl")
+include("functions/sqrNormL2.jl")
+include("functions/sumPositive.jl")
+
+# Calculus rules
+
+include("calculus/conjugate.jl")
+# include("calculus/epicompose.jl")
+include("calculus/distL2.jl")
+include("calculus/moreauEnvelope.jl")
+include("calculus/postcompose.jl")
+include("calculus/precompose.jl")
+include("calculus/precomposeDiagonal.jl")
+include("calculus/regularize.jl")
+include("calculus/separableSum.jl")
+include("calculus/slicedSeparableSum.jl")
+include("calculus/sqrDistL2.jl")
+include("calculus/tilt.jl")
+include("calculus/translate.jl")
+
+# Functions obtain from basic + calculus
+
+include("functions/indExp.jl")
+include("functions/sumLargest.jl")
+include("functions/normLinf.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
   println(io, "description : ", fun_name(f))
@@ -103,38 +95,69 @@ fun_params(f) = "n/a"
 is_prox_accurate(f::ProximableFunction) = true
 is_separable(f::ProximableFunction) = false
 is_convex(f::ProximableFunction) = false
-is_set(f::ProximableFunction) = is_cone(f)
+is_singleton(f::ProximableFunction) = false
 is_cone(f::ProximableFunction) = false
+is_affine(f::ProximableFunction) = is_singleton(f)
+is_set(f::ProximableFunction) = is_cone(f) || is_affine(f)
+is_smooth(f::ProximableFunction) = false
+is_quadratic(f::ProximableFunction) = false
+is_generalized_quadratic(f::ProximableFunction) = is_quadratic(f) || is_affine(f)
+is_strongly_convex(f::ProximableFunction) = false
 
 """
-  prox(f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
+**Proximal mapping**
 
-Computes the proximal point of `x` with respect to function `f`
-and parameter `γ > 0`, that is
+    prox(f, x, γ=1.0)
 
-  y = argmin_z { f(z) + 1/(2γ)||z-x||² }
-
-and returns `y` and `f(y)`.
+Computes
+```math
+y = \\mathrm{prox}_{\\gamma f}(x) = \\arg\\min_z \\left\\{ f(z) + \\tfrac{1}{2\\gamma}\\|z-x\\|^2 \\right\\}.
+```
+The resulting point ``y`` is returned as first output, and ``f(y)`` as second output.
 """
 
-function prox(f::ProximableFunction, x::AbstractArray, gamma::Union{Real, AbstractArray}=1.0)
-  y = similar(x)
+function prox(f::ProximableFunction, x, gamma=1.0)
+  y = deepsimilar(x)
   fy = prox!(y, f, x, gamma)
   return y, fy
 end
 
 """
-  prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, γ::Real=1.0)
+**Proximal mapping (in-place)**
 
-Computes the proximal point of `x` with respect to function `f`
-and parameter `γ > 0`, and writes the result in `y`. Returns `f(y)`.
+    prox!(y, f, x, γ=1.0)
+
+Computes
+```math
+y = \\mathrm{prox}_{\\gamma f}(x) = \\arg\\min_z \\left\\{ f(z) + \\tfrac{1}{2\\gamma}\\|z-x\\|^2 \\right\\}.
+```
+The resulting point ``y`` is written to the (pre-allocated) array `y`, which must have the same shape/size as `x`, and the value the proximal point of ``x`` with respect to function ``f(y)`` is returned.
 """
 
-function prox!(y::AbstractArray, f::ProximableFunction, x::AbstractArray, gamma::Union{Real, AbstractArray}=1.0)
-  throw(MethodException(
-    "prox! is not implemented for y::", typeof(y), ", f::", typeof(f),
-    ", x::", typeof(x), ", gamma::", typeof(gamma)
-  ))
+prox!
+
+"""
+**Gradient mapping**
+
+    gradient(f, x)
+
+For a differentiable function ``f``, returns ``\\nabla f(x)`` as first output, and ``f(x)`` as second output.
+"""
+
+function gradient(f::ProximableFunction, x)
+	y = deepsimilar(x)
+	fx = gradient!(y, f, x)
+	return y, fx
 end
+
+"""
+**Gradient mapping (in-place)**
+
+    gradient!(y, f, x)
+
+For a differentiable function ``f``, writes ``\\nabla f(x)`` to `y`, which must be pre-allocated and have the same shape/size as `x`, and returns ``f(x)`` as output.
+"""
+
+gradient!
 
 end

@@ -1,17 +1,23 @@
 # indicator of an affine set
 
+export IndAffine
+
 """
-  IndAffine(A::Array{Real,2}, b::Array{Real,1})
-  IndAffine(A::SparseMatrixCSC, b::AbstractArray{Real,1})
+**Indicator of an affine subspace**
 
-Returns the function `g = ind{x : Ax = b}`.
+    IndAffine(A, b)
 
-  IndAffine(A::Array{Real,1}, b::Real)
-
-Returns the function `g = ind{x : dot(a,x) = b}`.
+If `A` is a matrix (dense or sparse) and `b` is a vector, returns the indicator function of the set
+```math
+S = \\{x : Ax = b\\}.
+```
+If `A` is a vector and `b` is a scalar, returns the indicator function of the set
+```math
+S = \\{x : \\langle A, x \\rangle = b\\}.
+```
 """
 
-immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}, F} <: ProximableFunction
+immutable IndAffine{T <: RealOrComplex, M <: AbstractArray{T, 2}, V <: AbstractArray{T, 1}, F} <: ProximableFunction
   A::M
   b::V
   R::F
@@ -32,13 +38,17 @@ immutable IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{
   end
 end
 
-IndAffine{T <: RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}}(A::M, b::V) =
-  IndAffine{T,M,V,M}(A, b)
+is_affine(f::IndAffine) = true
+is_cone(f::IndAffine) = norm(f.b) == 0.0
+is_generalized_quadratic(f::IndAffine) = true
 
-IndAffine{T<:RealOrComplex, M<:SparseMatrixCSC, V<:AbstractArray{T,1}}(A::M, b::V) =
-  IndAffine{T,M,V,SparseArrays.SPQR.Factorization{T}}(A, b)
+IndAffine{T <: RealOrComplex, M <: AbstractArray{T, 2}, V <: AbstractArray{T, 1}}(A::M, b::V) =
+  IndAffine{T, M, V, M}(A, b)
 
-IndAffine{T<:RealOrComplex,V<:AbstractArray{T,1}}(a::V, b::T) =
+IndAffine{T <: RealOrComplex, M <: SparseMatrixCSC, V <: AbstractArray{T, 1}}(A::M, b::V) =
+  IndAffine{T, M, V, SparseArrays.SPQR.Factorization{T}}(A, b)
+
+IndAffine{T <: RealOrComplex, V <: AbstractArray{T, 1}}(a::V, b::T) =
   IndAffine(reshape(a,1,:), [b])
 
 function (f::IndAffine){R<:Real, T <: RealOrComplex{R}}(x::AbstractArray{T,1})

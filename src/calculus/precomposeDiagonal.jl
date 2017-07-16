@@ -1,9 +1,17 @@
 # Precompose with diagonal scaling and translation
 
-"""
-  PrecomposeDiagonal(f::ProximableFunction, a::AbstractArray, b::AbstractArray)
+export PrecomposeDiagonal
 
-Returns the function `g(x) = f(a.*x + b)`. Function `f` must be separable, or `a` must be a scalar, for the `prox` of `g` to be computable.
+"""
+**Precomposition with diagonal scaling/translation**
+
+    PrecomposeDiagonal(f, a, b)
+
+Returns the function
+```math
+g(x) = f(\\mathrm{diag}(a)x + b)
+```
+where ``f`` is a convex function. Furthermore, ``f`` must be separable, or `a` must be a scalar, for the `prox` of ``g`` to be computable. Parametes `a` and `b` can be arrays of multiple dimensions, according to the shape/size of the input `x` that will be provided to the function: the way the above expression for ``g`` should be thought of, is `g(x) = f(a.*x + b)`.
 """
 
 immutable PrecomposeDiagonal{T <: ProximableFunction, R <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
@@ -29,16 +37,29 @@ is_separable(f::PrecomposeDiagonal) = is_separable(f.f)
 is_prox_accurate(f::PrecomposeDiagonal) = is_prox_accurate(f.f)
 is_convex(f::PrecomposeDiagonal) = is_convex(f.f)
 is_set(f::PrecomposeDiagonal) = is_set(f.f)
+is_singleton(f::PrecomposeDiagonal) = is_singleton(f.f)
 is_cone(f::PrecomposeDiagonal) = is_cone(f.f)
+is_affine(f::PrecomposeDiagonal) = is_affine(f.f)
+is_smooth(f::PrecomposeDiagonal) = is_smooth(f.f)
+is_quadratic(f::PrecomposeDiagonal) = is_quadratic(f.f)
+is_generalized_quadratic(f::PrecomposeDiagonal) = is_generalized_quadratic(f.f)
+is_strongly_convex(f::PrecomposeDiagonal) = is_strongly_convex(f.f)
 
-PrecomposeDiagonal{T <: ProximableFunction, S <: Real}(f::T, a::S=one(S), b::S=zero(S)) = PrecomposeDiagonal{T, S, S}(f, a, b)
+PrecomposeDiagonal{T <: ProximableFunction, S <: Real}(f::T, a::S=1.0, b::S=0.0) = PrecomposeDiagonal{T, S, S}(f, a, b)
 
-PrecomposeDiagonal{T <: ProximableFunction, R <: AbstractArray, S <: Real}(f::T, a::R, b::S=zero(S)) = PrecomposeDiagonal{T, R, S}(f, a, b)
+PrecomposeDiagonal{T <: ProximableFunction, R <: AbstractArray, S <: Real}(f::T, a::R, b::S=0.0) = PrecomposeDiagonal{T, R, S}(f, a, b)
 
 PrecomposeDiagonal{T <: ProximableFunction, R <: Union{AbstractArray, Real}, S <: AbstractArray}(f::T, a::R, b::S) = PrecomposeDiagonal{T, R, S}(f, a, b)
 
 function (g::PrecomposeDiagonal){T <: RealOrComplex}(x::AbstractArray{T})
   return g.f((g.a).*x .+ g.b)
+end
+
+function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T})
+  z = g.a .* x .+ g.b
+  v = gradient!(y, g.f, z)
+  y .*= g.a
+  return v
 end
 
 function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)

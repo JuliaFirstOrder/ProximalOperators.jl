@@ -10,7 +10,6 @@ function call_test(f, x)
   print("* call        : ");
   try
     @time fx = f(x)
-    # @test typeof(fx) == eltype(real(x))
     return fx
   catch e
     if isa(e, MethodError)
@@ -20,13 +19,12 @@ function call_test(f, x)
   end
 end
 
-# measures time of the three possible calls to prox and prox!
+# measures time of the calls to prox, prox! and prox_naive
 # then tests equality of the results and returns them if they agree
 function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
   print("* prox        : "); @time yf, fy = prox(f, x, gamma)
   print("* prox!       : "); yf_prealloc = deepcopy(x); @time fy_prealloc = prox!(yf_prealloc, f, x, gamma)
   print("* prox_naive  : "); @time y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gamma)
-  # @test typeof(fy) == eltype(real(x))
   @test ProximalOperators.deepmaxabs(yf_prealloc .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
   @test ProximalOperators.deepmaxabs(y_naive .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
   if ProximalOperators.is_cone(f)
@@ -47,23 +45,62 @@ function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
   return yf, fy
 end
 
-println("*********************************************************************")
-include("test_deep.jl")
-println("*********************************************************************")
-include("test_symmetricpacked.jl")
-println("*********************************************************************")
-include("test_calls.jl")
-println("*********************************************************************")
-include("test_calculus.jl")
-println("*********************************************************************")
-include("test_SeparableSum.jl")
-include("test_SlicedSeparableSum.jl")
-println("*********************************************************************")
-include("test_equivalences.jl")
-println("*********************************************************************")
-include("test_condition.jl")
-println("*********************************************************************")
-include("test_results.jl")
-println("*********************************************************************")
-include("test_demos.jl")
-println("*********************************************************************")
+# test predicates consistency
+# i.e., that more specific properties imply less specific ones
+# e.g., the indicator of a subspace is the indicator of a set in particular
+function predicates_test(f)
+  # is_quadratic => is_generalized_quadratic
+  @test !ProximalOperators.is_quadratic(f) ||
+    ProximalOperators.is_generalized_quadratic(f)
+  # is_(singleton || cone || affine) => is_set
+  @test !(ProximalOperators.is_singleton(f) ||
+    ProximalOperators.is_cone(f) ||
+    ProximalOperators.is_affine(f)) ||
+    ProximalOperators.is_set(f)
+  # is_strongly_convex => is_convex
+  @test !ProximalOperators.is_strongly_convex(f) ||
+    ProximalOperators.is_convex(f)
+end
+
+@testset "ProximalOperators" begin
+
+@testset "Utilities" begin
+  include("test_deep.jl")
+  include("test_symmetricpacked.jl")
+  include("test_cg.jl")
+end
+
+@testset "Functions" begin
+  include("test_huberLoss.jl")
+  include("test_leastSquares.jl")
+  include("test_quadratic.jl")
+  include("test_calls.jl")
+end
+
+@testset "Calculus rules" begin
+  include("test_calculus.jl")
+  include("test_moreauEnvelope.jl")
+  include("test_precompose.jl")
+  include("test_postcompose.jl")
+  include("test_regularize.jl")
+  include("test_separableSum.jl")
+  include("test_slicedSeparableSum.jl")
+end
+
+@testset "Equivalences" begin
+  include("test_equivalences.jl")
+end
+
+@testset "Conditions" begin
+  include("test_condition.jl")
+end
+
+@testset "Hardcoded" begin
+  include("test_results.jl")
+end
+
+@testset "Demos" begin
+  include("test_demos.jl")
+end
+
+end

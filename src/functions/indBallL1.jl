@@ -1,9 +1,17 @@
 # indicator of the L1 norm ball with given radius
 
-"""
-  IndBallL1(r::Real=1.0)
+export IndBallL1
 
-Returns the function `g = ind{x : ‖x‖_1 ⩽ r}`, for a real parameter `r > 0`.
+"""
+**Indicator of a ``L_1`` norm ball**
+
+    IndBallL1(r=1.0)
+
+Returns the indicator function of the set
+```math
+S = \\left\\{ x : ∑_i |x_i| \\leq r \\right\\}.
+```
+Parameter `r` must be positive.
 """
 
 immutable IndBallL1{R <: Real} <: ProximableFunction
@@ -23,7 +31,7 @@ is_set(f::IndBallL1) = true
 IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
 
 function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T})
-  if vecnorm(x,1) - f.r > 1e-14
+  if vecnorm(x,1) - f.r > 1e-12
     return +Inf
   end
   return 0.0

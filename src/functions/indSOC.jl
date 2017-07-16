@@ -1,9 +1,16 @@
 # indicator of second-order cones
 
-"""
-  IndSOC()
+export IndSOC, IndRotatedSOC
 
-Returns the indicator of the second-order cone (ice-cream cone) of R^n.
+"""
+**Indicator of the second-order cone**
+
+    IndSOC()
+
+Returns the indicator of the second-order cone (also known as ice-cream cone or Lorentz cone), that is
+```math
+C = \\left\\{ (t, x) : \\|x\\| \\leq t \\right\\}.
+```
 """
 
 immutable IndSOC <: ProximableFunction end
@@ -19,7 +26,7 @@ end
 is_convex(f::IndSOC) = true
 is_set(f::IndSOC) = true
 
-function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndSOC, x::AbstractArray{T,1}, gamma::T=one(T))
   nx = norm(x[2:end])
   t = x[1]
   if t <= -nx
@@ -39,7 +46,7 @@ fun_dom(f::IndSOC) = "AbstractArray{Real,1}"
 fun_expr(f::IndSOC) = "x ↦ 0 if x[1] >= ||x[2:end]||, +∞ otherwise"
 fun_params(f::IndSOC) = "none"
 
-function prox_naive{T <: Real}(f::IndSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox_naive{T <: Real}(f::IndSOC, x::AbstractArray{T,1}, gamma=1.0)
   nx = norm(x[2:end])
   t = x[1]
   if t <= -nx
@@ -60,9 +67,14 @@ end
 # ########################
 
 """
-  IndRotatedSOC()
+**Indicator of the rotated second-order cone**
 
-Returns the indicator of the *rotated* second-order cone of R^n, that is {(p,q,x) : norm(x)^2 ⩽ 2pq, p ⩾ 0, q ⩾ 0}
+    IndRotatedSOC()
+
+Returns the indicator of the *rotated* second-order cone (also known as ice-cream cone or Lorentz cone), that is
+```math
+C = \\left\\{ (p, q, x) : \\|x\\|^2 \\leq 2\\cdot pq, p \\geq 0, q \\geq 0 \\right\\}.
+```
 """
 
 immutable IndRotatedSOC <: ProximableFunction end
@@ -77,7 +89,7 @@ end
 is_convex(f::IndRotatedSOC) = true
 is_set(f::IndRotatedSOC) = true
 
-function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndRotatedSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndRotatedSOC, x::AbstractArray{T,1}, gamma::T=one(T))
   # sin(pi/4) = cos(pi/4) = 0.7071067811865475
   # rotate x ccw by pi/4
   x1 = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
@@ -110,7 +122,7 @@ fun_dom(f::IndRotatedSOC) = "AbstractArray{Real,1}"
 fun_expr(f::IndRotatedSOC) = "x ↦ 0 if x[1] ⩾ 0, x[2] ⩾ 0, norm(x[3:end])² ⩽ 2*x[1]*x[2], +∞ otherwise"
 fun_params(f::IndRotatedSOC) = "none"
 
-function prox_naive{T <: Real}(f::IndRotatedSOC, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox_naive{T <: Real}(f::IndRotatedSOC, x::AbstractArray{T,1}, gamma=1.0)
   g = IndSOC()
   z = copy(x)
   z[1] = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]

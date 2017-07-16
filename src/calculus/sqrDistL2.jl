@@ -1,5 +1,19 @@
 # squared Euclidean distance from a set
-immutable SqrDistL2{R <: Real, T<:ProximableFunction} <: ProximableFunction
+
+export SqrDistL2
+
+"""
+**Squared distance from a convex set**
+
+    SqrDistL2(ind_S, λ=1.0)
+
+Given `ind_S` the indicator function of a convex set ``S``, and an optional positive parameter `λ`, returns the (weighted) squared Euclidean distance from ``S``, that is function
+```math
+g(x) = \\tfrac{λ}{2}\\mathrm{dist}_S^2(x) = \\min \\left\\{ \\tfrac{λ}{2}\\|y - x\\|^2 : y \\in S \\right\\}.
+```
+"""
+
+immutable SqrDistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R
   function SqrDistL2{R,T}(ind::T, lambda::R) where {R <: Real, T<:ProximableFunction}
@@ -16,6 +30,9 @@ end
 
 is_prox_accurate(f::SqrDistL2) = is_prox_accurate(f.ind)
 is_convex(f::SqrDistL2) = true
+is_smooth(f::SqrDistL2) = true
+is_quadratic(f::SqrDistL2) = is_affine(f.ind)
+is_strongly_convex(f::SqrDistL2) = is_singleton(f.ind)
 
 SqrDistL2{R <: Real, T <: ProximableFunction}(ind::T, lambda::R=1.0) = SqrDistL2{R, T}(ind, lambda)
 

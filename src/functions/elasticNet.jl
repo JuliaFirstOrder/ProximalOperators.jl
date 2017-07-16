@@ -1,9 +1,17 @@
 # elastic-net regularization
 
-"""
-  ElasticNet(λ::Real=1.0, μ::Real=1.0)
+export ElasticNet
 
-Returns the function `g(x) = μ||x||_1 + (λ/2)||x||²`, for a real parameters `μ, λ ⩾ 0`.
+"""
+**Elastic-net regularization**
+
+    ElasticNet(μ=1.0, λ=1.0)
+
+Returns the function
+```math
+f(x) = μ\\|x\\|_1 + (λ/2)\\|x\\|^2,
+```
+for nonnegative parameters `μ` and `λ`.
 """
 
 immutable ElasticNet{R <: Real} <: ProximableFunction

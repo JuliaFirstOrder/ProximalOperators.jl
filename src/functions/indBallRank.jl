@@ -1,9 +1,17 @@
 # indicator of the ball of matrices with (at most) a given rank
 
-"""
-  IndBallRank(r::Int=1)
+export IndBallRank
 
-Returns the function `g = ind{X : rank(X) ⩽ r}`, for an integer parameter `r > 0`.
+"""
+**Indicator of rank ball**
+
+    IndBallRank(r=1)
+
+Returns the indicator function of the set of matrices of rank at most `r`:
+```math
+S = \\{ X : \\mathrm{rank}(X) \\leq r \\},
+```
+Parameter `r` must be a positive integer.
 """
 
 immutable IndBallRank{I <: Integer} <: ProximableFunction
