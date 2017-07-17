@@ -9,7 +9,7 @@ export HingeLoss
 
 Returns the function
 ```math
-f(x) = μ⋅∑_i \\max\\{0, 1 - b_i * x_i\\},
+f(x) = μ⋅∑_i \\max\\{0, 1 - b_i ⋅ x_i\\},
 ```
 where `b` is an array and `μ` is a positive parameter.
 """
