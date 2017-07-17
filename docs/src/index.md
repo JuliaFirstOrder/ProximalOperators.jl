@@ -22,13 +22,13 @@ Remember to do `Pkg.update()` from time to time, to keep the package up to date.
 
 ## Quick introduction
 
-For a function ``f`` and a stepsize ``\gamma > 0``, the *proximal operator* (or *proximal mapping*) is given by
+For a function \\(f\\) and a stepsize \\(\gamma > 0\\), the *proximal operator* (or *proximal mapping*) is given by
 ```math
-\mathrm{prox}_{\gamma f}(x) = \arg\min_z \left\{ f(z) + \tfrac{1}{2\gamma}\|z-x\|^2 \right\},
+\mathrm{prox}_{\gamma f}(x) = \arg\min_z \left\{ f(z) + \tfrac{1}{2\gamma}\|z-x\|^2 \right\}
 ```
-and can be efficiently computed for many functions ``f`` used in applications.
+and can be efficiently computed for many functions \\(f\\) used in applications.
 
-ProximalOperators allows to pick function ``f`` from a [library of commonly used functions](functions.md), and to modify and combine them using [calculus rules](calculus.md) to obtain new ones. The proximal mapping of ``f`` is then provided through the [`prox`](@ref) and [`prox!`](@ref) methods, as described [here](operators.md).
+ProximalOperators allows to pick function \\(f\\) from a [library of commonly used functions](functions.md), and to modify and combine them using [calculus rules](calculus.md) to obtain new ones. The proximal mapping of \\(f\\) is then provided through the [`prox`](@ref) and [`prox!`](@ref) methods, as described [here](operators.md).
 
 For example, one can create the L1-norm as follows.
 

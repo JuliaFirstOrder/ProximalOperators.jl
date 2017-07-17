@@ -6,7 +6,7 @@ These functions can be modified and/or combined together to make new ones, by me
 
 ## Indicators of sets
 
-When function ``f`` is the indicator function of a set ``S``, that is
+When function \\(f\\) is the indicator function of a set \\(S\\), that is
 ```math
 f(x) = δ_S(x) =
 \begin{cases}
@@ -14,7 +14,7 @@ f(x) = δ_S(x) =
 +∞ & \text{otherwise},
 \end{cases}
 ```
-then ``\mathrm{prox}_{γf} = Π_S`` is the projection onto ``S``.
+then \\(\mathrm{prox}_{γf} = Π_S\\) is the projection onto \\(S\\).
 Therefore ProximalOperators includes in particular projections onto commonly used sets, which are here listed.
 
 ```@docs
