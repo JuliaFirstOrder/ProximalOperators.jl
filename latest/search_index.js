@@ -565,7 +565,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Prox and gradient",
     "title": "ProximalOperators.prox",
     "category": "Function",
-    "text": "Proximal mapping\n\nprox(f, x, γ=1.0)\n\nComputes\n\ny = mathrmprox_gamma f(x) = argmin_z left f(z) + tfrac12gammaz-x^2 right\n\nThe resulting point y is returned as first output, and f(y) as second output.\n\n\n\n"
+    "text": "Proximal mapping\n\ny, fy = prox(f, x, γ=1.0)\n\nComputes\n\ny = mathrmprox_gamma f(x) = argmin_z left f(z) + tfrac12gammaz-x^2 right\n\nReturn values:\n\ny: the proximal point y\nfy: the value f(y)\n\n\n\n"
 },
 
 {
@@ -573,7 +573,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Prox and gradient",
     "title": "ProximalOperators.prox!",
     "category": "Function",
-    "text": "Proximal mapping (in-place)\n\nprox!(y, f, x, γ=1.0)\n\nComputes\n\ny = mathrmprox_gamma f(x) = argmin_z left f(z) + tfrac12gammaz-x^2 right\n\nThe resulting point y is written to the (pre-allocated) array y, which must have the same shape/size as x, and the value the proximal point of x with respect to function f(y) is returned.\n\n\n\n"
+    "text": "Proximal mapping (in-place)\n\nfy = prox!(y, f, x, γ=1.0)\n\nComputes\n\ny = mathrmprox_gamma f(x) = argmin_z left f(z) + tfrac12gammaz-x^2 right\n\nThe resulting point y is written to the (pre-allocated) array y, which must have the same shape/size as x.\n\nReturn values:\n\nfy: the value f(y)\n\n\n\n"
 },
 
 {
@@ -581,7 +581,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Prox and gradient",
     "title": "Base.LinAlg.gradient",
     "category": "Function",
-    "text": "Gradient mapping\n\ngradient(f, x)\n\nFor a differentiable function f, returns nabla f(x) as first output, and f(x) as second output.\n\n\n\n"
+    "text": "Gradient mapping\n\ngradfx, fx = gradient(f, x)\n\nComputes the gradient (and value) of f at x.\n\nReturn values:\n\ngradfx: the gradiet of f at x\nfx: the value f(x)\n\n\n\n"
 },
 
 {
@@ -589,7 +589,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Prox and gradient",
     "title": "ProximalOperators.gradient!",
     "category": "Function",
-    "text": "Gradient mapping (in-place)\n\ngradient!(y, f, x)\n\nFor a differentiable function f, writes nabla f(x) to y, which must be pre-allocated and have the same shape/size as x, and returns f(x) as output.\n\n\n\n"
+    "text": "Gradient mapping (in-place)\n\ngradient!(gradfx, f, x)\n\nWrites nabla f(x) to gradfx, which must be pre-allocated and have the same shape/size as x.\n\nReturn values:\n\nfx: the value f(x)\n\n\n\n"
 },
 
 {
