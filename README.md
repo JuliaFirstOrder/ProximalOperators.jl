@@ -2,12 +2,17 @@
 
 [![Build Status](https://travis-ci.org/kul-forbes/ProximalOperators.jl.svg?branch=master)](https://travis-ci.org/kul-forbes/ProximalOperators.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/00rk6ip0y0t2wj8t?svg=true)](https://ci.appveyor.com/project/lostella/prox-jl)
-[![Coverage Status](https://coveralls.io/repos/github/kul-forbes/ProximalOperators.jl/badge.svg?branch=master)](https://coveralls.io/github/kul-forbes/ProximalOperators.jl?branch=master)
 [![codecov](https://codecov.io/gh/kul-forbes/ProximalOperators.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kul-forbes/ProximalOperators.jl)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/ProximalOperators-jl/Lobby)
 
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kul-forbes.github.io/ProximalOperators.jl/stable)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://kul-forbes.github.io/ProximalOperators.jl/latest)
+
+
 Proximal operators for nonsmooth optimization in Julia.
 This package can be used to easily implement proximal algorithms for convex and nonconvex optimization problems such as ADMM, the alternating direction method of multipliers.
+
+See the [documentation](https://kul-forbes.github.io/ProximalOperators.jl/latest) on how to use the package.
 
 ## Installation
 
@@ -23,7 +28,7 @@ Remember to `Pkg.update()` to keep the package up to date.
 
 With `using ProximalOperators` the package exports the `prox` and `prox!` methods to evaluate the proximal mapping of several functions.
 
-**[Here](FUNCTIONS.md)** is a list of the available functions.
+A list of available function constructors is in the [documentation](https://kul-forbes.github.io/ProximalOperators.jl/latest).
 
 For example, you can create the L1-norm as follows.
 
@@ -57,10 +62,6 @@ and only returns the function value at the proximal point:
 ```julia
 julia> fy = prox!(y, f, x, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
 ```
-
-## Examples
-
-See the **[demos](demos/)** folder for examples on how to use `ProximalOperators` in algorithms.
 
 ## References
 
