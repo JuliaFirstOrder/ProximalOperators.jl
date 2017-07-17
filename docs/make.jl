@@ -1,12 +1,24 @@
 using Documenter, ProximalOperators
 
 makedocs(
-  modules = [ProximalOperators]
+  modules = [ProximalOperators],
+  format = :html,
+  sitename = "ProximalOperators.jl",
+  authors = "Lorenzo Stella and contributors",
+  pages = Any[
+  "Home" => "index.md",
+  "Functions" => "functions.md",
+  "Calculus rules" => "calculus.md",
+  "Prox and gradient" => "operators.md",
+  "Demos" => "demos.md"
+  ],
 )
 
 deploydocs(
-  deps   = Deps.pip("pygments", "mkdocs", "python-markdown-math", "mkdocs-bootstrap"),
   repo   = "github.com/kul-forbes/ProximalOperators.jl.git",
   julia  = "0.6",
-  osname = "linux"
+  osname = "linux",
+  target = "build",
+  deps = nothing,
+  make = nothing,
 )
