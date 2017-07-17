@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Description...">
+        <meta name="author" content="kul-forbes">
+        
+        <link rel="shortcut icon" href="./img/favicon.ico">
+
+	<title>ProximalOperators.jl</title>
+
+        <link href="./css/bootstrap-3.0.3.min.css" rel="stylesheet">
+        <link href="./css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link rel="stylesheet" href="./css/highlight.css">
+        <link href="./css/base.css" rel="stylesheet">
+        <link href="./assets/Documenter.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href=".">ProximalOperators.jl</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li class="active">
+                    <a href=".">Home</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="functions/">Functions</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="calculus/">Calculus rules</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="operators/">Prox and gradient</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="demos/">Demos</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                <li class="disabled">
+                    <a rel="next" >
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="functions/">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://github.com/kul-forbes/ProximalOperators.jl">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#proximaloperatorsjl">ProximalOperators.jl</a></li>
+        
+            <li><a href="#installation">Installation</a></li>
+        
+            <li><a href="#quick-introduction">Quick introduction</a></li>
+        
+            <li><a href="#bibliographic-references">Bibliographic references</a></li>
+        
+            <li><a href="#credits">Credits</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<p><a id='ProximalOperators.jl-1'></a></p>
+<h1 id="proximaloperatorsjl">ProximalOperators.jl</h1>
+<p>ProximalOperators is a <a href="https://julialang.org">Julia</a> package that implements first-order primitives for a variety of functions, which are commonly used for implementing optimization algorithms in several application areas, <em>e.g.</em>, statistical learning, image and signal processing, optimal control.</p>
+<p>Please refer to the <a href="https://github.com/kul-forbes/ProximalOperators.jl">GitHub repository</a> to browse the source code, report issues and submit pull requests.</p>
+<p><a id='Installation-1'></a></p>
+<h2 id="installation">Installation</h2>
+<p>To install the package, use the following in the Julia command line</p>
+<pre><code class="julia">Pkg.add(&quot;ProximalOperators&quot;)
+</code></pre>
+
+<p>To load the package simply type</p>
+<pre><code class="julia">using ProximalOperators
+</code></pre>
+
+<p>Remember to do <code>Pkg.update()</code> from time to time, to keep the package up to date.</p>
+<p><a id='Quick-introduction-1'></a></p>
+<h2 id="quick-introduction">Quick introduction</h2>
+<p>For a function <script type="math/tex">f</script> and a stepsize <script type="math/tex">\gamma > 0</script>, the <em>proximal operator</em> (or <em>proximal mapping</em>) is given by</p>
+<p>
+<script type="math/tex; mode=display">
+\mathrm{prox}_{\gamma f}(x) = \arg\min_z \left\{ f(z) + \tfrac{1}{2\gamma}\|z-x\|^2 \right\}
+</script>
+</p>
+<p>and can be efficiently computed for many functions <script type="math/tex">f</script> used in applications.</p>
+<p>ProximalOperators allows to pick function <script type="math/tex">f</script> from a <a href="functions/">library of commonly used functions</a>, and to modify and combine them using <a href="calculus/">calculus rules</a> to obtain new ones. The proximal mapping of <script type="math/tex">f</script> is then provided through the <a href="operators/#ProximalOperators.prox"><code>prox</code></a> and <a href="operators/#ProximalOperators.prox!"><code>prox!</code></a> methods, as described <a href="operators/">here</a>.</p>
+<p>For example, one can create the L1-norm as follows.</p>
+<pre><code class="julia-repl">julia&gt; using ProximalOperators
+
+julia&gt; f = NormL1(3.5)
+description : weighted L1 norm
+domain      : AbstractArray{Real}, AbstractArray{Complex}
+expression  : x ↦ λ||x||_1
+parameters  : λ = 3.5
+</code></pre>
+
+<p>Functions created this way are, of course, callable.</p>
+<pre><code class="julia-repl">julia&gt; x = [1.0, 2.0, 3.0, 4.0, 5.0]; # some point
+
+julia&gt; f(x)
+52.5
+</code></pre>
+
+<p>Method <a href="operators/#ProximalOperators.prox"><code>prox</code></a> evaluates the proximal operator associated with a function, given a point and (optionally) a positive stepsize parameter, returning the proximal point <code>y</code> and the value of the function at <code>y</code>:</p>
+<pre><code class="julia-repl">julia&gt; y, fy = prox(f, x, 0.5) # last argument is 1.0 if absent
+([0.0, 0.25, 1.25, 2.25, 3.25], 24.5)
+</code></pre>
+
+<p>Method <a href="operators/#ProximalOperators.prox!"><code>prox!</code></a> evaluates the proximal operator <em>in place</em>, and only returns the function value at the proximal point (in this case <code>y</code> must be preallocated and have the same shape/size as <code>x</code>):</p>
+<pre><code class="julia-repl">julia&gt; y = similar(x); # allocate y
+
+julia&gt; fy = prox!(y, f, x, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
+24.5
+</code></pre>
+
+<p><a id='Bibliographic-references-1'></a></p>
+<h2 id="bibliographic-references">Bibliographic references</h2>
+<ol>
+<li>N. Parikh and S. Boyd (2014), <a href="http://dx.doi.org/10.1561/2400000003"><em>Proximal Algorithms</em></a>, Foundations and Trends in Optimization, vol. 1, no. 3, pp. 127-239.</li>
+<li>S. Boyd, N. Parikh, E. Chu, B. Peleato and J. Eckstein (2011), <a href="http://dx.doi.org/10.1561/2200000016"><em>Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers</em></a>, Foundations and Trends in Machine Learning, vol. 3, no. 1, pp. 1-122.</li>
+</ol>
+<p><a id='Credits-1'></a></p>
+<h2 id="credits">Credits</h2>
+<p>ProximalOperators.jl is developed by <a href="https://lostella.github.io">Lorenzo Stella</a> and <a href="http://homes.esat.kuleuven.be/~nantonel/">Niccolò Antonello</a> at <a href="https://www.esat.kuleuven.be/stadius/">KU Leuven, ESAT/Stadius</a>, and <a href="http://www.control.lth.se/Staff/MattiasFalt.html">Mattias Fält</a> at <a href="http://www.control.lth.se/">Lunds Universitet, Department of Automatic Control</a>.</p></div>
+        </div>
+
+	<footer class="col-md-12">
+		<hr>
+		
+		<p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+	</footer>
+
+
+        <script src="./js/jquery-1.10.2.min.js"></script>
+        <script src="./js/bootstrap-3.0.3.min.js"></script>
+        <script src="./js/highlight.pack.js"></script>
+        <script src="./js/base.js"></script>
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+        <script src="./assets/mathjaxhelper.js"></script>
+    </body>
+</html>

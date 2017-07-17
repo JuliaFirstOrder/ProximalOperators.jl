@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="kul-forbes">
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+	<title>Functions - ProximalOperators.jl</title>
+
+        <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+        <link href="../css/base.css" rel="stylesheet">
+        <link href="../assets/Documenter.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">ProximalOperators.jl</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li >
+                    <a href="..">Home</a>
+                </li>
+            
+            
+            
+                <li class="active">
+                    <a href="./">Functions</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../calculus/">Calculus rules</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../operators/">Prox and gradient</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../demos/">Demos</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                <li >
+                    <a rel="next" href="..">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../calculus/">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://github.com/kul-forbes/ProximalOperators.jl">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#functions">Functions</a></li>
+        
+            <li><a href="#indicators-of-sets">Indicators of sets</a></li>
+        
+            <li><a href="#indicators-of-convex-cones">Indicators of convex cones</a></li>
+        
+            <li><a href="#norms-and-regularization-functions">Norms and regularization functions</a></li>
+        
+            <li><a href="#penalties-and-other-functions">Penalties and other functions</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<p><a id='Functions-1'></a></p>
+<h1 id="functions">Functions</h1>
+<p>Here we list the available functions, grouped by category. Each function is documented with its exact definition and the necessary parameters for construction. The proximal mapping (and gradient, when defined) of such functions is computed by calling the <a href="../operators/#ProximalOperators.prox"><code>prox</code></a> and <a href="../operators/#ProximalOperators.prox!"><code>prox!</code></a> methods (and <a href="../operators/#Base.LinAlg.gradient"><code>gradient</code></a>, <a href="../operators/#ProximalOperators.gradient!"><code>gradient!</code></a>, when defined). These functions can be modified and/or combined together to make new ones, by means of <a href="../calculus/">calculus rules</a>.</p>
+<p><a id='Indicators-of-sets-1'></a></p>
+<h2 id="indicators-of-sets">Indicators of sets</h2>
+<p>When function <script type="math/tex">f</script> is the indicator function of a set <script type="math/tex">S</script>, that is</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = δ_S(x) =
+\begin{cases}
+0 & \text{if}\ x \in S, \\
++∞ & \text{otherwise},
+\end{cases}
+</script>
+</p>
+<p>then <script type="math/tex">\mathrm{prox}_{γf} = Π_S</script> is the projection onto <script type="math/tex">S</script>. Therefore ProximalOperators includes in particular projections onto commonly used sets, which are here listed.</p>
+<p><a id='ProximalOperators.IndAffine' href='#ProximalOperators.IndAffine'>#</a>
+<strong><code>ProximalOperators.IndAffine</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of an affine subspace</strong></p>
+<pre><code>IndAffine(A, b)
+</code></pre>
+
+<p>If <code>A</code> is a matrix (dense or sparse) and <code>b</code> is a vector, returns the indicator function of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{x : Ax = b\}.
+</script>
+</p>
+<p>If <code>A</code> is a vector and <code>b</code> is a scalar, returns the indicator function of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{x : \langle A, x \rangle = b\}.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indAffine.jl#L5-L18' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndBallLinf' href='#ProximalOperators.IndBallLinf'>#</a>
+<strong><code>ProximalOperators.IndBallLinf</code></strong> &mdash; <em>Function</em>.</p>
+<p><strong>Indicator of a $L_∞$ norm ball</strong></p>
+<pre><code>IndBallLinf(r=1.0)
+</code></pre>
+
+<p>Returns the indicator function of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{ x : \max (|x_i|) \leq r \}.
+</script>
+</p>
+<p>Parameter <code>r</code> must be positive.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indBox.jl#L71-L81' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndBallL0' href='#ProximalOperators.IndBallL0'>#</a>
+<strong><code>ProximalOperators.IndBallL0</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of a $L_0$ pseudo-norm ball</strong></p>
+<pre><code>IndBallL0(r=1)
+</code></pre>
+
+<p>Returns the indicator function of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{ x : \mathrm{nnz}(x) \leq r \}.
+</script>
+</p>
+<p>Parameter <code>r</code> must be a positive integer.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indBallL0.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndBallL1' href='#ProximalOperators.IndBallL1'>#</a>
+<strong><code>ProximalOperators.IndBallL1</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of a $L_1$ norm ball</strong></p>
+<pre><code>IndBallL1(r=1.0)
+</code></pre>
+
+<p>Returns the indicator function of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \left\{ x : ∑_i |x_i| \leq r \right\}.
+</script>
+</p>
+<p>Parameter <code>r</code> must be positive.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indBallL1.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndBallL2' href='#ProximalOperators.IndBallL2'>#</a>
+<strong><code>ProximalOperators.IndBallL2</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of a Euclidean ball</strong></p>
+<pre><code>IndBallL2(r=1.0)
+</code></pre>
+
+<p>Returns the indicator function of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{ x : \|x\| \leq r \},
+</script>
+</p>
+<p>where $|\cdot|$ is the $L_2$ (Euclidean) norm. Parameter <code>r</code> must be positive.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indBallL2.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndBallRank' href='#ProximalOperators.IndBallRank'>#</a>
+<strong><code>ProximalOperators.IndBallRank</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of rank ball</strong></p>
+<pre><code>IndBallRank(r=1)
+</code></pre>
+
+<p>Returns the indicator function of the set of matrices of rank at most <code>r</code>:</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{ X : \mathrm{rank}(X) \leq r \},
+</script>
+</p>
+<p>Parameter <code>r</code> must be a positive integer.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indBallRank.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndBinary' href='#ProximalOperators.IndBinary'>#</a>
+<strong><code>ProximalOperators.IndBinary</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of the product of binary sets</strong></p>
+<pre><code>IndBinary(low, up)
+</code></pre>
+
+<p>Returns the indicator function of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{ x : x_i = low_i\ \text{or}\ x_i = up_i \},
+</script>
+</p>
+<p>Parameters <code>low</code> and <code>up</code> can be either scalars or arrays of the same dimension as the space.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indBinary.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndBox' href='#ProximalOperators.IndBox'>#</a>
+<strong><code>ProximalOperators.IndBox</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of a box</strong></p>
+<pre><code>IndBox(low, up)
+</code></pre>
+
+<p>Returns the indicator function of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{ x : low \leq x \leq up \}.
+</script>
+</p>
+<p>Parameters <code>low</code> and <code>up</code> can be either scalars or arrays of the same dimension as the space: they must satisfy <code>low &lt;= up</code>, and are allowed to take values <code>-Inf</code> and <code>+Inf</code> to indicate unbounded coordinates.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indBox.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndHalfspace' href='#ProximalOperators.IndHalfspace'>#</a>
+<strong><code>ProximalOperators.IndHalfspace</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of a halfspace</strong></p>
+<pre><code>IndHalfspace(a, b)
+</code></pre>
+
+<p>For an array <code>a</code> and a scalar <code>b</code>, returns the indicator of set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{x : \langle a,x \rangle \leq b \}.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indHalfspace.jl#L5-L14' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndPoint' href='#ProximalOperators.IndPoint'>#</a>
+<strong><code>ProximalOperators.IndPoint</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of a singleton</strong></p>
+<pre><code>IndPoint(p=0.0)
+</code></pre>
+
+<p>Returns the indicator of the set</p>
+<p>
+<script type="math/tex; mode=display">
+C = \{p \}.
+</script>
+</p>
+<p>Parameter <code>p</code> can be a scalar, in which case the unique element of <code>S</code> has uniform coefficients.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indPoint.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndSimplex' href='#ProximalOperators.IndSimplex'>#</a>
+<strong><code>ProximalOperators.IndSimplex</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of a simplex</strong></p>
+<pre><code>IndSimplex(a=1.0)
+</code></pre>
+
+<p>Returns the indicator of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \left\{ x : x \geq 0, ∑_i x_i = a \right\}.
+</script>
+</p>
+<p>By default <code>a=1.0</code>, therefore $S$ is the probability simplex.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indSimplex.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndSphereL2' href='#ProximalOperators.IndSphereL2'>#</a>
+<strong><code>ProximalOperators.IndSphereL2</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of a Euclidean sphere</strong></p>
+<pre><code>IndSphereL2(r=1.0)
+</code></pre>
+
+<p>Returns the indicator function of the set</p>
+<p>
+<script type="math/tex; mode=display">
+S = \{ x : \|x\| = r \},
+</script>
+</p>
+<p>where $|cdot|$ is the $L_2$ (Euclidean) norm. Parameter <code>r</code> must be positive.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indSphereL2.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='Indicators-of-convex-cones-1'></a></p>
+<h2 id="indicators-of-convex-cones">Indicators of convex cones</h2>
+<p>An important class of sets in optimization is that of convex cones. These are used in particular for formulating <a href="https://en.wikipedia.org/wiki/Conic_optimization">cone programming problems</a>, a family of problems which includes linear programs (LP), quadratic programs (QP), quadratically constrained quadratic programs (QCQP) and semidefinite programs (SDP).</p>
+<p><a id='ProximalOperators.IndExpPrimal' href='#ProximalOperators.IndExpPrimal'>#</a>
+<strong><code>ProximalOperators.IndExpPrimal</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of the (primal) exponential cone</strong></p>
+<pre><code>IndExpPrimal()
+</code></pre>
+
+<p>Returns the indicator function of the primal exponential cone, that is</p>
+<p>
+<script type="math/tex; mode=display">
+C = \mathrm{cl} \{ (r,s,t) : s > 0, s⋅e^{r/s} \leq t \} \subset \mathbb{R}^3.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indExp.jl#L6-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndExpDual' href='#ProximalOperators.IndExpDual'>#</a>
+<strong><code>ProximalOperators.IndExpDual</code></strong> &mdash; <em>Function</em>.</p>
+<p><strong>Indicator of the (dual) exponential cone</strong></p>
+<pre><code>IndExpDual()
+</code></pre>
+
+<p>Returns the indicator function of the dual exponential cone, that is</p>
+<p>
+<script type="math/tex; mode=display">
+C = \mathrm{cl} \{ (u,v,w) : u < 0, -u⋅e^{v/u} \leq w⋅e \} \subset \mathbb{R}^3.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indExp.jl#L22-L31' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndFree' href='#ProximalOperators.IndFree'>#</a>
+<strong><code>ProximalOperators.IndFree</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of the free cone</strong></p>
+<pre><code>IndFree()
+</code></pre>
+
+<p>Returns the indicator function of the whole space, or "free cone", <em>i.e.</em>, a function which is identically zero.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indFree.jl#L5-L12' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndNonnegative' href='#ProximalOperators.IndNonnegative'>#</a>
+<strong><code>ProximalOperators.IndNonnegative</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of the nonnegative orthant</strong></p>
+<pre><code>IndNonnegative()
+</code></pre>
+
+<p>Returns the indicator of the set</p>
+<p>
+<script type="math/tex; mode=display">
+C = \{ x : x \geq 0 \}.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indNonnegative.jl#L5-L14' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndNonpositive' href='#ProximalOperators.IndNonpositive'>#</a>
+<strong><code>ProximalOperators.IndNonpositive</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of the nonpositive orthant</strong></p>
+<pre><code>IndNonpositive()
+</code></pre>
+
+<p>Returns the indicator of the set</p>
+<p>
+<script type="math/tex; mode=display">
+C = \{ x : x \leq 0 \}.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indNonpositive.jl#L5-L14' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndPSD' href='#ProximalOperators.IndPSD'>#</a>
+<strong><code>ProximalOperators.IndPSD</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of the set of positive semi-definite cone</strong></p>
+<pre><code>IndPSD()
+</code></pre>
+
+<p>Returns the indicator of the set</p>
+<p>
+<script type="math/tex; mode=display">
+C = \{ X : X \succeq 0 \}.
+</script>
+</p>
+<p>The argument to the function can be either a <code>Symmetric</code> or <code>Hermitian</code> object, or an object of type <code>AbstractVector{Float64}</code> holding a symmetric matrix in (lower triangular) packed storage.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indPSD.jl#L5-L16' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndSOC' href='#ProximalOperators.IndSOC'>#</a>
+<strong><code>ProximalOperators.IndSOC</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of the second-order cone</strong></p>
+<pre><code>IndSOC()
+</code></pre>
+
+<p>Returns the indicator of the second-order cone (also known as ice-cream cone or Lorentz cone), that is</p>
+<p>
+<script type="math/tex; mode=display">
+C = \left\{ (t, x) : \|x\| \leq t \right\}.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indSOC.jl#L5-L14' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndRotatedSOC' href='#ProximalOperators.IndRotatedSOC'>#</a>
+<strong><code>ProximalOperators.IndRotatedSOC</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of the rotated second-order cone</strong></p>
+<pre><code>IndRotatedSOC()
+</code></pre>
+
+<p>Returns the indicator of the <em>rotated</em> second-order cone (also known as ice-cream cone or Lorentz cone), that is</p>
+<p>
+<script type="math/tex; mode=display">
+C = \left\{ (p, q, x) : \|x\|^2 \leq 2\cdot pq, p \geq 0, q \geq 0 \right\}.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indSOC.jl#L69-L78' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.IndZero' href='#ProximalOperators.IndZero'>#</a>
+<strong><code>ProximalOperators.IndZero</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Indicator of the zero cone</strong></p>
+<pre><code>IndZero()
+</code></pre>
+
+<p>Returns the indicator function of the set containing the origin, the "zero cone".</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/indZero.jl#L5-L11' class='documenter-source'>source</a><br></p>
+<p><a id='Norms-and-regularization-functions-1'></a></p>
+<h2 id="norms-and-regularization-functions">Norms and regularization functions</h2>
+<p><a id='ProximalOperators.ElasticNet' href='#ProximalOperators.ElasticNet'>#</a>
+<strong><code>ProximalOperators.ElasticNet</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Elastic-net regularization</strong></p>
+<pre><code>ElasticNet(μ=1.0, λ=1.0)
+</code></pre>
+
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = μ\|x\|_1 + (λ/2)\|x\|^2,
+</script>
+</p>
+<p>for nonnegative parameters <code>μ</code> and <code>λ</code>.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/elasticNet.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.NormL0' href='#ProximalOperators.NormL0'>#</a>
+<strong><code>ProximalOperators.NormL0</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>$L_0$ pseudo-norm</strong></p>
+<pre><code>NormL0(λ=1.0)
+</code></pre>
+
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = λ\cdot\mathrm{nnz}(x)
+</script>
+</p>
+<p>for a nonnegative parameter <code>λ</code>.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/normL0.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.NormL1' href='#ProximalOperators.NormL1'>#</a>
+<strong><code>ProximalOperators.NormL1</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>$L_1$ norm</strong></p>
+<pre><code>NormL1(λ=1.0)
+</code></pre>
+
+<p>With a nonnegative scalar parameter λ, returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = λ\cdot∑_i|x_i|.
+</script>
+</p>
+<p>With a nonnegative array parameter λ, returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = ∑_i λ_i|x_i|.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/normL1.jl#L5-L18' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.NormL2' href='#ProximalOperators.NormL2'>#</a>
+<strong><code>ProximalOperators.NormL2</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>$L_2$ norm</strong></p>
+<pre><code>NormL2(λ=1.0)
+</code></pre>
+
+<p>With a nonnegative scalar parameter λ, returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = λ\cdot\sqrt{x_1^2 + … + x_n^2}.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/normL2.jl#L5-L14' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.NormL21' href='#ProximalOperators.NormL21'>#</a>
+<strong><code>ProximalOperators.NormL21</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Sum-of-$L_2$ norms</strong></p>
+<pre><code>NormL21(λ=1.0, dim=1)
+</code></pre>
+
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(X) = λ⋅∑_i\|x_i\|
+</script>
+</p>
+<p>for a nonnegative <code>λ</code>, where $x_i$ is the $i$-th column of $X$ if <code>dim == 1</code>, and the $i$-th row of $X$ if <code>dim == 2</code>. In words, it is the sum of the Euclidean norms of the columns or rows.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/normL21.jl#L5-L16' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.NormLinf' href='#ProximalOperators.NormLinf'>#</a>
+<strong><code>ProximalOperators.NormLinf</code></strong> &mdash; <em>Function</em>.</p>
+<p><strong>$L_∞$ norm</strong></p>
+<pre><code>NormLinf(λ=1.0)
+</code></pre>
+
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = λ⋅\max\{|x_1|, …, |x_n|\},
+</script>
+</p>
+<p>for a nonnegative parameter <code>λ</code>.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/normLinf.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.NuclearNorm' href='#ProximalOperators.NuclearNorm'>#</a>
+<strong><code>ProximalOperators.NuclearNorm</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Nuclear norm</strong></p>
+<pre><code>NuclearNorm(λ=1.0)
+</code></pre>
+
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(X) = \|X\|_* = λ ∑_i σ_i(X),
+</script>
+</p>
+<p>where <code>λ</code> is a positive parameter and $σ_i(X)$ is $i$-th singular value of matrix $X$.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/nuclearNorm.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.SqrNormL2' href='#ProximalOperators.SqrNormL2'>#</a>
+<strong><code>ProximalOperators.SqrNormL2</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Squared Euclidean norm (weighted)</strong></p>
+<pre><code>SqrNormL2(λ=1.0)
+</code></pre>
+
+<p>With a nonnegative scalar <code>λ</code>, returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = \tfrac{λ}{2}\|x\|^2.
+</script>
+</p>
+<p>With a nonnegative array <code>λ</code>, returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = \tfrac{1}{2}∑_i λ_i x_i^2.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/sqrNormL2.jl#L5-L18' class='documenter-source'>source</a><br></p>
+<p><a id='Penalties-and-other-functions-1'></a></p>
+<h2 id="penalties-and-other-functions">Penalties and other functions</h2>
+<p><a id='ProximalOperators.HingeLoss' href='#ProximalOperators.HingeLoss'>#</a>
+<strong><code>ProximalOperators.HingeLoss</code></strong> &mdash; <em>Function</em>.</p>
+<p><strong>Hinge loss</strong></p>
+<p>HingeLoss(b, μ=1.0)</p>
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = μ⋅∑_i \max\{0, 1 - b_i * x_i\},
+</script>
+</p>
+<p>where <code>b</code> is an array and <code>μ</code> is a positive parameter.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/hingeLoss.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.HuberLoss' href='#ProximalOperators.HuberLoss'>#</a>
+<strong><code>ProximalOperators.HuberLoss</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Huber loss</strong></p>
+<pre><code>HuberLoss(ρ=1.0, μ=1.0)
+</code></pre>
+
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = \begin{cases}
+  \tfrac{μ}{2}\|x\|^2 & \text{if}\ \|x\| ⩽ ρ \\
+  ρμ(\|x\| - \tfrac{ρ}{2}) & \text{otherwise},
+\end{cases}
+</script>
+</p>
+<p>where <code>ρ</code> and <code>μ</code> are positive parameters.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/huberLoss.jl#L5-L18' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.LeastSquares' href='#ProximalOperators.LeastSquares'>#</a>
+<strong><code>ProximalOperators.LeastSquares</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Least squares penalty</strong></p>
+<pre><code>LeastSquares(A, b, λ=1.0)
+</code></pre>
+
+<p>For a matrix <code>A</code>, a vector <code>b</code> and a scalar <code>λ</code>, returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = \tfrac{\lambda}{2}\|Ax - b\|^2.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/leastSquares.jl#L5-L14' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.Linear' href='#ProximalOperators.Linear'>#</a>
+<strong><code>ProximalOperators.Linear</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Linear function</strong></p>
+<pre><code>Linear(c)
+</code></pre>
+
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = \langle c, x \rangle.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/linear.jl#L3-L12' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.LogBarrier' href='#ProximalOperators.LogBarrier'>#</a>
+<strong><code>ProximalOperators.LogBarrier</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Logarithmic barrier</strong></p>
+<pre><code>LogBarrier(a=1.0, b=0.0, μ=1.0)
+</code></pre>
+
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = -μ⋅∑_i\log(a⋅x_i+b),
+</script>
+</p>
+<p>for a nonnegative parameter <code>μ</code>.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/logBarrier.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.Maximum' href='#ProximalOperators.Maximum'>#</a>
+<strong><code>ProximalOperators.Maximum</code></strong> &mdash; <em>Function</em>.</p>
+<p><strong>Maximum coefficient</strong></p>
+<pre><code>Maximum(λ=1.0)
+</code></pre>
+
+<p>For a nonnegative parameter <code>λ ⩾ 0</code>, returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = \lambda \cdot \max \{x_i : i = 1,\ldots, n \}.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/maximum.jl#L5-L14' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.Quadratic' href='#ProximalOperators.Quadratic'>#</a>
+<strong><code>ProximalOperators.Quadratic</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Quadratic function</strong></p>
+<pre><code>Quadratic(Q, q)
+</code></pre>
+
+<p>For a matrix <code>Q</code> (dense or sparse, symmetric and positive definite) and a vector <code>q</code>, returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = \tfrac{1}{2}\langle Qx, x\rangle + \langle q, x \rangle.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/quadratic.jl#L5-L14' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.QuadraticIterative' href='#ProximalOperators.QuadraticIterative'>#</a>
+<strong><code>ProximalOperators.QuadraticIterative</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Quadratic function (iterative evaluation of prox)</strong></p>
+<pre><code>QuadraticIterative(Q, q)
+</code></pre>
+
+<p>For a matrix <code>Q</code> (dense or sparse, symmetric and positive definite) and a vector <code>q</code>, returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = \tfrac{1}{2}\langle Qx, x\rangle + \langle q, x \rangle.
+</script>
+</p>
+<p>Differently from <code>Quadratic</code>, in this case the <code>prox</code> operation is evaluated (inexactly) using an iterative method.</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/quadraticIterative.jl#L5-L15' class='documenter-source'>source</a><br></p>
+<p><a id='ProximalOperators.SumPositive' href='#ProximalOperators.SumPositive'>#</a>
+<strong><code>ProximalOperators.SumPositive</code></strong> &mdash; <em>Type</em>.</p>
+<p><strong>Sum of the positive coefficients</strong></p>
+<pre><code>SumPositive()
+</code></pre>
+
+<p>Returns the function</p>
+<p>
+<script type="math/tex; mode=display">
+f(x) = ∑_i \max\{0, x_i\}.
+</script>
+</p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/functions/sumPositive.jl#L5-L14' class='documenter-source'>source</a><br></p></div>
+        </div>
+
+	<footer class="col-md-12">
+		<hr>
+		
+		<p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+	</footer>
+
+
+        <script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script>
+        <script src="../js/base.js"></script>
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+        <script src="../assets/mathjaxhelper.js"></script>
+    </body>
+</html>
