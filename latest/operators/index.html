@@ -140,7 +140,7 @@ y = \mathrm{prox}_{\gamma f}(x) = \arg\min_z \left\{ f(z) + \tfrac{1}{2\gamma}\|
 </script>
 </p>
 <p>The resulting point $y$ is returned as first output, and $f(y)$ as second output.</p>
-<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/ProximalOperators.jl#L107-L117' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/006904f41998a2fc57b599f5cca3dd8a25dadf8c/src/ProximalOperators.jl#L107-L117' class='documenter-source'>source</a><br></p>
 <p><a id='ProximalOperators.prox!' href='#ProximalOperators.prox!'>#</a>
 <strong><code>ProximalOperators.prox!</code></strong> &mdash; <em>Function</em>.</p>
 <p><strong>Proximal mapping (in-place)</strong></p>
@@ -154,7 +154,7 @@ y = \mathrm{prox}_{\gamma f}(x) = \arg\min_z \left\{ f(z) + \tfrac{1}{2\gamma}\|
 </script>
 </p>
 <p>The resulting point $y$ is written to the (pre-allocated) array <code>y</code>, which must have the same shape/size as <code>x</code>, and the value the proximal point of $x$ with respect to function $f(y)$ is returned.</p>
-<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/ProximalOperators.jl#L125-L135' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/006904f41998a2fc57b599f5cca3dd8a25dadf8c/src/ProximalOperators.jl#L125-L135' class='documenter-source'>source</a><br></p>
 <p><a id='Base.LinAlg.gradient' href='#Base.LinAlg.gradient'>#</a>
 <strong><code>Base.LinAlg.gradient</code></strong> &mdash; <em>Function</em>.</p>
 <p><strong>Gradient mapping</strong></p>
@@ -162,7 +162,7 @@ y = \mathrm{prox}_{\gamma f}(x) = \arg\min_z \left\{ f(z) + \tfrac{1}{2\gamma}\|
 </code></pre>
 
 <p>For a differentiable function $f$, returns $\nabla f(x)$ as first output, and $f(x)$ as second output.</p>
-<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/ProximalOperators.jl#L139-L145' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/006904f41998a2fc57b599f5cca3dd8a25dadf8c/src/ProximalOperators.jl#L139-L145' class='documenter-source'>source</a><br></p>
 <p><a id='ProximalOperators.gradient!' href='#ProximalOperators.gradient!'>#</a>
 <strong><code>ProximalOperators.gradient!</code></strong> &mdash; <em>Function</em>.</p>
 <p><strong>Gradient mapping (in-place)</strong></p>
@@ -170,7 +170,7 @@ y = \mathrm{prox}_{\gamma f}(x) = \arg\min_z \left\{ f(z) + \tfrac{1}{2\gamma}\|
 </code></pre>
 
 <p>For a differentiable function $f$, writes $\nabla f(x)$ to <code>y</code>, which must be pre-allocated and have the same shape/size as <code>x</code>, and returns $f(x)$ as output.</p>
-<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/baebd06ce600508294645f1d44b27979fae48367/src/ProximalOperators.jl#L153-L159' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/kul-forbes/ProximalOperators.jl/tree/006904f41998a2fc57b599f5cca3dd8a25dadf8c/src/ProximalOperators.jl#L153-L159' class='documenter-source'>source</a><br></p>
 <p><a id='Complex-and-matrix-variables-1'></a></p>
 <h2 id="complex-and-matrix-variables">Complex and matrix variables</h2>
 <p>The proximal mapping is usually discussed in the case of functions over <script type="math/tex">\mathbb{R}^n</script>. However, by adapting the inner product <script type="math/tex">\langle\cdot,\cdot\rangle</script> and associated norm <script type="math/tex">\|\cdot\|</script> adopted in its definition, one can extend the concept to functions over more general spaces. When functions of unidimensional arrays (vectors) are concerned, the standard Euclidean product and norm are used in defining <a href="./#ProximalOperators.prox"><code>prox</code></a> (therefore <a href="./#ProximalOperators.prox!"><code>prox!</code></a>, but also <a href="./#Base.LinAlg.gradient"><code>gradient</code></a> and <a href="./#ProximalOperators.gradient!"><code>gradient!</code></a>). This are the inner product and norm which are computed by <code>dot</code> and <code>norm</code> in Julia.</p>
