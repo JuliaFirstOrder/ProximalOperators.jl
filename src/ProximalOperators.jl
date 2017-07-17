@@ -107,13 +107,15 @@ is_strongly_convex(f::ProximableFunction) = false
 """
 **Proximal mapping**
 
-    prox(f, x, γ=1.0)
+    y, fy = prox(f, x, γ=1.0)
 
 Computes
 ```math
 y = \\mathrm{prox}_{\\gamma f}(x) = \\arg\\min_z \\left\\{ f(z) + \\tfrac{1}{2\\gamma}\\|z-x\\|^2 \\right\\}.
 ```
-The resulting point ``y`` is returned as first output, and ``f(y)`` as second output.
+Return values:
+* `y`: the proximal point ``y``
+* `fy`: the value ``f(y)``
 """
 
 function prox(f::ProximableFunction, x, gamma=1.0)
@@ -125,13 +127,16 @@ end
 """
 **Proximal mapping (in-place)**
 
-    prox!(y, f, x, γ=1.0)
+    fy = prox!(y, f, x, γ=1.0)
 
 Computes
 ```math
 y = \\mathrm{prox}_{\\gamma f}(x) = \\arg\\min_z \\left\\{ f(z) + \\tfrac{1}{2\\gamma}\\|z-x\\|^2 \\right\\}.
 ```
-The resulting point ``y`` is written to the (pre-allocated) array `y`, which must have the same shape/size as `x`, and the value the proximal point of ``x`` with respect to function ``f(y)`` is returned.
+The resulting point ``y`` is written to the (pre-allocated) array `y`, which must have the same shape/size as `x`.
+
+Return values:
+* `fy`: the value ``f(y)``
 """
 
 prox!
@@ -139,9 +144,13 @@ prox!
 """
 **Gradient mapping**
 
-    gradient(f, x)
+    gradfx, fx = gradient(f, x)
 
-For a differentiable function ``f``, returns ``\\nabla f(x)`` as first output, and ``f(x)`` as second output.
+Computes the gradient (and value) of ``f`` at ``x``.
+
+Return values:
+* `gradfx`: the gradiet of ``f`` at ``x``
+* `fx`: the value ``f(x)``
 """
 
 function gradient(f::ProximableFunction, x)
@@ -153,9 +162,12 @@ end
 """
 **Gradient mapping (in-place)**
 
-    gradient!(y, f, x)
+    gradient!(gradfx, f, x)
 
-For a differentiable function ``f``, writes ``\\nabla f(x)`` to `y`, which must be pre-allocated and have the same shape/size as `x`, and returns ``f(x)`` as output.
+Writes ``\\nabla f(x)`` to `gradfx`, which must be pre-allocated and have the same shape/size as `x`.
+
+Return values:
+* `fx`: the value ``f(x)``
 """
 
 gradient!
