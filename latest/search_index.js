@@ -325,7 +325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.HingeLoss",
     "category": "Function",
-    "text": "Hinge loss\n\nHingeLoss(b, μ=1.0)\n\nReturns the function\n\nf(x) = _i max0 1 - b_i * x_i\n\nwhere b is an array and μ is a positive parameter.\n\n\n\n"
+    "text": "Hinge loss\n\nHingeLoss(b, μ=1.0)\n\nReturns the function\n\nf(x) = _i max0 1 - b_i  x_i\n\nwhere b is an array and μ is a positive parameter.\n\n\n\n"
 },
 
 {
