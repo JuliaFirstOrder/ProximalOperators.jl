@@ -1,9 +1,16 @@
 # Tilting (addition with affine function)
 
-"""
-  Tilt(f::ProximableFunction, a::AbstractArray, b::Real)
+export Tilt
 
-Given function `f`, returns `g(x) = f(x) + <a,x> + b`.
+"""
+**Linear tilting**
+
+    Tilt(f, a, b=0.0)
+
+Given function `f`, an array `a` and a constant `b` (optional), returns function
+```math
+g(x) = f(x) + \\langle a, x \\rangle + b.
+```
 """
 
 immutable Tilt{T <: ProximableFunction, S <: AbstractArray, R <: Real} <: ProximableFunction
@@ -15,8 +22,11 @@ end
 is_separable(f::Tilt) = is_separable(f.f)
 is_prox_accurate(f::Tilt) = is_prox_accurate(f.f)
 is_convex(f::Tilt) = is_convex(f.f)
-is_set(f::Tilt) = false
-is_cone(f::Tilt) = false
+is_singleton(f::Tilt) = is_singleton(f.f)
+is_smooth(f::Tilt) = is_smooth(f.f)
+is_quadratic(f::Tilt) = is_quadratic(f.f)
+is_generalized_quadratic(f::Tilt) = is_generalized_quadratic(f.f)
+is_strongly_convex(f::Tilt) = is_strongly_convex(f.f)
 
 Tilt{T <: ProximableFunction, S <: AbstractArray}(f::T, a::S) = Tilt{T, S, eltype(a)}(f, a, 0.0)
 

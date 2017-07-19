@@ -30,6 +30,11 @@ stuff = [
         "args"   => ( randn(10), randn(20) )
       ),
 
+  Dict( "constr" => IndAffine,
+        "params" => ( (sprand(50,100, 0.1), randn(50)), (sprand(Complex{Float64}, 50,100, 0.1), randn(50)+im*randn(50)), ),
+        "args"   => ( randn(100), randn(100)+im*randn(100), )
+      ),
+
   Dict( "constr" => IndBallLinf,
         "wrong"  => ( (-rand(),), ),
         "params" => ( (rand(),), ),
@@ -50,8 +55,8 @@ stuff = [
 
   Dict( "constr" => IndBallL2,
         "wrong"  => ( (-rand(),), ),
-        "params" => ( (rand(),), (sqrt(20)) ),
-        "args"   => ( randn(10), randn(20), )
+        "params" => ( (rand(),), (sqrt(20),), (0.5,) ),
+        "args"   => ( randn(10), randn(20), 0.1*ones(10) )
       ),
 
   Dict( "constr" => IndBallRank,
@@ -161,12 +166,6 @@ stuff = [
         "args"   => ( randn(10), randn(10), randn(20), rand(Complex{Float64},30), rand(Complex{Float64}, 50) )
       ),
 
-  Dict( "constr" => FirmThreshold,
-        "wrong"  => ( (-rand(),0.9*rand()+1e-3), (-rand(10),0.9*rand(10)+1e-3), (rand(),1.1+rand()), (rand(10),1.1+rand(10)), (rand(), -rand()), (rand(10), -rand(10)), (rand(5),0.9*rand(10)) ),
-	"params" => ( (), (rand(),), (rand(20),0.9*rand(20)+1e-3), (rand(30),0.9*rand(30)+1e-3,), (rand(),0.9*rand()+1e-3) ),
-	"args"   => ( randn(10), randn(10), randn(20), rand(Complex{Float64},30), rand(Complex{Float64}, 50) )
-      ),
-
   Dict( "constr" => NormL2,
         "params" => ( (), (rand(),) ),
         "args"   => ( randn(10), randn(10) )
@@ -241,8 +240,8 @@ stuff = [
       ),
 
   Dict( "constr" => SeparableSum,
-        "params" => ( ([NormL2(2.0), NormL1(1.5), NormL2(0.5)], ), ),
-        "args"   => ( [randn(5), randn(15), randn(10)], )
+        "params" => ( ((NormL2(2.0), NormL1(1.5), NormL2(0.5)), ), ),
+        "args"   => ( (randn(5), randn(15), randn(10)), )
       ),
 
   Dict( "constr" => SlicedSeparableSum,
@@ -268,6 +267,8 @@ for i = 1:length(stuff)
     x      = stuff[i]["args"][j]
     f = constr(params...)
     println(f)
+
+    predicates_test(f)
 
 ##### just call f
     fx = call_test(f, x)

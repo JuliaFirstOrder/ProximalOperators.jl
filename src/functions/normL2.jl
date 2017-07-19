@@ -1,14 +1,21 @@
 # L2 norm (times a constant)
 
-"""
-  NormL2(λ::Real=1.0)
+export NormL2
 
-Returns the function `g(x) = λ||x||_2`, for a real parameter `λ ⩾ 0`.
+"""
+**``L_2`` norm**
+
+    NormL2(λ=1.0)
+
+With a nonnegative scalar parameter λ, returns the function
+```math
+f(x) = λ\\cdot\\sqrt\{x_1^2 + … + x_n^2\}.
+```
 """
 
 immutable NormL2{R <: Real} <: ProximableFunction
   lambda::R
-  function NormL2(lambda::R)
+  function NormL2{R}(lambda::R) where {R <: Real}
     if lambda < 0
       error("parameter λ must be nonnegative")
     else

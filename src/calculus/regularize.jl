@@ -1,16 +1,24 @@
 # Regularize
 
-"""
-  Regularize(f::ProximableFunction, ρ::Real, a::AbstractArray)
+export Regularize
 
-Given function `f`, returns `g(x) = f(x) + (ρ/2)||x-a||²`.
+"""
+**Regularize**
+
+    Regularize(f, ρ=1.0, a=0.0)
+
+Given function `f`, and optional parameters `ρ` (positive) and `a`, returns
+```math
+g(x) = f(x) + \\tfrac{ρ}{2}\\|x-a\\|².
+```
+Parameter `a` can be either an array or a scalar, in which case it is subtracted component-wise from `x` in the above expression.
 """
 
 immutable Regularize{T <: ProximableFunction, S <: Real, A <: Union{Real, AbstractArray}} <: ProximableFunction
   f::T
   rho::S
   a::A
-  function Regularize(f::T, rho::S, a::A)
+  function Regularize{T,S,A}(f::T, rho::S, a::A) where {T <: ProximableFunction, S <: Real, A <: Union{Real, AbstractArray}}
     if rho <= 0.0
       error("parameter `ρ` must be positive")
     else
@@ -22,6 +30,10 @@ end
 is_separable(f::Regularize) = is_separable(f.f)
 is_prox_accurate(f::Regularize) = is_prox_accurate(f.f)
 is_convex(f::Regularize) = is_convex(f.f)
+is_smooth(f::Regularize) = is_smooth(f.f)
+is_quadratic(f::Regularize) = is_quadratic(f.f)
+is_generalized_quadratic(f::Regularize) = is_generalized_quadratic(f.f)
+is_strongly_convex(f::Regularize) = true
 
 Regularize{T <: ProximableFunction, S <: Real, A <: AbstractArray}(f::T, rho::S, a::A) = Regularize{T, S, A}(f, rho, a)
 
@@ -29,6 +41,12 @@ Regularize{T <: ProximableFunction, S <: Real}(f::T, rho::S=one(S), a::S=zero(S)
 
 function (g::Regularize){T <: RealOrComplex}(x::AbstractArray{T})
 	return g.f(x) + g.rho/2*vecnorm(x-g.a)^2
+end
+
+function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::Regularize, x::AbstractArray{T})
+  v = gradient!(y, g.f, x)
+  y .+= g.rho*(x .- g.a)
+  return v + g.rho/2*vecnorm(x - g.a)^2
 end
 
 function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::Regularize, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)

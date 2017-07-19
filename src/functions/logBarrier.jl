@@ -1,10 +1,24 @@
 # logarithmic barrier function
 
+export LogBarrier
+
+"""
+**Logarithmic barrier**
+
+    LogBarrier(a=1.0, b=0.0, μ=1.0)
+
+Returns the function
+```math
+f(x) = -μ⋅∑_i\\log(a⋅x_i+b),
+```
+for a nonnegative parameter `μ`.
+"""
+
 immutable LogBarrier{T <: Real} <: ProximableFunction
   a::T
   b::T
   mu::T
-  function LogBarrier(a::T, b::T, mu::T)
+  function LogBarrier{T}(a::T, b::T, mu::T) where {T <: Real}
     if mu <= 0
       error("parameter mu must be positive")
     else
@@ -15,12 +29,6 @@ end
 
 is_separable(f::LogBarrier) = true
 is_convex(f::LogBarrier) = true
-
-"""
-  LogBarrier(a::Real=1.0, b::Real=0.0, mu::Real=1.0)
-
-Returns the function `g(x) = -mu*sum(log(a*x_i+b), i=1,...,n)`.
-"""
 
 LogBarrier{T <: Real}(a::T=1.0, b::T=0.0, mu::T=1.0) = LogBarrier{T}(a, b, mu)
 

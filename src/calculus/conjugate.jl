@@ -1,14 +1,21 @@
 # Conjugate
 
-"""
-  Conjugate(f::ProximableFunction)
+export Conjugate
 
-Returns the conjugate function of `f`, that is `f*(x) = sup{y'x - f(y)}`.
+"""
+**Convex conjugate**
+
+    Conjugate(f)
+
+Returns the convex conjugate (also known as Fenchel conjugate, or Fenchel-Legendre transform) of function `f`, that is
+```math
+f^*(x) = \\sup_y \\{ \\langle y, x \\rangle - f(y) \\}.
+```
 """
 
 immutable Conjugate{T <: ProximableFunction} <: ProximableFunction
   f::T
-  function Conjugate(f::T)
+  function Conjugate{T}(f::T) where {T<: ProximableFunction}
     if is_convex(f) == false
       error("`f` must be convex")
     end
@@ -19,6 +26,10 @@ end
 is_prox_accurate(f::Conjugate) = is_prox_accurate(f.f)
 is_convex(f::Conjugate) = true
 is_cone(f::Conjugate) = is_cone(f.f) && is_convex(f.f)
+is_smooth(f::Conjugate) = is_strongly_convex(f.f)
+is_strongly_convex(f::Conjugate) = is_smooth(f.f)
+is_quadratic(f::Conjugate) = is_strongly_convex(f.f) && is_generalized_quadratic(f.f)
+is_generalized_quadratic(f::Conjugate) = is_quadratic(f.f)
 
 fun_dom(f::Conjugate) = fun_dom(f.f)
 

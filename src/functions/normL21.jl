@@ -1,17 +1,24 @@
 # L2,1 norm/Sum of norms of columns or rows (times a constant)
 
-"""
-  NormL21(λ::Real=1.0, dim=1)
+export NormL21
 
-Returns the function `g(X) = λsum(||x_i||)` for a nonnegative parameter `λ ⩾ 0`,
-where x_i are the columns of X if dim == 1, or the rows of X if dim == 2.
-In words, it is the (weighted) sum of the Euclidean norm of the columns (rows) of X.
+"""
+**Sum-of-``L_2`` norms**
+
+    NormL21(λ=1.0, dim=1)
+
+Returns the function
+```math
+f(X) = λ⋅∑_i\\|x_i\\|
+```
+for a nonnegative `λ`, where ``x_i`` is the ``i``-th column of ``X`` if `dim == 1`, and the ``i``-th row of ``X`` if `dim == 2`.
+In words, it is the sum of the Euclidean norms of the columns or rows.
 """
 
 immutable NormL21{R <: Real, I <: Integer} <: ProximableFunction
   lambda::R
   dim::I
-  function NormL21(lambda::R, dim::I)
+  function NormL21{R,I}(lambda::R, dim::I) where {R <: Real, I <: Integer}
     if lambda < 0
       error("parameter λ must be nonnegative")
     else

@@ -1,9 +1,17 @@
 # L-infinity norm
 
-"""
-  NormLinf(λ::Real=1.0)
+export NormLinf
 
-Returns the function `g(x) = λ⋅max(abs(x))`, for a nonnegative parameter `λ ⩾ 0`.
+"""
+**``L_∞`` norm**
+
+    NormLinf(λ=1.0)
+
+Returns the function
+```math
+f(x) = λ⋅\\max\\{|x_1|, …, |x_n|\\},
+```
+for a nonnegative parameter `λ`.
 """
 
 NormLinf{R <: Real}(lambda::R=1.0) = Conjugate(IndBallL1(lambda))

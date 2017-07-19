@@ -1,11 +1,16 @@
 # indicator of nonpositive orthant
 
+export IndNonpositive
+
 """
-  IndNonpositive()
+**Indicator of the nonpositive orthant**
 
-Returns the indicator function the nonpositive orthant, that is
+    IndNonpositive()
 
-  `g(x) = 0 if x ⩽ 0, +∞ otherwise`
+Returns the indicator of the set
+```math
+C = \\{ x : x \\leq 0 \\}.
+```
 """
 
 immutable IndNonpositive <: ProximableFunction end

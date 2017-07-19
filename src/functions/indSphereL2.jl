@@ -1,14 +1,22 @@
 # indicator of the L2 norm sphere with given radius
 
-"""
-  IndSphereL2(r::Real=1.0)
+export IndSphereL2
 
-Returns the function `g = ind{x : ||x|| = r}`, for a real parameter `r > 0`.
+"""
+**Indicator of a Euclidean sphere**
+
+    IndSphereL2(r=1.0)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : \\|x\\| = r \\},
+```
+where ``\\|\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
 
 immutable IndSphereL2{R <: Real} <: ProximableFunction
   r::R
-  function IndSphereL2(r::R)
+  function IndSphereL2{R}(r::R) where {R <: Real}
     if r <= 0
       error("parameter r must be positive")
     else

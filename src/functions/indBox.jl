@@ -1,17 +1,23 @@
 # indicator of a generic box
 
-"""
-  IndBox(lb, ub)
+export IndBox, IndBallLinf
 
-Returns the function `g = ind{x : lb ⩽ x ⩽ ub}`. Parameters `lb` and `ub` can be
-either scalars or arrays of the same dimension as `x`, and must satisfy `lb <= ub`.
-Bounds are allowed to take values `-Inf` and `+Inf`.
+"""
+**Indicator of a box**
+
+    IndBox(low, up)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : low \\leq x \\leq up \\}.
+```
+Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space: they must satisfy `low <= up`, and are allowed to take values `-Inf` and `+Inf` to indicate unbounded coordinates.
 """
 
 immutable IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
   lb::T
   ub::S
-  function IndBox(lb::T, ub::S)
+  function IndBox{T,S}(lb::T, ub::S) where {T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
     if !(eltype(lb) <: Real && eltype(ub) <: Real)
       error("`lb` and `ub` must be real")
     end
@@ -38,14 +44,9 @@ IndBox{T <: AbstractArray, S <: AbstractArray}(lb::T, ub::S) =
   size(lb) != size(ub) ? error("bounds must have the same dimensions, or at least one of them be scalar") :
   IndBox{T, S}(lb, ub)
 
-IndBox_lb{T <: Real, S}(f::IndBox{T, S}, i) = f.lb
-IndBox_lb{T <: AbstractArray, S}(f::IndBox{T, S}, i) = f.lb[i]
-IndBox_ub{T, S <: Real}(f::IndBox{T, S}, i) = f.ub
-IndBox_ub{T, S <: AbstractArray}(f::IndBox{T, S}, i) = f.ub[i]
-
 function (f::IndBox){R <: Real}(x::AbstractArray{R})
   for k in eachindex(x)
-    if x[k] < IndBox_lb(f,k) || x[k] > IndBox_ub(f,k)
+    if x[k] < get_kth_elem(f.lb, k) || x[k] > get_kth_elem(f.ub, k)
       return +Inf
     end
   end
@@ -54,10 +55,10 @@ end
 
 function prox!{R <: Real}(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=one(R))
   for k in eachindex(x)
-    if x[k] < IndBox_lb(f,k)
-      y[k] = IndBox_lb(f,k)
-    elseif x[k] > IndBox_ub(f,k)
-      y[k] = IndBox_ub(f,k)
+    if x[k] < get_kth_elem(f.lb, k)
+      y[k] = get_kth_elem(f.lb, k)
+    elseif x[k] > get_kth_elem(f.ub, k)
+      y[k] = get_kth_elem(f.ub, k)
     else
       y[k] = x[k]
     end
@@ -68,10 +69,15 @@ end
 prox!{R <: Real}(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) = prox!(y, f, x, one(R))
 
 """
-  IndBallLinf(r::Real=1.0)
+**Indicator of a ``L_∞`` norm ball**
 
-Returns the indicator function of an infinity-norm ball, that is function
-`g(x) = ind{maximum(abs(x)) ⩽ r}` for `r ⩾ 0`.
+    IndBallLinf(r=1.0)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : \\max (|x_i|) \\leq r \\}.
+```
+Parameter `r` must be positive.
 """
 
 IndBallLinf{R <: Real}(r::R=1.0) = IndBox(-r, r)

@@ -1,9 +1,17 @@
 # indicator of the Cartesian product of real binary sets
 
-"""
-  IndBinary(low, high)
+export IndBinary
 
-Returns the function `g = ind{x : x_i == low || x_i == high}`.
+"""
+**Indicator of the product of binary sets**
+
+    IndBinary(low, up)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : x_i = low_i\\ \\text{or}\\ x_i = up_i \\},
+```
+Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space.
 """
 
 immutable IndBinary{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction

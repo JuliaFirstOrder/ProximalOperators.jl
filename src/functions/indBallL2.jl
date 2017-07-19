@@ -1,14 +1,22 @@
 # indicator of the L2 norm ball with given radius
 
-"""
-  IndBallL2(r::Real=1.0)
+export IndBallL2
 
-Returns the function `g = ind{x : ||x|| ⩽ r}`, for a real parameter `r > 0`.
+"""
+**Indicator of a Euclidean ball**
+
+    IndBallL2(r=1.0)
+
+Returns the indicator function of the set
+```math
+S = \\{ x : \\|x\\| \\leq r \\},
+```
+where ``\\|\\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
 
 immutable IndBallL2{R <: Real} <: ProximableFunction
   r::R
-  function IndBallL2(r::R)
+  function IndBallL2{R}(r::R) where {R <: Real}
     if r <= 0
       error("parameter r must be positive")
     else

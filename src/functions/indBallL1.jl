@@ -1,14 +1,22 @@
 # indicator of the L1 norm ball with given radius
 
-"""
-  IndBallL1(r::Real=1.0)
+export IndBallL1
 
-Returns the function `g = ind{x : ‖x‖_1 ⩽ r}`, for a real parameter `r > 0`.
+"""
+**Indicator of a ``L_1`` norm ball**
+
+    IndBallL1(r=1.0)
+
+Returns the indicator function of the set
+```math
+S = \\left\\{ x : ∑_i |x_i| \\leq r \\right\\}.
+```
+Parameter `r` must be positive.
 """
 
 immutable IndBallL1{R <: Real} <: ProximableFunction
   r::R
-  function IndBallL1(r::R)
+  function IndBallL1{R}(r::R) where {R <: Real}
     if r <= 0
       error("parameter r must be positive")
     else
@@ -23,13 +31,13 @@ is_set(f::IndBallL1) = true
 IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
 
 function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T})
-  if vecnorm(x,1) - f.r > 1e-14
+  if vecnorm(x,1) - f.r > 1e-12
     return +Inf
   end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!{R<: Real, T <: RealOrComplex{R}}(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=one(R))
   # TODO: a faster algorithm
   if vecnorm(x,1) - f.r < 1e-14
     y[:] = x[:]
@@ -38,20 +46,20 @@ function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL1, x::Abstrac
     n = length(x)
     p = abs.(view(x,:))
     sort!(p, rev=true)
-    s = 0.0
+    s = zero(R)
     @inbounds for i = 1:n-1
       s = s + p[i]
       tmax = (s - f.r)/i
       if tmax >= p[i+1]
         @inbounds for j in eachindex(x)
-          y[j] = sign(x[j])*max(abs(x[j])-tmax, 0.0)
+          y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
         end
         return 0.0
       end
     end
     tmax = (s + p[n] - f.r)/n
     @inbounds for j in eachindex(x)
-      y[j] = sign(x[j])*max(abs(x[j])-tmax, 0.0)
+      y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
     end
     return 0.0
   end
