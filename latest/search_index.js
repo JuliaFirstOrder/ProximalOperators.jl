@@ -213,7 +213,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.IndPSD",
     "category": "Type",
-    "text": "Indicator of the set of positive semi-definite cone\n\nIndPSD()\n\nReturns the indicator of the set\n\nC =  X  X succeq 0 \n\nThe argument to the function can be either a Symmetric or Hermitian object, or an object of type AbstractVector{Float64} holding a symmetric matrix in (lower triangular) packed storage.\n\n\n\n"
+    "text": "Indicator of the set of positive semi-definite cone\n\nIndPSD(;scaling=false)\n\nReturns the indicator of the set\n\nC =  X  X succeq 0 \n\nThe argument to the function can be either a Symmetric or Hermitian object, or an object of type AbstractVector{Float64} holding a symmetric matrix in (lower triangular) packed storage.\n\nIf scaling = true then the vectors y and x in prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}, args...) have the off-diagonal elements multiplied with √2 to preserve inner products, see Vandenberghe 2010: http://www.seas.ucla.edu/~vandenbe/publications/coneprog.pdf .\n\nI.e. when when scaling=true, let X,Y be matrices and\n\nx = (X_{1,1}, √2⋅X_{2,1}, ... ,√2⋅X_{n,1}, X_{2,2}, √2⋅X_{3,2}, ..., X_{n,n}),\n\ny = (Y_{1,1}, √2⋅Y_{2,1}, ... ,√2⋅Y_{n,1}, Y_{2,2}, √2⋅Y_{3,2}, ..., Y_{n,n})\n\nthen prox!(Y, f, X) is equivalent to prox!(y, f, x).\n\n\n\n"
 },
 
 {
