@@ -21,6 +21,7 @@ immutable IndAffine{T <: RealOrComplex, M <: AbstractArray{T, 2}, V <: AbstractA
   A::M
   b::V
   R::F
+  res::V
   function IndAffine{T,M,V,F}(A::M, b::V) where {T<:RealOrComplex, M<:AbstractArray{T,2}, V<:AbstractArray{T,1}, F}
     if size(A,1) > size(A,2)
       error("A must be full row rank")
@@ -30,10 +31,10 @@ immutable IndAffine{T <: RealOrComplex, M <: AbstractArray{T, 2}, V <: AbstractA
     b = normrowsinv.*b # and b accordingly
     if !issparse(A)
       Q, R = qr(A')
-      new(A, b, R)
+      new(A, b, R, similar(b))
     else
       RF = qrfact(A') #Save QR=AE factorization
-      new(A, b, RF)
+      new(A, b, RF, [])
     end
   end
 end
@@ -60,8 +61,12 @@ function (f::IndAffine){R<:Real, T <: RealOrComplex{R}}(x::AbstractArray{T,1})
 end
 
 function prox!{R<:Real, T<:RealOrComplex{R}, M<:DenseArray, V<:AbstractArray{T,1}}(y::V, f::IndAffine{T,M,V,M}, x::V, gamma::R=one(R))
-  res = f.A*x - f.b
-  y[:] = x - f.A'*(f.R\(f.R'\res))
+  A_mul_B!(f.res, f.A, x)
+  f.res .= f.b .- f.res
+  LinAlg.LAPACK.trtrs!('U', 'C', 'N', f.R, f.res);
+  LinAlg.LAPACK.trtrs!('U', 'N', 'N', f.R, f.res);
+  Ac_mul_B!(y, f.A, f.res)
+  y .+= x
   return zero(R)
 end
 
@@ -84,8 +89,7 @@ fun_params(f::IndAffine) =
           "b = ", typeof(f.b), " of size ", size(f.b))
 
 function prox_naive{R<:Real, T <: RealOrComplex{R}}(f::IndAffine, x::AbstractArray{T,1}, gamma::R=one(R))
-  res = f.A*x - f.b
-  y = x - f.A'*(f.R\(f.R'\res))
+  y = x + f.A'*(f.R\(f.R'\(f.b - f.A*x)))
   return y, zero(R)
 end
 
