@@ -4,7 +4,7 @@ __precompile__()
 
 module ProximalOperators
 
-const RealOrComplex{T<:Real} = Union{T, Complex{T}}
+const RealOrComplex{T <: Real} = Union{T, Complex{T}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
 
 export ProximableFunction
@@ -54,7 +54,6 @@ include("functions/normL21.jl")
 include("functions/normL0.jl")
 include("functions/nuclearNorm.jl")
 include("functions/quadratic.jl")
-include("functions/quadraticIterative.jl")
 include("functions/sqrNormL2.jl")
 include("functions/sumPositive.jl")
 

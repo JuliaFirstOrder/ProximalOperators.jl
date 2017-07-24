@@ -6,6 +6,7 @@ A = randn(n, k)
 Q = A*A'
 q = randn(n)
 f = Quadratic(Q, q)
+@test typeof(f) <: ProximalOperators.QuadraticDirect
 
 predicates_test(f)
 
@@ -23,7 +24,8 @@ call_test(f, x)
 prox_test(f, x)
 prox_test(f, x, 1.5)
 
-f = QuadraticIterative(Q, q)
+f = Quadratic(Q, q, iterative=true)
+@test typeof(f) <: ProximalOperators.QuadraticIterative
 
 call_test(f, x)
 prox_test(f, x)
@@ -33,6 +35,7 @@ prox_test(f, x, 2.1)
 
 Q = sparse(Q)
 f = Quadratic(Q, q)
+@test typeof(f) <: ProximalOperators.QuadraticDirect
 
 grad_fx, fx = gradient(f, x)
 @test abs(fx - 0.5*dot(x, Q*x) - dot(x, q)) <= 1e-12
@@ -42,7 +45,8 @@ call_test(f, x)
 prox_test(f, x)
 prox_test(f, x, 0.8)
 
-f = QuadraticIterative(Q, q)
+f = Quadratic(Q, q, iterative=true)
+@test typeof(f) <: ProximalOperators.QuadraticIterative
 
 call_test(f, x)
 prox_test(f, x)
