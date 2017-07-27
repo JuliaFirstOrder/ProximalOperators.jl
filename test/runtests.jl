@@ -103,4 +103,8 @@ end
   include("test_demos.jl")
 end
 
+@testset "IndGraph blocks" begin
+  include("test_graph.jl")
+end
+
 end

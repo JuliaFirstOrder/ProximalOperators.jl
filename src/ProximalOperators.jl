@@ -57,6 +57,7 @@ include("functions/quadratic.jl")
 include("functions/quadraticIterative.jl")
 include("functions/sqrNormL2.jl")
 include("functions/sumPositive.jl")
+include("functions/indGraph.jl")
 
 # Calculus rules
 
