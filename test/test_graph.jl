@@ -1,7 +1,7 @@
 ## Test sparse
-# workspace()
-# using ProximalOperators
-# using Base.Test
+workspace()
+using ProximalOperators
+using Base.Test
 
 rng = MersenneTwister(1234)
 
@@ -52,19 +52,3 @@ prox!(x, y, fiagdf, c, d)
 
 prox!(y, x, fiagds, v, w)
 @test fiagds(y, x) == 0.0
-
-@time for i = 1:10000
-  prox!(x, y, fiag, c, d)
-end
-
-@time for i = 1:10000
-  prox!(x, y, fiagdf, c, d)
-end
-
-@time for i = 1:10000
-  prox!(y, x, fiagds, v, w)
-end
-
-@time for i = 1:10000
-  prox!(xy, fiaf, cd)
-end

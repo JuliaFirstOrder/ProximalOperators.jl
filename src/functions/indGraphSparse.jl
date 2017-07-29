@@ -1,18 +1,29 @@
-struct IndGraphSparse{T <: RealOrComplex} <: IndGraph
+struct IndGraphSparse{T <: RealOrComplex, Ti <: Number} <: IndGraph
   m::Int
   n::Int
-  A::AbstractArray{T,2}
+  A::SparseMatrixCSC{T, Ti}
   F::Base.SparseArrays.CHOLMOD.Factor{T} #LDL factorization
+
+  tmp::Array{T, 1}
+  tmpx::SubArray{T, 1, Array{T, 1}, Tuple{UnitRange{Int64}}, true}
+  res::Array{T, 1}
 end
 
-function IndGraphSparse(A::AbstractArray{T,2}) where {T <: RealOrComplex}
+function IndGraphSparse(A::SparseMatrixCSC{T,Ti}) where
+  {T <: RealOrComplex, Ti <: Number}
+
   m, n = size(A)
   K = [speye(n) A'; A -speye(m)]
 
   F = LinAlg.ldltfact(K)
-  #normrows = vec(sqrt.(sum(abs2.(A), 2)))
 
-  return IndGraphSparse(m, n, A, F)
+  tmp = Array{T,1}(m + n)
+  tmpx = view(tmp, 1:n)
+  tmpy = view(tmp, (n + 1):(n + m)) #second part is always zeros
+  fill!(tmpy, 0)
+
+  res = Array{T,1}(m + n)
+  return IndGraphSparse(m, n, A, F, tmp, tmpx, res)
 end
 
 # is_convex(f::IndGraph) = true
@@ -25,10 +36,14 @@ function prox!{T <: RealOrComplex}(
     f::IndGraphSparse,
     c::AbstractArray{T, 1},
     d::AbstractArray{T, 1})
-  res = [c + f.A' * d; zeros(f.m)]
-  xy = f.F \ res
-  x[:] = xy[1:f.n]
-  y[:] = xy[end - f.m + 1:end]
+
+  #instead of res = [c + f.A' * d; zeros(f.m)]
+  At_mul_B!(f.tmpx, f.A, d)
+  f.tmpx .+= c
+  # A_ldiv_B!(f.res, f.F, f.tmp) #is not working
+  f.res .= f.F \ f.tmp #note here f.tmp which is m+n array
+  copy!(x, 1, f.res, 1, f.n)
+  copy!(y, 1, f.res, f.n + 1, f.m)
   return 0.0
 end
 
@@ -50,6 +65,8 @@ function prox_naive{T <: RealOrComplex}(
     f::IndGraphSparse,
     c::AbstractArray{T, 1},
     d::AbstractArray{T, 1})
+
+
   res = [c + f.At * d; zeros(f.m)]
   xy = f.F \ res
   return xy[1:f.n], xy[end - f.m:end], 0.0
