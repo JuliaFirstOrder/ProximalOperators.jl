@@ -1,4 +1,4 @@
-struct IndGraphSparse{T <: RealOrComplex, Ti <: Int} <: IndGraph
+struct IndGraphSparse{T <: RealOrComplex, Ti} <: IndGraph
   m::Int
   n::Int
   A::SparseMatrixCSC{T, Ti}
@@ -10,7 +10,7 @@ struct IndGraphSparse{T <: RealOrComplex, Ti <: Int} <: IndGraph
 end
 
 function IndGraphSparse(A::SparseMatrixCSC{T,Ti}) where
-  {T <: RealOrComplex, Ti <: Int}
+  {T <: RealOrComplex, Ti}
 
   m, n = size(A)
   K = [speye(n) A'; A -speye(m)]
@@ -31,27 +31,29 @@ end
 # is_cone(f::IndGraph) = false
 
 function prox!(
-    xy::Tuple{AbstractVector{T}, AbstractVector{T}},
+    x::AbstractVector{T},
+    y::AbstractVector{T},
     f::IndGraphSparse,
-    cd::Tuple{AbstractVector{T}, AbstractVector{T}}
+    c::AbstractVector{T},
+    d::AbstractVector{T}
   ) where {T <: RealOrComplex}
   #instead of res = [c + f.A' * d; zeros(f.m)]
-  At_mul_B!(f.tmpx, f.A, cd[2])
-  f.tmpx .+= cd[1]
+  At_mul_B!(f.tmpx, f.A, d)
+  f.tmpx .+= c
   # A_ldiv_B!(f.res, f.F, f.tmp) #is not working
-  f.res .= f.F \ f.tmp #note here f.tmp which is m+n array
-  copy!(xy[1], 1, f.res, 1, f.n)
-  copy!(xy[2], 1, f.res, f.n + 1, f.m)
+  f.res .= f.F \ f.tmp
+  # f.res .= f.F \ f.tmp #note here f.tmp which is m+n array
+  copy!(x, 1, f.res, 1, f.n)
+  copy!(y, 1, f.res, f.n + 1, f.m)
   return 0.0
 end
 
-function (f::IndGraphSparse)(
-  xy::Tuple{AbstractVector{T}, AbstractVector{T}}) where
+function (f::IndGraphSparse)(x::AbstractVector{T}, y::AbstractVector{T}) where
     {T <: RealOrComplex}
   # the tolerance in the following line should be customizable
   tmpy = view(f.res, 1:f.m) # the res is rewritten in prox!
-  A_mul_B!(tmpy, f.A, xy[1])
-  tmpy .-= xy[2]
+  A_mul_B!(tmpy, f.A, x)
+  tmpy .-= y
   if norm(tmpy, Inf) <= 1e-10
     return 0.0
   end
@@ -66,22 +68,21 @@ fun_name(f::IndGraphSparse) = "Indicator of an operator graph defined by sparse 
 
 function prox_naive(
     f::IndGraphSparse,
-    cd::Tuple{AbstractVector{T}, AbstractVector{T}}
+    c::AbstractVector{T},
+    d::AbstractVector{T}
   ) where {T <: RealOrComplex}
 
-  res = [c + f.At * d; zeros(f.m)]
+  res = [c + f.A' * d; zeros(f.m)]
   xy = f.F \ res
-  return xy[1:f.n], xy[end - f.m:end], 0.0
+  return xy[1:f.n], xy[f.n + 1:f.n + f.m], 0.0
 end
 
-## Here for convenience
-prox!(x::AbstractVector{T},
-      y::AbstractVector{T},
+## Additional signatures
+prox!(xy::Tuple{AbstractVector{T},AbstractVector{T}},
       f::IndGraphSparse,
-      c::AbstractVector{T},
-      d::AbstractVector{T}
+      cd::Tuple{AbstractVector{T},AbstractVector{T}}
   ) where {T <: RealOrComplex} =
-    prox!((x,y), f, (c,d))
+    prox!(xy[1], xy[2], f, cd[1], cd[2])
 
-(f::IndGraphSparse)(x::AbstractVector{T}, y::AbstractVector{T}
-  ) where {T <: RealOrComplex} = f((x, y))
+(f::IndGraphSparse)(xy::Tuple{AbstractVector{T}, AbstractVector{T}}) where
+  {T <: RealOrComplex} = f(xy[1], xy[2])
