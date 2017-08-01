@@ -5,7 +5,7 @@ struct IndGraphSparse{T <: RealOrComplex, Ti} <: IndGraph
   F::Base.SparseArrays.CHOLMOD.Factor{T} #LDL factorization
 
   tmp::Array{T, 1}
-  tmpx::SubArray{T, 1, Array{T, 1}, Tuple{UnitRange{Int64}}, true}
+  tmpx::SubArray{T, 1, Array{T, 1}, Tuple{UnitRange{Int}}, true}
   res::Array{T, 1}
 end
 
