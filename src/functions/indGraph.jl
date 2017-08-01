@@ -27,7 +27,7 @@ end
 
 is_convex(f::IndGraph) = true
 is_set(f::IndGraph) = true
-# is_cone(f::IndGraph) = false
+is_cone(f::IndGraph) = true
 
 IndGraph(a::AbstractArray{T,1}) where {T <: RealOrComplex} =
   IndGraph{T}(a')
@@ -40,7 +40,7 @@ IndGraph(a::AbstractArray{T,1}) where {T <: RealOrComplex} =
 #   return +Inf
 # end
 
-fun_name(f::IndGraph) = "Indicator of an operator graph"
+# fun_name(f::IndGraph) = "Indicator of an operator graph"
 fun_dom(f::IndGraph) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"
 fun_expr(f::IndGraph) = "x,y ↦ 0 if Ax = y, +∞ otherwise"
 fun_params(f::IndGraph) =

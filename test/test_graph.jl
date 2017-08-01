@@ -1,7 +1,7 @@
 ## Test sparse
-workspace()
-using ProximalOperators
-using Base.Test
+# workspace()
+# using ProximalOperators
+# using Base.Test
 
 rng = MersenneTwister(1234)
 
@@ -85,3 +85,16 @@ prox!(y, x, fiagds, v, w)
 # test tuple signature
 prox!((y,x), fiagds, (v,w))
 @test fiagds((y,x)) == 0.0
+
+
+## MISC
+# test calls to other functions
+for foo in [fiag, fiagdf, fiagds]
+  @test ProximalOperators.fun_name(foo) != ""
+  @test ProximalOperators.fun_dom(foo) != ""
+  @test ProximalOperators.fun_expr(foo) != ""
+  @test ProximalOperators.fun_params(foo) != ""
+  @test ProximalOperators.is_convex(foo) == true
+  @test ProximalOperators.is_set(foo) == true
+  @test ProximalOperators.is_cone(foo) == true
+end
