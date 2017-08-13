@@ -1,5 +1,7 @@
 # This implements the variant when A is dense and m > n
 
+export IndGraphSkinny
+
 struct IndGraphSkinny{T <: RealOrComplex} <: IndGraph
   m::Int
   n::Int
@@ -69,11 +71,14 @@ function prox_naive(
 end
 
 ## Additional signatures
-prox!(xy::Tuple{AbstractVector{T},AbstractVector{T}},
-      f::IndGraphSkinny,
-      cd::Tuple{AbstractVector{T},AbstractVector{T}}
-  ) where {T <: RealOrComplex} =
-    prox!(xy[1], xy[2], f, cd[1], cd[2])
-
-(f::IndGraphSkinny)(xy::Tuple{AbstractVector{T}, AbstractVector{T}}) where
-  {T <: RealOrComplex} = f(xy[1], xy[2])
+# prox!(xy::Tuple{AbstractVector{T},AbstractVector{T}},
+#       f::IndGraphSkinny,
+#       cd::Tuple{AbstractVector{T},AbstractVector{T}}
+#   ) where {T <: RealOrComplex} =
+#     prox!(xy[1], xy[2], f, cd[1], cd[2])
+#
+function (f::IndGraphSkinny)(xy::AbstractVector{T}) where
+  {T <: RealOrComplex}
+  x, y = splitinput(f, xy)
+  return f(x, y)
+end

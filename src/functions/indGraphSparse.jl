@@ -1,3 +1,5 @@
+export IndGraphSparse
+
 struct IndGraphSparse{T <: RealOrComplex, Ti} <: IndGraph
   m::Int
   n::Int
@@ -35,7 +37,8 @@ function prox!(
     y::AbstractVector{T},
     f::IndGraphSparse,
     c::AbstractVector{T},
-    d::AbstractVector{T}
+    d::AbstractVector{T},
+    gamma=1.0
   ) where {T <: RealOrComplex}
   #instead of res = [c + f.A' * d; zeros(f.m)]
   At_mul_B!(f.tmpx, f.A, d)
@@ -69,7 +72,8 @@ fun_name(f::IndGraphSparse) = "Indicator of an operator graph defined by sparse 
 function prox_naive(
     f::IndGraphSparse,
     c::AbstractVector{T},
-    d::AbstractVector{T}
+    d::AbstractVector{T},
+    gamma=1.0
   ) where {T <: RealOrComplex}
 
   res = [c + f.A' * d; zeros(f.m)]
@@ -78,11 +82,14 @@ function prox_naive(
 end
 
 ## Additional signatures
-prox!(xy::Tuple{AbstractVector{T},AbstractVector{T}},
-      f::IndGraphSparse,
-      cd::Tuple{AbstractVector{T},AbstractVector{T}}
-  ) where {T <: RealOrComplex} =
-    prox!(xy[1], xy[2], f, cd[1], cd[2])
-
-(f::IndGraphSparse)(xy::Tuple{AbstractVector{T}, AbstractVector{T}}) where
-  {T <: RealOrComplex} = f(xy[1], xy[2])
+# prox!(xy::Tuple{AbstractVector{T},AbstractVector{T}},
+#       f::IndGraphSparse,
+#       cd::Tuple{AbstractVector{T},AbstractVector{T}}, gamma=1.0
+#   ) where {T <: RealOrComplex} =
+#     prox!(xy[1], xy[2], f, cd[1], cd[2])
+#
+function (f::IndGraphSparse)(xy::AbstractVector{T}) where
+  {T <: RealOrComplex}
+  x, y = splitinput(f, xy)
+  return f(x, y)
+end

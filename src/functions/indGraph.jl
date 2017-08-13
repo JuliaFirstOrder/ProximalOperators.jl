@@ -1,4 +1,5 @@
 # indicator of an affine set
+export IndGraph
 
 """
   IndGraph(A::Array{Real,2})
@@ -45,6 +46,32 @@ fun_dom(f::IndGraph) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"
 fun_expr(f::IndGraph) = "x,y ↦ 0 if Ax = y, +∞ otherwise"
 fun_params(f::IndGraph) =
   string( "A = ", typeof(f.A), " of size ", size(f.A))
+
+# Additional signatures
+function prox!(
+    xy::AbstractVector{T},
+    f::IndGraph,
+    cd::AbstractVector{T},
+    gamma=1.0) where
+  {T<:RealOrComplex}
+ @assert length(xy) == f.m + f.n
+ @assert length(cd) == f.m + f.n
+ x = view(xy, 1:f.n)
+ y = view(xy, (f.n + 1):(f.n + f.m))
+ c = view(cd, 1:f.n)
+ d = view(cd, (f.n + 1):(f.n + f.m))
+ prox!(x, y, f, c, d)
+ return 0.0
+end
+
+function splitinput(f::IndGraph, xy::AbstractVector{T}) where
+    {T <: RealOrComplex}
+  @assert length(xy) == f.m + f.n
+  @assert length(cd) == f.m + f.n
+  x = view(xy, 1:f.n)
+  y = view(xy, (f.n + 1):(f.n + f.m))
+  return x, y
+end
 
 include("indGraphSparse.jl")
 include("indGraphFat.jl")
