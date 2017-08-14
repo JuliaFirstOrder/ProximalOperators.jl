@@ -1,14 +1,16 @@
 ### CONCRETE TYPE: DIRECT PROX EVALUATION
 
 mutable struct LeastSquaresDirect{R <: Real, RC <: RealOrComplex{R}, M <: AbstractMatrix{RC}, V <: AbstractVector{RC}, F <: Factorization} <: LeastSquares
-  A::M
+  A::M # m-by-n matrix
   b::V
   Atb::V
   lambda::R
   gamma::R
+  shape::Symbol
   S::M
-  res::Vector{RC}
-  U::F
+  res::Vector{RC} # m-sized buffer
+  q::Vector{RC} # n-sized buffer
+  fact::F
   function LeastSquaresDirect{R, RC, M, V, F}(A::M, b::V, lambda::R) where {R <: Real, RC <: RealOrComplex{R}, M <: AbstractMatrix{RC}, V <: AbstractVector{RC}, F <: Factorization}
     if size(A, 1) != length(b)
       error("A and b have incompatible dimensions")
@@ -16,11 +18,15 @@ mutable struct LeastSquaresDirect{R <: Real, RC <: RealOrComplex{R}, M <: Abstra
     if lambda <= 0
       error("lambda must be positive")
     end
-    if size(A,1) >= size(A,2)
-      new(A, b, A'*b, lambda, -1, A'*A, zeros(RC, length(b)))
+    m, n = size(A)
+    if m >= n
+      S = A'*A
+      shape = :Tall
     else
-      new(A, b, A'*b, lambda, -1, A*A', zeros(RC, length(b)))
+      S = A*A'
+      shape = :Fat
     end
+    new(A, b, A'*b, lambda, -1, shape, S, zeros(RC, m), zeros(RC, n))
   end
 end
 
@@ -45,13 +51,13 @@ end
 
 function factor_step!(f::LeastSquaresDirect{R, RC, M, V, F}, gamma::R) where {R, RC, M <: DenseMatrix, V, F}
   lamgam = f.lambda*gamma
-  f.U = cholfact(f.S + I/lamgam)
+  f.fact = cholfact(f.S + I/lamgam)
   f.gamma = gamma
 end
 
 function factor_step!(f::LeastSquaresDirect{R, RC, M, V, F}, gamma::R) where {R, RC, M <: SparseMatrixCSC, V, F}
   lamgam = f.lambda*gamma
-  f.U = cholfact(f.S; shift=1.0/lamgam)
+  f.fact = cholfact(f.S; shift=1.0/lamgam)
   f.gamma = gamma
 end
 
@@ -62,11 +68,11 @@ function prox!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::A
   end
   lamgam = f.lambda*gamma
   # solve step, two cases: (1) tall A, (2) fat A
-  q = f.Atb + x/lamgam
-  if size(f.A,1) >= size(f.A,2)
-    y .= f.U\q
+  f.q .= f.Atb .+ x./lamgam
+  if f.shape == :Tall
+    y .= f.fact\f.q
   else
-    y .= lamgam*(q - (f.A'*(f.U\(f.A*q))))
+    y .= lamgam*(f.q - (f.A'*(f.fact\(f.A*f.q))))
   end
   A_mul_B!(f.res, f.A, y)
   f.res .-= f.b
