@@ -24,7 +24,8 @@ function (f::QuadraticIterative{R, M, V})(x::AbstractArray{R}) where {R, M, V}
 end
 
 function prox!(y::AbstractArray{R}, f::QuadraticIterative{R, M, V}, x::AbstractArray{R}, gamma::R=one(R)) where {R, M, V}
-  cg!(y, f.Q, 1.0/gamma, x/gamma - f.q)
+  f.temp .= x./gamma .- f.q
+  cg!(y, f.Q, 1.0/gamma, f.temp)
   A_mul_B!(f.temp, f.Q, y)
   fy = 0.5*vecdot(y, f.temp) + vecdot(y, f.q)
   return fy
