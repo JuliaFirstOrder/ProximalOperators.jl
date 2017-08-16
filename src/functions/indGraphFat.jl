@@ -31,7 +31,8 @@ function prox!(
     y::AbstractArray{T},
     f::IndGraphFat,
     c::AbstractArray{T},
-    d::AbstractArray{T}
+    d::AbstractArray{T},
+    gamma=1.0
     ) where {T <: RealOrComplex}
 
   # y .= f.F \ (f.A * c + f.AA * d)
@@ -40,10 +41,10 @@ function prox!(
   y .+= f.tmp
   A_ldiv_B!(f.F, y)
 
-  # f.A * (d - y) + c
+  # f.A' * (d - y) + c # note: for complex the complex conjugate is used
   copy!(f.tmp, d)
   f.tmp .-= y
-  At_mul_B!(x, f.A, f.tmp)
+  Ac_mul_B!(x, f.A, f.tmp)
   x .+= c
   return 0.0
 end
@@ -68,7 +69,8 @@ fun_name(f::IndGraphFat) = "Indicator of an operator graph defined by dense full
 function prox_naive(
     f::IndGraphFat,
     c::AbstractArray{T},
-    d::AbstractArray{T}
+    d::AbstractArray{T},
+    gamma=1.0
   ) where {T <: RealOrComplex}
 
   y = f.F \ (f.A * c + f.AA * d)

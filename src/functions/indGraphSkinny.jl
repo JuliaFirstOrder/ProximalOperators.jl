@@ -42,7 +42,8 @@ function prox!(
     y::AbstractArray{T},
     f::IndGraphSkinny,
     c::AbstractArray{T},
-    d::AbstractArray{T}
+    d::AbstractArray{T},
+    gamma=1.0
     ) where {T <: RealOrComplex}
 
   # x[:] = f.F \ (c + f.A' * d)
@@ -63,10 +64,11 @@ fun_name(f::IndGraphSkinny) = "Indicator of an operator graph defined by dense f
 function prox_naive(
     f::IndGraphSkinny,
     c::AbstractArray{T},
-    d::AbstractArray{T}
+    d::AbstractArray{T},
+    gamma=1.0
     ) where {T <: RealOrComplex}
 
-  x = f.F \ (c + f.A' * d)
+  x = f.F \ (c + f.A.' * d)
   return x, f.A * x, 0.0
 end
 

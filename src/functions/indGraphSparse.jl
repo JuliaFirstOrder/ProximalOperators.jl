@@ -57,7 +57,7 @@ function (f::IndGraphSparse)(x::AbstractVector{T}, y::AbstractVector{T}) where
   tmpy = view(f.res, 1:f.m) # the res is rewritten in prox!
   A_mul_B!(tmpy, f.A, x)
   tmpy .-= y
-  if norm(tmpy, Inf) <= 1e-10
+  if norm(tmpy, Inf) <= 1e-12
     return 0.0
   end
   return +Inf
@@ -76,7 +76,9 @@ function prox_naive(
     gamma=1.0
   ) where {T <: RealOrComplex}
 
-  res = [c + f.A' * d; zeros(f.m)]
+  tmp = At_mul_B(f.A, d);
+  tmp .+= c;
+  res = [tmp; zeros(f.m)]
   xy = f.F \ res
   return xy[1:f.n], xy[f.n + 1:f.n + f.m], 0.0
 end

@@ -85,7 +85,24 @@ stuff = [
         "params" => ( (), (), () ),
         "args"   => ( randn(5), randn(10), randn(30) )
       ),
-
+  Dict( "constr" => IndGraph,
+        "params" => (
+                (sprand(50,100, 0.2),),
+                (sprand(Complex{Float64}, 50,100, 0.2),),
+                (rand(50, 100),),
+                (rand(Complex{Float64}, 50, 100),),
+                (rand(55, 50),),
+                (rand(Complex{Float64}, 55, 50),),
+        ),
+        "args"   => (
+                randn(150),
+                randn(150)+im*randn(150),
+                randn(150),
+                randn(150)+im*randn(150),
+                randn(105),
+                randn(105)+im*randn(105)
+          )
+      ),
   Dict( "constr" => IndPoint,
         "params" => ( (), (randn(20), ) ),
         "args"   => ( randn(10), randn(20) )
