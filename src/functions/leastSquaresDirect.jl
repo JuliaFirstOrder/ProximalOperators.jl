@@ -1,4 +1,7 @@
 ### CONCRETE TYPE: DIRECT PROX EVALUATION
+# prox! is computed using a Cholesky factorization of A'A + I/(lambda*gamma)
+# or AA' + I/(lambda*gamma), according to which matrix is smaller.
+# The factorization is cached and recomputed whenever gamma changes
 
 mutable struct LeastSquaresDirect{R <: Real, RC <: RealOrComplex{R}, M <: AbstractMatrix{RC}, V <: AbstractVector{RC}, F <: Factorization} <: LeastSquares
   A::M # m-by-n matrix
@@ -49,9 +52,20 @@ function (f::LeastSquaresDirect{R, RC, M, V, F})(x::AbstractVector{RC}) where {R
   return (f.lambda/2)*vecnorm(f.res, 2)^2
 end
 
+function prox!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}, gamma::R=one(R)) where {R, RC, M, V, F, D <: RealOrComplex{R}}
+  # if gamma different from f.gamma then call factor_step!
+  if gamma != f.gamma
+    factor_step!(f, gamma)
+  end
+  solve_step!(y, f, x, gamma)
+  A_mul_B!(f.res, f.A, y)
+  f.res .-= f.b
+  return (f.lambda/2)*norm(f.res, 2)^2
+end
+
 function factor_step!(f::LeastSquaresDirect{R, RC, M, V, F}, gamma::R) where {R, RC, M <: DenseMatrix, V, F}
   lamgam = f.lambda*gamma
-  f.fact = cholfact(f.S + I/lamgam)
+  f.fact = cholfact(f.S + I/lamgam, :L)
   f.gamma = gamma
 end
 
@@ -61,22 +75,40 @@ function factor_step!(f::LeastSquaresDirect{R, RC, M, V, F}, gamma::R) where {R,
   f.gamma = gamma
 end
 
-function prox!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}, gamma::R=one(R)) where {R, RC, M, V, F, D <: RealOrComplex{R}}
-  # if gamma different from f.gamma then call factor_step!
-  if gamma != f.gamma
-    factor_step!(f, gamma)
-  end
+function solve_step!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}, gamma::R) where {R, RC, M, V, F <: LinAlg.Cholesky{RC, M}, D <: RealOrComplex{R}}
   lamgam = f.lambda*gamma
-  # solve step, two cases: (1) tall A, (2) fat A
   f.q .= f.Atb .+ x./lamgam
+  # two cases: (1) tall A, (2) fat A
+  if f.shape == :Tall
+    # y .= f.fact\f.q
+    y .= f.q
+    LinAlg.LAPACK.trtrs!('L', 'N', 'N', f.fact.factors, y)
+    LinAlg.LAPACK.trtrs!('L', 'C', 'N', f.fact.factors, y)
+  else # f.shape == :Fat
+    # y .= lamgam*(f.q - (f.A'*(f.fact\(f.A*f.q))))
+    A_mul_B!(f.res, f.A, f.q)
+    LinAlg.LAPACK.trtrs!('L', 'N', 'N', f.fact.factors, f.res)
+    LinAlg.LAPACK.trtrs!('L', 'C', 'N', f.fact.factors, f.res)
+    Ac_mul_B!(y, f.A, f.res)
+    y .-= f.q
+    y .*= -lamgam
+  end
+end
+
+function solve_step!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}, gamma::R) where {R, RC, M, V, F <: SparseArrays.CHOLMOD.Factor{RC}, D <: RealOrComplex{R}}
+  lamgam = f.lambda*gamma
+  f.q .= f.Atb .+ x./lamgam
+  # two cases: (1) tall A, (2) fat A
   if f.shape == :Tall
     y .= f.fact\f.q
-  else
-    y .= lamgam*(f.q - (f.A'*(f.fact\(f.A*f.q))))
+  else # f.shape == :Fat
+    # y .= lamgam*(f.q - (f.A'*(f.fact\(f.A*f.q))))
+    A_mul_B!(f.res, f.A, f.q)
+    f.res .= f.fact\f.res
+    Ac_mul_B!(y, f.A, f.res)
+    y .-= f.q
+    y .*= -lamgam
   end
-  A_mul_B!(f.res, f.A, y)
-  f.res .-= f.b
-  return (f.lambda/2)*norm(f.res, 2)^2
 end
 
 function gradient!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}) where {R, RC, M, V, F, D <: Union{R, Complex{R}}}
