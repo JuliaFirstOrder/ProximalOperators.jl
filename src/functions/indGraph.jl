@@ -1,19 +1,23 @@
-# indicator of an affine set
 export IndGraph
 
 """
-  IndGraph(A::Array{Real,2})
+**Indicator of an operator graph**
 
-Returns the function `g = ind{(x, y) : Ax = y}`.
+    IndGraph(A)
 
-  IndGraph(A::Array{Real,1})
+For matrix `A` (dense or sparse) returns the indicator function of the set
+```math
+S = \\{(x, y) : Ax = y\\}.
+```
 
-Returns the function `g = ind{(x, y) : dot(a,x) = y}`.
+The evaluation of `prox!` uses direct methods based on LDLt (LL for dense cases) matrix factorization and backsolve.
+
+The main method for `prox!` of `IndGraph` has the signature `prox!(x, y, f, c, d, gamma=1.0)`.
+In addition the method `prox!(v, f, w)` is defined with `v` being the concatenation of `x, y`, and `w` --  concatenated input.
+
+The `gamma` could be passed as the last argument, but note that it does not affect anything in calculations.
 """
-# if !isdefined(:RealOrComplex)
-  # RealOrComplex = Union{Real, Complex}
-# end
-#
+
 abstract type IndGraph <: ProximableFunction end
 
 function IndGraph(A::AbstractArray{T,2}) where {T <: RealOrComplex}
@@ -32,14 +36,6 @@ is_cone(f::IndGraph) = true
 
 IndGraph(a::AbstractArray{T,1}) where {T <: RealOrComplex} =
   IndGraph{T}(a')
-
-# function (f::IndGraph){T <: RealOrComplex}(x::AbstractArray{T,1}, y::AbstractArray{T, 1})
-#   # the tolerance in the following line should be customizable
-#   if norm(f.A * x - y, Inf) <= 1e-14
-#     return 0.0
-#   end
-#   return +Inf
-# end
 
 # fun_name(f::IndGraph) = "Indicator of an operator graph"
 fun_dom(f::IndGraph) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"

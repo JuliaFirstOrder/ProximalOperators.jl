@@ -103,7 +103,7 @@ end
   include("test_demos.jl")
 end
 
-@testset "IndGraph blocks" begin
+@testset "IndGraph vs IndAffine" begin
   include("test_graph.jl")
 end
 
