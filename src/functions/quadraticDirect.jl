@@ -1,4 +1,6 @@
 ### CONCRETE TYPE: DIRECT PROX EVALUATION
+# prox! is computed using a Cholesky factorization of Q + I/gamma.
+# The factorization is cached and recomputed whenever gamma changes
 
 mutable struct QuadraticDirect{R <: Real, M <: AbstractMatrix{R}, V <: AbstractVector{R}, F <: Factorization} <: Quadratic
   Q::M

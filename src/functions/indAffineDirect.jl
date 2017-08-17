@@ -1,4 +1,5 @@
 ### CONCRETE TYPE: DIRECT PROX EVALUATION
+# prox! is computed using a QR factorization of A'.
 
 struct IndAffineDirect{R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}, F <: Factorization} <: IndAffine
   A::M
