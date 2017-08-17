@@ -4,7 +4,7 @@
 #
 # using Base.Test
 
-srand(time_ns())
+srand(0)
 
 m, n = (10, 50)
 
