@@ -75,6 +75,7 @@ end
   include("test_leastSquares.jl")
   include("test_quadratic.jl")
   include("test_calls.jl")
+  include("test_graph.jl")
 end
 
 @testset "Calculus rules" begin
@@ -101,10 +102,6 @@ end
 
 @testset "Demos" begin
   include("test_demos.jl")
-end
-
-@testset "IndGraph vs IndAffine" begin
-  include("test_graph.jl")
 end
 
 end

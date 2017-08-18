@@ -25,7 +25,8 @@ IndBallL1
 IndBallL2     
 IndBallRank   
 IndBinary
-IndBox       
+IndBox  
+IndGraph     
 IndHalfspace  
 IndPoint              
 IndSimplex    

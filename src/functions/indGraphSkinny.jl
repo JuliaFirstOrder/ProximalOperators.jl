@@ -84,3 +84,6 @@ function (f::IndGraphSkinny)(xy::AbstractVector{T}) where
   x, y = splitinput(f, xy)
   return f(x, y)
 end
+
+(f::IndGraphSkinny)(xy::Tuple{AbstractVector{T}, AbstractVector{T}}) where
+  {T <: RealOrComplex} = f(xy[1], xy[2])
