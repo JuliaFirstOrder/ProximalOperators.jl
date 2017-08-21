@@ -30,7 +30,7 @@ function (f::IndAffineDirect{R, T, M, V, F})(x::V) where {R, T, M, V, F}
   A_mul_B!(f.res, f.A, x)
   f.res .= f.b .- f.res
   # the tolerance in the following line should be customizable
-  if norm(f.res, Inf) <= 1e-14
+  if norm(f.res, Inf) <= 1e-12
     return zero(R)
   end
   return typemax(R)
