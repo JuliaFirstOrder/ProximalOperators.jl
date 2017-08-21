@@ -72,6 +72,5 @@ Linear
 LogBarrier
 Maximum
 Quadratic
-QuadraticIterative
 SumPositive
 ```
