@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.IndAffine",
     "category": "Type",
-    "text": "Indicator of an affine subspace\n\nIndAffine(A, b)\n\nIf A is a matrix (dense or sparse) and b is a vector, returns the indicator function of the set\n\nS = x  Ax = b\n\nIf A is a vector and b is a scalar, returns the indicator function of the set\n\nS = x  langle A x rangle = b\n\n\n\n"
+    "text": "Indicator of an affine subspace\n\nIndAffine(A, b)\n\nIf A is a matrix (dense or sparse) and b is a vector, returns the indicator function of the set\n\nS = x  Ax = b\n\nIf A is a vector and b is a scalar, returns the indicator function of the set\n\nS = x  langle A x rangle = b\n\nBy default, a direct method (matrix factorization) is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
 },
 
 {
@@ -341,7 +341,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.LeastSquares",
     "category": "Type",
-    "text": "Least squares penalty\n\nLeastSquares(A, b, λ=1.0)\n\nFor a matrix A, a vector b and a scalar λ, returns the function\n\nf(x) = tfraclambda2Ax - b^2\n\n\n\n"
+    "text": "Least squares penalty\n\nLeastSquares(A, b, λ=1.0)\n\nFor a matrix A, a vector b and a scalar λ, returns the function\n\nf(x) = tfraclambda2Ax - b^2\n\nBy default, a direct method (matrix factorization) is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
 },
 
 {
@@ -373,15 +373,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.Quadratic",
     "category": "Type",
-    "text": "Quadratic function\n\nQuadratic(Q, q)\n\nFor a matrix Q (dense or sparse, symmetric and positive definite) and a vector q, returns the function\n\nf(x) = tfrac12langle Qx xrangle + langle q x rangle\n\n\n\n"
-},
-
-{
-    "location": "functions.html#ProximalOperators.QuadraticIterative",
-    "page": "Functions",
-    "title": "ProximalOperators.QuadraticIterative",
-    "category": "Type",
-    "text": "Quadratic function (iterative evaluation of prox)\n\nQuadraticIterative(Q, q)\n\nFor a matrix Q (dense or sparse, symmetric and positive definite) and a vector q, returns the function\n\nf(x) = tfrac12langle Qx xrangle + langle q x rangle\n\nDifferently from Quadratic, in this case the prox operation is evaluated (inexactly) using an iterative method.\n\n\n\n"
+    "text": "Quadratic function\n\nQuadratic(Q, q; iterative=false)\n\nFor a matrix Q (dense or sparse, symmetric and positive definite) and a vector q, returns the function\n\nf(x) = tfrac12langle Qx xrangle + langle q x rangle\n\nBy default, a direct method (matrix factorization) is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
 },
 
 {
@@ -397,7 +389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "Penalties and other functions",
     "category": "section",
-    "text": "HingeLoss   \nHuberLoss   \nLeastSquares\nLinear\nLogBarrier\nMaximum\nQuadratic\nQuadraticIterative\nSumPositive"
+    "text": "HingeLoss   \nHuberLoss   \nLeastSquares\nLinear\nLogBarrier\nMaximum\nQuadratic\nSumPositive"
 },
 
 {
