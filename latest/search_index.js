@@ -129,6 +129,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "functions.html#ProximalOperators.IndGraph",
+    "page": "Functions",
+    "title": "ProximalOperators.IndGraph",
+    "category": "Type",
+    "text": "Indicator of an operator graph\n\nIndGraph(A)\n\nFor matrix A (dense or sparse) returns the indicator function of the set\n\nS = (x y)  Ax = y\n\nThe evaluation of prox! uses direct methods based on LDLt (LL for dense cases) matrix factorization and backsolve.\n\nThe main method for prox! of IndGraph has the signature prox!(x, y, f, c, d, gamma=1.0). In addition the method prox!(v, f, w) is defined with v being the concatenation of x, y, and w –  concatenated input.\n\nThe gamma could be passed as the last argument, but note that it does not affect anything in calculations.\n\n\n\n"
+},
+
+{
     "location": "functions.html#ProximalOperators.IndHalfspace",
     "page": "Functions",
     "title": "ProximalOperators.IndHalfspace",
@@ -165,7 +173,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "Indicators of sets",
     "category": "section",
-    "text": "When function f is the indicator function of a set S, that isf(x) = _S(x) =\nbegincases\n0  textif x in S \n+  textotherwise\nendcasesthen mathrmprox_f = _S is the projection onto S. Therefore ProximalOperators includes in particular projections onto commonly used sets, which are here listed.IndAffine\nIndBallLinf   \nIndBallL0     \nIndBallL1     \nIndBallL2     \nIndBallRank   \nIndBinary\nIndBox       \nIndHalfspace  \nIndPoint              \nIndSimplex    \nIndSphereL2          "
+    "text": "When function f is the indicator function of a set S, that isf(x) = _S(x) =\nbegincases\n0  textif x in S \n+  textotherwise\nendcasesthen mathrmprox_f = _S is the projection onto S. Therefore ProximalOperators includes in particular projections onto commonly used sets, which are here listed.IndAffine\nIndBallLinf   \nIndBallL0     \nIndBallL1     \nIndBallL2     \nIndBallRank   \nIndBinary\nIndBox  \nIndGraph     \nIndHalfspace  \nIndPoint              \nIndSimplex    \nIndSphereL2          "
 },
 
 {
