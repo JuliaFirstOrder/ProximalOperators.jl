@@ -22,25 +22,24 @@ end
 # measures time of the calls to prox, prox! and prox_naive
 # then tests equality of the results and returns them if they agree
 function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
+  TOL_ASSERT_PROX = ProximalOperators.is_prox_accurate(f) ? 1e-12 : 1e-6
   print("* prox        : "); @time yf, fy = prox(f, x, gamma)
   print("* prox!       : "); yf_prealloc = deepcopy(x); @time fy_prealloc = prox!(yf_prealloc, f, x, gamma)
   print("* prox_naive  : "); @time y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gamma)
-  @test ProximalOperators.deepmaxabs(yf_prealloc .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
-  @test ProximalOperators.deepmaxabs(y_naive .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT
+  @test ProximalOperators.deepmaxabs(yf_prealloc .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT_PROX
+  @test ProximalOperators.deepmaxabs(y_naive .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT_PROX
   if ProximalOperators.is_cone(f)
     @test ProximalOperators.is_set(f)
   end
   if ProximalOperators.is_set(f)
     @test fy_prealloc == 0
   end
-  if ProximalOperators.is_prox_accurate(f)
-    @test fy_prealloc == fy || abs(fy_prealloc - fy)/(1+abs(fy)) <= TOL_ASSERT
-    @test fy_naive == fy || abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT
-    try
-      f_at_y = f(yf)
-      @test f_at_y == fy || abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT
-    catch e
-    end
+  @test fy_prealloc == fy || abs(fy_prealloc - fy)/(1+abs(fy)) <= TOL_ASSERT_PROX
+  @test fy_naive == fy || abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT_PROX
+  try
+    f_at_y = f(yf)
+    @test f_at_y == fy || abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT_PROX
+  catch e
   end
   return yf, fy
 end
@@ -67,7 +66,6 @@ end
 @testset "Utilities" begin
   include("test_deep.jl")
   include("test_symmetricpacked.jl")
-  include("test_cg.jl")
 end
 
 @testset "Functions" begin
