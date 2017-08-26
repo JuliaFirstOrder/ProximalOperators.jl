@@ -5,7 +5,7 @@ export IndAffine
 """
 **Indicator of an affine subspace**
 
-    IndAffine(A, b)
+    IndAffine(A, b; iterative=false)
 
 If `A` is a matrix (dense or sparse) and `b` is a vector, returns the indicator function of the set
 ```math
@@ -15,7 +15,7 @@ If `A` is a vector and `b` is a scalar, returns the indicator function of the se
 ```math
 S = \\{x : \\langle A, x \\rangle = b\\}.
 ```
-By default, a direct method (matrix factorization) is used to evaluate `prox!`.
+By default, a direct method (QR factorization of matrix `A'`) is used to evaluate `prox!`.
 If `iterative=true`, then `prox!` is evaluated approximately using an iterative method instead.
 """
 
@@ -34,7 +34,7 @@ function IndAffine(A::M, b::V; iterative=false) where {M, V}
   if iterative == false
     IndAffineDirect(A, b)
   else
-    error("not yet implemented")
+    IndAffineIterative(A, b)
   end
 end
 
