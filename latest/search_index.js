@@ -133,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.IndGraph",
     "category": "Type",
-    "text": "Indicator of the graph of a linear operator\n\nIndGraph(A)\n\nFor matrix A (dense or sparse) returns the indicator function of the set\n\nS = (x y)  Ax = y\n\nThe evaluation of prox! uses direct methods based on LDLt (LL for dense cases) matrix factorization and backsolve.\n\nThe prox! method operates on pairs (x, y) as input/output. So if f = IndGraph(A), while (x, y) and (c, d) are pairs of vectors of the same sizes, then prox!((c, d), f, (x, y)) writes to (c, d) the projection onto S of (x, y).\n\n\n\n"
+    "text": "Indicator of the graph of a linear operator\n\nIndGraph(A)\n\nFor matrix A (dense or sparse) returns the indicator function of the set\n\nS = (x y)  Ax = y\n\nThe evaluation of prox! uses direct methods based on LDLt (LL for dense cases) matrix factorization and backsolve.\n\nThe prox! method operates on pairs (x, y) as input/output. So if f = IndGraph(A) is the indicator of affine space S, while (x, y) and (c, d) are pairs of vectors of the same sizes, then prox!((c, d), f, (x, y)) writes to (c, d) the projection onto S of (x, y).\n\n\n\n"
 },
 
 {
