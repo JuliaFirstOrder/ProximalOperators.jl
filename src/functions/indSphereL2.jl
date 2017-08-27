@@ -11,7 +11,7 @@ Returns the indicator function of the set
 ```math
 S = \\{ x : \\|x\\| = r \\},
 ```
-where ``\\|\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
+where ``\\|\\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
 
 immutable IndSphereL2{R <: Real} <: ProximableFunction
