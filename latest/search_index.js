@@ -133,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.IndGraph",
     "category": "Type",
-    "text": "Indicator of an operator graph\n\nIndGraph(A)\n\nFor matrix A (dense or sparse) returns the indicator function of the set\n\nS = (x y)  Ax = y\n\nThe evaluation of prox! uses direct methods based on LDLt (LL for dense cases) matrix factorization and backsolve.\n\nThe main method for prox! of IndGraph has the signature prox!(x, y, f, c, d, gamma=1.0). In addition the method prox!(v, f, w) is defined with v being the concatenation of x, y, and w –  concatenated input.\n\nThe gamma could be passed as the last argument, but note that it does not affect anything in calculations.\n\n\n\n"
+    "text": "Indicator of the graph of a linear operator\n\nIndGraph(A)\n\nFor matrix A (dense or sparse) returns the indicator function of the set\n\nS = (x y)  Ax = y\n\nThe evaluation of prox! uses direct methods based on LDLt (LL for dense cases) matrix factorization and backsolve.\n\nThe prox! method operates on pairs (x, y) as input/output. So if f = IndGraph(A), while (x, y) and (c, d) are pairs of vectors of the same sizes, then prox!((c, d), f, (x, y)) writes to (c, d) the projection onto S of (x, y).\n\n\n\n"
 },
 
 {
