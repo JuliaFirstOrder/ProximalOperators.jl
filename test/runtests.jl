@@ -70,6 +70,7 @@ end
 
 @testset "Functions" begin
   include("test_huberLoss.jl")
+  include("test_indAffine.jl")
   include("test_leastSquares.jl")
   include("test_quadratic.jl")
   include("test_calls.jl")
