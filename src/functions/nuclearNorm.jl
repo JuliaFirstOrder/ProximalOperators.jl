@@ -35,12 +35,17 @@ function (f::NuclearNorm{R})(X::AbstractMatrix{T}) where {R <: Real, T <: Union{
 end
 
 function prox!(Y::AbstractMatrix{T}, f::NuclearNorm{R}, X::AbstractMatrix{T}, gamma::R=one(R)) where {R <: Real, T <: Union{R, Complex{R}}}
-  U, S, V = svd(X)
-  S = max.(zero(R), S .- f.lambda*gamma)
-  rankY = findfirst(S .== zero(R))
-  M = S[1:rankY] .* V[:,1:rankY]'
-  A_mul_B!(Y, U[:,1:rankY], M)
-  return f.lambda * sum(S);
+  F = svdfact(X)
+  S_thresh = max.(zero(R), F[:S] .- f.lambda*gamma)
+  rankY = findfirst(S_thresh .== zero(R))
+  if rankY == 0
+    rankY = minimum(size(X))
+  end
+  Vt_thresh = view(F[:Vt], 1:rankY, :)
+  U_thresh = view(F[:U], :, 1:rankY)
+  M = S_thresh[1:rankY] .* Vt_thresh
+  A_mul_B!(Y, U_thresh, M)
+  return f.lambda * sum(S_thresh);
 end
 
 fun_name(f::NuclearNorm) = "nuclear norm"

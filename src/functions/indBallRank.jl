@@ -32,9 +32,9 @@ IndBallRank{I <: Integer}(r::I=1) = IndBallRank{I}(r)
 function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   maxr = minimum(size(x))
   if maxr <= f.r return 0.0 end
-  svdobj = svds(x, nsv=f.r+1)[1]
+  F = svds(x, nsv=f.r+1)[1]
   # the tolerance in the following line should be customizable
-  if svdobj[:S][end]/svdobj[:S][1] <= 1e-14
+  if F[:S][end]/F[:S][1] <= 1e-14
     return 0.0
   end
   return +Inf
@@ -43,12 +43,14 @@ end
 function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma::R=1.0) where {R <: Real, T <: Union{R, Complex{R}}}
   maxr = minimum(size(x))
   if maxr <= f.r
-    y[:] = x
+    y .= x
     return 0.0
   end
-  svdobj = svds(x, nsv=f.r)[1]
-  M = svdobj[:S][1:f.r] .* svdobj[:Vt][1:f.r,:]
-  A_mul_B!(y, svdobj[:U][:,1:f.r], M)
+  F = svds(x, nsv=f.r)[1]
+  Vt_thresh = view(F[:Vt], 1:f.r, :)
+  U_thresh = view(F[:U], :, 1:f.r)
+  M = F[:S][1:f.r] .* Vt_thresh
+  A_mul_B!(y, U_thresh, M)
   return 0.0
 end
 
