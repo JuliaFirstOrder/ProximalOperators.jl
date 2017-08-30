@@ -27,21 +27,19 @@ end
 
 is_convex(f::NuclearNorm) = true
 
-NuclearNorm{R <: Real}(lambda::R=1.0) = NuclearNorm{R}(lambda)
+NuclearNorm(lambda::R=1.0) where {R <: Real} = NuclearNorm{R}(lambda)
 
-function (f::NuclearNorm){T <: RealOrComplex}(X::AbstractArray{T,2})
+function (f::NuclearNorm{R})(X::AbstractMatrix{T}) where {R <: Real, T <: Union{R, Complex{R}}}
   U, S, V = svd(X);
   return f.lambda * sum(S);
 end
 
-function prox!{T <: RealOrComplex}(Y::AbstractArray{T,2}, f::NuclearNorm, X::AbstractArray{T,2}, gamma::Real=1.0)
+function prox!(Y::AbstractMatrix{T}, f::NuclearNorm{R}, X::AbstractMatrix{T}, gamma::R=one(R)) where {R <: Real, T <: Union{R, Complex{R}}}
   U, S, V = svd(X)
-
-  for i in eachindex(S)
-    S[i] = max(0, S[i] - f.lambda*gamma);
-  end
-
-  Y[:] = U * diagm(S) * V'
+  S = max.(zero(R), S .- f.lambda*gamma)
+  rankY = findfirst(S .== zero(R))
+  M = S[1:rankY] .* V[:,1:rankY]'
+  A_mul_B!(Y, U[:,1:rankY], M)
   return f.lambda * sum(S);
 end
 
@@ -50,10 +48,9 @@ fun_dom(f::NuclearNorm) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
 fun_expr(f::NuclearNorm) = "X ↦ λ∑σ_i(X)"
 fun_params(f::NuclearNorm) = "λ = $(f.lambda)"
 
-function prox_naive{T <: RealOrComplex}(f::NuclearNorm, X::AbstractArray{T,2}, gamma::Real=1.0)
-  U,S,V = svd(X)
-  ftemp = NormL1(1.0)
-  S_γ, fS_γ =  prox(ftemp,S,f.lambda*gamma)
-  Y = U * diagm(S_γ) * V'
-  return Y, f.lambda * sum(S_γ)
+function prox_naive(f::NuclearNorm, X::AbstractMatrix{T}, gamma=1.0) where T
+  U, S, V = svd(X)
+  S = max.(0, S .- f.lambda*gamma)
+  Y = U * (spdiagm(S) * V')
+  return Y, f.lambda * sum(S)
 end

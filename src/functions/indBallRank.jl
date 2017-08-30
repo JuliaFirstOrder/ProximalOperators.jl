@@ -40,47 +40,15 @@ function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
   return +Inf
 end
 
-function prox!{T <: Real}(y::AbstractArray{T,2}, f::IndBallRank, x::AbstractArray{T,2}, gamma::Real=1.0)
+function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma::R=1.0) where {R <: Real, T <: Union{R, Complex{R}}}
   maxr = minimum(size(x))
   if maxr <= f.r
     y[:] = x
     return 0.0
   end
   svdobj = svds(x, nsv=f.r)[1]
-  for i = 1:size(x,1)
-    for j = 1:size(x,2)
-      y[i,j] = 0.0
-      for k = 1:f.r
-          if VERSION >= v"0.6.0-dev.2071"
-              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][k,j]
-          else
-              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][j,k]
-          end
-      end
-    end
-  end
-  return 0.0
-end
-
-function prox!{T <: Complex}(y::AbstractArray{T,2}, f::IndBallRank, x::AbstractArray{T,2}, gamma::Real=1.0)
-  maxr = minimum(size(x))
-  if maxr <= f.r
-    y[:] = x
-    return 0.0
-  end
-  svdobj = svds(x, nsv=f.r)[1]
-  for i = 1:size(x,1)
-    for j = 1:size(x,2)
-      y[i,j] = 0.0 + 0.0im
-      for k = 1:f.r
-          if VERSION >= v"0.6.0-dev.2071"
-              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*svdobj[:Vt][k,j]
-          else
-              y[i,j] += svdobj[:U][i,k]*svdobj[:S][k]*conj(svdobj[:Vt][j,k])
-          end
-      end
-    end
-  end
+  M = svdobj[:S][1:f.r] .* svdobj[:Vt][1:f.r,:]
+  A_mul_B!(y, svdobj[:U][:,1:f.r], M)
   return 0.0
 end
 
@@ -89,14 +57,13 @@ fun_dom(f::IndBallRank) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
 fun_expr(f::IndBallRank) = "x ↦ 0 if rank(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallRank) = "r = $(f.r)"
 
-function prox_naive{T <: RealOrComplex}(f::IndBallRank, x::AbstractArray{T,2}, gamma::Real=1.0)
+function prox_naive(f::IndBallRank, x::AbstractMatrix{T}, gamma=1.0) where T
   maxr = minimum(size(x))
   if maxr <= f.r
     y = x
     return y, 0.0
   end
   U, S, V = svd(x)
-  M = U[:,1:f.r]*spdiagm(S[1:f.r])
-  y = M*V[:,1:f.r]'
+  y = U[:,1:f.r]*(spdiagm(S[1:f.r])*V[:,1:f.r]')
   return y, 0.0
 end
