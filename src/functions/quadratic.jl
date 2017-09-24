@@ -11,7 +11,7 @@ For a matrix `Q` (dense or sparse, symmetric and positive definite) and a vector
 ```math
 f(x) = \\tfrac{1}{2}\\langle Qx, x\\rangle + \\langle q, x \\rangle.
 ```
-By default, a direct method (matrix factorization) is used to evaluate `prox!`.
+By default, a direct method (based on Cholesky factorization) is used to evaluate `prox!`.
 If `iterative=true`, then `prox!` is evaluated approximately using an iterative method instead.
 """
 

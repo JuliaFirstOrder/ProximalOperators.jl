@@ -4,6 +4,8 @@ __precompile__()
 
 module ProximalOperators
 
+using IterativeSolvers
+
 const RealOrComplex{T <: Real} = Union{T, Complex{T}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
 
@@ -17,8 +19,8 @@ abstract type ProximableFunction end
 
 # Utilities
 
-include("utilities/cg.jl")
 include("utilities/deep.jl")
+include("utilities/linops.jl")
 include("utilities/symmetricpacked.jl")
 include("utilities/uniformarrays.jl")
 
@@ -74,7 +76,7 @@ include("calculus/sqrDistL2.jl")
 include("calculus/tilt.jl")
 include("calculus/translate.jl")
 
-# Functions obtain from basic + calculus
+# Functions obtained from basic + calculus
 
 include("functions/indExp.jl")
 include("functions/sumLargest.jl")
