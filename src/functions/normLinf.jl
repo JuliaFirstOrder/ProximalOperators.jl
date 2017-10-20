@@ -20,6 +20,13 @@ function (f::Conjugate{IndBallL1{R}}){R <: Real, S <: RealOrComplex}(x::Abstract
   return (f.f.r)*vecnorm(x, Inf)
 end
 
+function gradient!{T <: RealOrComplex, R <: Real}(y::AbstractArray{T}, f::Conjugate{IndBallL1{R}}, x::AbstractArray{T})
+  absxi, i = findmax(abs(xi) for xi in x) # Largest absolute value
+  y .= 0
+  y[i] = lambda*sign(x[i])
+  return lambda*absxi
+end
+
 fun_name{R <: Real}(f::Postcompose{Conjugate{IndBallL1{R}}, R}) = "weighted L-infinity norm"
 fun_expr{R <: Real}(f::Postcompose{Conjugate{IndBallL1{R}}, R}) = "x ↦ λ||x||_∞ = λ⋅max(abs(x))"
 fun_params{R <: Real}(f::Postcompose{Conjugate{IndBallL1{R}}, R}) = "λ = $(f.a*(f.f.f.r))"

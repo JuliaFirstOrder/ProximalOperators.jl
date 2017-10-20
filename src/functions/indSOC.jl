@@ -27,7 +27,7 @@ is_convex(f::IndSOC) = true
 is_set(f::IndSOC) = true
 
 function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndSOC, x::AbstractArray{T,1}, gamma::T=one(T))
-  nx = norm(x[2:end])
+  @views nx = norm(x[2:end])
   t = x[1]
   if t <= -nx
     y[:] = 0.0
@@ -36,7 +36,7 @@ function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndSOC, x::AbstractArray{T,1
   else
     r = 0.5 * (1 + t / nx)
     y[1] = r * nx
-    y[2:end] = r * x[2:end]
+    @views y[2:end] .= r .* x[2:end]
   end
   return 0.0
 end
@@ -57,7 +57,7 @@ function prox_naive{T <: Real}(f::IndSOC, x::AbstractArray{T,1}, gamma=1.0)
     y = zeros(x)
     r = 0.5 * (1 + t / nx)
     y[1] = r * nx
-    y[2:end] = r * x[2:end]
+    y[2:end] .= r .* x[2:end]
   end
   return y, 0.0
 end
@@ -95,19 +95,19 @@ function prox!{T <: Real}(y::AbstractArray{T,1}, f::IndRotatedSOC, x::AbstractAr
   x1 = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
   x2 = 0.7071067811865475*x[1] - 0.7071067811865475*x[2]
   # project rotated x onto SOC
-  nx = sqrt(x2^2+norm(x[3:end])^2)
+  @views nx = sqrt(x2^2+norm(x[3:end])^2)
   t = x1
   if t <= -nx
     y[:] = 0.0
   elseif t >= nx
     y[1] = x1
     y[2] = x2
-    y[3:end] = x[3:end]
+    @views y[3:end] .= x[3:end]
   else
     r = 0.5 * (1 + t / nx)
     y[1] = r * nx
     y[2] = r * x2
-    y[3:end] = r * x[3:end]
+    @views y[3:end] = r .* x[3:end]
   end
   # rotate back y cw by pi/4
   y1 = 0.7071067811865475*y[1] + 0.7071067811865475*y[2]
