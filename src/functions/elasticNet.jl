@@ -88,6 +88,17 @@ function prox!{R <: Real}(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::Abs
   return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
+function gradient!{T <: RealOrComplex, R <: Real}(y::AbstractArray{T}, f::Conjugate{IndBallL1{R}}, x::AbstractArray{T})
+  # Gradient of 1 norm
+  y .= f.mu.*sign.(x)
+  # Gradient of 2 norm
+  f2norm2 = vecnorm(x,2)^2
+  if f2norm2 != 0
+    y .+= (lambda/f2norm2).*x
+  end
+  return f.mu*vecnorm(x,1) + (f.lambda/2)*f2norm2
+end
+
 fun_name(f::ElasticNet) = "elastic-net regularization"
 fun_dom(f::ElasticNet) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||²"

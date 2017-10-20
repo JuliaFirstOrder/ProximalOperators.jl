@@ -74,6 +74,17 @@ function prox!{T <: Real}(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T
   return -f.mu*sumf
 end
 
+function gradient!{T <: Real}(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T})
+  sum = 0.0
+  for i in eachindex(x)
+    logarg = f.a*x[i]+f.b
+    y[i] = -f.mu*f.a/logarg
+    sum += log(logarg)
+  end
+  sum *= -f.mu
+  return sum
+end
+
 fun_name(f::LogBarrier) = "logarithmic barrier"
 fun_dom(f::LogBarrier) = "AbstractArray{Real}"
 fun_expr(f::LogBarrier) = "x ↦ -μ * sum( log(a*x_i+b), i=1,...,n )"

@@ -17,6 +17,9 @@ end
 
 Linear(c::A) where {R <: RealOrComplex, A <: AbstractArray{R}} = Linear{R, A}(c)
 
+is_separable(f::Linear) = true
+is_convex(f::Linear) = true
+
 function (f::Linear{RC, A})(x::AbstractArray{RC}) where {R <: Real, RC <: Union{R, Complex{R}}, A <: AbstractArray{RC}}
   return vecdot(f.c, x)
 end
@@ -28,7 +31,6 @@ function prox!(y::AbstractArray{RC}, f::Linear{RC, A}, x::AbstractArray{RC}, gam
 end
 
 function gradient!(y::AbstractArray{RC}, f::Linear{RC, A}, x::AbstractArray{RC}) where {R <: Real, RC <: Union{R, Complex{R}}, A <: AbstractArray{RC}}
-  A_mul_B!(y, f.Q, x)
   y .= f.c
   return vecdot(f.c, x)
 end
