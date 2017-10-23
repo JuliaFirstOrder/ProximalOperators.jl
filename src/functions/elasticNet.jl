@@ -88,7 +88,7 @@ function prox!{R <: Real}(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::Abs
   return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
-function gradient!{T <: RealOrComplex, R <: Real}(y::AbstractArray{T}, f::Conjugate{IndBallL1{R}}, x::AbstractArray{T})
+function gradient!{T <: RealOrComplex, R <: Real}(y::AbstractArray{T}, f::ElasticNet{R}, x::AbstractArray{T})
   # Gradient of 1 norm
   y .= f.mu.*sign.(x)
   # Gradient of 2 norm
