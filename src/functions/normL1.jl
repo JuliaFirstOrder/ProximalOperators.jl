@@ -135,6 +135,11 @@ function prox!{T <: Real, R <: Real}(y::AbstractArray{Complex{R}}, f::NormL1{T},
   return f.lambda*n1y
 end
 
+function gradient!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::NormL1, x::AbstractArray{T})
+  y .= f.lambda.*sign.(x)
+  return f(x)
+end
+
 fun_name(f::NormL1) = "weighted L1 norm"
 fun_dom(f::NormL1) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr{R <: Real}(f::NormL1{R}) = "x ↦ λ||x||_1"

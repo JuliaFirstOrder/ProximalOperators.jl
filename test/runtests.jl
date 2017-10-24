@@ -77,6 +77,10 @@ end
   include("test_graph.jl")
 end
 
+@testset "Gradients" begin
+  include("test_gradients.jl")
+end
+
 @testset "Calculus rules" begin
   include("test_calculus.jl")
   include("test_moreauEnvelope.jl")

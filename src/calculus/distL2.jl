@@ -9,7 +9,7 @@ export DistL2
 
 Given `ind_S` the indicator function of a convex set ``S``, and an optional positive parameter `λ`, returns the (weighted) Euclidean distance from ``S``, that is function
 ```math
-g(x) = \\mathrm{dist}_S(x) = \\min \\{ \\|y - x\\| : y \\in S \\}.
+g(x) = λ\\mathrm{dist}_S(x) = \\min \\{ λ\\|y - x\\| : y \\in S \\}.
 ```
 """
 
@@ -35,22 +35,30 @@ DistL2{R <: Real, T <: ProximableFunction}(ind::T, lambda::R=1.0) = DistL2{R, T}
 
 function (f::DistL2){R <: RealOrComplex}(x::AbstractArray{R})
   p, = prox(f.ind, x)
-  return f.lambda*vecnorm(x-p)
+  return f.lambda*vecnormdiff(x,p)
 end
 
 function prox!{R <: RealOrComplex}(y::AbstractArray{R}, f::DistL2, x::AbstractArray{R}, gamma::Real=1.0)
-  p, = prox(f.ind, x)
-  d = vecnorm(x-p)
+  prox!(y, f.ind, x)
+  d = vecnormdiff(x,y)
   gamlam = (gamma*f.lambda)
   if gamlam < d
     gamlamd = gamlam/d
-    for k in eachindex(p)
-      y[k] = (1-gamlamd)*x[k] + gamlamd*p[k]
-    end
+    y .= (1-gamlamd).*x .+ gamlamd.*y
     return f.lambda*(d-gamlam)
   end
-  y[:] = p
   return 0.0
+end
+
+function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T})
+  prox!(y, f.ind, x) # Use y as temporary storage
+  dist = vecnormdiff(x,y)
+  if dist > 0
+    y .= (f.lambda/dist).*(x .- y)
+  else
+    y .= 0
+  end
+  return f.lambda*dist
 end
 
 fun_name(f::DistL2) = "Euclidean distance from a convex set"

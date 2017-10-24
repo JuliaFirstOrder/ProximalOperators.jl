@@ -19,7 +19,7 @@ is_separable(f::SumPositive) = true
 is_convex(f::SumPositive) = true
 
 function (f::SumPositive){T <: Real}(x::AbstractArray{T})
-  return sum(max.(0.0, x))
+  return sum(xi -> max(xi,0), x)
 end
 
 function prox!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T}, gamma::Real=1.0)
@@ -29,6 +29,11 @@ function prox!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{
     fsum += y[i] > 0.0 ? y[i] : 0.0
   end
   return fsum
+end
+
+function gradient!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T})
+  y .= max.(0, sign.(x))
+  return sum(xi -> max(xi,0), x)
 end
 
 fun_name(f::SumPositive) = "Sum of the positive coefficients"
