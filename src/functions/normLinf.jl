@@ -23,8 +23,8 @@ end
 function gradient!{T <: RealOrComplex, R <: Real}(y::AbstractArray{T}, f::Conjugate{IndBallL1{R}}, x::AbstractArray{T})
   absxi, i = findmax(abs(xi) for xi in x) # Largest absolute value
   y .= 0
-  y[i] = lambda*sign(x[i])
-  return lambda*absxi
+  y[i] = f.f.r*sign(x[i])
+  return f.f.r*absxi
 end
 
 fun_name{R <: Real}(f::Postcompose{Conjugate{IndBallL1{R}}, R}) = "weighted L-infinity norm"

@@ -92,11 +92,8 @@ function gradient!{T <: RealOrComplex, R <: Real}(y::AbstractArray{T}, f::Elasti
   # Gradient of 1 norm
   y .= f.mu.*sign.(x)
   # Gradient of 2 norm
-  f2norm2 = vecnorm(x,2)^2
-  if f2norm2 != 0
-    y .+= (lambda/f2norm2).*x
-  end
-  return f.mu*vecnorm(x,1) + (f.lambda/2)*f2norm2
+  y .+= f.lambda.*x
+  return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2
 end
 
 fun_name(f::ElasticNet) = "elastic-net regularization"

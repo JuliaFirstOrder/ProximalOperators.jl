@@ -42,13 +42,13 @@ function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::NormL2, x::AbstractAr
 end
 
 function gradient!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T})
-  fx = f(x)
+  fx = vecnorm(x) # Value of f, without lambda
   if fx == 0
     y .= 0
   else
-    y .= (lambda/fx).*x
+    y .= (f.lambda/fx).*x
   end
-  return fx
+  return f.lambda*fx
 end
 
 fun_name(f::NormL2) = "Euclidean norm"

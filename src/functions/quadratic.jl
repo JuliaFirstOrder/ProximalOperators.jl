@@ -19,6 +19,7 @@ If `iterative=true`, then `prox!` is evaluated approximately using an iterative 
 
 abstract type Quadratic <: ProximableFunction end
 
+is_convex(f::Quadratic) = true
 is_smooth(f::Quadratic) = true
 is_quadratic(f::Quadratic) = true
 

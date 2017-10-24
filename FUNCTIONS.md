@@ -16,6 +16,7 @@ Name            | Type of set                             | Properties
 `IndBallRank`   | Set of matrices with given rank         | nonconvex
 `IndBinary`     | Indicator of a binary set               | nonconvex, separable
 `IndBox`        | Box                                     | convex, separable
+`IndGraph`      | Indicator of the graph of a linear op.  | convex
 `IndExpPrimal`  | Indicator of (primal) exponential cone  | convex cone
 `IndExpDual`    | Indicator of (dual) exponential cone    | convex cone
 `IndFree`       | Indicator of the free cone              | convex cone, separable
@@ -34,33 +35,31 @@ Name            | Type of set                             | Properties
 
 Name            | Description                         | Properties
 ----------------|-------------------------------------|----------------
-`ElasticNet`    | Elastic-net regularization          | convex, separable
+`ElasticNet`    | Elastic-net regularization          | convex, separable, gradient
 `NormL0`        | L0 pseudo-norm                      | nonconvex
-`NormL1`        | L1 norm                             | convex, separable
-`NormL2`        | Euclidean norm                      | convex
+`NormL1`        | L1 norm                             | convex, separable, gradient
+`NormL2`        | Euclidean norm                      | convex, gradient
 `NormL21`       | Sum-of-L2 norms                     | convex
-`NormLinf`      | L-infinity norm                     | convex
+`NormLinf`      | L-infinity norm                     | convex, gradient
 `NuclearNorm`   | Nuclear norm                        | convex
-`SqrNormL2`     | Squared Euclidean norm              | convex, separable
+`SqrNormL2`     | Squared Euclidean norm              | convex, separable, gradient
 
-### Penalties
+### Penalties and other functions
 
 Name            | Description                         | Properties
 ----------------|-------------------------------------|-----------------
-`HingeLoss`     | Hinge loss function                 | convex, separable
-`HuberLoss`     | Huber loss function                 | convex
-`LogBarrier`    | Logarithmic barrier                 | convex, separable
-`LeastSquares`  | Sum-of-residual-squares             | convex
+`HingeLoss`     | Hinge loss function                 | convex, separable, gradient
+`HuberLoss`     | Huber loss function                 | convex, gradient
+`LogBarrier`    | Logarithmic barrier                 | convex, separable, gradient
+`LeastSquares`  | Sum-of-residual-squares             | convex, gradient
+`Maximum`       | Maximum coordinate of a vector      | convex
+`Linear`        | Linear function                     | convex, separable, gradient
+`Quadratic`     | Quadratic function                  | convex, gradient
+`SumPositive`   | Sum of the positive coefficients    | convex, gradient
 
 ### Distances
 
 Name            | Description                                          | Properties
 ----------------|------------------------------------------------------|----------------
-`DistL2`        | Euclidean distance from a convex set                 | convex
-`SqrDistL2`     | Squared Euclidean distance from a convex set         | convex
-
-### Other functions
-
-Name            | Description                                          | Properties
-----------------|------------------------------------------------------|----------------
-`Maximum`       | Maximum coordinate of a vector                       | convex
+`DistL2`        | Euclidean distance from a convex set                 | convex, gradient
+`SqrDistL2`     | Squared Euclidean distance from a convex set         | convex, gradient

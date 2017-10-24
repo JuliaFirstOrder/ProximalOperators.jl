@@ -75,3 +75,9 @@ Maximum
 Quadratic
 SumPositive
 ```
+
+## Distances
+```@docs
+DistL2
+SqrDistL2
+```

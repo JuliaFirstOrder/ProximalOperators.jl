@@ -38,18 +38,25 @@ SqrDistL2{R <: Real, T <: ProximableFunction}(ind::T, lambda::R=1.0) = SqrDistL2
 
 function (f::SqrDistL2){T <: RealOrComplex}(x::AbstractArray{T})
   p, = prox(f.ind, x)
-  return (f.lambda/2)*vecnorm(x-p)^2
+  return (f.lambda/2)*vecnormdiff2(x,p)
 end
 
 function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}, gamma::Real=1.0)
   p, = prox(f.ind, x)
-  sqrd = (f.lambda/2)*vecnorm(x-p)^2
+  sqrd = (f.lambda/2)*vecnormdiff2(x,p)
   c1 = 1/(1+f.lambda*gamma)
   c2 = f.lambda*gamma*c1
   for k in eachindex(p)
     y[k] = c1*x[k] + c2*p[k]
   end
   return sqrd*c1^2
+end
+
+function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T})
+  p, = prox(f.ind, x)
+  dist2 = vecnormdiff2(x,p)
+  y .= f.lambda.*(x .- p)
+  return (f.lambda/2)*dist2
 end
 
 fun_name(f::SqrDistL2) = "squared Euclidean distance from a convex set"
