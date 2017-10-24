@@ -401,6 +401,30 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "functions.html#ProximalOperators.DistL2",
+    "page": "Functions",
+    "title": "ProximalOperators.DistL2",
+    "category": "Type",
+    "text": "Distance from a convex set\n\nDistL2(ind_S)\n\nGiven ind_S the indicator function of a convex set S, and an optional positive parameter λ, returns the (weighted) Euclidean distance from S, that is function\n\ng(x) = mathrmdist_S(x) = min  y - x  y in S \n\n\n\n"
+},
+
+{
+    "location": "functions.html#ProximalOperators.SqrDistL2",
+    "page": "Functions",
+    "title": "ProximalOperators.SqrDistL2",
+    "category": "Type",
+    "text": "Squared distance from a convex set\n\nSqrDistL2(ind_S, λ=1.0)\n\nGiven ind_S the indicator function of a convex set S, and an optional positive parameter λ, returns the (weighted) squared Euclidean distance from S, that is function\n\ng(x) = tfrac2mathrmdist_S^2(x) = min left tfrac2y - x^2  y in S right\n\n\n\n"
+},
+
+{
+    "location": "functions.html#Distances-1",
+    "page": "Functions",
+    "title": "Distances",
+    "category": "section",
+    "text": "DistL2\nSqrDistL2"
+},
+
+{
     "location": "calculus.html#",
     "page": "Calculus rules",
     "title": "Calculus rules",
@@ -430,22 +454,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Duality",
     "category": "section",
     "text": "Conjugate"
-},
-
-{
-    "location": "calculus.html#ProximalOperators.DistL2",
-    "page": "Calculus rules",
-    "title": "ProximalOperators.DistL2",
-    "category": "Type",
-    "text": "Distance from a convex set\n\nDistL2(ind_S)\n\nGiven ind_S the indicator function of a convex set S, and an optional positive parameter λ, returns the (weighted) Euclidean distance from S, that is function\n\ng(x) = mathrmdist_S(x) = min  y - x  y in S \n\n\n\n"
-},
-
-{
-    "location": "calculus.html#ProximalOperators.SqrDistL2",
-    "page": "Calculus rules",
-    "title": "ProximalOperators.SqrDistL2",
-    "category": "Type",
-    "text": "Squared distance from a convex set\n\nSqrDistL2(ind_S, λ=1.0)\n\nGiven ind_S the indicator function of a convex set S, and an optional positive parameter λ, returns the (weighted) squared Euclidean distance from S, that is function\n\ng(x) = tfrac2mathrmdist_S^2(x) = min left tfrac2y - x^2  y in S right\n\n\n\n"
 },
 
 {
