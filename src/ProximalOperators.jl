@@ -149,10 +149,10 @@ prox!
 
     gradfx, fx = gradient(f, x)
 
-Computes the gradient (and value) of ``f`` at ``x``.
+Computes the gradient (and value) of ``f`` at ``x``. If ``f`` is only *subdifferentiable* at ``x``, then return a subgradient instead.
 
 Return values:
-* `gradfx`: the gradiet of ``f`` at ``x``
+* `gradfx`: the (sub)gradient of ``f`` at ``x``
 * `fx`: the value ``f(x)``
 """
 
@@ -167,7 +167,7 @@ end
 
     gradient!(gradfx, f, x)
 
-Writes ``\\nabla f(x)`` to `gradfx`, which must be pre-allocated and have the same shape/size as `x`.
+Writes ``\\nabla f(x)`` to `gradfx`, which must be pre-allocated and have the same shape/size as `x`. If ``f`` is only *subdifferentiable* at ``x``, then writes a subgradient instead.
 
 Return values:
 * `fx`: the value ``f(x)``

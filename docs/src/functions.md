@@ -76,7 +76,8 @@ Quadratic
 SumPositive
 ```
 
-## Distances
+## Distances from convex sets
+
 ```@docs
 DistL2
 SqrDistL2
