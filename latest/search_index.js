@@ -381,7 +381,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.Quadratic",
     "category": "Type",
-    "text": "Quadratic function\n\nQuadratic(Q, q; iterative=false)\n\nFor a matrix Q (dense or sparse, symmetric and positive definite) and a vector q, returns the function\n\nf(x) = tfrac12langle Qx xrangle + langle q x rangle\n\nBy default, a direct method (based on Cholesky factorization) is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
+    "text": "Quadratic function\n\nQuadratic(Q, q; iterative=false)\n\nFor a matrix Q (dense or sparse, symmetric and positive semidefinite) and a vector q, returns the function\n\nf(x) = tfrac12langle Qx xrangle + langle q x rangle\n\nBy default, a direct method (based on Cholesky factorization) is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
 },
 
 {
@@ -417,9 +417,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "functions.html#Distances-1",
+    "location": "functions.html#Distances-from-convex-sets-1",
     "page": "Functions",
-    "title": "Distances",
+    "title": "Distances from convex sets",
     "category": "section",
     "text": "DistL2\nSqrDistL2"
 },
@@ -589,7 +589,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Prox and gradient",
     "title": "Base.LinAlg.gradient",
     "category": "Function",
-    "text": "Gradient mapping\n\ngradfx, fx = gradient(f, x)\n\nComputes the gradient (and value) of f at x.\n\nReturn values:\n\ngradfx: the gradiet of f at x\nfx: the value f(x)\n\n\n\n"
+    "text": "Gradient mapping\n\ngradfx, fx = gradient(f, x)\n\nComputes the gradient (and value) of f at x. If f is only subdifferentiable at x, then return a subgradient instead.\n\nReturn values:\n\ngradfx: the (sub)gradient of f at x\nfx: the value f(x)\n\n\n\n"
 },
 
 {
@@ -597,7 +597,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Prox and gradient",
     "title": "ProximalOperators.gradient!",
     "category": "Function",
-    "text": "Gradient mapping (in-place)\n\ngradient!(gradfx, f, x)\n\nWrites nabla f(x) to gradfx, which must be pre-allocated and have the same shape/size as x.\n\nReturn values:\n\nfx: the value f(x)\n\n\n\n"
+    "text": "Gradient mapping (in-place)\n\ngradient!(gradfx, f, x)\n\nWrites nabla f(x) to gradfx, which must be pre-allocated and have the same shape/size as x. If f is only subdifferentiable at x, then writes a subgradient instead.\n\nReturn values:\n\nfx: the value f(x)\n\n\n\n"
 },
 
 {
