@@ -25,7 +25,7 @@ function (f::Linear{RC, A})(x::AbstractArray{RC}) where {R <: Real, RC <: Union{
 end
 
 function prox!(y::AbstractArray{RC}, f::Linear{RC, A}, x::AbstractArray{RC}, gamma::Union{R, AbstractArray{R}}=1.0) where {R <: Real, RC <: Union{R, Complex{R}}, A <: AbstractArray{RC}}
-  y .= x - gamma.*(f.c)
+  y .= x .- gamma.*(f.c)
   fy = vecdot(f.c, y)
   return fy
 end
