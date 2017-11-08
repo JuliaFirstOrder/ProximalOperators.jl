@@ -32,7 +32,7 @@ function SlicedSeparableSum{S <: AbstractArray, T <: AbstractArray}(fs::S, idxs:
     error("size(fs) must coincide with size(idxs)")
   else
     for k in eachindex(idxs)
-      cond = [typeof(t) <: Integer || typeof(t) <: AbstractArray{Integer,1} || typeof(t) <: Colon || typeof(t) <: Range for t in idxs[k]]
+      cond = [typeof(t) <: Integer || typeof(t) <: AbstractArray{Int,1} || typeof(t) <: Colon || typeof(t) <: Range for t in idxs[k]]
 			!all(cond) ? error("invalid index $(k)") : nothing
     end
     ftypes = DataType[]

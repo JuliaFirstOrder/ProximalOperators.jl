@@ -63,3 +63,25 @@ y3,fy3 = prox(f,x3,1.)
 @test vecnorm(yn-y)<1e-11
 @test abs((fy1+fy2+fy3)-Fy)<1e-11
 @test vecnorm(y-[y1 y2 y3])<1e-11
+
+# CASE 4
+
+x = randn(10)
+y0 = randn(10)
+y = copy(y0)
+
+prox_col = [NormL1(0.1),IndBallL0(1)]
+ind_col = [(collect(1:5),),(collect(6:10),)]
+
+f = SlicedSeparableSum(prox_col,ind_col)
+y, fy = prox(f,x,1.)
+yn,fyn = ProximalOperators.prox_naive(f,x,1.)
+y1,fy1 = prox(prox_col[1],x[ind_col[1]...],1.)
+y2,fy2 = prox(prox_col[2],x[ind_col[2]...],1.)
+
+@test abs(f(y)-fy)<1e-11
+@test abs(fyn-fy)<1e-11
+@test vecnorm(yn-y)<1e-11
+@test abs((fy1+fy2)-fy)<1e-11
+@test vecnorm(y-[y1;y2])<1e-11
+
