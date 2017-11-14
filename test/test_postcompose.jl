@@ -46,21 +46,3 @@ yh, hyh = prox_test(h, x, 1.3)
 @test abs(gyg-hyh)/(1+abs(gyg)) <= 1e-12
 @test norm(yg-yh, Inf)/(1+norm(yg, Inf)) <= 1e-12
 
-# test postcompose of Conjugate
-x = randn(10)
-f = NormL1()
-c = Conjugate(f)
-d = Postcompose(c,0.5)
-d2 = IndBallLinf(0.5)
-
-yd, fd = prox(d,x)
-yd2, fd2 = prox(d2,x)
-
-@test norm(fd-fd2) <= 1e-8
-@test norm(yd-yd2) <= 1e-8
-
-
-
-
-
-

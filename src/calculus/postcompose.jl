@@ -42,9 +42,6 @@ Postcompose{T <: ProximableFunction, R <: Real}(f::T, a::R=one(R), b::R=zero(R))
 
 Postcompose{T <: ProximableFunction, R <: Real}(f::Postcompose{T, R}, a::R=one(R), b::R=zero(R)) = Postcompose{T, R}(f.f, a*f.a, b+a*f.b)
 
-#special cases
-Postcompose{T <: ProximableFunction, C <: Conjugate{T}, R <: Real}(f::C, a::R=one(R), b::R=zero(R)) = Conjugate(Postcompose{T, R}(f.f, a, b))
-
 function (g::Postcompose){T <: RealOrComplex}(x::AbstractArray{T})
   return g.a*g.f(x) + g.b
 end
