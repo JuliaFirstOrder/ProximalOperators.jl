@@ -28,7 +28,7 @@ struct SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N} <: ProximableFuncti
 end
 
 function SlicedSeparableSum(fs::S, idxs::T) where {N,
-						   S <: NTuple{N,Union{subtypes(ProximableFunction)...}},
+						   S <: Tuple{Vararg{<:ProximableFunction,N}},
 						   M, 
 						   I <: Integer, 
 						   T1 <: NTuple{M,Union{I,
