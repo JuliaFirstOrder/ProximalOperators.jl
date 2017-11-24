@@ -262,7 +262,7 @@ stuff = [
       ),
 
   Dict( "constr" => SlicedSeparableSum,
-        "params" => ( ([NormL2(2.0), NormL1(1.5), NormL2(0.5)], [(1:5,), (6:20,), (21:30,)]), ),
+       "params" => ( ((NormL2(2.0), NormL1(1.5), NormL2(0.5)), ((1:5,), (6:20,), (21:30,))), ),
         "args"   => ( randn(30), )
       ),
 ]
