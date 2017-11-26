@@ -72,6 +72,7 @@ end
   include("test_huberLoss.jl")
   include("test_indAffine.jl")
   include("test_leastSquares.jl")
+  include("test_logisticLoss.jl")
   include("test_quadratic.jl")
   include("test_calls.jl")
   include("test_graph.jl")

@@ -71,6 +71,7 @@ HuberLoss
 LeastSquares
 Linear
 LogBarrier
+LogisticLoss
 Maximum
 Quadratic
 SumPositive
