@@ -1,5 +1,3 @@
-import ProximalOperators: gradient!, gradient #this can be removed when moved to Prox
-
 # Hinge loss function
 
 export SqrHingeLoss
@@ -31,7 +29,7 @@ end
 is_convex(f::SqrHingeLoss) = true
 is_smooth(f::SqrHingeLoss) = true
 
-SqrHingeLoss(b::T, mu::R=1.0) where {R <: Real, T <: AbstractVector{R}} = SqrHingeLoss{R,T}(b,mu) 
+SqrHingeLoss(b::T, mu::R=1.0) where {R <: Real, T <: AbstractVector{R}} = SqrHingeLoss{R,T}(b,mu)
 
 # TODO prox!
 
@@ -43,7 +41,7 @@ function gradient!(y::AbstractArray{T}, f::SqrHingeLoss{T}, x::AbstractArray{T})
 		zz = 1-f.b[i]*x[i]
 		z = max(zero(T),zz)
 		y[i] = z .> 0 ? -2*f.mu*f.b[i]*zz : 0
-		sum += z^2 
+		sum += z^2
 	end
 	return f.mu*sum
 end

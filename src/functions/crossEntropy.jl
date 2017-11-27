@@ -1,6 +1,3 @@
-
-import ProximalOperators: gradient!, gradient #this can be removed when moved to Prox
-
 # Cross Entropy loss function
 
 export CrossEntropy
@@ -31,22 +28,22 @@ end
 is_convex(f::CrossEntropy) = true
 is_smooth(f::CrossEntropy) = true
 
-CrossEntropy(b::T) where {R <: Real, T <: AbstractVector{R}} = CrossEntropy{R,T}(b) 
+CrossEntropy(b::T) where {R <: Real, T <: AbstractVector{R}} = CrossEntropy{R,T}(b)
 
 # TODO prox!
 
-function (f::CrossEntropy{T})(x::AbstractArray{T}) where {T<:Real}  
+function (f::CrossEntropy{T})(x::AbstractArray{T}) where {T<:Real}
 	sum = zero(T)
 	for i in eachindex(f.b)
-		sum += f.b[i]*log(x[i])+(1-f.b[i])*log(1-x[i]) 
+		sum += f.b[i]*log(x[i])+(1-f.b[i])*log(1-x[i])
 	end
 	return -sum/length(f.b)
 end
 
-function (f::CrossEntropy{B})(x::AbstractArray{T}) where {B<:Bool, T<:Real}  
+function (f::CrossEntropy{B})(x::AbstractArray{T}) where {B<:Bool, T<:Real}
 	sum = zero(T)
 	for i in eachindex(f.b)
-		sum += f.b[i] ? log(x[i]) : (1-f.b[i])*log(1-x[i]) 
+		sum += f.b[i] ? log(x[i]) : (1-f.b[i])*log(1-x[i])
 	end
 	return -sum/length(f.b)
 end
@@ -57,17 +54,17 @@ function gradient!(y::AbstractArray{T}, f::CrossEntropy{T}, x::AbstractArray{T})
 		y[i] = 1/length(f.b)*( - f.b[i]/x[i] + (1-f.b[i])/(1-x[i]) )
 		sum += f.b[i]*log(x[i])+(1-f.b[i])*log(1-x[i])
 	end
-	return -1/length(f.b)*sum 
+	return -1/length(f.b)*sum
 end
 
 function gradient!(y::AbstractArray{T}, f::CrossEntropy{B}, x::AbstractArray{T}) where {T <: Real, B <: Bool}
 	sum = zero(T)
 	for i in eachindex(x)
-		y[i] = f.b[i] ? - 1/x[i] : 1/(1-x[i]) 
+		y[i] = f.b[i] ? - 1/x[i] : 1/(1-x[i])
 		y[i] *= 1/length(f.b)
 		sum += f.b[i] ? log(x[i]) : log(1-x[i])
 	end
-	return -1/length(f.b)*sum 
+	return -1/length(f.b)*sum
 end
 
 fun_name(f::CrossEntropy) = "cross entropy loss"
