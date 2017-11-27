@@ -28,7 +28,6 @@ include("utilities/vecnormdiff.jl")
 # Basic functions
 
 include("functions/elasticNet.jl")
-include("functions/hingeLoss.jl")
 include("functions/huberLoss.jl")
 include("functions/indAffine.jl")
 include("functions/indBallL0.jl")
@@ -50,6 +49,7 @@ include("functions/indZero.jl")
 include("functions/leastSquares.jl")
 include("functions/linear.jl")
 include("functions/logBarrier.jl")
+include("functions/logisticLoss.jl")
 include("functions/maximum.jl")
 include("functions/normL2.jl")
 include("functions/normL1.jl")
@@ -60,6 +60,8 @@ include("functions/quadratic.jl")
 include("functions/sqrNormL2.jl")
 include("functions/sumPositive.jl")
 include("functions/indGraph.jl")
+include("functions/sqrHingeLoss.jl")
+include("functions/crossEntropy.jl")
 
 # Calculus rules
 
@@ -79,9 +81,10 @@ include("calculus/translate.jl")
 
 # Functions obtained from basic + calculus
 
+include("functions/hingeLoss.jl")
 include("functions/indExp.jl")
-include("functions/sumLargest.jl")
 include("functions/normLinf.jl")
+include("functions/sumLargest.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
   println(io, "description : ", fun_name(f))

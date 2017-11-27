@@ -66,13 +66,16 @@ SqrNormL2
 ## Penalties and other functions
 
 ```@docs
-HingeLoss   
-HuberLoss   
+CrossEntropy
+HingeLoss
+HuberLoss
 LeastSquares
 Linear
 LogBarrier
+LogisticLoss
 Maximum
 Quadratic
+SqrHingeLoss
 SumPositive
 ```
 
