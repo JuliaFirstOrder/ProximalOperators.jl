@@ -329,11 +329,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "functions.html#ProximalOperators.CrossEntropy",
+    "page": "Functions",
+    "title": "ProximalOperators.CrossEntropy",
+    "category": "Type",
+    "text": "Cross Entropy loss\n\nCrossEntropy(b)\n\nReturns the function\n\nf(x) = -1N sum_n = 1^N b log (x)+(1-b) log (1-x)\n\nwhere b is an array with 0 ≤ b ≤ 1.\n\n\n\n"
+},
+
+{
     "location": "functions.html#ProximalOperators.HingeLoss",
     "page": "Functions",
     "title": "ProximalOperators.HingeLoss",
     "category": "Function",
-    "text": "Hinge loss\n\nHingeLoss(b, μ=1.0)\n\nReturns the function\n\nf(x) = _i max0 1 - b_i  x_i\n\nwhere b is an array and μ is a positive parameter.\n\n\n\n"
+    "text": "Hinge loss\n\nHingeLoss(y, μ=1.0)\n\nReturns the function\n\nf(x) = _i max0 1 - y_i  x_i\n\nwhere y is an array and μ is a positive parameter.\n\n\n\n"
 },
 
 {
@@ -369,6 +377,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "functions.html#ProximalOperators.LogisticLoss",
+    "page": "Functions",
+    "title": "ProximalOperators.LogisticLoss",
+    "category": "Type",
+    "text": "Logistic loss\n\nLogisticLoss(y, μ=1.0)\n\nReturns the function\n\nf(x) = _i log(1+exp(-y_ix_i))\n\nwhere y is an array and μ is a positive parameter.\n\n\n\n"
+},
+
+{
     "location": "functions.html#ProximalOperators.Maximum",
     "page": "Functions",
     "title": "ProximalOperators.Maximum",
@@ -385,6 +401,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "functions.html#ProximalOperators.SqrHingeLoss",
+    "page": "Functions",
+    "title": "ProximalOperators.SqrHingeLoss",
+    "category": "Type",
+    "text": "Squared Hinge loss\n\nSqrHingeLoss(b, μ=1.0)\n\nReturns the function\n\nf(x) = _i max0 1 - b_i  x_i^2\n\nwhere b is an array and μ is a positive parameter.\n\n\n\n"
+},
+
+{
     "location": "functions.html#ProximalOperators.SumPositive",
     "page": "Functions",
     "title": "ProximalOperators.SumPositive",
@@ -397,7 +421,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "Penalties and other functions",
     "category": "section",
-    "text": "HingeLoss   \nHuberLoss   \nLeastSquares\nLinear\nLogBarrier\nMaximum\nQuadratic\nSumPositive"
+    "text": "CrossEntropy\nHingeLoss\nHuberLoss\nLeastSquares\nLinear\nLogBarrier\nLogisticLoss\nMaximum\nQuadratic\nSqrHingeLoss\nSumPositive"
 },
 
 {
