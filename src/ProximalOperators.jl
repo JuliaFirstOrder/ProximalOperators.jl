@@ -60,6 +60,8 @@ include("functions/quadratic.jl")
 include("functions/sqrNormL2.jl")
 include("functions/sumPositive.jl")
 include("functions/indGraph.jl")
+include("functions/sqrHingeLoss.jl")
+include("functions/crossEntropy.jl")
 
 # Calculus rules
 

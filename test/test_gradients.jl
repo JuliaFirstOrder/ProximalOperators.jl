@@ -1,4 +1,15 @@
 
+function gradient_fd(f,x) #compute gradient using finite differences
+	gradfd = zeros(x)
+	xeps = zeros(x)
+	for i in eachindex(gradfd)
+		xeps .= x
+		xeps[i] += sqrt(eps())
+		gradfd[i] = (f(xeps)-f(x))/sqrt(eps())
+	end
+	return gradfd
+end
+
 stuff = [
   Dict( "f"      => ElasticNet(2.0, 3.0),
         "x"      => [-2., -1., 0., 1., 2., 3.],
@@ -104,6 +115,22 @@ stuff = [
         "x"      => [-1.0, -2.0, 3.0, 2.0, 1.0],
         "∇f(x)"  => [-1.0965878679450072, 0.17880438303317633, -0.07113880976635019, 1.3211956169668235, -0.4034121320549927]
       ),
+  Dict( "f"      => SqrHingeLoss([1.0, -1.0, 1.0, -1.0, 1.0], 1.5),
+       "x"      => randn(srand(0),5),
+       "∇f(x)"  => gradient_fd(SqrHingeLoss([1.0, -1.0, 1.0, -1.0, 1.0], 1.5),randn(srand(0),5)) 
+      ),
+  Dict( "f"      => CrossEntropy([1.0, 0., 1.0,  0., 1.0]),
+       "x"      => rand(srand(0),5),
+       "∇f(x)"  => gradient_fd(CrossEntropy([1.0, 0., 1.0,  0., 1.0]),rand(srand(0),5)) 
+      ),
+  Dict( "f"      => CrossEntropy([true, false, true,  false, true]),
+       "x"      => rand(srand(0),5),
+       "∇f(x)"  => gradient_fd(CrossEntropy([true, false, true,  false, true]),rand(srand(0),5)) 
+      ),
+  Dict( "f"      => CrossEntropy([true, false, true,  false, true]),
+       "x"      => rand(srand(0),1,5),
+       "∇f(x)"  => gradient_fd(CrossEntropy([true, false, true,  false, true]),rand(srand(0),1,5)) 
+      ),
 ]
 
 println("Testing Gradients")
@@ -122,7 +149,7 @@ for i = 1:length(stuff)
   ∇f = similar(x)
   fx = gradient!(∇f, f, x)
   @test fx == ref_fx || abs(fx-ref_fx)/(1+abs(ref_fx)) <= TOL_ASSERT
-  @test ∇f == ref_∇f || norm(∇f-ref_∇f)/(1+norm(ref_∇f)) <= TOL_ASSERT
+  @test ∇f == ref_∇f || norm(∇f-ref_∇f)/(1+norm(ref_∇f)) <= sqrt(TOL_ASSERT)
 
   for j = 1:11
     #For initial point x and 10 other random points
@@ -131,7 +158,11 @@ for i = 1:length(stuff)
       # Test conditions in different directions
       if ProximalOperators.is_convex(f)
         # Test ∇f is subgradient
-        d = randn(size(x))
+	if typeof(f) <: CrossEntropy
+		d = x.*(rand(size(x)).-1)./2 # assures 0 <= x+d <= 1
+	else
+		d = randn(size(x))
+	end
         @test f(x+d) ≥ fx + dot(d, ∇f) - TOL_ASSERT
       else
         # Assume smooth function

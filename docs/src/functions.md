@@ -67,11 +67,13 @@ SqrNormL2
 
 ```@docs
 HingeLoss   
+SqrHingeLoss   
 HuberLoss   
 LeastSquares
 Linear
 LogBarrier
 LogisticLoss
+CrossEntropy
 Maximum
 Quadratic
 SumPositive
