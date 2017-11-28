@@ -445,7 +445,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "Distances from convex sets",
     "category": "section",
-    "text": "DistL2\nSqrDistL2"
+    "text": "When the indicator of a convex set is constructed (see Indicators of sets) the (squared) distance from the set can be constructed using the following:DistL2\nSqrDistL2"
 },
 
 {
@@ -478,14 +478,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Duality",
     "category": "section",
     "text": "Conjugate"
-},
-
-{
-    "location": "calculus.html#Distances-from-convex-sets-1",
-    "page": "Calculus rules",
-    "title": "Distances from convex sets",
-    "category": "section",
-    "text": "When the indicator of a convex set is constructed (see Indicators of sets) the (squared) distance from the set can be constructed using the following:DistL2\nSqrDistL2"
 },
 
 {
