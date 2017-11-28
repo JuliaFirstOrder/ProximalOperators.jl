@@ -81,6 +81,8 @@ SumPositive
 
 ## Distances from convex sets
 
+When the indicator of a convex set is constructed (see [Indicators of sets](@ref)) the (squared) distance from the set can be constructed using the following:
+
 ```@docs
 DistL2
 SqrDistL2
