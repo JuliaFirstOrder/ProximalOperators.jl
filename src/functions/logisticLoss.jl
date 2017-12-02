@@ -25,14 +25,15 @@ struct LogisticLoss{T <: AbstractArray, R <: Real} <: ProximableFunction
     end
 end
 
-LogisticLoss(y::T, mu::R=1.0) where {T, R} = LogisticLoss{T, R}(y, mu)
+LogisticLoss(y::T, mu::R=one(R)) where {R, T <: AbstractArray{R}} = LogisticLoss{T, R}(y, mu)
 
 is_separable(f::LogisticLoss) = true
 is_convex(f::LogisticLoss) = true
+is_prox_accurate(f::LogisticLoss) = false
 
 # f(x)  =  mu log(1 + exp(-y x))
 
-function (f::LogisticLoss{T, R})(x::S) where {S <: AbstractArray, T, R}
+function (f::LogisticLoss{T, R})(x::AbstractArray{R}) where {T, R}
     val = zero(R)
     for k in eachindex(x)
         expyx = exp(f.y[k]*x[k])
@@ -43,8 +44,10 @@ end
 
 # f'(x) = -mu y exp(-y x) / (1 + exp(-y x))
 #       = -mu y / (1 + exp(y x))
+#
+# Lipschitz constant of gradient: (mu y)
 
-function gradient!(g::S, f::LogisticLoss{T, R}, x::S) where {S <: AbstractArray, T, R}
+function gradient!(g::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}) where {T, R}
     val = zero(R)
     for k in eachindex(x)
         expyx = exp(f.y[k]*x[k])
@@ -54,9 +57,39 @@ function gradient!(g::S, f::LogisticLoss{T, R}, x::S) where {S <: AbstractArray,
     return f.mu * val
 end
 
+# Computing proximal operator:
 # z = prox(f, x, gamma)
-# ==> f'(z) + (z - x)/gamma = 0
-# ==> -mu y / (1 + exp(y z)) + (z - x)/gamma = 0
-# ==> -mu gamma y / (1 + exp(y z)) + z - x = 0
+# <==> f'(z) + (z - x)/gamma = 0
+# <==> (z - x)/gamma - mu y / (1 + exp(y z)) = 0
+# <==> z - x - mu gamma y / (1 + exp(y z)) = 0
+#
+# Indicating the above condition as F(z) = 0, then
+# ==> F'(z) = 1 - (mu gamma y^2 exp(y z))/(1+exp(y z))^2
+#
+# Newton's method (no damping) to compute z reads:
+# z_{k+1} = z_k - F(z_k)/F'(z_k)
+#
+# To ensure convergence of Newton's method a damping is required.
+# The damping coefficient could be computed by backtracking.
+#
+# Alternatively we can use gradient methods with constant step size.
 
-# TODO: implement prox! using Newton method?
+function prox!(z::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}, gamma::R=one(R)) where {T, R}
+    c = 1.0/gamma # convexity modulus
+    L = maximum(abs, f.mu .* f.y) + c # Lipschitz constants
+    z .= x
+    expyz = similar(z)
+    Fz = similar(z)
+    F1z = similar(z)
+    for k = 1:20
+        expyz .= exp.(f.y .* z)
+        Fz .= z .- x .- f.mu * gamma * (f.y ./ (1 .+ expyz))
+        z .-= Fz ./ L
+    end
+    expyz .= exp.(f.y .* z)
+    val = zero(R)
+    for k in eachindex(expyz)
+        val += log(1.0 + 1.0/expyz[k])
+    end
+    return f.mu * val
+end

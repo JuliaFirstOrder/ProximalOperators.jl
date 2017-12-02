@@ -32,6 +32,14 @@ stuff = [
         # test optimality condition of prox
         "test"   => (f, x, gamma, y) -> isapprox((x-y)/gamma, (vecnorm(y) <= f.rho ? f.mu*y : f.rho*f.mu*y/vecnorm(y)))
       ),
+
+  Dict( "constr" => SqrHingeLoss,
+        "params" => ( (randn(5),), (randn(5), 0.1+rand()), (randn(3, 5), 0.1+rand()) ),
+        "args"   => ( randn(5), randn(5), randn(3, 5) ),
+        "gammas" => ( 0.1+rand(), 0.1+rand(), 0.1+rand() ),
+        # test optimality condition of prox
+        "test"   => (f, x, gamma, z) -> isapprox((x-z)/gamma, -2.*f.mu.*f.y.*max.(0, 1 .- f.y.*z))
+      ),
 ]
 
 for i = 1:length(stuff)
