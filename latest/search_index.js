@@ -405,7 +405,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.SqrHingeLoss",
     "category": "Type",
-    "text": "Squared Hinge loss\n\nSqrHingeLoss(b, μ=1.0)\n\nReturns the function\n\nf(x) = _i max0 1 - b_i  x_i^2\n\nwhere b is an array and μ is a positive parameter.\n\n\n\n"
+    "text": "Squared Hinge loss\n\nSqrHingeLoss(y, μ=1.0)\n\nReturns the function\n\nf(x) = _i max0 1 - y_i  x_i^2\n\nwhere y is an array and μ is a positive parameter.\n\n\n\n"
 },
 
 {
