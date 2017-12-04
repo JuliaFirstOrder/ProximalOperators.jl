@@ -329,14 +329,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "functions.html#ProximalOperators.CrossEntropy",
-    "page": "Functions",
-    "title": "ProximalOperators.CrossEntropy",
-    "category": "Type",
-    "text": "Cross Entropy loss\n\nCrossEntropy(b)\n\nReturns the function\n\nf(x) = -1N sum_n = 1^N b log (x)+(1-b) log (1-x)\n\nwhere b is an array with 0 ≤ b ≤ 1.\n\n\n\n"
-},
-
-{
     "location": "functions.html#ProximalOperators.HingeLoss",
     "page": "Functions",
     "title": "ProximalOperators.HingeLoss",
@@ -421,7 +413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "Penalties and other functions",
     "category": "section",
-    "text": "CrossEntropy\nHingeLoss\nHuberLoss\nLeastSquares\nLinear\nLogBarrier\nLogisticLoss\nMaximum\nQuadratic\nSqrHingeLoss\nSumPositive"
+    "text": "HingeLoss\nHuberLoss\nLeastSquares\nLinear\nLogBarrier\nLogisticLoss\nMaximum\nQuadratic\nSqrHingeLoss\nSumPositive"
 },
 
 {
