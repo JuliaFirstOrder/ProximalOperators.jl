@@ -1,16 +1,180 @@
-\documentclass{standalone}
+%!tikz editor 1.0
+\documentclass{article}
+\usepackage{tikzsymbols}
+\usepackage{tikz}
+\usepackage[graphics, active, tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
 
-\usepackage{amsmath}
-\usepackage{xcolor}
-\usepackage{graphicx}
+%!tikz preamble begin
+\usetikzlibrary{arrows}
+\usepackage{pstricks}
+\usepackage{pstricks-add}
+\usetikzlibrary{pgfplots.groupplots} 
+\usetikzlibrary{colorbrewer}
+\usepackage{pgfplots}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{calc}
+\usetikzlibrary{pgfplots.polar}
+\usepackage{subcaption}
+%!tikz preamble end
+\definecolor{mycolor1}{rgb}{0.01430,0.01430,0.01430}%
+\definecolor{mycolor2}{rgb}{0.10740,0.22340,0.49840}%
+\definecolor{mycolor3}{rgb}{      0,    0.3977,    0.4220}
+\definecolor{mycolor4}{rgb}{0.00000,0.55650,0.24690}%
+\definecolor{mycolor5}{rgb}{0.69120,0.77950,0.00000}%0.9681    0.8962    0.8378
+\definecolor{mycolor6}{rgb}{0.96810, 0.89620,0.83780}
+\definecolor{mycolor7}{rgb}{0.875, 0.41015625, 0.13671875}%
+\definecolor{mycolor8}{rgb}{0.93359375, 0.23046875, 0.0546875}
+%\usetikzlibrary{external}
+%\tikzexternalize
+\pagenumbering{gobble}
 
-\definecolor{JuliaRed}{RGB}{203, 60, 51}
-\definecolor{JuliaViolet}{RGB}{149, 88, 178}
-\definecolor{JuliaGreen}{RGB}{56, 152, 38}
+\newcommand*\Laplace{\mathop{}\!\mathbin\bigtriangleup}
+\newcommand*\prox{\text{{prox}}}
+\newcommand*\argmin{\text{{argmin}}}
+\newcommand*\minimize{\text{{minimize}}}
+\newcommand*\vect{\text{{vec}}}
+\newcommand*\rank{\text{{rank}}}
+\newcommand*\sign{\text{{sign}}}
+\newcommand*\x{\mathbf{x}}
+\newcommand*\y{\mathbf{y}}
+\newcommand{\sgn}{\mathop{\mathrm{sgn}}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+
+\definecolor{JuliaBlue}{RGB}{64.256, 99.328, 216.832}
+\definecolor{JuliaBlueL}{RGB}{102.4, 130.56, 224.768   }
+\definecolor{JuliaPurple}{RGB}{149.504, 88.32, 178.688}
+\definecolor{JuliaPurpleL}{RGB}{170.752, 121.6, 193.792}
+\definecolor{JuliaGreen}{RGB}{56.32, 152.576, 38.144}
+\definecolor{JuliaGreenL}{RGB}{96.256, 173.568, 81.408}
+\definecolor{JuliaRed}{RGB}{203.776, 60.16, 51.2}
+\definecolor{JuliaRedL}{RGB}{213.76, 99.328, 92.416} 
 
 \begin{document}
-\nopagecolor
-\resizebox{5cm}{!}{%
-\(\boxed{\mathrm{\color{JuliaGreen}{prox}}_{\color{JuliaRed}{\gamma} \color{JuliaViolet}{f}}}\)%
+%!tikz source begin
+
+\begin{tikzpicture}
+%
+\newcommand{\PGsize}{3} %minimum size
+\newcommand{\PGLW}{2}   %line width paths
+\newcommand{\PGLWC}{1.5}   %line width contours
+
+\tikzstyle{every node}=[font=\scriptsize]
+\begin{axis}	[
+axis background/.style={fill=white},
+compat=newest,
+width=10cm,
+height=10cm,
+%xtick={-4,-2,0,2,4},
+%xlabel=Time (ms),
+xmin = {-0.2},
+xmax = {0.6},
+ymin = {-0.2},
+ymax = {0.6},
+ytick={-0.6},
+xtick={-0.6},
+yticklabels={\empty},
+xticklabels={\empty},
+unbounded coords=jump,
+legend columns=3,
+tick style={draw=none},
+axis line style={draw=none},
+]
+
+%\addplot[forget plot] graphics [xmin=0,xmax=1,ymin=0,ymax=1] {fig/PG_path.png};
+
+\addplot[
+color = JuliaRedL,
+solid,
+only marks,
+mark size=0.18*\axisdefaultwidth,
+mark = *,
+forget plot,
+opacity = 1,
+]
+coordinates {(0,0)};
+
+%%%ind l2
+\addplot[
+color = JuliaRed,
+solid,
+line width = 6,
+]
+table[x = "x", y = "y",col sep=comma]{idl2.cvs};
+
+%%l1        
+\pgfplotsforeachungrouped \n in {2,...,4,5} {
+% manipulate the counter and store it in `\i'                
+\pgfmathtruncatemacro{\i}{30*\n}
+% then use this construct as written in the manual in section 8.1
+% on page 519 (v1.13)
+\edef\temp{\noexpand%
+\addplot[
+color=JuliaPurple!\i,
+opacity = 1,
+line width = 4,
+forget plot,
+]
+table[x = "x", y = "y",col sep=comma]{l1_\n.cvs};
+}\temp
 }
+
+%%contour        
+\pgfplotsforeachungrouped \n in {1,...,50} {
+% manipulate the counter and store it in `\i'                
+\pgfmathtruncatemacro{\i}{20*\n}
+% then use this construct as written in the manual in section 8.1
+% on page 519 (v1.13)
+\edef\temp{\noexpand%
+\addplot[
+color=JuliaRed,
+opacity = 0.3,
+line width = 1,
+forget plot,
+]
+table[x = "x", y = "y",col sep=comma]{prox1_\n.cvs};
+}\temp
+}	
+
+%%contour        
+\pgfplotsforeachungrouped \n in {1,...,50} {
+% manipulate the counter and store it in `\i'                
+\pgfmathtruncatemacro{\i}{20*\n}
+% then use this construct as written in the manual in section 8.1
+% on page 519 (v1.13)
+\edef\temp{\noexpand%
+\addplot[
+color=JuliaPurple,
+opacity = 0.3,
+line width = 1,
+forget plot,
+]
+table[x = "x", y = "y",col sep=comma]{prox2_\n.cvs};
+}\temp
+}
+
+%%%data points
+\addplot[
+color = JuliaGreenL,
+only marks,
+mark size=0.185*\axisdefaultwidth,
+mark = *,
+forget plot,
+opacity = 0.7,
+]
+coordinates {(0.2,0.4)};
+
+\addplot[
+color = JuliaGreen,
+line width =0,
+draw opacity=0,
+only marks,
+mark size=2.3,
+mark = *,
+]
+table[x = "x", y = "y",col sep=comma]{datapoints.cvs};
+
+\end{axis}
+\end{tikzpicture}%
 \end{document}
