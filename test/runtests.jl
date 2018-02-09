@@ -90,6 +90,7 @@ end
   include("test_regularize.jl")
   include("test_separableSum.jl")
   include("test_slicedSeparableSum.jl")
+  include("test_sum.jl")
 end
 
 @testset "Equivalences" begin

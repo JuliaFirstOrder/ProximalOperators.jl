@@ -12,4 +12,4 @@ grad1, val1 = gradient(f1, xtest)
 grad2, val2 = gradient(f2, xtest)
 
 gradsum, valsum = gradient(f, xtest)
-gradsum ≈ grad1 + grad2
+@test gradsum ≈ grad1 + grad2
