@@ -41,16 +41,15 @@ function (sumobj::Sum)(x)
     sum
 end
 
-function gradient!(grad, sumobj::Sum, x)
+function gradient!{T}(grad::T, sumobj::Sum, x::T)
     # gradient of sum is sum of gradients
-
     val = 0.0
     # to keep track of this sum, i may not be able to
     # avoid allocating an array
     temp = zeros(grad)
     for f in sumobj.fs
         val += gradient!(temp, f, x)
-        grad += temp
+        grad[:] += temp
     end
     return val
 end
