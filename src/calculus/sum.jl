@@ -25,13 +25,12 @@ Sum(fs::Vararg{ProximableFunction}) = Sum((fs...))
 is_prox_accurate(f::Sum) = false
 is_convex(f::Sum) = all(is_convex.(f.fs))
 is_set(f::Sum) = all(is_set.(f.fs))
-is_singleton(f::Sum) = all(is_singleton.(f.fs))
 is_cone(f::Sum) = all(is_cone.(f.fs))
 is_affine(f::Sum) = all(is_affine.(f.fs))
 is_smooth(f::Sum) = all(is_smooth.(f.fs))
 is_quadratic(f::Sum) = all(is_quadratic.(f.fs))
 is_generalized_quadratic(f::Sum) = all(is_generalized_quadratic.(f.fs))
-is_strongly_convex(f::Sum) = all(is_strongly_convex.(f.fs))
+is_strongly_convex(f::Sum) = all(is_convex.(f.fs)) && any(is_strongly_convex.(f.fs))
 
 function (sumobj::Sum)(x)
     sum = 0.0
@@ -41,7 +40,7 @@ function (sumobj::Sum)(x)
     sum
 end
 
-function gradient!{T}(grad::T, sumobj::Sum, x::T)
+function gradient!(grad::T, sumobj::Sum, x::T) where T
     # gradient of sum is sum of gradients
     val = 0.0
     # to keep track of this sum, i may not be able to
@@ -49,7 +48,7 @@ function gradient!{T}(grad::T, sumobj::Sum, x::T)
     temp = zeros(grad)
     for f in sumobj.fs
         val += gradient!(temp, f, x)
-        grad[:] += temp
+        grad .+= temp
     end
     return val
 end
