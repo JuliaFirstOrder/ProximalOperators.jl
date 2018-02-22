@@ -32,17 +32,17 @@ is_quadratic(f::Sum) = all(is_quadratic.(f.fs))
 is_generalized_quadratic(f::Sum) = all(is_generalized_quadratic.(f.fs))
 is_strongly_convex(f::Sum) = all(is_convex.(f.fs)) && any(is_strongly_convex.(f.fs))
 
-function (sumobj::Sum)(x)
-    sum = 0.0
+function (sumobj::Sum)(x::AbstractArray{T}) where {R, T <: Union{R, Complex{R}}}
+    sum = zero(R)
     for f in sumobj.fs
         sum += f(x)
     end
     sum
 end
 
-function gradient!(grad::T, sumobj::Sum, x::T) where T
+function gradient!(grad::AbstractArray{T}, sumobj::Sum, x::AbstractArray{T}) where {R, T <: Union{R, Complex{R}}}
     # gradient of sum is sum of gradients
-    val = 0.0
+    val = zero(R)
     # to keep track of this sum, i may not be able to
     # avoid allocating an array
     temp = zeros(grad)
