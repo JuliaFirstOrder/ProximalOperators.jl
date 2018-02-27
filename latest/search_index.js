@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.IndAffine",
     "category": "Type",
-    "text": "Indicator of an affine subspace\n\nIndAffine(A, b; iterative=false)\n\nIf A is a matrix (dense or sparse) and b is a vector, returns the indicator function of the set\n\nS = x  Ax = b\n\nIf A is a vector and b is a scalar, returns the indicator function of the set\n\nS = x  langle A x rangle = b\n\nBy default, a direct method (QR factorization of matrix A') is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
+    "text": "Indicator of an affine subspace\n\nIndAffine(A, b; iterative=false)\n\nIf A is a matrix (dense or sparse) and b is a vector, returns the indicator function of the set\n\nS = x  Ax = b\n\nIf A is a vector and b is a scalar, returns the indicator function of the set\n\nS = x  langle A x rangle = b\n\nBy default, a direct method (QR factorization of matrix A\') is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
 },
 
 {
@@ -629,7 +629,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Prox and gradient",
     "title": "Multiple variable blocks",
     "category": "section",
-    "text": "By combining functions together through SeparableSum, the resulting function will have multiple inputs, i.e., it will be defined over the Cartesian product of the domains of the individual functions. To represent elements (points) of such product space, here we use Julia's Tuple objects.Example. Suppose that the following function needs to be represented:f(x Y) = x_1 + Y_*that is, the sum of the L_1 norm of some vector x and the nuclear norm (the sum of the singular values) of some matrix Y. This is accomplished as follows:using ProximalOperators\nf = SeparableSum(NormL1(), NuclearNorm());Now, function f is defined over pairs of appropriate Array objects. Likewise, the prox method will take pairs of Arrays as inputs, and return pairs of Arrays as output:x = randn(10); # some random vector\nY = randn(20, 30); # some random matrix\nf_xY = f((x, Y)); # evaluates f at (x, Y)\n(u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)The same holds for the separable sum of more than two functions, in which case \"pairs\" are to be replaced with Tuples of the appropriate length."
+    "text": "By combining functions together through SeparableSum, the resulting function will have multiple inputs, i.e., it will be defined over the Cartesian product of the domains of the individual functions. To represent elements (points) of such product space, here we use Julia\'s Tuple objects.Example. Suppose that the following function needs to be represented:f(x Y) = x_1 + Y_*that is, the sum of the L_1 norm of some vector x and the nuclear norm (the sum of the singular values) of some matrix Y. This is accomplished as follows:using ProximalOperators\nf = SeparableSum(NormL1(), NuclearNorm());Now, function f is defined over pairs of appropriate Array objects. Likewise, the prox method will take pairs of Arrays as inputs, and return pairs of Arrays as output:x = randn(10); # some random vector\nY = randn(20, 30); # some random matrix\nf_xY = f((x, Y)); # evaluates f at (x, Y)\n(u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)The same holds for the separable sum of more than two functions, in which case \"pairs\" are to be replaced with Tuples of the appropriate length."
 },
 
 {
