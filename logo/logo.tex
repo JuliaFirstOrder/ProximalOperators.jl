@@ -1,16 +1,70 @@
-\documentclass{standalone}
+%!tikz editor 1.0
+\documentclass[convert={density=2000,size=600x600,outext=.png}]{standalone}
 
-\usepackage{amsmath}
-\usepackage{xcolor}
-\usepackage{graphicx}
+\usepackage{tikzsymbols}
+\usepackage{tikz}
+\usepackage[graphics, active, tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\usetikzlibrary{backgrounds}
 
-\definecolor{JuliaRed}{RGB}{203, 60, 51}
-\definecolor{JuliaViolet}{RGB}{149, 88, 178}
-\definecolor{JuliaGreen}{RGB}{56, 152, 38}
+%!tikz preamble begin
+\usetikzlibrary{arrows}
+\usepackage{pstricks}
+\usepackage{pstricks-add}
+\usetikzlibrary{pgfplots.groupplots} 
+\usetikzlibrary{colorbrewer}
+\usepackage{pgfplots}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{calc}
+\usetikzlibrary{pgfplots.polar}
+\usepackage{subcaption}
+%!tikz preamble end
+
+\definecolor{JuliaBlue}{RGB}{64.256, 99.328, 216.832}
+\definecolor{JuliaBlueL}{RGB}{102.4, 130.56, 224.768   }
+\definecolor{JuliaPurple}{RGB}{149.504, 88.32, 178.688}
+\definecolor{JuliaPurpleL}{RGB}{170.752, 121.6, 193.792}
+\definecolor{JuliaGreen}{RGB}{56.32, 152.576, 38.144}
+\definecolor{JuliaGreenL}{RGB}{96.256, 173.568, 81.408}
+\definecolor{JuliaRed}{RGB}{203.776, 60.16, 51.2}
+\definecolor{JuliaRedL}{RGB}{213.76, 99.328, 92.416}
 
 \begin{document}
-\nopagecolor
-\resizebox{5cm}{!}{%
-\(\boxed{\mathrm{\color{JuliaGreen}{prox}}_{\color{JuliaRed}{\gamma} \color{JuliaViolet}{f}}}\)%
+%!tikz source begin
+\begin{tikzpicture}
+
+\tikzset{
+	% Mic style
+mysqr/.pic={ 
+\draw[pic actions] (-1,0) to (0,-1) to (1, 0) to (0, 1) to (-1,0) to (0,-1);
+},
 }
+
+\newcommand{\LW}{1.3}
+
+\draw[JuliaGreen,fill=JuliaGreenL,line width=\LW] (0.1,0.3) circle (0.1);
+\draw[JuliaGreen,fill=JuliaGreenL,line width=\LW] (-0.1,0.3) circle (0.1);
+
+\draw[JuliaGreen,fill=JuliaGreenL,line width=\LW] (-0.1,0.5) circle (0.1);
+\draw[JuliaGreen,fill=JuliaGreenL,line width=\LW] (0.1,0.5) circle (0.1);
+
+\draw[JuliaRed,fill=JuliaRedL,line width=\LW] (-0.3,0) circle (0.2);
+
+\pic[JuliaPurpleL,fill=JuliaPurple,line width=\LW, scale= 0.24] (n1) at (0.3,0) {mysqr} ;
+
+\pic[JuliaPurpleL,line width=\LW, scale= 0.1] (n1) at (0.3,0) {mysqr} ;
+
+\draw[-,JuliaBlue,line width=0.3*\LW, opacity = 1] (0.1,0.5) to (0.3,0.2);
+\draw[JuliaBlue,fill=JuliaBlue,line width=1] (0.3,0.2) circle (0.01);
+\draw[-,JuliaBlue,line width=0.3*\LW, opacity = 1] (0.1,0.3) to (0.3,0);
+\draw[JuliaBlue,fill=JuliaBlue,line width=1] (0.3,0) circle (0.01);
+
+\draw[-,JuliaBlue,line width=0.3*\LW, opacity = 1] (-0.1,0.3) to (-0.19,0.17);
+\draw[JuliaBlue,fill=JuliaBlue,line width=1] (-0.19,0.17) circle (0.01);
+
+\draw[-,JuliaBlue,line width=0.3*\LW, opacity = 1] (-0.1,0.5) to (-0.23,0.19);
+\draw[JuliaBlue,fill=JuliaBlue,line width=1] (-0.23,0.19) circle (0.01);
+
+\end{tikzpicture}
+
 \end{document}

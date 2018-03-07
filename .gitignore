@@ -3,6 +3,9 @@
 *.jl.mem
 *.log
 *.aux
+*.cvs
+*.bbl
+*.blg
 
 docs/build/
 docs/site/
