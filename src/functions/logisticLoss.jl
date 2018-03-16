@@ -29,6 +29,7 @@ LogisticLoss(y::T, mu::R=one(R)) where {R, T <: AbstractArray{R}} = LogisticLoss
 
 is_separable(f::LogisticLoss) = true
 is_convex(f::LogisticLoss) = true
+is_smooth(f::LogisticLoss) = true
 is_prox_accurate(f::LogisticLoss) = false
 
 # f(x)  =  mu log(1 + exp(-y x))

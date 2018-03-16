@@ -19,6 +19,7 @@ Linear(c::A) where {R <: RealOrComplex, A <: AbstractArray{R}} = Linear{R, A}(c)
 
 is_separable(f::Linear) = true
 is_convex(f::Linear) = true
+is_smooth(f::Linear) = true
 
 function (f::Linear{RC, A})(x::AbstractArray{RC}) where {R <: Real, RC <: Union{R, Complex{R}}, A <: AbstractArray{RC}}
   return vecdot(f.c, x)
