@@ -27,4 +27,4 @@ end
 
 # including concrete types
 
-include("IndPolyhedralOSQP.jl")
+include("indPolyhedralOSQP.jl")
