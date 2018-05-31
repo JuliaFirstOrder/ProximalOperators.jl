@@ -153,6 +153,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "functions.html#ProximalOperators.IndPolyhedral",
+    "page": "Functions",
+    "title": "ProximalOperators.IndPolyhedral",
+    "category": "type",
+    "text": "Indicator of a polyhedral set\n\nIndPolyhedral([l,] A, [u, xmin, xmax])\n\nReturns the indicator function of the polyhedral set:\n\nS =  x  x_min leq x leq x_max l leq Ax leq u \n\nMatrix A is a mandatory argument; when any of the bounds is not provided, it is assumed to be (plus or minus) infinity.\n\n\n\n"
+},
+
+{
     "location": "functions.html#ProximalOperators.IndSimplex",
     "page": "Functions",
     "title": "ProximalOperators.IndSimplex",
@@ -173,7 +181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "Indicators of sets",
     "category": "section",
-    "text": "When function f is the indicator function of a set S, that isf(x) = _S(x) =\nbegincases\n0  textif x in S \n+  textotherwise\nendcasesthen mathrmprox_f = _S is the projection onto S. Therefore ProximalOperators includes in particular projections onto commonly used sets, which are here listed.IndAffine\nIndBallLinf   \nIndBallL0     \nIndBallL1     \nIndBallL2     \nIndBallRank   \nIndBinary\nIndBox  \nIndGraph     \nIndHalfspace  \nIndPoint              \nIndSimplex    \nIndSphereL2          "
+    "text": "When function f is the indicator function of a set S, that isf(x) = _S(x) =\nbegincases\n0  textif x in S \n+  textotherwise\nendcasesthen mathrmprox_f = _S is the projection onto S. Therefore ProximalOperators includes in particular projections onto commonly used sets, which are here listed.IndAffine\nIndBallLinf   \nIndBallL0     \nIndBallL1     \nIndBallL2     \nIndBallRank   \nIndBinary\nIndBox  \nIndGraph     \nIndHalfspace  \nIndPoint\nIndPolyhedral              \nIndSimplex    \nIndSphereL2          "
 },
 
 {
