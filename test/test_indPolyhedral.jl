@@ -41,6 +41,7 @@ for constr in constructors_positive
     f = constr()
     @test ProximalOperators.is_convex(f) == true
     @test ProximalOperators.is_set(f) == true
+    fx = call_test(f, x)
     p, fp = prox_test(f, x)
 end
 
