@@ -28,18 +28,17 @@ function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
   print("* prox_naive  : "); @time y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gamma)
   @test ProximalOperators.deepmaxabs(yf_prealloc .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT_PROX
   @test ProximalOperators.deepmaxabs(y_naive .- yf)/(1 + ProximalOperators.deepmaxabs(yf)) <= TOL_ASSERT_PROX
-  if ProximalOperators.is_cone(f)
-    @test ProximalOperators.is_set(f)
-  end
   if ProximalOperators.is_set(f)
     @test fy_prealloc == 0
   end
   @test fy_prealloc == fy || abs(fy_prealloc - fy)/(1+abs(fy)) <= TOL_ASSERT_PROX
   @test fy_naive == fy || abs(fy_naive - fy)/(1+abs(fy_naive)) <= TOL_ASSERT_PROX
-  try
-    f_at_y = f(yf)
-    @test f_at_y == fy || abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT_PROX
-  catch e
+  if !ProximalOperators.is_set(f) || ProximalOperators.is_prox_accurate(f)
+    try
+      f_at_y = f(yf)
+      @test f_at_y == fy || abs(fy - f_at_y)/(1+abs(fy)) <= TOL_ASSERT_PROX
+    catch e
+    end
   end
   return yf, fy
 end
@@ -71,6 +70,7 @@ end
 @testset "Functions" begin
   include("test_huberLoss.jl")
   include("test_indAffine.jl")
+  include("test_indPolyhedral.jl")
   include("test_leastSquares.jl")
   include("test_logisticLoss.jl")
   include("test_quadratic.jl")

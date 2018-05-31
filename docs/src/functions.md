@@ -28,7 +28,8 @@ IndBinary
 IndBox  
 IndGraph     
 IndHalfspace  
-IndPoint              
+IndPoint
+IndPolyhedral              
 IndSimplex    
 IndSphereL2          
 ```

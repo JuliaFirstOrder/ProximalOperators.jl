@@ -5,6 +5,7 @@ __precompile__()
 module ProximalOperators
 
 using IterativeSolvers
+using OSQP
 
 const RealOrComplex{T <: Real} = Union{T, Complex{T}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
@@ -41,6 +42,7 @@ include("functions/indHalfspace.jl")
 include("functions/indNonnegative.jl")
 include("functions/indNonpositive.jl")
 include("functions/indPoint.jl")
+include("functions/indPolyhedral.jl")
 include("functions/indPSD.jl")
 include("functions/indSimplex.jl")
 include("functions/indSOC.jl")
