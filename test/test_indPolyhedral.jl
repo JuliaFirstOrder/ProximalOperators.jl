@@ -18,32 +18,34 @@ l = A*x0 .- 0.1
 x = 10.*randn(n)
 p = similar(x)
 
-# l
+# define test cases
 
-f = IndPolyhedral(l, A)
-p, fp = prox_test(f, x)
+constructors_positive = [
+    () -> IndPolyhedral(l, A),
+    () -> IndPolyhedral(l, A, xmin, xmax),
+    () -> IndPolyhedral(A, u),
+    () -> IndPolyhedral(A, u, xmin, xmax),
+    () -> IndPolyhedral(l, A, u),
+    () -> IndPolyhedral(l, A, u, xmin, xmax),
+]
 
-# l, xmin, xmax
+constructors_negative = [
+    () -> IndPolyhedral(l, A, xmax, xmin),
+    () -> IndPolyhedral(A, u, xmax, xmin),
+    () -> IndPolyhedral(l, A, u, xmax, xmin),
+]
 
-f = IndPolyhedral(l, A, xmin, xmax)
-p, fp = prox_test(f, x)
+# run positive tests
 
-# u
+for constr in constructors_positive
+    f = constr()
+    @test ProximalOperators.is_convex(f) == true
+    @test ProximalOperators.is_set(f) == true
+    p, fp = prox_test(f, x)
+end
 
-f = IndPolyhedral(A, u)
-p, fp = prox_test(f, x)
+# run negative tests
 
-# u, xmin, xmax
-
-f = IndPolyhedral(A, u, xmin, xmax)
-p, fp = prox_test(f, x)
-
-# l, u
-
-f = IndPolyhedral(l, A, u)
-p, fp = prox_test(f, x)
-
-# l, u, xmin, xmax
-
-f = IndPolyhedral(l, A, u, xmin, xmax)
-p, fp = prox_test(f, x)
+for constr in constructors_negative
+    @test_throws ErrorException constr()
+end
