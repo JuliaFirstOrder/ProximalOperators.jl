@@ -1,5 +1,17 @@
-using ProximalOperators
 using Base.Test
+using ProximalOperators
+using ProximalOperators:
+  is_prox_accurate,
+  is_separable,
+  is_convex,
+  is_singleton,
+  is_cone,
+  is_affine,
+  is_set,
+  is_smooth,
+  is_quadratic,
+  is_generalized_quadratic,
+  is_strongly_convex
 
 srand(0)
 
@@ -48,17 +60,12 @@ end
 # i.e., that more specific properties imply less specific ones
 # e.g., the indicator of a subspace is the indicator of a set in particular
 function predicates_test(f)
-  # is_quadratic => is_generalized_quadratic
-  @test !ProximalOperators.is_quadratic(f) ||
-    ProximalOperators.is_generalized_quadratic(f)
+  # is_quadratic => is_(generalized_quadratic && smooth)
+  @test !is_quadratic(f) || (is_generalized_quadratic(f) && is_smooth(f))
   # is_(singleton || cone || affine) => is_set
-  @test !(ProximalOperators.is_singleton(f) ||
-    ProximalOperators.is_cone(f) ||
-    ProximalOperators.is_affine(f)) ||
-    ProximalOperators.is_set(f)
+  @test !(is_singleton(f) || is_cone(f) || is_affine(f)) || is_set(f)
   # is_strongly_convex => is_convex
-  @test !ProximalOperators.is_strongly_convex(f) ||
-    ProximalOperators.is_convex(f)
+  @test !is_strongly_convex(f) || is_convex(f)
 end
 
 @testset "ProximalOperators" begin
