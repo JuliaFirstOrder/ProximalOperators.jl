@@ -80,6 +80,7 @@ include("calculus/slicedSeparableSum.jl")
 include("calculus/sqrDistL2.jl")
 include("calculus/tilt.jl")
 include("calculus/translate.jl")
+include("calculus/sum.jl")
 
 # Functions obtained from basic + calculus
 
