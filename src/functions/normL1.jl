@@ -60,6 +60,7 @@ function (f::NormL1{A}){A <: AbstractArray}(x::AbstractArray)
 end
 
 function prox!{A <: AbstractArray, R <: Real}(y::AbstractArray{R}, f::NormL1{A}, x::AbstractArray{R}, gamma::Real=1.0)
+  @assert length(y) == length(x) == length(f.lambda)
   fy = zero(R)
   @inbounds @simd for i in eachindex(x)
     gl = gamma*f.lambda[i]
@@ -69,6 +70,7 @@ function prox!{A <: AbstractArray, R <: Real}(y::AbstractArray{R}, f::NormL1{A},
 end
 
 function prox!{A <: AbstractArray, R <: Real}(y::AbstractArray{Complex{R}}, f::NormL1{A}, x::AbstractArray{Complex{R}}, gamma::Real=1.0)
+  @assert length(y) == length(x) == length(f.lambda)
   fy = zero(R)
   @inbounds @simd for i in eachindex(x)
     gl = gamma*f.lambda[i]
@@ -78,6 +80,7 @@ function prox!{A <: AbstractArray, R <: Real}(y::AbstractArray{Complex{R}}, f::N
 end
 
 function prox!{T <: Real, R <: Real}(y::AbstractArray{R}, f::NormL1{T}, x::AbstractArray{R}, gamma::Real=1.0)
+  @assert length(y) == length(x)
   n1y = zero(R)
   gl = gamma*f.lambda
   @inbounds @simd for i in eachindex(x)
@@ -88,6 +91,7 @@ function prox!{T <: Real, R <: Real}(y::AbstractArray{R}, f::NormL1{T}, x::Abstr
 end
 
 function prox!{T <: Real, R <: Real}(y::AbstractArray{Complex{R}}, f::NormL1{T}, x::AbstractArray{Complex{R}}, gamma::Real=1.0)
+  @assert length(y) == length(x)
   gl = gamma*f.lambda
   n1y = zero(R)
   @inbounds @simd for i in eachindex(x)
@@ -98,6 +102,7 @@ function prox!{T <: Real, R <: Real}(y::AbstractArray{Complex{R}}, f::NormL1{T},
 end
 
 function prox!{A <: AbstractArray, R <: Real}(y::AbstractArray{R}, f::NormL1{A}, x::AbstractArray{R}, gamma::AbstractArray)
+  @assert length(y) == length(x) == length(f.lambda) == length(gamma)
   fy = zero(R)
   @inbounds @simd for i in eachindex(x)
     gl = gamma[i]*f.lambda[i]
@@ -107,6 +112,7 @@ function prox!{A <: AbstractArray, R <: Real}(y::AbstractArray{R}, f::NormL1{A},
 end
 
 function prox!{A <: AbstractArray, R <: Real}(y::AbstractArray{Complex{R}}, f::NormL1{A}, x::AbstractArray{Complex{R}}, gamma::AbstractArray)
+  @assert length(y) == length(x) == length(f.lambda) == length(gamma)
   fy = zero(R)
   @inbounds @simd for i in eachindex(x)
     gl = gamma[i]*f.lambda[i]
@@ -116,6 +122,7 @@ function prox!{A <: AbstractArray, R <: Real}(y::AbstractArray{Complex{R}}, f::N
 end
 
 function prox!{T <: Real, R <: Real}(y::AbstractArray{R}, f::NormL1{T}, x::AbstractArray{R}, gamma::AbstractArray)
+  @assert length(y) == length(x) == length(gamma)
   n1y = zero(R)
   @inbounds @simd for i in eachindex(x)
     gl = gamma[i]*f.lambda
@@ -126,6 +133,7 @@ function prox!{T <: Real, R <: Real}(y::AbstractArray{R}, f::NormL1{T}, x::Abstr
 end
 
 function prox!{T <: Real, R <: Real}(y::AbstractArray{Complex{R}}, f::NormL1{T}, x::AbstractArray{Complex{R}}, gamma::AbstractArray)
+  @assert length(y) == length(x) == length(gamma) 
   n1y = zero(R)
   @inbounds @simd for i in eachindex(x)
     gl = gamma[i]*f.lambda
