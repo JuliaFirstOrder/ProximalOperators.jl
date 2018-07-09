@@ -14,7 +14,7 @@ S = \\left\\{ x : ∑_i |x_i| \\leq r \\right\\}.
 Parameter `r` must be positive.
 """
 
-immutable IndBallL1{R <: Real} <: ProximableFunction
+struct IndBallL1{R <: Real} <: ProximableFunction
   r::R
   function IndBallL1{R}(r::R) where {R <: Real}
     if r <= 0
@@ -28,16 +28,16 @@ end
 is_convex(f::IndBallL1) = true
 is_set(f::IndBallL1) = true
 
-IndBallL1{R <: Real}(r::R=1.0) = IndBallL1{R}(r)
+IndBallL1(r::R=1.0) where {R <: Real} = IndBallL1{R}(r)
 
-function (f::IndBallL1){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::IndBallL1)(x::AbstractArray{T}) where T <: RealOrComplex
   if vecnorm(x,1) - f.r > 1e-12
     return +Inf
   end
   return 0.0
 end
 
-function prox!{R<: Real, T <: RealOrComplex{R}}(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=one(R))
+function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=one(R)) where {R<: Real, T <: RealOrComplex{R}}
   # TODO: a faster algorithm
   if vecnorm(x,1) - f.r < 1e-14
     y[:] = x[:]
@@ -70,7 +70,7 @@ fun_dom(f::IndBallL1) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL1) = "x ↦ 0 if ‖x‖_1 ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL1) = "r = $(f.r)"
 
-function prox_naive{T <: RealOrComplex}(f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   # do a simple bisection (aka binary search) on λ
   L = 0.0
   U = maximum(abs, x)

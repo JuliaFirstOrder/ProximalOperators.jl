@@ -13,7 +13,7 @@ g(x) = λ\\mathrm{dist}_S(x) = \\min \\{ λ\\|y - x\\| : y \\in S \\}.
 ```
 """
 
-immutable DistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
+struct DistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R
   function DistL2{R, T}(ind::T, lambda::R) where {R <: Real, T <: ProximableFunction}
@@ -31,14 +31,14 @@ end
 is_prox_accurate(f::DistL2) = is_prox_accurate(f.ind)
 is_convex(f::DistL2) = is_convex(f.ind)
 
-DistL2{R <: Real, T <: ProximableFunction}(ind::T, lambda::R=1.0) = DistL2{R, T}(ind, lambda)
+DistL2(ind::T, lambda::R=1.0) where {R <: Real, T <: ProximableFunction} = DistL2{R, T}(ind, lambda)
 
-function (f::DistL2){R <: RealOrComplex}(x::AbstractArray{R})
+function (f::DistL2)(x::AbstractArray{R}) where R <: RealOrComplex
   p, = prox(f.ind, x)
   return f.lambda*vecnormdiff(x,p)
 end
 
-function prox!{R <: RealOrComplex}(y::AbstractArray{R}, f::DistL2, x::AbstractArray{R}, gamma::Real=1.0)
+function prox!(y::AbstractArray{R}, f::DistL2, x::AbstractArray{R}, gamma::Real=1.0) where R <: RealOrComplex
   prox!(y, f.ind, x)
   d = vecnormdiff(x,y)
   gamlam = (gamma*f.lambda)
@@ -50,7 +50,7 @@ function prox!{R <: RealOrComplex}(y::AbstractArray{R}, f::DistL2, x::AbstractAr
   return 0.0
 end
 
-function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T})
+function gradient!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}) where T <: RealOrComplex
   prox!(y, f.ind, x) # Use y as temporary storage
   dist = vecnormdiff(x,y)
   if dist > 0
@@ -66,7 +66,7 @@ fun_dom(f::DistL2) = fun_dom(f.ind)
 fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
 fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
-function prox_naive{R <: RealOrComplex}(f::DistL2, x::AbstractArray{R}, gamma::Real=1.0)
+function prox_naive(f::DistL2, x::AbstractArray{R}, gamma::Real=1.0) where R <: RealOrComplex
   p, = prox(f.ind, x)
   d = vecnorm(x-p)
   gamlam = gamma*f.lambda

@@ -14,7 +14,7 @@ f(X) = \\|X\\|_* = λ ∑_i σ_i(X),
 where `λ` is a positive parameter and ``σ_i(X)`` is ``i``-th singular value of matrix ``X``.
 """
 
-immutable NuclearNorm{R <: Real} <: ProximableFunction
+struct NuclearNorm{R <: Real} <: ProximableFunction
   lambda::R
   function NuclearNorm{R}(lambda::R) where {R <: Real}
     if lambda < 0

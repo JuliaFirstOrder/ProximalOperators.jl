@@ -1,6 +1,6 @@
 # IndPolyhedral: OSQP implementation
 
-immutable IndPolyhedralOSQP{R} <: IndPolyhedral
+struct IndPolyhedralOSQP{R} <: IndPolyhedral
     l::AbstractVector{R}
     A::AbstractMatrix{R}
     u::AbstractVector{R}

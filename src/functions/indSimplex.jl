@@ -14,7 +14,7 @@ S = \\left\\{ x : x \\geq 0, ∑_i x_i = a \\right\\}.
 By default `a=1.0`, therefore ``S`` is the probability simplex.
 """
 
-immutable IndSimplex{T <: Union{Real, Integer}} <: ProximableFunction
+struct IndSimplex{T <: Union{Real, Integer}} <: ProximableFunction
   a::T
   function IndSimplex{T}(a::T) where {T <: Union{Real, Integer}}
     if a <= 0
@@ -28,16 +28,16 @@ end
 is_convex(f::IndSimplex) = true
 is_set(f::IndSimplex) = true
 
-IndSimplex{T <: Union{Real, Integer}}(a::T=1.0) = IndSimplex{T}(a)
+IndSimplex(a::T=1.0) where {T <: Union{Real, Integer}} = IndSimplex{T}(a)
 
-function (f::IndSimplex){T <: Real}(x::AbstractArray{T,1})
+function (f::IndSimplex)(x::AbstractArray{T,1}) where T <: Real
   if all(x .>= 0) && abs(sum(x)-f.a) <= 1e-14
     return 0.0
   end
   return +Inf
 end
 
-function prox!{T <: Real}(y::AbstractArray{T}, f::IndSimplex, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::IndSimplex, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
 # Implements Algorithm 1 in Condat, "Fast projection onto the simplex and the l1 ball", Mathematical Programming, 158:575–585, 2016.
 # We should consider implementing the other algorithms reviewed there, and the one proposed in the paper.
   n = length(x)
@@ -70,7 +70,7 @@ fun_dom(f::IndSimplex) = "AbstractArray{Real}"
 fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = a, +∞ otherwise"
 fun_params(f::IndSimplex) = "a = $(f.a)"
 
-function prox_naive{T <: Real}(f::IndSimplex, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive(f::IndSimplex, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
   low = minimum(x)
   upp = maximum(x)
   v = x

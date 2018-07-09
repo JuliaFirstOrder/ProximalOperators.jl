@@ -10,7 +10,7 @@ export IndZero
 Returns the indicator function of the set containing the origin, the "zero cone".
 """
 
-immutable IndZero <: ProximableFunction end
+struct IndZero <: ProximableFunction end
 
 is_separable(f::IndZero) = true
 is_convex(f::IndZero) = true
@@ -18,7 +18,7 @@ is_singleton(f::IndZero) = true
 is_cone(f::IndZero) = true
 is_affine(f::IndZero) = true
 
-function (f::IndZero){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::IndZero)(x::AbstractArray{T}) where T <: RealOrComplex
   for k in eachindex(x)
     if x[k] != zero(T)
       return Inf
@@ -27,14 +27,14 @@ function (f::IndZero){T <: RealOrComplex}(x::AbstractArray{T})
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndZero, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::IndZero, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   for k in eachindex(x)
     y[k] = zero(T)
   end
   return 0.0
 end
 
-prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndZero, x::AbstractArray{T}, gamma::AbstractArray) = prox!(y, f, x, 1.0)
+prox!(y::AbstractArray{T}, f::IndZero, x::AbstractArray{T}, gamma::AbstractArray) where {T <: RealOrComplex} = prox!(y, f, x, 1.0)
 
 fun_name(f::IndZero) = "indicator of the zero cone"
 fun_dom(f::IndZero) = "AbstractArray{Real}, AbstractArray{Complex}"

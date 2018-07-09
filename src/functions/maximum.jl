@@ -13,4 +13,4 @@ f(x) = \\lambda \\cdot \\max \\{x_i : i = 1,\\ldots, n \\}.
 ```
 """
 
-Maximum{R <: Real}(lambda::R=1.0) = SumLargest(one(Int32), lambda)
+Maximum(lambda::R=1.0) where {R <: Real} = SumLargest(one(Int32), lambda)

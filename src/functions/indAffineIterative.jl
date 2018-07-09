@@ -51,7 +51,7 @@ function prox!(y::V, f::IndAffineIterative{R, T, M, V}, x::V, gamma::R=one(R)) w
   return zero(R)
 end
 
-function prox_naive{R <: Real, T <: RealOrComplex{R}}(f::IndAffineIterative, x::AbstractArray{T,1}, gamma::R=one(R))
+function prox_naive(f::IndAffineIterative, x::AbstractArray{T,1}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
   y = x + f.A'*((f.A*f.A')\(f.b - f.A*x))
   return y, zero(R)
 end

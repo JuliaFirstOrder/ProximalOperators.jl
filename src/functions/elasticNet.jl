@@ -14,7 +14,7 @@ f(x) = μ\\|x\\|_1 + (λ/2)\\|x\\|^2,
 for nonnegative parameters `μ` and `λ`.
 """
 
-immutable ElasticNet{R <: Real} <: ProximableFunction
+struct ElasticNet{R <: Real} <: ProximableFunction
   mu::R
   lambda::R
   function ElasticNet{R}(mu::R, lambda::R) where {R <: Real}
@@ -30,13 +30,13 @@ is_separable(f::ElasticNet) = true
 is_prox_accurate(f::ElasticNet) = true
 is_convex(f::ElasticNet) = true
 
-ElasticNet{R <: Real}(mu::R=1.0, lambda::R=1.0) = ElasticNet{R}(mu, lambda)
+ElasticNet(mu::R=1.0, lambda::R=1.0) where {R <: Real} = ElasticNet{R}(mu, lambda)
 
-function (f::ElasticNet){R <: RealOrComplex}(x::AbstractArray{R})
+function (f::ElasticNet)(x::AbstractArray{R}) where R <: RealOrComplex
   return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2
 end
 
-function prox!{R <: Real}(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma::Real=1.0)
+function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma::Real=1.0) where R <: Real
   sqnorm2x = zero(R)
   norm1x = zero(R)
   gm = gamma*f.mu
@@ -49,7 +49,7 @@ function prox!{R <: Real}(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArra
   return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
-function prox!{R <: Real}(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma::AbstractArray{R})
+function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma::AbstractArray{R}) where R <: Real
   sqnorm2x = zero(R)
   norm1x = zero(R)
   for i in eachindex(x)
@@ -62,7 +62,7 @@ function prox!{R <: Real}(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArra
   return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
-function prox!{R <: Real}(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{Complex{R}}, gamma::Real=1.0)
+function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{Complex{R}}, gamma::Real=1.0) where R <: Real
   sqnorm2x = zero(R)
   norm1x = zero(R)
   gm = gamma*f.mu
@@ -75,7 +75,7 @@ function prox!{R <: Real}(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::Abs
   return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
-function prox!{R <: Real}(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{Complex{R}}, gamma::AbstractArray{R})
+function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{Complex{R}}, gamma::AbstractArray{R}) where R <: Real
   sqnorm2x = zero(R)
   norm1x = zero(R)
   for i in eachindex(x)
@@ -88,7 +88,7 @@ function prox!{R <: Real}(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::Abs
   return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
-function gradient!{T <: RealOrComplex, R <: Real}(y::AbstractArray{T}, f::ElasticNet{R}, x::AbstractArray{T})
+function gradient!(y::AbstractArray{T}, f::ElasticNet{R}, x::AbstractArray{T}) where {T <: RealOrComplex, R <: Real}
   # Gradient of 1 norm
   y .= f.mu.*sign.(x)
   # Gradient of 2 norm
@@ -101,12 +101,12 @@ fun_dom(f::ElasticNet) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||²"
 fun_params(f::ElasticNet) = "μ = $(f.mu), λ = $(f.lambda)"
 
-function prox_naive{R <: RealOrComplex}(f::ElasticNet, x::AbstractArray{R}, gamma::Real=1.0)
+function prox_naive(f::ElasticNet, x::AbstractArray{R}, gamma::Real=1.0) where R <: RealOrComplex
   uz = max.(0, abs.(x) - gamma*f.mu)/(1 + f.lambda*gamma)
   return sign.(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
 end
 
-function prox_naive{R <: RealOrComplex}(f::ElasticNet, x::AbstractArray{R}, gamma::AbstractArray)
+function prox_naive(f::ElasticNet, x::AbstractArray{R}, gamma::AbstractArray) where R <: RealOrComplex
   uz = max.(0, abs.(x) - gamma.*f.mu)./(1 + f.lambda*gamma)
   return sign.(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
 end

@@ -14,7 +14,7 @@ S = \\{ x : \\|x\\| \\leq r \\},
 where ``\\|\\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
 
-immutable IndBallL2{R <: Real} <: ProximableFunction
+struct IndBallL2{R <: Real} <: ProximableFunction
   r::R
   function IndBallL2{R}(r::R) where {R <: Real}
     if r <= 0
@@ -28,16 +28,16 @@ end
 is_convex(f::IndBallL2) = true
 is_set(f::IndBallL2) = true
 
-IndBallL2{R <: Real}(r::R=1.0) = IndBallL2{R}(r)
+IndBallL2(r::R=1.0) where {R <: Real} = IndBallL2{R}(r)
 
-function (f::IndBallL2){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::IndBallL2)(x::AbstractArray{T}) where T <: RealOrComplex
   if vecnorm(x) - f.r > 1e-14
     return +Inf
   end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL2, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::IndBallL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   scal = f.r/vecnorm(x)
   if scal > 1
     y[:] = x
@@ -54,7 +54,7 @@ fun_dom(f::IndBallL2) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL2) = "x ↦ 0 if ||x|| ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL2) = "r = $(f.r)"
 
-function prox_naive{T <: RealOrComplex}(f::IndBallL2, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive(f::IndBallL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   normx = vecnorm(x)
   if normx > f.r
     y = (f.r/normx)*x

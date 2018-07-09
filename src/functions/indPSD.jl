@@ -28,13 +28,13 @@ I.e. when when `scaling=true`, let `X,Y` be matrices and
 then `prox!(Y, f, X)` is equivalent to `prox!(y, f, x)`.
 """
 
-immutable IndPSD <: ProximableFunction
+struct IndPSD <: ProximableFunction
     scaling::Bool
 end
 
 IndPSD(;scaling=false) = IndPSD(scaling)
 
-function (f::IndPSD){T <: RealOrComplex}(X::HermOrSym{T})
+function (f::IndPSD)(X::HermOrSym{T}) where T <: RealOrComplex
   F = eigfact(X);
   for i in eachindex(F.values)
     #Do we allow for some tolerance here?
@@ -48,7 +48,7 @@ end
 is_convex(f::IndPSD) = true
 is_cone(f::IndPSD) = true
 
-function prox!{T <: RealOrComplex}(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0)
+function prox!(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) where T <: RealOrComplex
   n = size(X, 1);
   F = eigfact(X);
   for i in eachindex(F.values)
@@ -70,7 +70,7 @@ fun_dom(f::IndPSD) = "Symmetric, Hermitian, AbstractArray{Float64}"
 fun_expr(f::IndPSD) = "x ↦ 0 if A ⪰ 0, +∞ otherwise"
 fun_params(f::IndPSD) = "none"
 
-function prox_naive{T <: RealOrComplex}(f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0)
+function prox_naive(f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) where T <: RealOrComplex
   F = eigfact(X);
   return F.vectors * diagm(max.(0.0, F.values)) * F.vectors', 0.0;
 end
@@ -91,7 +91,7 @@ end
 
 ### Below: with AbstractVector argument
 
-function (f::IndPSD){T <: Float64}(x::AbstractVector{T})
+function (f::IndPSD)(x::AbstractVector{T}) where T <: Float64
   y = copy(x)
   f.scaling && scale_diagonal!(y, sqrt(2)) #If scaling, scale diagonal (eigenvalues scaled by sqrt(2))
 
@@ -126,7 +126,7 @@ function prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}
   return 0.0
 end
 
-function prox_naive{T<:Float64}(f::IndPSD, x::AbstractVector{T}, gamma::Real=1.0)
+function prox_naive(f::IndPSD, x::AbstractVector{T}, gamma::Real=1.0) where T<:Float64
   n = Int(sqrt(1/4+2*length(x))-1/2)  # Formula for size of matrix
   X = Array{T,2}(n,n)
   k = 1

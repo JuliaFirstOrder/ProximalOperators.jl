@@ -32,7 +32,7 @@ is_smooth(f::SqrHingeLoss) = true
 
 SqrHingeLoss(b::T, mu::R=1.0) where {R <: Real, T <: AbstractArray{R}} = SqrHingeLoss{R, T}(b, mu)
 
-(f::SqrHingeLoss){R <: Real, T <: AbstractArray{R}}(x::T) = f.mu*sum(max.(zero(R), (one(R) .- f.y.*x)).^2)
+(f::SqrHingeLoss)(x::T) where {R <: Real, T <: AbstractArray{R}} = f.mu*sum(max.(zero(R), (one(R) .- f.y.*x)).^2)
 
 function gradient!(y::AbstractArray{R}, f::SqrHingeLoss{R, T}, x::AbstractArray{R}) where {R <: Real, T}
 	sum = zero(R)

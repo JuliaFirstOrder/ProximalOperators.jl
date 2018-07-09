@@ -11,7 +11,7 @@ Returns the indicator function of the whole space, or "free cone", *i.e.*,
 a function which is identically zero.
 """
 
-immutable IndFree <: ProximableFunction end
+struct IndFree <: ProximableFunction end
 
 is_separable(f::IndFree) = true
 is_convex(f::IndFree) = true

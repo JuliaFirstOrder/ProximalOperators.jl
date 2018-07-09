@@ -14,7 +14,7 @@ f(x) = -μ⋅∑_i\\log(a⋅x_i+b),
 for a nonnegative parameter `μ`.
 """
 
-immutable LogBarrier{T <: Real} <: ProximableFunction
+struct LogBarrier{T <: Real} <: ProximableFunction
   a::T
   b::T
   mu::T
@@ -30,9 +30,9 @@ end
 is_separable(f::LogBarrier) = true
 is_convex(f::LogBarrier) = true
 
-LogBarrier{T <: Real}(a::T=1.0, b::T=0.0, mu::T=1.0) = LogBarrier{T}(a, b, mu)
+LogBarrier(a::T=1.0, b::T=0.0, mu::T=1.0) where {T <: Real} = LogBarrier{T}(a, b, mu)
 
-function (f::LogBarrier){T <: Real}(x::AbstractArray{T,1})
+function (f::LogBarrier)(x::AbstractArray{T,1}) where T <: Real
   sumf = 0.0
   v = 0.0
   for i in eachindex(x)
@@ -45,7 +45,7 @@ function (f::LogBarrier){T <: Real}(x::AbstractArray{T,1})
   return -f.mu*sumf
 end
 
-function prox!{T <: Real}(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T,1}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T,1}, gamma::Real=1.0) where T <: Real
   par = 4*gamma*f.mu*f.a*f.a
   sumf = 0.0
   z = 0.0
@@ -59,7 +59,7 @@ function prox!{T <: Real}(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T
   return -f.mu*sumf
 end
 
-function prox!{T <: Real}(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T,1}, gamma::AbstractArray)
+function prox!(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T,1}, gamma::AbstractArray) where T <: Real
   par = 4*f.mu*f.a*f.a
   sumf = 0.0
   z = 0.0
@@ -74,7 +74,7 @@ function prox!{T <: Real}(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T
   return -f.mu*sumf
 end
 
-function gradient!{T <: Real}(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T})
+function gradient!(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T}) where T <: Real
   sum = 0.0
   for i in eachindex(x)
     logarg = f.a*x[i]+f.b
@@ -90,7 +90,7 @@ fun_dom(f::LogBarrier) = "AbstractArray{Real}"
 fun_expr(f::LogBarrier) = "x ↦ -μ * sum( log(a*x_i+b), i=1,...,n )"
 fun_params(f::LogBarrier) = "a = $(f.a), b = $(f.b), μ = $(f.mu)"
 
-function prox_naive{T <: Real}(f::LogBarrier, x::AbstractArray{T,1}, gamma::Union{Real, AbstractArray}=1.0)
+function prox_naive(f::LogBarrier, x::AbstractArray{T,1}, gamma::Union{Real, AbstractArray}=1.0) where T <: Real
   asqr = f.a*f.a
   z = f.a*x + f.b
   y = ((z + sqrt.(z.*z + 4*gamma*f.mu*asqr))/2 - f.b)/f.a

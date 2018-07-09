@@ -14,7 +14,7 @@ S = \\{ x : \\mathrm{nnz}(x) \\leq r \\}.
 Parameter `r` must be a positive integer.
 """
 
-immutable IndBallL0{I <: Integer} <: ProximableFunction
+struct IndBallL0{I <: Integer} <: ProximableFunction
   r::I
   function IndBallL0{I}(r::I) where {I <: Integer}
     if r <= 0
@@ -27,16 +27,16 @@ end
 
 is_set(f::IndBallL0) = true
 
-IndBallL0{I <: Integer}(r::I) = IndBallL0{I}(r)
+IndBallL0(r::I) where {I <: Integer} = IndBallL0{I}(r)
 
-function (f::IndBallL0){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::IndBallL0)(x::AbstractArray{T}) where T <: RealOrComplex
   if countnz(x) > f.r
     return +Inf
   end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndBallL0, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::IndBallL0, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   p = []
   if ndims(x) == 1
     p = selectperm(x, 1:f.r, by=abs, rev=true)
@@ -59,7 +59,7 @@ fun_dom(f::IndBallL0) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL0) = "x ↦ 0 if countnz(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL0) = "r = $(f.r)"
 
-function prox_naive{T <: RealOrComplex}(f::IndBallL0, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive(f::IndBallL0, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   p = sortperm(abs.(x)[:], rev=true)
   y = similar(x)
   y[p[1:f.r]] = x[p[1:f.r]]

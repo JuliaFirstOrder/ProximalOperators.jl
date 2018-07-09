@@ -15,7 +15,7 @@ for a nonnegative `λ`, where ``x_i`` is the ``i``-th column of ``X`` if `dim ==
 In words, it is the sum of the Euclidean norms of the columns or rows.
 """
 
-immutable NormL21{R <: Real, I <: Integer} <: ProximableFunction
+struct NormL21{R <: Real, I <: Integer} <: ProximableFunction
   lambda::R
   dim::I
   function NormL21{R,I}(lambda::R, dim::I) where {R <: Real, I <: Integer}
@@ -29,9 +29,9 @@ end
 
 is_convex(f::NormL21) = true
 
-NormL21{R <: Real, I <: Integer}(lambda::R=1.0, dim::I=1) = NormL21{R, I}(lambda, dim)
+NormL21(lambda::R=1.0, dim::I=1) where {R <: Real, I <: Integer} = NormL21{R, I}(lambda, dim)
 
-function (f::NormL21){T <: RealOrComplex}(X::AbstractArray{T,2})
+function (f::NormL21)(X::AbstractArray{T,2}) where T <: RealOrComplex
   nslice = 0.0
   n21X = 0.0
   if f.dim == 1
@@ -54,7 +54,7 @@ function (f::NormL21){T <: RealOrComplex}(X::AbstractArray{T,2})
   return f.lambda*n21X
 end
 
-function prox!{T <: RealOrComplex}(Y::AbstractArray{T,2}, f::NormL21, X::AbstractArray{T,2}, gamma::Real=1.0)
+function prox!(Y::AbstractArray{T,2}, f::NormL21, X::AbstractArray{T,2}, gamma::Real=1.0) where T <: RealOrComplex
   gl = gamma*f.lambda
   nslice = zero(Float64)
   n21X = zero(Float64)
@@ -95,7 +95,7 @@ fun_dom(f::NormL21) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
 fun_expr(f::NormL21) = "x ↦ λsum(||x_i||)"
 fun_params(f::NormL21) = "λ = $(f.lambda), dim = $(f.dim)"
 
-function prox_naive{T <: RealOrComplex}(f::NormL21, X::AbstractArray{T,2}, gamma::Real=1.0)
+function prox_naive(f::NormL21, X::AbstractArray{T,2}, gamma::Real=1.0) where T <: RealOrComplex
   Y = max.(0, 1-f.lambda*gamma./sqrt.(sum(abs.(X).^2, f.dim))).*X
   return Y, f.lambda*sum(sqrt.(sum(abs.(Y).^2, f.dim)))
 end

@@ -11,7 +11,7 @@ f(x) = \\langle c, x \\rangle.
 ```
 """
 
-immutable Linear{R <: RealOrComplex, A <: AbstractArray{R}} <: ProximableFunction
+struct Linear{R <: RealOrComplex, A <: AbstractArray{R}} <: ProximableFunction
   c::A
 end
 

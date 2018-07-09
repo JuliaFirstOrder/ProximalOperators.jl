@@ -12,7 +12,7 @@ f^γ(x) = \\min_z \\left\\{ f(z) + \\tfrac{1}{2γ}\\|z-x\\|^2 \\right\\}.
 If ``f`` is convex, then ``f^γ`` is a smooth, convex, lower approximation to ``f``, having the same minima as the original function.
 """
 
-immutable MoreauEnvelope{R <: Real, T <: ProximableFunction} <: ProximableFunction
+struct MoreauEnvelope{R <: Real, T <: ProximableFunction} <: ProximableFunction
 	g::T
 	lambda::R
 	# dirty trick to use in place prox! when evaluating the function
@@ -25,7 +25,7 @@ function MoreauEnvelope{R, T}(g::T, lambda::R) where {R <: Real, T <: Proximable
 	MoreauEnvelope{R, T}(g, lambda, [ Nullable{AbstractArray}() ])
 end
 
-MoreauEnvelope{R <: Real, T <: ProximableFunction}(g::T, lambda::R=1.0) = MoreauEnvelope{R, T}(g, lambda)
+MoreauEnvelope(g::T, lambda::R=1.0) where {R <: Real, T <: ProximableFunction} = MoreauEnvelope{R, T}(g, lambda)
 
 is_convex(f::MoreauEnvelope) = is_convex(f.g)
 is_smooth(f::MoreauEnvelope) = is_convex(f.g)

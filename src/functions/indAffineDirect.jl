@@ -61,7 +61,7 @@ function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=one(R)) w
   return zero(R)
 end
 
-function prox_naive{R <: Real, T <: RealOrComplex{R}}(f::IndAffineDirect, x::AbstractArray{T,1}, gamma::R=one(R))
+function prox_naive(f::IndAffineDirect, x::AbstractArray{T,1}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
   y = x + f.A'*((f.A*f.A')\(f.b - f.A*x))
   return y, zero(R)
 end

@@ -13,7 +13,7 @@ S = \\{x : \\langle a,x \\rangle \\leq b \\}.
 ```
 """
 
-immutable IndHalfspace{R <: Real, T <: AbstractVector{R}} <: ProximableFunction
+struct IndHalfspace{R <: Real, T <: AbstractVector{R}} <: ProximableFunction
   a::T
   b::R
   function IndHalfspace{R,T}(a::T, b::R) where {R <: Real, T <: AbstractVector{R}}
@@ -26,9 +26,9 @@ is_convex(f::IndHalfspace) = true
 is_set(f::IndHalfspace) = true
 is_cone(f::IndHalfspace) = (f.b == 0)
 
-IndHalfspace{R <: Real, T <: AbstractVector{R}}(a::T, b::R) = IndHalfspace{R, T}(a, b)
+IndHalfspace(a::T, b::R) where {R <: Real, T <: AbstractVector{R}} = IndHalfspace{R, T}(a, b)
 
-function (f::IndHalfspace){T <: Real}(x::AbstractArray{T})
+function (f::IndHalfspace)(x::AbstractArray{T}) where T <: Real
   s = vecdot(f.a,x)-f.b
   if s <= 1e-14
     return 0.0
@@ -36,7 +36,7 @@ function (f::IndHalfspace){T <: Real}(x::AbstractArray{T})
   return +Inf
 end
 
-function prox!{T <: Real}(y::AbstractArray{T}, f::IndHalfspace, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::IndHalfspace, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
   s = vecdot(f.a,x)-f.b
   if s <= 0
     y[:] = x
@@ -55,7 +55,7 @@ fun_params(f::IndHalfspace) =
   string( "a = ", typeof(f.a), " of size ", size(f.a), ", ",
           "b = $(f.b)")
 
-function prox_naive{T <: Real}(f::IndHalfspace, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive(f::IndHalfspace, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
   s = vecdot(f.a,x)-f.b
   if s <= 0
     return x, 0.0

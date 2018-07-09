@@ -14,7 +14,7 @@ C = \\mathrm{cl} \\{ (r,s,t) : s > 0, s⋅e^{r/s} \\leq t \\} \\subset \\mathbb{
 ```
 """
 
-immutable IndExpPrimal <: ProximableFunction end
+struct IndExpPrimal <: ProximableFunction end
 
 is_convex(f::IndExpPrimal) = true
 is_cone(f::IndExpPrimal) = true
@@ -37,7 +37,7 @@ EXP_POLAR_CALL_TOL = 1e-3
 EXP_PROJ_TOL = 1e-15
 EXP_PROJ_MAXIT = 100
 
-function (f::IndExpPrimal){R <: Real}(x::AbstractArray{R,1})
+function (f::IndExpPrimal)(x::AbstractArray{R,1}) where R <: Real
   if (x[2] > 0.0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_PRIMAL_CALL_TOL) ||
      (x[1] <= EXP_PRIMAL_CALL_TOL && abs(x[2]) <= EXP_PRIMAL_CALL_TOL && x[3] >= -EXP_PRIMAL_CALL_TOL)
     return 0.0
@@ -45,7 +45,7 @@ function (f::IndExpPrimal){R <: Real}(x::AbstractArray{R,1})
   return +Inf
 end
 
-function (f::Conjugate{IndExpPrimal}){R <: Real}(x::AbstractArray{R,1})
+function (f::Conjugate{IndExpPrimal})(x::AbstractArray{R,1}) where R <: Real
   if (x[1] > 0.0 && x[1]*exp(x[2]/x[1]) <= -exp(1)*x[3]+EXP_POLAR_CALL_TOL) ||
      (abs(x[1]) <= EXP_POLAR_CALL_TOL && x[2] <= EXP_POLAR_CALL_TOL && x[3] <= EXP_POLAR_CALL_TOL)
     return 0.0
@@ -78,7 +78,7 @@ end
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-function prox!{R <: Real}(y::AbstractArray{R,1}, f::IndExpPrimal, x::AbstractArray{R,1}, gamma::Real=1.0)
+function prox!(y::AbstractArray{R,1}, f::IndExpPrimal, x::AbstractArray{R,1}, gamma::Real=1.0) where R <: Real
   r = x[1]
   s = x[2]
   t = x[3]
@@ -169,12 +169,12 @@ fun_dom(f::IndExpPrimal) = "AbstractArray{Real}"
 fun_expr(f::IndExpPrimal) = "x ↦ 0 if x ∈ cl{(r,s,t) : s > 0, s*exp(r/s) ⩽ t}, +∞ otherwise"
 fun_params(f::IndExpPrimal) = "none"
 
-fun_name{R <: Real}(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) = "indicator of the exponential cone (dual)"
-fun_expr{R <: Real}(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) = "x ↦ 0 if x ∈ cl{(u,v,w) : u < 0, -u*exp(v/u) ⩽ w*exp(1)}, +∞ otherwise"
-fun_params{R <: Real}(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) = "none"
+fun_name(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} = "indicator of the exponential cone (dual)"
+fun_expr(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} = "x ↦ 0 if x ∈ cl{(u,v,w) : u < 0, -u*exp(v/u) ⩽ w*exp(1)}, +∞ otherwise"
+fun_params(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} = "none"
 
-prox_naive{R <: Real}(f::IndExpPrimal, x::AbstractArray{R}, gamma::Real=1.0) =
+prox_naive(f::IndExpPrimal, x::AbstractArray{R}, gamma::Real=1.0) where {R <: Real} =
   prox(f, x, gamma) # we don't have a much simpler way to do this yet
 
-prox_naive{R <: Real}(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}}, x::AbstractArray{R}, gamma::Real=1.0) =
+prox_naive(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}}, x::AbstractArray{R}, gamma::Real=1.0) where {R <: Real} =
   prox(f, x, gamma) # we don't have a much simpler way to do this yet
