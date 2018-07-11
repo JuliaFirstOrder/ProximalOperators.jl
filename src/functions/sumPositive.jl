@@ -13,16 +13,16 @@ f(x) = ∑_i \\max\\{0, x_i\\}.
 ```
 """
 
-immutable SumPositive <: ProximableFunction end
+struct SumPositive <: ProximableFunction end
 
 is_separable(f::SumPositive) = true
 is_convex(f::SumPositive) = true
 
-function (f::SumPositive){T <: Real}(x::AbstractArray{T})
+function (f::SumPositive)(x::AbstractArray{T}) where T <: Real
   return sum(xi -> max(xi,0), x)
 end
 
-function prox!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
   fsum = 0.0
   for i in eachindex(x)
     y[i] = x[i] < gamma ? (x[i] > 0.0 ? 0.0 : x[i]) : x[i]-gamma
@@ -31,7 +31,7 @@ function prox!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{
   return fsum
 end
 
-function gradient!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T})
+function gradient!(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T}) where T <: Real
   y .= max.(0, sign.(x))
   return sum(xi -> max(xi,0), x)
 end
@@ -40,7 +40,7 @@ fun_name(f::SumPositive) = "Sum of the positive coefficients"
 fun_dom(f::SumPositive) = "AbstractArray{Real}"
 fun_expr(f::SumPositive) = "x ↦ sum(max(0, x))"
 
-function prox_naive{T <: Real}(f::SumPositive, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive(f::SumPositive, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
   y = copy(x)
   indpos = x .> 0.0
   y[indpos] = max.(0.0, x[indpos]-gamma)
@@ -51,7 +51,7 @@ end
 # Prox with multiple gammas #
 # ######################### #
 
-function prox!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T}, gamma::AbstractArray{T})
+function prox!(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{T}, gamma::AbstractArray{T}) where T <: Real
   fsum = 0.0
   for i in eachindex(x)
     y[i] = x[i] < gamma[i] ? (x[i] > 0.0 ? 0.0 : x[i]) : x[i]-gamma[i]
@@ -60,7 +60,7 @@ function prox!{T <: Real}(y::AbstractArray{T}, f::SumPositive, x::AbstractArray{
   return fsum
 end
 
-function prox_naive{T <: Real}(f::SumPositive, x::AbstractArray{T}, gamma::AbstractArray{T})
+function prox_naive(f::SumPositive, x::AbstractArray{T}, gamma::AbstractArray{T}) where T <: Real
   y = copy(x)
   indpos = x .> 0.0
   y[indpos] = max.(0.0, x[indpos]-gamma[indpos])

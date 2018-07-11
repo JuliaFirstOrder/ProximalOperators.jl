@@ -17,7 +17,7 @@ gradient.
 
 """
 
-immutable Sum{T <: Tuple} <: ProximableFunction fs::T end
+struct Sum{T <: Tuple} <: ProximableFunction fs::T end
 
 Sum(fs::Vararg{ProximableFunction}) = Sum((fs...))
 

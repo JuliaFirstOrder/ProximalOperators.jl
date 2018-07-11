@@ -14,7 +14,7 @@ S = \\{ X : \\mathrm{rank}(X) \\leq r \\},
 Parameter `r` must be a positive integer.
 """
 
-immutable IndBallRank{I <: Integer} <: ProximableFunction
+struct IndBallRank{I <: Integer} <: ProximableFunction
   r::I
   function IndBallRank{I}(r::I) where {I <: Integer}
     if r <= 0
@@ -27,9 +27,9 @@ end
 
 is_set(f::IndBallRank) = false
 
-IndBallRank{I <: Integer}(r::I=1) = IndBallRank{I}(r)
+IndBallRank(r::I=1) where {I <: Integer} = IndBallRank{I}(r)
 
-function (f::IndBallRank){T <: RealOrComplex}(x::AbstractArray{T,2})
+function (f::IndBallRank)(x::AbstractArray{T,2}) where T <: RealOrComplex
   maxr = minimum(size(x))
   if maxr <= f.r return 0.0 end
   F = svds(x, nsv=f.r+1)[1]

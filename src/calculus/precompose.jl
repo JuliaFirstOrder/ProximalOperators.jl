@@ -18,7 +18,7 @@ Parameter `L` defines ``L`` through the `A_mul_B!` and `Ac_mul_B!` methods. Ther
 In this case, `prox` and `prox!` are computed according to Prop. 24.14 in Bauschke, Combettes "Convex Analisys and Monotone Operator Theory in Hilbert Spaces", 2nd edition, 2016. The same result is Prop. 23.32 in the 1st edition of the same book.
 """
 
-immutable Precompose{T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{C, AbstractArray{C}}, V <: Union{C, AbstractArray{C}}, M} <: ProximableFunction
+struct Precompose{T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{C, AbstractArray{C}}, V <: Union{C, AbstractArray{C}}, M} <: ProximableFunction
   f::T
   L::M
   mu::U
@@ -53,7 +53,7 @@ function (g::Precompose)(x::T) where {T <: Union{Tuple, AbstractArray}}
   return g.f(g.L*x .+ g.b)
 end
 
-function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::Precompose, x::AbstractArray{T})
+function gradient!(y::AbstractArray{T}, g::Precompose, x::AbstractArray{T}) where T <: RealOrComplex
   res = g.L*x .+ g.b
   gradres = similar(res)
   v = gradient!(gradres, g.f, res)

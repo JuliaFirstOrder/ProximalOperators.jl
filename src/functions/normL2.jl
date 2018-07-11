@@ -13,7 +13,7 @@ f(x) = λ\\cdot\\sqrt\{x_1^2 + … + x_n^2\}.
 ```
 """
 
-immutable NormL2{R <: Real} <: ProximableFunction
+struct NormL2{R <: Real} <: ProximableFunction
   lambda::R
   function NormL2{R}(lambda::R) where {R <: Real}
     if lambda < 0
@@ -26,13 +26,13 @@ end
 
 is_convex(f::NormL2) = true
 
-NormL2{R <: Real}(lambda::R=1.0) = NormL2{R}(lambda)
+NormL2(lambda::R=1.0) where {R <: Real} = NormL2{R}(lambda)
 
 function (f::NormL2)(x::AbstractArray)
   return f.lambda*vecnorm(x)
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   vecnormx = vecnorm(x)
   scale = max(0, 1-f.lambda*gamma/vecnormx)
   for i in eachindex(x)
@@ -41,7 +41,7 @@ function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::NormL2, x::AbstractAr
   return f.lambda*scale*vecnormx
 end
 
-function gradient!{T <: Union{Real, Complex}}(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T})
+function gradient!(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T}) where T <: Union{Real, Complex}
   fx = vecnorm(x) # Value of f, without lambda
   if fx == 0
     y .= 0
@@ -56,7 +56,7 @@ fun_dom(f::NormL2) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::NormL2) = "x ↦ λ||x||_2"
 fun_params(f::NormL2) = "λ = $(f.lambda)"
 
-function prox_naive{T <: RealOrComplex}(f::NormL2, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive(f::NormL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   vecnormx = vecnorm(x)
   scale = max(0, 1-f.lambda*gamma/vecnormx)
   y = scale*x

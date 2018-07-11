@@ -4,9 +4,9 @@ deepsimilar(x::Tuple) = deepsimilar.(x)
 
 deepsimilar(x::AbstractArray) = similar(x)
 
-deepcopy!{T <: Tuple}(y::T, x::T) = deepcopy!.(y, x)
+deepcopy!(y::T, x::T) where {T <: Tuple} = deepcopy!.(y, x)
 
-deepcopy!{R <: Number}(y::AbstractArray{R}, x::AbstractArray{R}) = copy!(y, x)
+deepcopy!(y::AbstractArray{R}, x::AbstractArray{R}) where {R <: Number} = copy!(y, x)
 
 deeplength(x::Tuple) = sum(deeplength.(x))
 
@@ -16,22 +16,22 @@ deepsize(x::Tuple) = map(deepsize, x)
 
 deepsize(x::AbstractArray) = size(x)
 
-deepvecdot{T <: Tuple}(x::T, y::T) = sum(deepvecdot.(x,y))
+deepvecdot(x::T, y::T) where {T <: Tuple} = sum(deepvecdot.(x,y))
 
-deepvecdot{R <: Number}(x::AbstractArray{R}, y::AbstractArray{R}) = vecdot(x, y)
+deepvecdot(x::AbstractArray{R}, y::AbstractArray{R}) where {R <: Number} = vecdot(x, y)
 
 deepvecnorm(x::Tuple) = sqrt(deepvecdot(x, x))
 
-deepvecnorm{R <: Number}(x::AbstractArray{R}) = vecnorm(x)
+deepvecnorm(x::AbstractArray{R}) where {R <: Number} = vecnorm(x)
 
 deepmaxabs(x::Tuple) = maximum(deepmaxabs.(x))
 
-deepmaxabs{R <: Number}(x::AbstractArray{R}) = maximum(abs, x)
+deepmaxabs(x::AbstractArray{R}) where {R <: Number} = maximum(abs, x)
 
 deepzeros(t::Tuple, s::Tuple) = deepzeros.(t, s)
 
 deepzeros(t::Type, n::NTuple{N, Integer} where {N}) = zeros(t, n)
 
-deepaxpy!{T <: Tuple, R <: Real}(z::T, x::T, alpha::R, y::T) = deepaxpy!.(z, x, alpha, y)
+deepaxpy!(z::T, x::T, alpha::R, y::T) where {T <: Tuple, R <: Real} = deepaxpy!.(z, x, alpha, y)
 
-deepaxpy!{T <: Number, R <: Real}(z::AbstractArray{T}, x::AbstractArray{T}, alpha::R, y::AbstractArray{T}) = (z .= x .+ alpha.*y)
+deepaxpy!(z::AbstractArray{T}, x::AbstractArray{T}, alpha::R, y::AbstractArray{T}) where {T <: Number, R <: Real} = (z .= x .+ alpha.*y)

@@ -14,21 +14,21 @@ S = \\{ x : x_i = low_i\\ \\text{or}\\ x_i = up_i \\},
 Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space.
 """
 
-immutable IndBinary{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
+struct IndBinary{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
   low::T
   high::S
 end
 
 is_set(f::IndBinary) = true
 
-IndBinary{T <: Real}(low::T=0.0, high::T=1.0) = IndBinary{T, T}(low, high)
+IndBinary(low::T=0.0, high::T=1.0) where {T <: Real} = IndBinary{T, T}(low, high)
 
-IndBinary_low{T <: Real, S}(f::IndBinary{T, S}, i) = f.low
-IndBinary_low{T <: AbstractArray, S}(f::IndBinary{T, S}, i) = f.low[i]
-IndBinary_high{T, S <: Real}(f::IndBinary{T, S}, i) = f.high
-IndBinary_high{T, S <: AbstractArray}(f::IndBinary{T, S}, i) = f.high[i]
+IndBinary_low(f::IndBinary{T, S}, i) where {T <: Real, S} = f.low
+IndBinary_low(f::IndBinary{T, S}, i) where {T <: AbstractArray, S} = f.low[i]
+IndBinary_high(f::IndBinary{T, S}, i) where {T, S <: Real} = f.high
+IndBinary_high(f::IndBinary{T, S}, i) where {T, S <: AbstractArray} = f.high[i]
 
-function (f::IndBinary){T <: Real}(x::AbstractArray{T})
+function (f::IndBinary)(x::AbstractArray{T}) where T <: Real
   for k in eachindex(x)
     if x[k] != IndBinary_low(f, k) && x[k] != IndBinary_high(f, k)
       return +Inf
@@ -37,7 +37,7 @@ function (f::IndBinary){T <: Real}(x::AbstractArray{T})
   return 0.0
 end
 
-function prox!{T <: Real}(y::AbstractArray{T}, f::IndBinary, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::IndBinary, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
   low = 0.0
   high = 0.0
   for k in eachindex(x)
@@ -55,7 +55,7 @@ end
 fun_name(f::IndBinary) = "indicator of binary array"
 fun_dom(f::IndBinary) = "AbstractArray{Real}"
 
-function prox_naive{T <: Real}(f::IndBinary, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive(f::IndBinary, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
   distlow = abs.(x-f.low)
   disthigh = abs.(x-f.high)
   indlow = distlow .< disthigh

@@ -14,7 +14,7 @@ S = \\{ x : \\|x\\| = r \\},
 where ``\\|\\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
 
-immutable IndSphereL2{R <: Real} <: ProximableFunction
+struct IndSphereL2{R <: Real} <: ProximableFunction
   r::R
   function IndSphereL2{R}(r::R) where {R <: Real}
     if r <= 0
@@ -27,16 +27,16 @@ end
 
 is_set(f::IndSphereL2) = true
 
-IndSphereL2{R <: Real}(r::R=1.0) = IndSphereL2{R}(r)
+IndSphereL2(r::R=1.0) where {R <: Real} = IndSphereL2{R}(r)
 
-function (f::IndSphereL2){T <: RealOrComplex}(x::AbstractArray{T})
+function (f::IndSphereL2)(x::AbstractArray{T}) where T <: RealOrComplex
   if abs(vecnorm(x) - f.r)/f.r > 1e-14
     return +Inf
   end
   return 0.0
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, f::IndSphereL2, x::AbstractArray{T}, gamma::Real=1.0)
+function prox!(y::AbstractArray{T}, f::IndSphereL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   normx = vecnorm(x)
   if normx > 0 # zero-zero?
     scal = f.r/normx
@@ -60,7 +60,7 @@ fun_dom(f::IndSphereL2) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndSphereL2) = "x ↦ 0 if ||x|| = r, +∞ otherwise"
 fun_params(f::IndSphereL2) = "r = $(f.r)"
 
-function prox_naive{T <: RealOrComplex}(f::IndSphereL2, x::AbstractArray{T}, gamma::Real=1.0)
+function prox_naive(f::IndSphereL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   normx = vecnorm(x)
   if normx > 0
     y = x*f.r/normx

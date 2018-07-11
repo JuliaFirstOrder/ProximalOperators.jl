@@ -22,7 +22,7 @@ Example:
     (u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)
 """
 
-immutable SeparableSum{T <: Tuple} <: ProximableFunction
+struct SeparableSum{T <: Tuple} <: ProximableFunction
 	fs::T
 end
 
@@ -47,7 +47,7 @@ function (f::SeparableSum)(x::Tuple)
   return sum
 end
 
-function prox!{T <: Tuple}(ys::T, fs::Tuple, xs::T, gamma::Real=1.0)
+function prox!(ys::T, fs::Tuple, xs::T, gamma::Real=1.0) where T <: Tuple
   sum = 0.0
   for k in eachindex(xs)
 	  sum += prox!(ys[k], fs[k], xs[k], gamma)
@@ -55,7 +55,7 @@ function prox!{T <: Tuple}(ys::T, fs::Tuple, xs::T, gamma::Real=1.0)
   return sum
 end
 
-function prox!{T <: Tuple}(ys::T, fs::Tuple, xs::T, gamma::Tuple)
+function prox!(ys::T, fs::Tuple, xs::T, gamma::Tuple) where T <: Tuple
   sum = 0.0
   for k in eachindex(xs)
 	  sum += prox!(ys[k], fs[k], xs[k], gamma[k])
@@ -63,9 +63,9 @@ function prox!{T <: Tuple}(ys::T, fs::Tuple, xs::T, gamma::Tuple)
   return sum
 end
 
-prox!{T <: Tuple}(ys::T, f::SeparableSum, xs::T, gamma::Union{Real, Tuple}=1.0) = prox!(ys, f.fs, xs, gamma)
+prox!(ys::T, f::SeparableSum, xs::T, gamma::Union{Real, Tuple}=1.0) where {T <: Tuple} = prox!(ys, f.fs, xs, gamma)
 
-function gradient!{T <: Tuple}(grad::T, fs::Tuple, x::T)
+function gradient!(grad::T, fs::Tuple, x::T) where T <: Tuple
   val = 0.0
   for k in eachindex(fs)
     val += gradient!(grad[k], fs[k], x[k])
@@ -73,7 +73,7 @@ function gradient!{T <: Tuple}(grad::T, fs::Tuple, x::T)
   return val
 end
 
-gradient!{T <: Tuple}(grad::T, f::SeparableSum, x::T) = gradient!(grad, f.fs, x)
+gradient!(grad::T, f::SeparableSum, x::T) where {T <: Tuple} = gradient!(grad, f.fs, x)
 
 fun_name(f::SeparableSum) = "separable sum"
 fun_dom(f::SeparableSum) = "n/a"

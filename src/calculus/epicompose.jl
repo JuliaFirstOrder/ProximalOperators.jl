@@ -20,7 +20,7 @@
 
 export Epicompose
 
-type Epicompose{S <: AbstractMatrix, T <: ProximableFunction, F <: Factorization} <: ProximableFunction
+mutable struct Epicompose{S <: AbstractMatrix, T <: ProximableFunction, F <: Factorization} <: ProximableFunction
   L::S
   f::T
   iter::Bool

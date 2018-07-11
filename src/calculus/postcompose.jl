@@ -13,7 +13,7 @@ g(x) = a\\cdot f(x) + b.
 ```
 """
 
-immutable Postcompose{T <: ProximableFunction, R <: Real} <: ProximableFunction
+struct Postcompose{T <: ProximableFunction, R <: Real} <: ProximableFunction
   f::T
   a::R
   b::R
@@ -38,26 +38,26 @@ is_quadratic(f::Postcompose) = is_quadratic(f.f)
 is_generalized_quadratic(f::Postcompose) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::Postcompose) = is_strongly_convex(f.f)
 
-Postcompose{T <: ProximableFunction, R <: Real}(f::T, a::R=one(R), b::R=zero(R)) = Postcompose{T, R}(f, a, b)
+Postcompose(f::T, a::R=one(R), b::R=zero(R)) where {T <: ProximableFunction, R <: Real} = Postcompose{T, R}(f, a, b)
 
-Postcompose{T <: ProximableFunction, R <: Real}(f::Postcompose{T, R}, a::R=one(R), b::R=zero(R)) = Postcompose{T, R}(f.f, a*f.a, b+a*f.b)
+Postcompose(f::Postcompose{T, R}, a::R=one(R), b::R=zero(R)) where {T <: ProximableFunction, R <: Real} = Postcompose{T, R}(f.f, a*f.a, b+a*f.b)
 
-function (g::Postcompose){T <: RealOrComplex}(x::AbstractArray{T})
+function (g::Postcompose)(x::AbstractArray{T}) where T <: RealOrComplex
   return g.a*g.f(x) + g.b
 end
 
-function gradient!{T <: RealOrComplex}(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T})
+function gradient!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}) where T <: RealOrComplex
   v = gradient!(y, g.f, x)
   y .*= g.a
   return g.a*v + g.b
 end
 
-function prox!{T <: RealOrComplex}(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)
+function prox!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
   v = prox!(y, g.f, x, g.a*gamma)
   return g.a*v + g.b
 end
 
-function prox_naive{T <: RealOrComplex}(g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0)
+function prox_naive(g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
   y, v = prox_naive(g.f, x, g.a*gamma)
   return y, g.a*v + g.b
 end
