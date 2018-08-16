@@ -1,5 +1,7 @@
 # IndPolyhedral: OSQP implementation
 
+using OSQP
+
 struct IndPolyhedralOSQP{R} <: IndPolyhedral
     l::AbstractVector{R}
     A::AbstractMatrix{R}
@@ -13,9 +15,9 @@ struct IndPolyhedralOSQP{R} <: IndPolyhedral
         if !all(l .<= u)
             error("function is improper (are some bounds inverted?)")
         end
-        OSQP.setup!(mod; P=speye(n), l=l, A=sparse(A), u=u, verbose=false,
-            eps_abs=1e-8, eps_rel=1e-8,
-            eps_prim_inf=1e-8, eps_dual_inf=1e-8)
+        OSQP.setup!(mod; P=SparseMatrixCSC{R}(I, n, n), l=l, A=sparse(A), u=u, verbose=false,
+            eps_abs=eps(R), eps_rel=eps(R),
+            eps_prim_inf=eps(R), eps_dual_inf=eps(R))
         new(l, A, u, mod)
     end
 end
@@ -35,7 +37,7 @@ IndPolyhedralOSQP(
     l::AbstractVector{R}, A::AbstractMatrix{R}, u::AbstractVector{R},
     xmin::AbstractVector{R}, xmax::AbstractVector{R}
 ) where R =
-    IndPolyhedralOSQP([l; xmin], [A; eye(size(A, 2))], [u; xmax])
+    IndPolyhedralOSQP([l; xmin], [A; I], [u; xmax])
 
 IndPolyhedralOSQP(
     l::AbstractVector{R}, A::AbstractMatrix{R}, args...
@@ -83,7 +85,7 @@ function prox_naive(f::IndPolyhedralOSQP{R}, x::AbstractVector{R}, gamma::R=one(
     g = IndBox(f.l, f.u)
     gstar = Conjugate(g)
     gstar_y = zero(R)
-    stepsize = one(R)/norm(full(f.A*f.A'))
+    stepsize = one(R)/opnorm(Matrix(f.A*f.A'))
     for it = 1:1e6
         w = y + (it-1)/(it+2)*(y - y1)
         y1 = y

@@ -9,7 +9,7 @@ export NormL2
 
 With a nonnegative scalar parameter λ, returns the function
 ```math
-f(x) = λ\\cdot\\sqrt\{x_1^2 + … + x_n^2\}.
+f(x) = λ\\cdot\\sqrt{x_1^2 + … + x_n^2}.
 ```
 """
 
@@ -29,20 +29,20 @@ is_convex(f::NormL2) = true
 NormL2(lambda::R=1.0) where {R <: Real} = NormL2{R}(lambda)
 
 function (f::NormL2)(x::AbstractArray)
-  return f.lambda*vecnorm(x)
+  return f.lambda*norm(x)
 end
 
 function prox!(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
-  vecnormx = vecnorm(x)
-  scale = max(0, 1-f.lambda*gamma/vecnormx)
+  normx = norm(x)
+  scale = max(0, 1-f.lambda*gamma/normx)
   for i in eachindex(x)
     y[i] = scale*x[i]
   end
-  return f.lambda*scale*vecnormx
+  return f.lambda*scale*normx
 end
 
 function gradient!(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T}) where T <: Union{Real, Complex}
-  fx = vecnorm(x) # Value of f, without lambda
+  fx = norm(x) # Value of f, without lambda
   if fx == 0
     y .= 0
   else
@@ -57,8 +57,8 @@ fun_expr(f::NormL2) = "x ↦ λ||x||_2"
 fun_params(f::NormL2) = "λ = $(f.lambda)"
 
 function prox_naive(f::NormL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
-  vecnormx = vecnorm(x)
-  scale = max(0, 1-f.lambda*gamma/vecnormx)
+  normx = norm(x)
+  scale = max(0, 1-f.lambda*gamma/normx)
   y = scale*x
-  return y, f.lambda*scale*vecnormx
+  return y, f.lambda*scale*normx
 end

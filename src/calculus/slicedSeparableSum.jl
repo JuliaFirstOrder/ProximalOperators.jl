@@ -9,14 +9,14 @@ export SlicedSeparableSum
 
 Returns the function
 ```math
-g(x) = ∑_\{i=1\}^k f_i(x_{J_i}).
+g(x) = ∑_{i=1}^k f_i(x_{J_i}).
 ```
 
     SlicedSeparableSum(f, (J₁,…,Jₖ))
 
 Analogous to the previous one, but applies the same function `f` to all slices of the variable `x`:
 ```math
-g(x) = ∑_\{i=1\}^k f(x_{J_i}).
+g(x) = ∑_{i=1}^k f(x_{J_i}).
 ```
 """
 
@@ -29,12 +29,12 @@ end
 
 function SlicedSeparableSum(fs::S, idxs::T) where {N,
 						   S <: Tuple{Vararg{<:ProximableFunction,N}},
-						   M, 
-						   I <: Integer, 
+						   M,
+						   I <: Integer,
 						   T1 <: NTuple{M,Union{I,
 								       AbstractArray{I},
 								       Colon,
-								       Range
+								       AbstractRange
 								       }
 							       },
 						   T <:NTuple{N,T1}
@@ -54,13 +54,13 @@ function SlicedSeparableSum(fs::S, idxs::T) where {N,
         push!(indarr[fi], idxs[i])
       end
     end
-    fsnew = ((Array{typeof(fs[1]),1}(fs) for fs in fsarr)...)
+    fsnew = ((Array{typeof(fs[1]),1}(fs) for fs in fsarr)...,)
     @assert typeof(fsnew) == Tuple{(Array{ft,1} for ft in ftypes)...}
     SlicedSeparableSum{typeof(fsnew),typeof(indarr),length(fsnew)}(fsnew, indarr)
 end
 
 # Constructor for the case where the same function is applied to all slices
-SlicedSeparableSum(f::F, idxs::T) where {F <: ProximableFunction, T <: Tuple} = 
+SlicedSeparableSum(f::F, idxs::T) where {F <: ProximableFunction, T <: Tuple} =
 SlicedSeparableSum(([f for k in eachindex(idxs)]...), idxs)
 
 # Unroll the loop over the different types of functions to evaluate

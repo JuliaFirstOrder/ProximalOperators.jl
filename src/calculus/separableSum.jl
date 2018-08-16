@@ -9,7 +9,7 @@ export SeparableSum
 
 Given functions `f₁` to `fₖ`, returns their separable sum, that is
 ```math
-g(x_1,…,x_k) = ∑_\{i=1\}^k f_i(x_i).
+g(x_1,…,x_k) = ∑_{i=1}^k f_i(x_i).
 ```
 The object `g` constructed in this way can be evaluated at `Tuple`s of length `k`. Likewise, the `prox` and `prox!` methods for `g` operate with (input and output) `Tuple`s of length `k`.
 

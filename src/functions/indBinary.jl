@@ -34,12 +34,12 @@ function (f::IndBinary)(x::AbstractArray{T}) where T <: Real
       return +Inf
     end
   end
-  return 0.0
+  return zero(T)
 end
 
 function prox!(y::AbstractArray{T}, f::IndBinary, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
-  low = 0.0
-  high = 0.0
+  low = zero(T)
+  high = zero(T)
   for k in eachindex(x)
     low = IndBinary_low(f, k)
     high = IndBinary_high(f, k)
@@ -49,15 +49,15 @@ function prox!(y::AbstractArray{T}, f::IndBinary, x::AbstractArray{T}, gamma::Re
       y[k] = high
     end
   end
-  return 0.0
+  return zero(T)
 end
 
 fun_name(f::IndBinary) = "indicator of binary array"
 fun_dom(f::IndBinary) = "AbstractArray{Real}"
 
 function prox_naive(f::IndBinary, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
-  distlow = abs.(x-f.low)
-  disthigh = abs.(x-f.high)
+  distlow = abs.(x .- f.low)
+  disthigh = abs.(x .- f.high)
   indlow = distlow .< disthigh
   indhigh = distlow .>= disthigh
   y = f.low.*indlow + f.high.*indhigh

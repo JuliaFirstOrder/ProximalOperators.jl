@@ -52,11 +52,11 @@ parameters `λ_i ⩾ 0`.
 NormL1(lambda::A) where {A <: AbstractArray} = NormL1{A}(lambda)
 
 function (f::NormL1{R})(x::AbstractArray) where R <: Real
-  return f.lambda*vecnorm(x,1)
+  return f.lambda*norm(x, 1)
 end
 
 function (f::NormL1{A})(x::AbstractArray) where A <: AbstractArray
-  return vecnorm(f.lambda.*x,1)
+  return norm(f.lambda .* x, 1)
 end
 
 function prox!(y::AbstractArray{R}, f::NormL1{A}, x::AbstractArray{R}, gamma::Real=1.0) where {A <: AbstractArray, R <: Real}
@@ -133,7 +133,7 @@ function prox!(y::AbstractArray{R}, f::NormL1{T}, x::AbstractArray{R}, gamma::Ab
 end
 
 function prox!(y::AbstractArray{Complex{R}}, f::NormL1{T}, x::AbstractArray{Complex{R}}, gamma::AbstractArray) where {T <: Real, R <: Real}
-  @assert length(y) == length(x) == length(gamma) 
+  @assert length(y) == length(x) == length(gamma)
   n1y = zero(R)
   @inbounds @simd for i in eachindex(x)
     gl = gamma[i]*f.lambda
@@ -156,6 +156,6 @@ fun_params(f::NormL1{R}) where {R <: Real} = "λ = $(f.lambda)"
 fun_params(f::NormL1{A}) where {A <: AbstractArray} = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
 
 function prox_naive(f::NormL1, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
-  y = sign.(x).*max.(0.0, abs.(x)-gamma.*f.lambda)
-  return y, vecnorm(f.lambda.*y,1)
+  y = sign.(x).*max.(0.0, abs.(x) .- gamma .* f.lambda)
+  return y, norm(f.lambda .* y,1)
 end

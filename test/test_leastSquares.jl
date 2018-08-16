@@ -1,3 +1,9 @@
+using LinearAlgebra
+using SparseArrays
+using Random
+
+Random.seed!(0)
+
 # Wide full matrix
 
 m, n = 10, 30

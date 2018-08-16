@@ -38,7 +38,7 @@ stuff = [
         "args"   => ( randn(5), randn(5), randn(3, 5) ),
         "gammas" => ( 0.1+rand(), 0.1+rand(), 0.1+rand() ),
         # test optimality condition of prox
-        "test"   => (f, x, gamma, z) -> isapprox((x-z)/gamma, -2.*f.mu.*f.y.*max.(0, 1 .- f.y.*z))
+        "test"   => (f, x, gamma, z) -> isapprox((x-z)/gamma, -2 .* f.mu.*f.y.*max.(0, 1 .- f.y.*z))
       ),
 ]
 

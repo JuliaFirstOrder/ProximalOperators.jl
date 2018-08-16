@@ -2,6 +2,8 @@
 # prox! is computed using CG on a system with matrix A'A + I/(lambda*gamma)
 # or AA' + I/(lambda*gamma), according to which matrix is smaller.
 
+using LinearAlgebra
+
 struct LeastSquaresIterative{R <: Real, RC <: RealOrComplex{R}, M, V <: AbstractVector{RC}, O} <: LeastSquares
   A::M # m-by-n operator
   b::V
@@ -36,7 +38,7 @@ function LeastSquaresIterative(A::M, b::V, lambda::R) where {R <: Real, RC <: Re
 end
 
 function (f::LeastSquaresIterative{R, RC, M, V})(x::AbstractVector{RC}) where {R, RC, M, V}
-  A_mul_B!(f.res, f.A, x)
+  mul!(f.res, f.A, x)
   f.res .-= f.b
   return (f.lambda/2)*vecnorm(f.res, 2)^2
 end
@@ -50,22 +52,22 @@ function prox!(y::AbstractVector{D}, f::LeastSquaresIterative{R, RC, M, V}, x::A
     IterativeSolvers.cg!(y, op, f.q)
   else # f.shape == :Fat
     # y .= lamgam*(f.q - (f.A'*(f.fact\(f.A*f.q))))
-    A_mul_B!(f.res, f.A, f.q)
+    mul!(f.res, f.A, f.q)
     op = Shift(f.S, one(R)/lamgam)
     IterativeSolvers.cg!(f.res2, op, f.res)
-    Ac_mul_B!(y, f.A, f.res2)
+    mul!(y, adjoint(f.A), f.res2)
     y .-= f.q
     y .*= -lamgam
   end
-  A_mul_B!(f.res, f.A, y)
+  mul!(f.res, f.A, y)
   f.res .-= f.b
   return (f.lambda/2)*norm(f.res, 2)^2
 end
 
 function gradient!(y::AbstractVector{D}, f::LeastSquaresIterative{R, RC, M, V}, x::AbstractVector{D}) where {R, RC, M, V, D <: Union{R, Complex{R}}}
-  A_mul_B!(f.res, f.A, x)
+  mul!(f.res, f.A, x)
   f.res .-= f.b
-  Ac_mul_B!(y, f.A, f.res)
+  mul!(y, adjoint(f.A), f.res)
   y .*= f.lambda
   fy = (f.lambda/2)*dot(f.res, f.res)
 end

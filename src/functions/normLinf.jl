@@ -17,7 +17,7 @@ for a nonnegative parameter `λ`.
 NormLinf(lambda::R=1.0) where {R <: Real} = Conjugate(IndBallL1(lambda))
 
 function (f::Conjugate{IndBallL1{R}})(x::AbstractArray{S}) where {R <: Real, S <: RealOrComplex}
-  return (f.f.r)*vecnorm(x, Inf)
+  return (f.f.r)*norm(x, Inf)
 end
 
 function gradient!(y::AbstractArray{T}, f::Conjugate{IndBallL1{R}}, x::AbstractArray{T}) where {T <: RealOrComplex, R <: Real}

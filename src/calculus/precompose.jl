@@ -57,7 +57,7 @@ function gradient!(y::AbstractArray{T}, g::Precompose, x::AbstractArray{T}) wher
   res = g.L*x .+ g.b
   gradres = similar(res)
   v = gradient!(gradres, g.f, res)
-  Ac_mul_B!(y, g.L, gradres)
+  mul!(y, adjoint(g.L), gradres)
   return v
 end
 
@@ -70,19 +70,19 @@ function prox!(y::AbstractArray{C}, g::Precompose, x::AbstractArray{C}, gamma::R
   # Then one can apply the above mentioned result to g(x) = f(Lx).
   #
   res = g.L*x .+ g.b
-  proxres = deepsimilar(res)
+  proxres = similar(res)
   v = prox!(proxres, g.f, res, g.mu.*gamma)
   proxres .-= res
   proxres ./= g.mu
-  Ac_mul_B!(y, g.L, proxres)
+  mul!(y, adjoint(g.L), proxres)
   y .+= x
   return v
 end
 
 function prox_naive(g::Precompose, x::AbstractArray{C}, gamma::R=1.0) where {R <: Real, C <: Union{R, Complex{R}}}
-  res = g.L*x + g.b
+  res = g.L*x .+ g.b
   proxres, v = prox_naive(g.f, res, g.mu .* gamma)
-  y = x + g.L'*((proxres - res)./g.mu)
+  y = x + g.L'*((proxres .- res)./g.mu)
   return y, v
 end
 

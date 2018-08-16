@@ -71,9 +71,9 @@ function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, 
 end
 
 function prox_naive(g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
-  z = g.a .* x + g.b
+  z = g.a .* x .+ g.b
   y, fy = prox_naive(g.f, z, (g.a .* g.a) .* gamma)
-  return (y - g.b)./g.a, fy
+  return (y .- g.b)./g.a, fy
 end
 
 fun_name(f::PrecomposeDiagonal) = string("Precomposition by affine diagonal mapping of ", fun_name(f.f))

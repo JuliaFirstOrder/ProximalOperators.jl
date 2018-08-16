@@ -46,7 +46,7 @@ function prox!(y, g::Translate, x, gamma=1.0)
 end
 
 function prox_naive(g::Translate, x, gamma=1.0)
-  y, v = prox_naive(g.f, x + g.b, gamma)
+  y, v = prox_naive(g.f, x .+ g.b, gamma)
   return y - g.b, v
 end
 

@@ -1,11 +1,14 @@
+using LinearAlgebra
+
 # Indicator of L1 norm ball composed with orthogonal matrix
 
 f = IndBallL1()
 A = randn(10, 10)
-Q, ~ = qr(A)
+F = qr(A)
+Q = F.Q
 
-@test vecnorm(Q'*Q - I) <= 1e-12
-@test vecnorm(Q*Q' - I) <= 1e-12
+@test norm(Q'*Q - I) <= 1e-12
+@test norm(Q*Q' - I) <= 1e-12
 
 g = Precompose(f, Q, 1.0)
 
@@ -23,10 +26,11 @@ prox_test(g, x, 1.0)
 # Larger example
 
 A = randn(500, 500)
-Q, ~ = qr(A)
+F = qr(A)
+Q = F.Q
 
-@test vecnorm(Q'*Q - I) <= 1e-12
-@test vecnorm(Q*Q' - I) <= 1e-12
+@test norm(Q'*Q - I) <= 1e-12
+@test norm(Q*Q' - I) <= 1e-12
 
 g = Precompose(f, Q, 1.0)
 
@@ -39,10 +43,11 @@ prox_test(g, x, 1.0)
 
 f = NormL1()
 A = randn(50, 50)
-Q, ~ = qr(A)
+F = qr(A)
+Q = F.Q
 
-@test vecnorm(Q'*Q - I) <= 1e-12
-@test vecnorm(Q*Q' - I) <= 1e-12
+@test norm(Q'*Q - I) <= 1e-12
+@test norm(Q*Q' - I) <= 1e-12
 
 g = Precompose(f, 3.0*Q, 9.0)
 
@@ -55,10 +60,11 @@ prox_test(g, x, 1.0)
 
 f = NormL2()
 A = randn(500, 500)
-Q, ~ = qr(A)
+F = qr(A)
+Q = F.Q
 
-@test vecnorm(Q'*Q - I) <= 1e-12
-@test vecnorm(Q*Q' - I) <= 1e-12
+@test norm(Q'*Q - I) <= 1e-12
+@test norm(Q*Q' - I) <= 1e-12
 
 g = Precompose(f, 0.9*Q, 0.9^2)
 
@@ -72,10 +78,11 @@ prox_test(g, x, 1.0)
 f = NormL2()
 A = randn(500, 500)
 b = randn(500)
-Q, ~ = qr(A)
+F = qr(A)
+Q = F.Q
 
-@test vecnorm(Q'*Q - I) <= 1e-12
-@test vecnorm(Q*Q' - I) <= 1e-12
+@test norm(Q'*Q - I) <= 1e-12
+@test norm(Q*Q' - I) <= 1e-12
 
 g = Precompose(f, Q, 1.0, -b)
 
@@ -103,7 +110,7 @@ call_test(g2, x)
 y2, gy2 = prox_test(g2, x, 1.0)
 
 @test abs(gy1 - gy2) <= (1 + abs(gy1))*1e-12
-@test vecnorm(y1 - y2) <= (1 + vecnorm(y1))*1e-12
+@test norm(y1 - y2) <= (1 + norm(y1))*1e-12
 
 # Squared L2 norm composed with diagonal matrix + translation
 # checking that Precompose and PrecomposeDiagonal agree
@@ -145,11 +152,11 @@ grad_g3_x, g3_x = gradient(g3, x)
 y1, gy1 = prox_test(g1, x, 1.0)
 y2, gy2 = prox_test(g2, x, 1.0)
 @test abs(gy1 - gy2) <= (1 + abs(gy1))*1e-12
-@test vecnorm(y1 - y2) <= (1 + vecnorm(y1))*1e-12
+@test norm(y1 - y2) <= (1 + norm(y1))*1e-12
 
 y3, gy3 = prox_test(g3, x, 1.0)
 @test abs(gy2 - gy3) <= (1 + abs(gy2))*1e-12
-@test vecnorm(y2 - y3) <= (1 + vecnorm(y2))*1e-12
+@test norm(y2 - y3) <= (1 + norm(y2))*1e-12
 
 # IndSOC composed with [I, I, I]
 

@@ -3,7 +3,8 @@
 # The idea is that whatever type has the A_mul_B!, Ac_mul_B!, size and eltype
 # methods implemented is a linear operator.
 
-import Base: A_mul_B!, Ac_mul_B!, *, size, eltype
+import Base: *, size, eltype
+import LinearAlgebra: mul!
 
 abstract type LinOp end
 
@@ -11,7 +12,7 @@ function (*)(Op::LinOp, x)
   # Is this the right thing to do?
   # Or maybe just: y = zeros(eltype(x), size(Op, 1))
   y = zeros(promote_type(eltype(Op), eltype(x)), size(Op, 1))
-  A_mul_B!(y, Op, x)
+  mul!(y, Op, x)
 end
 
 size(Op::LinOp, i::Integer) = i <= 2 ? size(Op)[i] : 1
@@ -28,12 +29,12 @@ end
 
 AAc(A::M) where {M} = AAc{M, eltype(A)}(A)
 
-function A_mul_B!(y, Op::AAc, x)
-  Ac_mul_B!(Op.buf, Op.A, x)
-  A_mul_B!(y, Op.A, Op.buf)
+function mul!(y, Op::AAc, x)
+  mul!(Op.buf, adjoint(Op.A), x)
+  mul!(y, Op.A, Op.buf)
 end
 
-Ac_mul_B!(y, Op::AAc, x) = A_mul_B!(y, Op::AAc, x)
+mul!(y, Op::Adjoint{AAc}, x) = mul!(y, adjoint(Op), x)
 
 size(Op::AAc) = size(Op.A, 1), size(Op.A, 1)
 eltype(Op::AAc) = eltype(Op.A)
@@ -50,12 +51,12 @@ end
 
 AcA(A::M) where {M} = AcA{M, eltype(A)}(A)
 
-function A_mul_B!(y, Op::AcA, x)
-  A_mul_B!(Op.buf, Op.A, x)
-  Ac_mul_B!(y, Op.A, Op.buf)
+function mul!(y, Op::AcA, x)
+  mul!(Op.buf, Op.A, x)
+  mul!(y, adjoint(Op.A), Op.buf)
 end
 
-Ac_mul_B!(y, Op::AcA, x) = A_mul_B!(y, Op::AcA, x)
+mul!(y, Op::Adjoint{AcA}, x) = mul!(y, adjoint(Op), x)
 
 size(Op::AcA) = size(Op.A, 2), size(Op.A, 2)
 eltype(Op::AcA) = eltype(Op.A)
@@ -75,13 +76,13 @@ end
 
 Shift(A::M, rho::T) where {M, T} = Shift{M, T}(A, rho)
 
-function A_mul_B!(y, Op::Shift, x)
-  A_mul_B!(y, Op.A, x)
+function mul!(y, Op::Shift, x)
+  mul!(y, Op.A, x)
   y .+= Op.rho .* x
 end
 
-function Ac_mul_B!(y, Op::Shift, x)
-  Ac_mul_B!(y, Op.A, x)
+function mul!(y, Op::Adjoint{Shift}, x)
+  mul!(y, adjoint(Op.A), x)
   y .+= Op.rho .* x
 end
 

@@ -10,7 +10,7 @@ struct IndAffineIterative{R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{
     if size(A,1) > size(A,2)
       error("A must be full row rank")
     end
-    normrowsinv = 1./vec(sqrt.(sum(abs2.(A), 2)))
+    normrowsinv = 1 ./ vec(sqrt.(sum(abs2.(A); dims=2)))
     A = normrowsinv.*A # normalize rows of A
     b = normrowsinv.*b # and b accordingly
     new(A, b, similar(b), 1000, 1e-8)
@@ -23,7 +23,7 @@ is_cone(f::IndAffineIterative) = norm(f.b) == 0.0
 IndAffineIterative(A::M, b::V) where {R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}} = IndAffineIterative{R, T, M, V}(A, b)
 
 function (f::IndAffineIterative{R, T, M, V})(x::V) where {R, T, M, V}
-  A_mul_B!(f.res, f.A, x)
+  mul!(f.res, f.A, x)
   f.res .= f.b .- f.res
   # the tolerance in the following line should be customizable
   if norm(f.res, Inf) <= f.tol

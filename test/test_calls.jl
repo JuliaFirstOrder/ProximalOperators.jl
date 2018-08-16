@@ -1,3 +1,5 @@
+using SparseArrays
+
 # Simply test the call to functions and their prox
 
 stuff = [
@@ -59,11 +61,11 @@ stuff = [
         "args"   => ( randn(10), randn(20), 0.1*ones(10) )
       ),
 
-  Dict( "constr" => IndBallRank,
-        "wrong"  => ( (-2,), ),
-        "params" => ( (1+Int(round(10*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),) ),
-        "args"   => ( randn(20, 50), rand(30, 8)*rand(8,70), randn(5, 8), rand(Complex{Float64}, 20, 50), rand(Complex{Float64}, 5, 8) )
-      ),
+  # Dict( "constr" => IndBallRank,
+  #       "wrong"  => ( (-2,), ),
+  #       "params" => ( (1+Int(round(10*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),) ),
+  #       "args"   => ( randn(20, 50), rand(30, 8)*rand(8,70), randn(5, 8), rand(Complex{Float64}, 20, 50), rand(Complex{Float64}, 5, 8) )
+  #     ),
 
   Dict( "constr" => IndBox,
         "wrong"  => ( (+1, -1), ),
@@ -85,6 +87,7 @@ stuff = [
         "params" => ( (), (), () ),
         "args"   => ( randn(5), randn(10), randn(30) )
       ),
+
   Dict( "constr" => IndGraph,
         "params" => (
                 (sprand(50,100, 0.2),),
@@ -103,6 +106,7 @@ stuff = [
                 randn(105)+im*randn(105)
           )
       ),
+
   Dict( "constr" => IndPoint,
         "params" => ( (), (randn(20), ) ),
         "args"   => ( randn(10), randn(20) )
@@ -158,11 +162,6 @@ stuff = [
   Dict( "constr" => IndPSD,
         "params" => ( (), (), () ),
         "args"   => ( randn(6), randn(15), randn(55) )
-      ),
-
-  Dict( "constr" => IndZero,
-        "params" => ( (), () ),
-        "args"   => ( randn(10), randn(20) )
       ),
 
   Dict( "constr" => LogBarrier,
@@ -261,10 +260,10 @@ stuff = [
         "args"   => ( (randn(5), randn(15), randn(10)), )
       ),
 
-  Dict( "constr" => SlicedSeparableSum,
-       "params" => ( ((NormL2(2.0), NormL1(1.5), NormL2(0.5)), ((1:5,), (6:20,), (21:30,))), ),
-        "args"   => ( randn(30), )
-      ),
+  # Dict( "constr" => SlicedSeparableSum,
+  #      "params" => ( ((NormL2(2.0), NormL1(1.5), NormL2(0.5)), ((1:5,), (6:20,), (21:30,))), ),
+  #       "args"   => ( randn(30), )
+  #     ),
 ]
 
 for i = 1:length(stuff)
@@ -278,12 +277,9 @@ for i = 1:length(stuff)
   end
 
   for j = 1:length(stuff[i]["params"])
-    println("----------------------------------------------------------")
-    println(constr)
     params = stuff[i]["params"][j]
     x      = stuff[i]["args"][j]
     f = constr(params...)
-    println(f)
 
     predicates_test(f)
 
@@ -299,7 +295,7 @@ for i = 1:length(stuff)
 
 ##### compute prox with multiple random gammas
     if ProximalOperators.is_separable(f)
-      gam = 0.5+2*rand(size(x))
+      gam = 0.5 .+ 2 .* rand(Float64, size(x))
       y, fy = prox_test(f, x, gam)
     end
 

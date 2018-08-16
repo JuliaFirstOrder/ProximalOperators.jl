@@ -33,10 +33,10 @@ is_convex(f::ElasticNet) = true
 ElasticNet(mu::R=1.0, lambda::R=1.0) where {R <: Real} = ElasticNet{R}(mu, lambda)
 
 function (f::ElasticNet)(x::AbstractArray{R}) where R <: RealOrComplex
-  return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2
+  return f.mu*norm(x,1) + (f.lambda/2)*norm(x,2)^2
 end
 
-function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma::Real=1.0) where R <: Real
+function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma::R=one(R)) where R <: Real
   sqnorm2x = zero(R)
   norm1x = zero(R)
   gm = gamma*f.mu
@@ -62,7 +62,7 @@ function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma
   return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
-function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{Complex{R}}, gamma::Real=1.0) where R <: Real
+function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{Complex{R}}, gamma::R=one(R)) where R <: Real
   sqnorm2x = zero(R)
   norm1x = zero(R)
   gm = gamma*f.mu
@@ -93,7 +93,7 @@ function gradient!(y::AbstractArray{T}, f::ElasticNet{R}, x::AbstractArray{T}) w
   y .= f.mu.*sign.(x)
   # Gradient of 2 norm
   y .+= f.lambda.*x
-  return f.mu*vecnorm(x,1) + (f.lambda/2)*vecnorm(x,2)^2
+  return f.mu*norm(x,1) + (f.lambda/2)*norm(x,2)^2
 end
 
 fun_name(f::ElasticNet) = "elastic-net regularization"
@@ -102,11 +102,11 @@ fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||²"
 fun_params(f::ElasticNet) = "μ = $(f.mu), λ = $(f.lambda)"
 
 function prox_naive(f::ElasticNet, x::AbstractArray{R}, gamma::Real=1.0) where R <: RealOrComplex
-  uz = max.(0, abs.(x) - gamma*f.mu)/(1 + f.lambda*gamma)
-  return sign.(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
+  uz = max.(0, abs.(x) .- gamma*f.mu)/(1 + f.lambda * gamma)
+  return sign.(x) .* uz, f.mu * norm(uz,1) + (f.lambda/2) * norm(uz)^2
 end
 
 function prox_naive(f::ElasticNet, x::AbstractArray{R}, gamma::AbstractArray) where R <: RealOrComplex
-  uz = max.(0, abs.(x) - gamma.*f.mu)./(1 + f.lambda*gamma)
-  return sign.(x).*uz, f.mu*vecnorm(uz,1) + (f.lambda/2)*vecnorm(uz)^2
+  uz = max.(0, abs.(x) .- gamma.*f.mu)./(1 .+ f.lambda .* gamma)
+  return sign.(x) .* uz, f.mu * norm(uz,1) + (f.lambda/2) * norm(uz)^2
 end

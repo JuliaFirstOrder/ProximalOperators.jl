@@ -43,7 +43,7 @@ fun_expr(f::SumPositive) = "x ↦ sum(max(0, x))"
 function prox_naive(f::SumPositive, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
   y = copy(x)
   indpos = x .> 0.0
-  y[indpos] = max.(0.0, x[indpos]-gamma)
+  y[indpos] = max.(0.0, x[indpos] .- gamma)
   return y, sum(max.(0.0, y))
 end
 
@@ -63,6 +63,6 @@ end
 function prox_naive(f::SumPositive, x::AbstractArray{T}, gamma::AbstractArray{T}) where T <: Real
   y = copy(x)
   indpos = x .> 0.0
-  y[indpos] = max.(0.0, x[indpos]-gamma[indpos])
+  y[indpos] = max.(0.0, x[indpos] .- gamma[indpos])
   return y, sum(max.(0.0, y))
 end

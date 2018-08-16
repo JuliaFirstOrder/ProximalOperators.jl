@@ -8,7 +8,7 @@ export Sum
 Given functions `f₁` to `fₖ`, returns their sum
 
 ```math
-g(x) = ∑_\{i=1\}^k f_i(x).
+g(x) = ∑_{i=1}^k f_i(x).
 ```
 
 The functions `fᵢ` should all have the same domain, which will be the domain of
@@ -19,7 +19,7 @@ gradient.
 
 struct Sum{T <: Tuple} <: ProximableFunction fs::T end
 
-Sum(fs::Vararg{ProximableFunction}) = Sum((fs...))
+Sum(fs::Vararg{ProximableFunction}) = Sum((fs...,))
 
 # note: is_prox_accurate false because prox in general doesn't exist?
 is_prox_accurate(f::Sum) = false

@@ -35,7 +35,7 @@ function (f::IndPoint{R})(x::AbstractArray{T}) where {R <: RealOrComplex, T <: R
       return +Inf
     end
   end
-  return 0.0
+  return zero(T)
 end
 
 function (f::IndPoint{A})(x::AbstractArray{T}) where {A <: AbstractArray, T <: RealOrComplex}
@@ -44,21 +44,21 @@ function (f::IndPoint{A})(x::AbstractArray{T}) where {A <: AbstractArray, T <: R
       return +Inf
     end
   end
-  return 0.0
+  return zero(T)
 end
 
 function prox!(y::AbstractArray{T}, f::IndPoint{R}, x::AbstractArray{T}, gamma::Real=1.0) where {R <: RealOrComplex, T <: RealOrComplex}
   for k in eachindex(x)
     y[k] = f.p
   end
-  return 0.0
+  return zero(T)
 end
 
 function prox!(y::AbstractArray{T}, f::IndPoint{A}, x::AbstractArray{T}, gamma::Real=1.0) where {A <: AbstractArray, T <: RealOrComplex}
   for k in eachindex(x)
     y[k] = f.p[k]
   end
-  return 0.0
+  return zero(T)
 end
 
 prox!(y::AbstractArray{T}, f::IndPoint, x::AbstractArray{T}, gamma::AbstractArray) where {T <: RealOrComplex} = prox!(y, f, x, 1.0)
@@ -69,8 +69,8 @@ fun_expr(f::IndPoint) = "x ↦ 0 if x = p, +∞ otherwise"
 fun_params(f::IndPoint) =
   string( "p = ", typeof(f.p) <: AbstractArray ? string(typeof(f.p), " of size ", size(f.p)) : f.p, ", ")
 
-function prox_naive(f::IndPoint, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
-  return f.p, 0.0
+function prox_naive(f::IndPoint, x::AbstractArray{T}, gamma=1.0) where T <: RealOrComplex
+    y = similar(x)
+    y .= f.p
+    return y, 0.0
 end
-
-prox_naive(f::IndPoint, x::AbstractArray, gamma::AbstractArray) = prox_naive(f, x, 1.0)

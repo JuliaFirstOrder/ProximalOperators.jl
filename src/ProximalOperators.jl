@@ -4,17 +4,18 @@ __precompile__()
 
 module ProximalOperators
 
-using IterativeSolvers
-using OSQP
+using LinearAlgebra
 
-const RealOrComplex{T <: Real} = Union{T, Complex{T}}
+const RealOrComplex{R <: Real} = Union{R, Complex{R}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
+const ArrayOrTuple{R} = Union{
+	AbstractArray{C, N} where {C <: RealOrComplex{R}, N},
+	Tuple{Vararg{AbstractArray{C, N} where {C <: RealOrComplex{R}, N}}}
+}
 
 export ProximableFunction
 export prox, prox!
-export gradient!
-
-import Base: gradient
+export gradient, gradient!
 
 abstract type ProximableFunction end
 
@@ -24,7 +25,7 @@ include("utilities/deep.jl")
 include("utilities/linops.jl")
 include("utilities/symmetricpacked.jl")
 include("utilities/uniformarrays.jl")
-include("utilities/vecnormdiff.jl")
+include("utilities/normdiff.jl")
 
 # Basic functions
 
@@ -38,6 +39,7 @@ include("functions/indBallRank.jl")
 include("functions/indBinary.jl")
 include("functions/indBox.jl")
 include("functions/indFree.jl")
+include("functions/indGraph.jl")
 include("functions/indHalfspace.jl")
 include("functions/indNonnegative.jl")
 include("functions/indNonpositive.jl")
@@ -52,16 +54,14 @@ include("functions/leastSquares.jl")
 include("functions/linear.jl")
 include("functions/logBarrier.jl")
 include("functions/logisticLoss.jl")
-include("functions/maximum.jl")
-include("functions/normL2.jl")
-include("functions/normL1.jl")
-include("functions/normL21.jl")
 include("functions/normL0.jl")
+include("functions/normL1.jl")
+include("functions/normL2.jl")
+include("functions/normL21.jl")
 include("functions/nuclearNorm.jl")
 include("functions/quadratic.jl")
 include("functions/sqrNormL2.jl")
 include("functions/sumPositive.jl")
-include("functions/indGraph.jl")
 include("functions/sqrHingeLoss.jl")
 include("functions/crossEntropy.jl")
 
@@ -82,10 +82,11 @@ include("calculus/tilt.jl")
 include("calculus/translate.jl")
 include("calculus/sum.jl")
 
-# Functions obtained from basic + calculus
+# Functions obtained from basic (as special cases or using calculus rules)
 
 include("functions/hingeLoss.jl")
 include("functions/indExp.jl")
+include("functions/maximum.jl")
 include("functions/normLinf.jl")
 include("functions/sumLargest.jl")
 
@@ -127,8 +128,8 @@ Return values:
 * `fy`: the value ``f(y)``
 """
 
-function prox(f::ProximableFunction, x, gamma=1.0)
-  y = deepsimilar(x)
+function prox(f::ProximableFunction, x::ArrayOrTuple{R}, gamma=one(R)) where R
+  y = similar(x)
   fy = prox!(y, f, x, gamma)
   return y, fy
 end
@@ -149,6 +150,8 @@ Return values:
 """
 
 prox!
+# TODO: should we put the following here instead? And remove the default value for gamma in each subtype
+# prox!(y::ArrayOrTuple{R}, f::ProximableFunction, x::ArrayOrTuple{R}) = prox!(y, f, x, one(R))
 
 """
 **Gradient mapping**
@@ -163,7 +166,7 @@ Return values:
 """
 
 function gradient(f::ProximableFunction, x)
-	y = deepsimilar(x)
+	y = similar(x)
 	fx = gradient!(y, f, x)
 	return y, fx
 end

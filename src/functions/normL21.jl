@@ -96,6 +96,6 @@ fun_expr(f::NormL21) = "x ↦ λsum(||x_i||)"
 fun_params(f::NormL21) = "λ = $(f.lambda), dim = $(f.dim)"
 
 function prox_naive(f::NormL21, X::AbstractArray{T,2}, gamma::Real=1.0) where T <: RealOrComplex
-  Y = max.(0, 1-f.lambda*gamma./sqrt.(sum(abs.(X).^2, f.dim))).*X
-  return Y, f.lambda*sum(sqrt.(sum(abs.(Y).^2, f.dim)))
+  Y = max.(0, 1.0 .- f.lambda*gamma./sqrt.(sum(abs.(X).^2, dims=f.dim))).*X
+  return Y, f.lambda*sum(sqrt.(sum(abs.(Y).^2, dims=f.dim)))
 end

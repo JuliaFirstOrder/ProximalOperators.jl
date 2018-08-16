@@ -1,5 +1,9 @@
 # indicator of an affine set
 
+using LinearAlgebra
+using SparseArrays
+using SuiteSparse
+
 export IndAffine
 
 """
@@ -39,6 +43,10 @@ function IndAffine(A::M, b::V; iterative=false) where {M, V}
 end
 
 ### INCLUDE CONCRETE TYPES
+
+using LinearAlgebra
+using SparseArrays
+using SuiteSparse
 
 include("indAffineDirect.jl")
 include("indAffineIterative.jl")

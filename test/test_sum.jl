@@ -1,12 +1,12 @@
-srand(123)
+using Random
+
+Random.seed!(123)
 
 # smooth case
 
 f1 = SqrNormL2()
 f2 = Translate(SqrNormL2(2.5), randn(10))
 f = Sum(f1, f2)
-
-println(f)
 
 predicates_test(f)
 
@@ -22,7 +22,7 @@ result = f1(xtest) + f2(xtest)
 grad1, val1 = gradient(f1, xtest)
 grad2, val2 = gradient(f2, xtest)
 
-gradsum = ones(xtest)
+gradsum = randn(size(xtest))
 valsum = gradient!(gradsum, f, xtest)
 @test gradsum ≈ grad1 + grad2
 
@@ -31,8 +31,6 @@ valsum = gradient!(gradsum, f, xtest)
 g1 = NormL2()
 g2 = Translate(SqrNormL2(2.5), randn(10))
 g = Sum(g1, g2)
-
-println(g)
 
 predicates_test(g)
 
@@ -48,6 +46,6 @@ result = g1(xtest) + g2(xtest)
 grad1, val1 = gradient(g1, xtest)
 grad2, val2 = gradient(g2, xtest)
 
-gradsum = ones(xtest)
+gradsum = randn(size(xtest))
 valsum = gradient!(gradsum, g, xtest)
 @test gradsum ≈ grad1 + grad2

@@ -1,3 +1,9 @@
+using LinearAlgebra
+using SparseArrays
+using Random
+
+Random.seed!(0)
+
 # Test with full matrices
 
 n, k = 5, 4

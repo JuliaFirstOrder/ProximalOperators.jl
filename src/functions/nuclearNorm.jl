@@ -30,21 +30,22 @@ is_convex(f::NuclearNorm) = true
 NuclearNorm(lambda::R=1.0) where {R <: Real} = NuclearNorm{R}(lambda)
 
 function (f::NuclearNorm{R})(X::AbstractMatrix{T}) where {R <: Real, T <: Union{R, Complex{R}}}
-  U, S, V = svd(X);
-  return f.lambda * sum(S);
+  F = svd(X);
+  return f.lambda * sum(F.S);
 end
 
 function prox!(Y::AbstractMatrix{T}, f::NuclearNorm{R}, X::AbstractMatrix{T}, gamma::R=one(R)) where {R <: Real, T <: Union{R, Complex{R}}}
-  F = svdfact(X)
-  S_thresh = max.(zero(R), F[:S] .- f.lambda*gamma)
+  F = svd(X)
+  S_thresh = max.(zero(R), F.S .- f.lambda*gamma)
   rankY = findfirst(S_thresh .== zero(R))
-  if rankY == 0
+  if rankY === nothing
     rankY = minimum(size(X))
   end
-  Vt_thresh = view(F[:Vt], 1:rankY, :)
-  U_thresh = view(F[:U], :, 1:rankY)
+  Vt_thresh = view(F.Vt, 1:rankY, :)
+  U_thresh = view(F.U, :, 1:rankY)
+  # TODO: the order of the following matrix products should depend on the shape of x
   M = S_thresh[1:rankY] .* Vt_thresh
-  A_mul_B!(Y, U_thresh, M)
+  mul!(Y, U_thresh, M)
   return f.lambda * sum(S_thresh);
 end
 
@@ -54,8 +55,8 @@ fun_expr(f::NuclearNorm) = "X ↦ λ∑σ_i(X)"
 fun_params(f::NuclearNorm) = "λ = $(f.lambda)"
 
 function prox_naive(f::NuclearNorm, X::AbstractMatrix{T}, gamma=1.0) where T
-  U, S, V = svd(X)
-  S = max.(0, S .- f.lambda*gamma)
-  Y = U * (spdiagm(S) * V')
+  F = svd(X)
+  S = max.(0, F.S .- f.lambda*gamma)
+  Y = F.U * (Diagonal(S) * F.Vt)
   return Y, f.lambda * sum(S)
 end

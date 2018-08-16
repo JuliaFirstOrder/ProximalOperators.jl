@@ -1,6 +1,6 @@
-import Base.LinAlg: Char, BlasInt, chkstride1
-import Base.LinAlg.LAPACK: chklapackerror
-import Base.LinAlg.BLAS.@blasfunc
+using LinearAlgebra: BlasInt, chkstride1
+using LinearAlgebra.LAPACK: chklapackerror
+using LinearAlgebra.BLAS: @blasfunc
 
 """
     dspev!(jobz::Char, uplo::Char, x::StridedVector{Float64})
@@ -21,7 +21,7 @@ Returns:
   `W,Z` if `jobz == 'V'` or: `W` if `jobz == 'N'` such that `A=Z*diagm(W)*Z'`
 """
 
-function dspev!(jobz::Char, uplo::Char, A::StridedVector{Float64})
+function dspev!(jobz::Symbol, uplo::Symbol, A::StridedVector{Float64})
     chkstride1(A)
     vecN = length(A)
     n = try
@@ -31,21 +31,21 @@ function dspev!(jobz::Char, uplo::Char, A::StridedVector{Float64})
     end
     W     = similar(A, Float64, n)
     Z     = similar(A, Float64, n, n)
-    work  = Array{Float64}(1)
+    work  = Array{Float64}(undef, 1)
     lwork = BlasInt(3*n)
     info  = Ref{BlasInt}()
-    work = Array{Float64}(lwork)
-    ccall((@blasfunc(dspev_), Base.liblapack_name), Void,
+    work = Array{Float64}(undef, lwork)
+    ccall((@blasfunc(dspev_), Base.liblapack_name), Cvoid,
           (Ptr{UInt8}, Ptr{UInt8}, Ptr{BlasInt}, Ptr{Float64},
           Ptr{Float64}, Ptr{Float64}, Ptr{BlasInt}, Ptr{Float64}, Ptr{BlasInt}),
-          &jobz, &uplo, &n, A,
-          W, Z, &n, work, info)
+          jobz, uplo, Ref(n), A,
+          W, Z, Ref(n), work, info)
     chklapackerror(info[])
-    jobz == 'V' ? (W, Z) : W
+    jobz == :V ? (W, Z) : W
 end
 
-function dspevV!(uplo::Char, A::StridedVector{Float64})
-    jobz = 'V'
+function dspevV!(uplo::Symbol, A::StridedVector{Float64})
+    jobz = :V
     chkstride1(A)
     vecN = length(A)
     n = try
@@ -55,15 +55,15 @@ function dspevV!(uplo::Char, A::StridedVector{Float64})
     end
     W     = similar(A, Float64, n)
     Z     = similar(A, Float64, n, n)
-    work  = Array{Float64}(1)
+    work  = Array{Float64}(undef, 1)
     lwork = BlasInt(3*n)
     info  = Ref{BlasInt}()
-    work = Array{Float64}(lwork)
-    ccall((@blasfunc(dspev_), Base.liblapack_name), Void,
+    work = Array{Float64}(undef, lwork)
+    ccall((@blasfunc(dspev_), Base.liblapack_name), Cvoid,
           (Ptr{UInt8}, Ptr{UInt8}, Ptr{BlasInt}, Ptr{Float64},
           Ptr{Float64}, Ptr{Float64}, Ptr{BlasInt}, Ptr{Float64}, Ptr{BlasInt}),
-          &jobz, &uplo, &n, A,
-          W, Z, &n, work, info)
+          jobz, uplo, Ref(n), A,
+          W, Z, Ref(n), work, info)
     chklapackerror(info[])
     return W, Z
 end

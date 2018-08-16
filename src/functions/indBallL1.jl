@@ -31,17 +31,17 @@ is_set(f::IndBallL1) = true
 IndBallL1(r::R=1.0) where {R <: Real} = IndBallL1{R}(r)
 
 function (f::IndBallL1)(x::AbstractArray{T}) where T <: RealOrComplex
-  if vecnorm(x,1) - f.r > 1e-12
+  if norm(x,1) - f.r > 1e-12
     return +Inf
   end
-  return 0.0
+  return zero(T)
 end
 
 function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=one(R)) where {R<: Real, T <: RealOrComplex{R}}
   # TODO: a faster algorithm
-  if vecnorm(x,1) - f.r < 1e-14
-    y[:] = x[:]
-    return 0.0
+  if norm(x,1) - f.r < 1e-14
+    y .= x
+    return zero(T)
   else # do a projection of abs(x) onto simplex then recover signs
     n = length(x)
     p = abs.(view(x,:))
@@ -54,14 +54,14 @@ function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=
         @inbounds for j in eachindex(x)
           y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
         end
-        return 0.0
+        return zero(T)
       end
     end
     tmax = (s + p[n] - f.r)/n
     @inbounds for j in eachindex(x)
       y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
     end
-    return 0.0
+    return zero(T)
   end
 end
 
@@ -77,9 +77,9 @@ function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0) where T 
   λ = L
   v = 0.0
   maxit = 120
-  for iter in range(1, maxit)
+  for iter in 1:maxit
     λ = 0.5*(L + U)
-    v = sum(max.(abs.(x) - λ, 0.0))
+    v = sum(max.(abs.(x) .- λ, 0.0))
     # modify lower or upper bound
     (v < f.r) ? U = λ : L = λ
     # exit condition
@@ -87,5 +87,5 @@ function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0) where T 
       break
     end
   end
-  return sign.(x).*max.(0.0, abs.(x)-λ), 0.0
+  return sign.(x) .* max.(0.0, abs.(x) .- λ), 0.0
 end
