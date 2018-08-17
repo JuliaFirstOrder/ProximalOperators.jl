@@ -3,22 +3,22 @@ using LinearAlgebra.LAPACK: chklapackerror
 using LinearAlgebra.BLAS: @blasfunc
 
 """
-    dspev!(jobz::Char, uplo::Char, x::StridedVector{Float64})
+    dspev!(jobz::Symbol, uplo::Symbol, x::StridedVector{Float64})
 
 Computes all the eigenvalues and optionally the eigenvectors of a real
 symmetric `n×n` matrix `A` in packed storage. Will corrupt `x`.
 
 Arguments:
 
-  `jobz`: `'N'` if only eigenvalues, `'V'` if eigenvalues and eigenvectors
+  `jobz`: `:N` if only eigenvalues, `:V` if eigenvalues and eigenvectors
 
-  `uplo`: `'L'` if lower triangle of `A` is stored, `'U'` if upper
+  `uplo`: `:L` if lower triangle of `A` is stored, `:U` if upper
 
   `x`: `A` represented as vector of the lower (upper) n*(n+1)/2 elements, packed columnwise.
 
 Returns:
 
-  `W,Z` if `jobz == 'V'` or: `W` if `jobz == 'N'` such that `A=Z*diagm(W)*Z'`
+  `W,Z` if `jobz == :V` or: `W` if `jobz == :N` such that `A=Z*diagm(W)*Z'`
 """
 
 function dspev!(jobz::Symbol, uplo::Symbol, A::StridedVector{Float64})
