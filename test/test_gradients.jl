@@ -1,11 +1,19 @@
+using LinearAlgebra
+using Random
+
+Random.seed!(0)
 
 function gradient_fd(f,x) #compute gradient using finite differences
-	gradfd = zeros(x)
-	xeps = zeros(x)
+	gradfd = zero(x)
+	xeps1 = zero(x)
+	xeps2 = zero(x)
+	delta = sqrt(eps())
 	for i in eachindex(gradfd)
-		xeps .= x
-		xeps[i] += sqrt(eps())
-		gradfd[i] = (f(xeps)-f(x))/sqrt(eps())
+		xeps1 .= x
+		xeps2 .= x
+		xeps1[i] -= delta
+		xeps2[i] += delta
+		gradfd[i] = (f(xeps2)-f(xeps1))/(2*delta)
 	end
 	return gradfd
 end
@@ -57,7 +65,7 @@ stuff = [
       ),
   Dict( "f"      => HuberLoss(2., 3.),
         "x"      => [-1., 0.5],
-        "∇f(x)"  => 3.*[-1., 0.5],
+        "∇f(x)"  => 3*[-1., 0.5],
       ),
   Dict( "f"      => HuberLoss(2., 3.),
         "x"      => [-2., 1.5],
@@ -116,40 +124,35 @@ stuff = [
         "∇f(x)"  => [-1.0965878679450072, 0.17880438303317633, -0.07113880976635019, 1.3211956169668235, -0.4034121320549927]
       ),
   Dict( "f"      => SqrHingeLoss([1.0, -1.0, 1.0, -1.0, 1.0], 1.5),
-       "x"      => randn(srand(0),5),
-       "∇f(x)"  => gradient_fd(SqrHingeLoss([1.0, -1.0, 1.0, -1.0, 1.0], 1.5),randn(srand(0),5)) 
+       "x"      => randn(MersenneTwister(0),Float64,5),
+       "∇f(x)"  => gradient_fd(SqrHingeLoss([1.0, -1.0, 1.0, -1.0, 1.0], 1.5),randn(MersenneTwister(0),Float64,5))
       ),
   Dict( "f"      => CrossEntropy([1.0, 0., 1.0,  0., 1.0]),
-       "x"      => rand(srand(0),5),
-       "∇f(x)"  => gradient_fd(CrossEntropy([1.0, 0., 1.0,  0., 1.0]),rand(srand(0),5)) 
+       "x"      => rand(MersenneTwister(0),Float64,5),
+       "∇f(x)"  => gradient_fd(CrossEntropy([1.0, 0., 1.0,  0., 1.0]),rand(MersenneTwister(0),Float64,5))
       ),
   Dict( "f"      => CrossEntropy([true, false, true,  false, true]),
-       "x"      => rand(srand(0),5),
-       "∇f(x)"  => gradient_fd(CrossEntropy([true, false, true,  false, true]),rand(srand(0),5)) 
+       "x"      => rand(MersenneTwister(0),Float64,5),
+       "∇f(x)"  => gradient_fd(CrossEntropy([true, false, true,  false, true]),rand(MersenneTwister(0),Float64,5))
       ),
   Dict( "f"      => CrossEntropy([true, false, true,  false, true]),
-       "x"      => rand(srand(0),1,5),
-       "∇f(x)"  => gradient_fd(CrossEntropy([true, false, true,  false, true]),rand(srand(0),1,5)) 
+       "x"      => rand(MersenneTwister(0),Float64,1,5),
+       "∇f(x)"  => gradient_fd(CrossEntropy([true, false, true,  false, true]),rand(MersenneTwister(0),Float64,1,5))
       ),
 ]
 
-println("Testing Gradients")
 for i = 1:length(stuff)
-
-  println("----------------------------------------------------------")
 
   f = stuff[i]["f"]
   x = stuff[i]["x"]
-
-  println("Gradient of ", string(typeof(f), " on ", typeof(x)))
 
   ref_∇f = stuff[i]["∇f(x)"]
 
   ref_fx = f(x)
   ∇f = similar(x)
   fx = gradient!(∇f, f, x)
-  @test fx == ref_fx || abs(fx-ref_fx)/(1+abs(ref_fx)) <= TOL_ASSERT
-  @test ∇f == ref_∇f || norm(∇f-ref_∇f)/(1+norm(ref_∇f)) <= sqrt(TOL_ASSERT)
+  @test fx ≈ ref_fx
+  @test ∇f ≈ ref_∇f
 
   for j = 1:11
     #For initial point x and 10 other random points
@@ -159,18 +162,18 @@ for i = 1:length(stuff)
       if ProximalOperators.is_convex(f)
         # Test ∇f is subgradient
 	if typeof(f) <: CrossEntropy
-		d = x.*(rand(size(x)).-1)./2 # assures 0 <= x+d <= 1
+		d = x.*(rand(Float64, size(x)).-1)./2 # assures 0 <= x+d <= 1
 	else
-		d = randn(size(x))
+		d = randn(Float64, size(x))
 	end
         @test f(x+d) ≥ fx + dot(d, ∇f) - TOL_ASSERT
       else
         # Assume smooth function
-        d = randn(size(x))
+        d = randn(Float64, size(x))
         d ./= norm(d).*sqrt(TOL_ASSERT)
         @test f(x+d) ≈ fx + dot(d, ∇f) atol=TOL_ASSERT
       end
     end
-    x = rand(size(x))
+    x = rand(Float64, size(x))
   end
 end

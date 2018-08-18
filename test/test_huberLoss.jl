@@ -1,4 +1,7 @@
 using LinearAlgebra
+using Random
+
+Random.seed!(0)
 
 f = HuberLoss(1.5, 0.7)
 

@@ -1,5 +1,4 @@
-using Test
-using ProximalOperators
+using LinearAlgebra
 using Random
 
 Random.seed!(123)

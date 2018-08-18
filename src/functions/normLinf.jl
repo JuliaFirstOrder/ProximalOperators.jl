@@ -21,7 +21,7 @@ function (f::Conjugate{IndBallL1{R}})(x::AbstractArray{S}) where {R <: Real, S <
 end
 
 function gradient!(y::AbstractArray{T}, f::Conjugate{IndBallL1{R}}, x::AbstractArray{T}) where {T <: RealOrComplex, R <: Real}
-  absxi, i = findmax(abs(xi) for xi in x) # Largest absolute value
+  absxi, i = findmax(abs.(x)) # Largest absolute value
   y .= 0
   y[i] = f.f.r*sign(x[i])
   return f.f.r*absxi

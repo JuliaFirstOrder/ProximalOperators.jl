@@ -30,7 +30,7 @@ is_set(f::IndBallL0) = true
 IndBallL0(r::I) where {I <: Integer} = IndBallL0{I}(r)
 
 function (f::IndBallL0)(x::AbstractArray{T}) where T <: RealOrComplex
-  if countnz(x) > f.r
+  if count(!isequal(0), x) > f.r
     return +Inf
   end
   return zero(T)

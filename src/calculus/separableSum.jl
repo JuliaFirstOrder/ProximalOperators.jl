@@ -26,7 +26,7 @@ struct SeparableSum{T <: Tuple} <: ProximableFunction
 	fs::T
 end
 
-SeparableSum(fs::Vararg{ProximableFunction}) = SeparableSum((fs...))
+SeparableSum(fs::Vararg{ProximableFunction}) = SeparableSum((fs...,))
 
 is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
 is_convex(f::SeparableSum) = all(is_convex.(f.fs))

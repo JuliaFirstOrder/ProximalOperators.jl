@@ -1,3 +1,4 @@
+using LinearAlgebra
 using SparseArrays
 
 # Simply test the call to functions and their prox
@@ -61,11 +62,11 @@ stuff = [
         "args"   => ( randn(10), randn(20), 0.1*ones(10) )
       ),
 
-  # Dict( "constr" => IndBallRank,
-  #       "wrong"  => ( (-2,), ),
-  #       "params" => ( (1+Int(round(10*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),) ),
-  #       "args"   => ( randn(20, 50), rand(30, 8)*rand(8,70), randn(5, 8), rand(Complex{Float64}, 20, 50), rand(Complex{Float64}, 5, 8) )
-  #     ),
+  Dict( "constr" => IndBallRank,
+        "wrong"  => ( (-2,), ),
+        "params" => ( (1+Int(round(10*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),), (10+Int(round(5*rand())),) ),
+        "args"   => ( randn(20, 50), rand(30, 8)*rand(8,70), randn(5, 8), rand(Complex{Float64}, 20, 50), rand(Complex{Float64}, 5, 8) )
+      ),
 
   Dict( "constr" => IndBox,
         "wrong"  => ( (+1, -1), ),
@@ -260,10 +261,10 @@ stuff = [
         "args"   => ( (randn(5), randn(15), randn(10)), )
       ),
 
-  # Dict( "constr" => SlicedSeparableSum,
-  #      "params" => ( ((NormL2(2.0), NormL1(1.5), NormL2(0.5)), ((1:5,), (6:20,), (21:30,))), ),
-  #       "args"   => ( randn(30), )
-  #     ),
+  Dict( "constr" => SlicedSeparableSum,
+       "params" => ( ((NormL2(2.0), NormL1(1.5), NormL2(0.5)), ((1:5,), (6:20,), (21:30,))), ),
+        "args"   => ( randn(30), )
+      ),
 ]
 
 for i = 1:length(stuff)

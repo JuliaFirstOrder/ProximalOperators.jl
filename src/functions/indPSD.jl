@@ -84,9 +84,8 @@ function scale_diagonal!(x, val)
     k = -n
     for i = 1:n
          k += n - i + 2    #Calculate indices of diagonal elements recursively (paralell faster?)
-         x[k] .*= val      #Scale diagonal
+         x[k] *= val      #Scale diagonal
     end
-    return
 end
 
 ### Below: with AbstractVector argument
@@ -142,14 +141,14 @@ function prox_naive(f::IndPSD, x::AbstractVector{T}, gamma::Real=1.0) where T<:F
   # It's equivalent to scaling off-diagonal by 1/sqrt(2) and working with sqrt(2)*X
   if f.scaling
     for i = 1:n
-      X[i,i] .*= sqrt(2)
+      X[i,i] *= sqrt(2)
     end
   end
   X, v = prox_naive(f, Symmetric(X), gamma)
 
   if f.scaling  #Scale diagonal elements back
     for i = 1:n
-      X[i,i] ./= sqrt(2)
+      X[i,i] /= sqrt(2)
     end
   end
 

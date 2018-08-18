@@ -40,7 +40,7 @@ end
 function (f::LeastSquaresIterative{R, RC, M, V})(x::AbstractVector{RC}) where {R, RC, M, V}
   mul!(f.res, f.A, x)
   f.res .-= f.b
-  return (f.lambda/2)*vecnorm(f.res, 2)^2
+  return (f.lambda/2)*norm(f.res, 2)^2
 end
 
 function prox!(y::AbstractVector{D}, f::LeastSquaresIterative{R, RC, M, V}, x::AbstractVector{D}, gamma::R=one(R)) where {R, RC, M, V, D <: RealOrComplex{R}}

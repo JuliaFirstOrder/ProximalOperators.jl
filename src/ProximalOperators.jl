@@ -21,7 +21,7 @@ abstract type ProximableFunction end
 
 # Utilities
 
-include("utilities/deep.jl")
+include("utilities/tuples.jl")
 include("utilities/linops.jl")
 include("utilities/symmetricpacked.jl")
 include("utilities/uniformarrays.jl")

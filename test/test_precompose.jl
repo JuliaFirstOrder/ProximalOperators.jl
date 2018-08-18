@@ -5,10 +5,10 @@ using LinearAlgebra
 f = IndBallL1()
 A = randn(10, 10)
 F = qr(A)
-Q = F.Q
+Q = Matrix(F.Q)
 
-@test norm(Q'*Q - I) <= 1e-12
-@test norm(Q*Q' - I) <= 1e-12
+@test Q'*Q ≈ I
+@test Q*Q' ≈ I
 
 g = Precompose(f, Q, 1.0)
 
@@ -27,10 +27,10 @@ prox_test(g, x, 1.0)
 
 A = randn(500, 500)
 F = qr(A)
-Q = F.Q
+Q = Matrix(F.Q)
 
-@test norm(Q'*Q - I) <= 1e-12
-@test norm(Q*Q' - I) <= 1e-12
+@test Q'*Q ≈ I
+@test Q*Q' ≈ I
 
 g = Precompose(f, Q, 1.0)
 
@@ -44,7 +44,7 @@ prox_test(g, x, 1.0)
 f = NormL1()
 A = randn(50, 50)
 F = qr(A)
-Q = F.Q
+Q = Matrix(F.Q)
 
 @test norm(Q'*Q - I) <= 1e-12
 @test norm(Q*Q' - I) <= 1e-12
@@ -61,7 +61,7 @@ prox_test(g, x, 1.0)
 f = NormL2()
 A = randn(500, 500)
 F = qr(A)
-Q = F.Q
+Q = Matrix(F.Q)
 
 @test norm(Q'*Q - I) <= 1e-12
 @test norm(Q*Q' - I) <= 1e-12
@@ -79,7 +79,7 @@ f = NormL2()
 A = randn(500, 500)
 b = randn(500)
 F = qr(A)
-Q = F.Q
+Q = Matrix(F.Q)
 
 @test norm(Q'*Q - I) <= 1e-12
 @test norm(Q*Q' - I) <= 1e-12
@@ -95,7 +95,7 @@ prox_test(g, x, 1.0)
 # checking that Precompose and PrecomposeDiagonal agree
 
 f = NormL2()
-A = spdiagm(3.0*ones(500))
+A = Diagonal(3.0*ones(500))
 b = randn(500)
 
 g1 = Precompose(f, A, 9.0, -b)
@@ -118,7 +118,7 @@ y2, gy2 = prox_test(g2, x, 1.0)
 
 f = SqrNormL2()
 diagA = [rand(250); -rand(250)]
-A = spdiagm(diagA)
+A = Diagonal(diagA)
 b = randn(500)
 
 g1 = Precompose(f, A, diagA .* diagA, -diagA .* b)
@@ -161,7 +161,7 @@ y3, gy3 = prox_test(g3, x, 1.0)
 # IndSOC composed with [I, I, I]
 
 f = IndSOC()
-A = [eye(3) eye(3) eye(3)]
+A = [Matrix{Float64}(I, 3, 3) Matrix{Float64}(I, 3, 3) Matrix{Float64}(I, 3, 3)]
 
 g = Precompose(f, A, 3.0)
 
@@ -182,12 +182,11 @@ y, gy = prox_test(g, x, 1.0)
 f = ElasticNet()
 d = 1.0:10.0
 n = length(d)
-k = 3
-A = repmat(diagm(d), 1, k)
+A = [Diagonal(d) Diagonal(d) Diagonal(d)]
 
-g = Precompose(f, A, k*(Array(d).^2))
+g = Precompose(f, A, 3*(Array(d).^2))
 
-x = randn(n*k)
+x = randn(3*n)
 
 call_test(g, x)
 y, gy = prox_test(g, x, 1.0)
