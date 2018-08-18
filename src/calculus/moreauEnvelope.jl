@@ -11,7 +11,6 @@ f^γ(x) = \\min_z \\left\\{ f(z) + \\tfrac{1}{2γ}\\|z-x\\|^2 \\right\\}.
 ```
 If ``f`` is convex, then ``f^γ`` is a smooth, convex, lower approximation to ``f``, having the same minima as the original function.
 """
-
 mutable struct MoreauEnvelope{R <: Real, T <: ProximableFunction} <: ProximableFunction
 	g::T
 	lambda::R

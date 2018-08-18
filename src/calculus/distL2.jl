@@ -12,7 +12,6 @@ Given `ind_S` the indicator function of a convex set ``S``, and an optional posi
 g(x) = λ\\mathrm{dist}_S(x) = \\min \\{ λ\\|y - x\\| : y \\in S \\}.
 ```
 """
-
 struct DistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R

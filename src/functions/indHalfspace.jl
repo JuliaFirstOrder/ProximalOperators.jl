@@ -12,7 +12,6 @@ For an array `a` and a scalar `b`, returns the indicator of set
 S = \\{x : \\langle a,x \\rangle \\leq b \\}.
 ```
 """
-
 struct IndHalfspace{R <: Real, T <: AbstractVector{R}} <: ProximableFunction
   a::T
   b::R

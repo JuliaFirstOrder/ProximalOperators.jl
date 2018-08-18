@@ -13,7 +13,6 @@ S = \\{ x : \\|x\\| = r \\},
 ```
 where ``\\|\\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
-
 struct IndSphereL2{R <: Real} <: ProximableFunction
   r::R
   function IndSphereL2{R}(r::R) where {R <: Real}

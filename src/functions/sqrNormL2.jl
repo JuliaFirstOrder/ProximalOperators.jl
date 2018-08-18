@@ -16,7 +16,6 @@ With a nonnegative array `λ`, returns the function
 f(x) = \\tfrac{1}{2}∑_i λ_i x_i^2.
 ```
 """
-
 struct SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   function SqrNormL2{T}(lambda::T) where {T <: Union{Real,AbstractArray}}

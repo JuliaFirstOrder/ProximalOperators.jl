@@ -2,12 +2,6 @@
 
 # export SumLargest
 
-"""
-  SumLargest(k::Integer=1, λ::Real=1.0)
-
-Returns the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 1 and `λ ⩾ 0`.
-"""
-
 # TODO: SumLargest(r) is (the postcomposition of) the conjugate of
 #   (1) ind{0 <= x <= 1 : sum(x) = r},
 # where instead IndSimplex(r) corresponds to
@@ -17,6 +11,12 @@ Returns the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 
 # additional bound in its definition, by adding a second argument to the
 # constructor. Then in the following line we should replace IndSimplex(k)
 # with IndSimplex(k, 1.0). Note that (1) is proper only if x ∈ Rⁿ for n ⩾ r.
+
+"""
+  SumLargest(k::Integer=1, λ::Real=1.0)
+
+Returns the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 1 and `λ ⩾ 0`.
+"""
 SumLargest(k::I=1, lambda::R=1.0) where {I <: Integer, R <: Real} = Postcompose(Conjugate(IndSimplex(k)), lambda)
 
 function (f::Conjugate{IndSimplex{I}})(x::AbstractArray{S}) where {I <: Integer, S <: Real}

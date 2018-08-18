@@ -12,7 +12,6 @@ With a nonnegative scalar parameter λ, returns the function
 f(x) = λ\\cdot\\sqrt{x_1^2 + … + x_n^2}.
 ```
 """
-
 struct NormL2{R <: Real} <: ProximableFunction
   lambda::R
   function NormL2{R}(lambda::R) where {R <: Real}

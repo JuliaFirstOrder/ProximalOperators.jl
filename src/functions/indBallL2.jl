@@ -13,7 +13,6 @@ S = \\{ x : \\|x\\| \\leq r \\},
 ```
 where ``\\|\\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
-
 struct IndBallL2{R <: Real} <: ProximableFunction
   r::R
   function IndBallL2{R}(r::R) where {R <: Real}

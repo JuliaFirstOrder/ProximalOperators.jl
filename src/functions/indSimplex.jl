@@ -13,7 +13,6 @@ S = \\left\\{ x : x \\geq 0, ∑_i x_i = a \\right\\}.
 ```
 By default `a=1.0`, therefore ``S`` is the probability simplex.
 """
-
 struct IndSimplex{T <: Union{Real, Integer}} <: ProximableFunction
   a::T
   function IndSimplex{T}(a::T) where {T <: Union{Real, Integer}}

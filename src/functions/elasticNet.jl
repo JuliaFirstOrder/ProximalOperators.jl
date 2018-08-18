@@ -13,7 +13,6 @@ f(x) = μ\\|x\\|_1 + (λ/2)\\|x\\|^2,
 ```
 for nonnegative parameters `μ` and `λ`.
 """
-
 struct ElasticNet{R <: Real} <: ProximableFunction
   mu::R
   lambda::R

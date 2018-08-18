@@ -12,7 +12,6 @@ Given function `f`, an array `a` and a constant `b` (optional), returns function
 g(x) = f(x) + \\langle a, x \\rangle + b.
 ```
 """
-
 struct Tilt{T <: ProximableFunction, S <: AbstractArray, R <: Real} <: ProximableFunction
   f::T
   a::S

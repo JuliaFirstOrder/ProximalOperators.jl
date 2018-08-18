@@ -12,7 +12,6 @@ Returns the function
 f(x) = ∑_i \\max\\{0, x_i\\}.
 ```
 """
-
 struct SumPositive <: ProximableFunction end
 
 is_separable(f::SumPositive) = true

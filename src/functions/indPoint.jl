@@ -13,7 +13,6 @@ C = \\{p \\}.
 ```
 Parameter `p` can be a scalar, in which case the unique element of `S` has uniform coefficients.
 """
-
 struct IndPoint{T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}} <: ProximableFunction
   p::T
   function IndPoint{T}(p::T) where {T <: Union{Real, Complex, AbstractArray{<:RealOrComplex}}}

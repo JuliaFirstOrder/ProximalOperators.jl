@@ -13,7 +13,6 @@ S = \\left\\{ x : ∑_i |x_i| \\leq r \\right\\}.
 ```
 Parameter `r` must be positive.
 """
-
 struct IndBallL1{R <: Real} <: ProximableFunction
   r::R
   function IndBallL1{R}(r::R) where {R <: Real}

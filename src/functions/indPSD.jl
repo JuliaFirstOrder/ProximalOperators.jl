@@ -27,7 +27,6 @@ I.e. when when `scaling=true`, let `X,Y` be matrices and
 
 then `prox!(Y, f, X)` is equivalent to `prox!(y, f, x)`.
 """
-
 struct IndPSD <: ProximableFunction
     scaling::Bool
 end

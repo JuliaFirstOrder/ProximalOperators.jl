@@ -13,7 +13,6 @@ S = \\{ x : \\mathrm{nnz}(x) \\leq r \\}.
 ```
 Parameter `r` must be a positive integer.
 """
-
 struct IndBallL0{I <: Integer} <: ProximableFunction
   r::I
   function IndBallL0{I}(r::I) where {I <: Integer}

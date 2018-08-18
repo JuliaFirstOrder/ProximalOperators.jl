@@ -16,7 +16,6 @@ the result. If all `fᵢ` have gradients then this function will also have a
 gradient.
 
 """
-
 struct Sum{T <: Tuple} <: ProximableFunction fs::T end
 
 Sum(fs::Vararg{ProximableFunction}) = Sum((fs...,))

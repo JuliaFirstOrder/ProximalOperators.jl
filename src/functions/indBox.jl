@@ -13,7 +13,6 @@ S = \\{ x : low \\leq x \\leq up \\}.
 ```
 Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space: they must satisfy `low <= up`, and are allowed to take values `-Inf` and `+Inf` to indicate unbounded coordinates.
 """
-
 struct IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
   lb::T
   ub::S
@@ -79,7 +78,6 @@ S = \\{ x : \\max (|x_i|) \\leq r \\}.
 ```
 Parameter `r` must be positive.
 """
-
 IndBallLinf(r::R=1.0) where {R <: Real} = IndBox(-r, r)
 
 fun_name(f::IndBox) = "indicator of a box"

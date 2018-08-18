@@ -19,7 +19,6 @@ Analogous to the previous one, but applies the same function `f` to all slices o
 g(x) = ∑_{i=1}^k f(x_{J_i}).
 ```
 """
-
 struct SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N} <: ProximableFunction
   fs::S    # Tuple, where each element is a Vector with elements of the same type; the functions to prox on
   # Example: S = Tuple{Array{ProximalOperators.NormL1{Float64},1}, Array{ProximalOperators.NormL2{Float64},1}}

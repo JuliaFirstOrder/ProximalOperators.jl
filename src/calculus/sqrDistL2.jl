@@ -12,7 +12,6 @@ Given `ind_S` the indicator function of a convex set ``S``, and an optional posi
 g(x) = \\tfrac{λ}{2}\\mathrm{dist}_S^2(x) = \\min \\left\\{ \\tfrac{λ}{2}\\|y - x\\|^2 : y \\in S \\right\\}.
 ```
 """
-
 struct SqrDistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R

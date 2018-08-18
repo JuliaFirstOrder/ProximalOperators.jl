@@ -16,7 +16,6 @@ S = \\{ X : \\mathrm{rank}(X) \\leq r \\},
 ```
 Parameter `r` must be a positive integer.
 """
-
 struct IndBallRank{I <: Integer} <: ProximableFunction
     r::I
     function IndBallRank{I}(r::I) where {I <: Integer}

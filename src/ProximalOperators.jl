@@ -127,7 +127,6 @@ Return values:
 * `y`: the proximal point ``y``
 * `fy`: the value ``f(y)``
 """
-
 function prox(f::ProximableFunction, x::ArrayOrTuple{R}, gamma=one(R)) where R
   y = similar(x)
   fy = prox!(y, f, x, gamma)
@@ -148,7 +147,6 @@ The resulting point ``y`` is written to the (pre-allocated) array `y`, which mus
 Return values:
 * `fy`: the value ``f(y)``
 """
-
 prox!
 # TODO: should we put the following here instead? And remove the default value for gamma in each subtype
 # prox!(y::ArrayOrTuple{R}, f::ProximableFunction, x::ArrayOrTuple{R}) = prox!(y, f, x, one(R))
@@ -164,7 +162,6 @@ Return values:
 * `gradfx`: the (sub)gradient of ``f`` at ``x``
 * `fx`: the value ``f(x)``
 """
-
 function gradient(f::ProximableFunction, x)
 	y = similar(x)
 	fx = gradient!(y, f, x)
@@ -181,7 +178,6 @@ Writes ``\\nabla f(x)`` to `gradfx`, which must be pre-allocated and have the sa
 Return values:
 * `fx`: the value ``f(x)``
 """
-
 gradient!
 
 end

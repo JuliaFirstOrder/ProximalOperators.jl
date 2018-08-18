@@ -13,7 +13,6 @@ Returns the indicator function of the primal exponential cone, that is
 C = \\mathrm{cl} \\{ (r,s,t) : s > 0, s⋅e^{r/s} \\leq t \\} \\subset \\mathbb{R}^3.
 ```
 """
-
 struct IndExpPrimal <: ProximableFunction end
 
 is_convex(f::IndExpPrimal) = true
@@ -29,7 +28,6 @@ Returns the indicator function of the dual exponential cone, that is
 C = \\mathrm{cl} \\{ (u,v,w) : u < 0, -u⋅e^{v/u} \\leq w⋅e \\} \\subset \\mathbb{R}^3.
 ```
 """
-
 IndExpDual() = PrecomposeDiagonal(Conjugate(IndExpPrimal()), -1.0)
 
 EXP_PRIMAL_CALL_TOL = 1e-6

@@ -20,7 +20,6 @@ Returns:
 
   `W,Z` if `jobz == :V` or: `W` if `jobz == :N` such that `A=Z*diagm(W)*Z'`
 """
-
 function dspev!(jobz::Symbol, uplo::Symbol, A::StridedVector{Float64})
     chkstride1(A)
     vecN = length(A)

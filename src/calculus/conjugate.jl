@@ -12,7 +12,6 @@ Returns the convex conjugate (also known as Fenchel conjugate, or Fenchel-Legend
 f^*(x) = \\sup_y \\{ \\langle y, x \\rangle - f(y) \\}.
 ```
 """
-
 struct Conjugate{T <: ProximableFunction} <: ProximableFunction
   f::T
   function Conjugate{T}(f::T) where {T<: ProximableFunction}

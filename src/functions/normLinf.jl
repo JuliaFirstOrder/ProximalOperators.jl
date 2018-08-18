@@ -13,7 +13,6 @@ f(x) = λ⋅\\max\\{|x_1|, …, |x_n|\\},
 ```
 for a nonnegative parameter `λ`.
 """
-
 NormLinf(lambda::R=1.0) where {R <: Real} = Conjugate(IndBallL1(lambda))
 
 function (f::Conjugate{IndBallL1{R}})(x::AbstractArray{S}) where {R <: Real, S <: RealOrComplex}

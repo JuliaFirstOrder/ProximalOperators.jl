@@ -12,7 +12,6 @@ Returns the indicator of the set
 C = \\{ x : x \\leq 0 \\}.
 ```
 """
-
 struct IndNonpositive <: ProximableFunction end
 
 is_separable(f::IndNonpositive) = true

@@ -13,7 +13,6 @@ f(x) = λ\\cdot\\mathrm{nnz}(x)
 ```
 for a nonnegative parameter `λ`.
 """
-
 struct NormL0{R <: Real} <: ProximableFunction
     lambda::R
     function NormL0{R}(lambda::R) where {R <: Real}

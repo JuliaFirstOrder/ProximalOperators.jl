@@ -12,7 +12,6 @@ Returns the indicator of the second-order cone (also known as ice-cream cone or 
 C = \\left\\{ (t, x) : \\|x\\| \\leq t \\right\\}.
 ```
 """
-
 struct IndSOC <: ProximableFunction end
 
 function (f::IndSOC)(x::AbstractVector{T}) where T <: Real

@@ -10,7 +10,6 @@ Returns the function
 f(x) = \\langle c, x \\rangle.
 ```
 """
-
 struct Linear{R <: RealOrComplex, A <: AbstractArray{R}} <: ProximableFunction
   c::A
 end

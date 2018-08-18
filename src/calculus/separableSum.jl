@@ -21,7 +21,6 @@ Example:
     f_xY = f((x, Y)); # evaluates f at (x, Y)
     (u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)
 """
-
 struct SeparableSum{T <: Tuple} <: ProximableFunction
 	fs::T
 end

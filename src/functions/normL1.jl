@@ -16,7 +16,6 @@ With a nonnegative array parameter λ, returns the function
 f(x) = ∑_i λ_i|x_i|.
 ```
 """
-
 struct NormL1{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   function NormL1{T}(lambda::T) where {T <: Union{Real, AbstractArray}}

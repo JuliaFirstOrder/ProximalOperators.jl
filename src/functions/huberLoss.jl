@@ -18,7 +18,6 @@ f(x) = \\begin{cases}
 ```
 where `ρ` and `μ` are positive parameters.
 """
-
 struct HuberLoss{R <: Real} <: ProximableFunction
   rho::R
   mu::R

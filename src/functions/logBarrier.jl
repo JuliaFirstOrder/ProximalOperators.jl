@@ -13,7 +13,6 @@ f(x) = -μ⋅∑_i\\log(a⋅x_i+b),
 ```
 for a nonnegative parameter `μ`.
 """
-
 struct LogBarrier{T <: Real} <: ProximableFunction
   a::T
   b::T
