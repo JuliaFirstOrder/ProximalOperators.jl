@@ -15,7 +15,13 @@ const ArrayOrTuple{R} = Union{
 
 export ProximableFunction
 export prox, prox!
-export gradient, gradient!
+
+if VERSION > v"0.7"
+	export gradient
+else
+	import Base: gradient
+end
+export gradient!
 
 abstract type ProximableFunction end
 
