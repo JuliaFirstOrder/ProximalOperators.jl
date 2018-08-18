@@ -38,7 +38,6 @@ is_convex(f::NormL1) = true
 
 Returns the function `g(x) = λ||x||_1`, for a real parameter `λ ⩾ 0`.
 """
-
 NormL1(lambda::R=1.0) where {R <: Real} = NormL1{R}(lambda)
 
 """
@@ -47,7 +46,6 @@ NormL1(lambda::R=1.0) where {R <: Real} = NormL1{R}(lambda)
 Returns the function `g(x) = sum(λ_i|x_i|, i = 1,...,n)`, for a vector of real
 parameters `λ_i ⩾ 0`.
 """
-
 NormL1(lambda::A) where {A <: AbstractArray} = NormL1{A}(lambda)
 
 function (f::NormL1{R})(x::AbstractArray) where R <: Real

@@ -21,6 +21,7 @@ if VERSION > v"0.7"
 else
 	import Base: gradient
 end
+
 export gradient!
 
 abstract type ProximableFunction end

@@ -75,7 +75,6 @@ Returns the indicator of the *rotated* second-order cone (also known as ice-crea
 C = \\left\\{ (p, q, x) : \\|x\\|^2 \\leq 2\\cdot pq, p \\geq 0, q \\geq 0 \\right\\}.
 ```
 """
-
 struct IndRotatedSOC <: ProximableFunction end
 
 function (f::IndRotatedSOC)(x::AbstractVector{T}) where T <: Real
