@@ -16,13 +16,11 @@ See the [documentation](https://kul-forbes.github.io/ProximalOperators.jl/latest
 
 ## Installation
 
-To install the package, use the following in the Julia command line
+To install the package, hit `]` from the Julia command line to enter the package manager, then
 
 ```julia
-Pkg.add("ProximalOperators")
+pkg> add ProximalOperators
 ```
-
-Remember to `Pkg.update()` to keep the package up to date.
 
 ## Usage
 
