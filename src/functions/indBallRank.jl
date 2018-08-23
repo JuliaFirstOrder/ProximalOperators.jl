@@ -1,7 +1,7 @@
 # indicator of the ball of matrices with (at most) a given rank
 
 using LinearAlgebra
-using Arpack
+using TSVD
 
 export IndBallRank
 
@@ -27,33 +27,32 @@ struct IndBallRank{I <: Integer} <: ProximableFunction
     end
 end
 
-is_set(f::IndBallRank) = false
+is_set(f::IndBallRank) = true
+is_prox_accurate(f::IndBallRank) = false
 
 IndBallRank(r::I=1) where {I <: Integer} = IndBallRank{I}(r)
 
 function (f::IndBallRank)(x::AbstractArray{T, 2}) where {R <: Real, T <: RealOrComplex{R}}
     maxr = minimum(size(x))
     if maxr <= f.r return zero(R) end
-    F = svds(x, nsv=f.r+1)[1]
+    U, S, V = tsvd(x, f.r+1)
     # the tolerance in the following line should be customizable
-    if F.S[end]/F.S[1] <= 1e-7
+    if S[end]/S[1] <= 1e-7
         return zero(R)
     end
     return +Inf
 end
 
-function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma::R=1.0) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
     maxr = minimum(size(x))
     if maxr <= f.r
         y .= x
         return zero(R)
     end
-    F = svds(x, nsv=f.r)[1]
-    Vt_thresh = view(F.Vt, 1:f.r, :)
-    U_thresh = view(F.U, :, 1:f.r)
+    U, S, V = tsvd(x, f.r)
     # TODO: the order of the following matrix products should depend on the shape of x
-    M = F.S[1:f.r] .* Vt_thresh
-    mul!(y, U_thresh, M)
+    M = S .* V'
+    mul!(y, U, M)
     return zero(R)
 end
 
