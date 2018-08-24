@@ -61,6 +61,12 @@ and only returns the function value at the proximal point:
 julia> fy = prox!(y, f, x, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
 ```
 
+## Related packages
+
+* [FirstOrderSolvers.jl](https://github.com/mfalt/FirstOrderSolvers.jl)
+* [ProximalAlgorithms.jl](https://github.com/kul-forbes/ProximalAlgorithms.jl)
+* [StructuredOptimization.jl](https://github.com/kul-forbes/StructuredOptimization.jl)
+
 ## References
 
 1. N. Parikh and S. Boyd (2014), [*Proximal Algorithms*](http://dx.doi.org/10.1561/2400000003),
