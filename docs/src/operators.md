@@ -20,7 +20,7 @@ For ``k``-dimensional arrays, of size ``n_1 \times n_2 \times \ldots \times n_k`
 ```math
 \langle A, B \rangle = \sum_{i_1,\ldots,i_k} A_{i_1,\ldots,i_k} \cdot B_{i_1,\ldots,i_k}
 ```
-which reduces to the usual Euclidean product in case of unidimensional arrays, and to the *trace product* ``\langle A, B \rangle = \mathrm{tr}(A^\top B)`` in the case of matrices (bidimensional arrays). This inner product, and the associated norm, are the ones computed by `vecdot` and `vecnorm` in Julia.
+which reduces to the usual Euclidean product in case of unidimensional arrays, and to the *trace product* ``\langle A, B \rangle = \mathrm{tr}(A^\top B)`` in the case of matrices (bidimensional arrays). This inner product, and the associated norm, are again the ones computed by `dot` and `norm` in Julia.
 
 ## Multiple variable blocks
 
