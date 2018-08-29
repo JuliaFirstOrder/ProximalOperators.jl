@@ -35,7 +35,7 @@ end
 
 function gradient!(grad::AbstractArray, f::MoreauEnvelope, x::AbstractArray)
 	g_prox = prox!(grad, f.g, x, f.lambda)
-	grad .= (x .- grad)/f.lambda
+	grad .= (x .- grad)./f.lambda
 	fx = g_prox + (f.lambda/2)*norm(grad)^2
 	return fx
 end
