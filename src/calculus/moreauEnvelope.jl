@@ -43,4 +43,4 @@ end
 fun_name(f::MoreauEnvelope,i::Int64) =
 "f$(i)(prox{λ$(i),f$(i)}(A$(i)x))+ 1/2 ‖x - prox{λ$(i),f$(i)}(A$(i)x)‖²"
 
-fun_par( f::MoreauEnvelope,i::Int64)  = "λ$i = $(round(f.lambda,3))"
+fun_par( f::MoreauEnvelope,i::Int64)  = "λ$i = $(round(f.lambda, digits=3))"

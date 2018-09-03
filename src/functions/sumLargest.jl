@@ -25,10 +25,10 @@ function (f::Conjugate{IndSimplex{I}})(x::AbstractArray{S}) where {I <: Integer,
   end
   v = zero(S)
   if ndims(x) == 1
-    p = selectperm(x, 1:f.f.a, rev=true)
+    p = partialsortperm(x, 1:f.f.a, rev=true)
     v = sum(x[p])
   else
-    p = selectperm(x[:], 1:f.f.a, rev=true)
+    p = partialsortperm(x[:], 1:f.f.a, rev=true)
     v = sum(x[p])
   end
   return v

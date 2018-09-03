@@ -1,7 +1,5 @@
 # ProximalOperators.jl - library of commonly used functions in optimization, and associated proximal mappings and gradients
 
-__precompile__()
-
 module ProximalOperators
 
 using LinearAlgebra
