@@ -9,7 +9,6 @@ export IndZero
 
 Returns the indicator function of the set containing the origin, the "zero cone".
 """
-
 struct IndZero <: ProximableFunction end
 
 is_separable(f::IndZero) = true

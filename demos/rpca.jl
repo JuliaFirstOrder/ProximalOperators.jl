@@ -4,7 +4,12 @@
 #
 # See Parikh, Boyd "Proximal Algorithms", §7.2
 
+using LinearAlgebra
+using Random
+using SparseArrays
 using ProximalOperators
+
+Random.seed!(0)
 
 # Define solvers
 
@@ -28,8 +33,8 @@ function rpca_fista(A, lam1, lam2, S, L; tol=1e-3, maxit=50000)
     # compute proximal (backward) step
     prox!((S, L), g, (y_S, y_L), gam)
     # stopping criterion
-    fix_point_res = max(vecnorm(S_extr-S, Inf), vecnorm(L_extr-L, Inf))/gam
-    rel_fix_point_res = fix_point_res/(1+max(vecnorm(S,Inf), vecnorm(L,Inf)))
+    fix_point_res = max(norm(S_extr-S, Inf), norm(L_extr-L, Inf))/gam
+    rel_fix_point_res = fix_point_res/(1+max(norm(S,Inf), norm(L,Inf)))
     if rel_fix_point_res <= tol
       break
     end
@@ -46,11 +51,10 @@ L1 = randn(m, r)
 L2 = randn(r, n)
 L = L1*L2
 S = sprand(m, n, p)
-S = 20*S - 10.*S
 V = sig*randn(m, n)
 A = L + S + V
-lam1 = 0.15*vecnorm(A, Inf)
-lam2 = 0.15*norm(A)
+lam1 = 0.15*norm(A, Inf)
+lam2 = 0.15*opnorm(A)
 
 # Call solvers
 
@@ -58,7 +62,7 @@ println("Calling solvers")
 
 S_fista, L_fista = rpca_fista(A, lam1, lam2, zeros(m, n), zeros(m, n))
 println("FISTA")
-println("      nnz(S)    = $(vecnorm(S_fista, 0))")
+println("      nnz(S)    = $(count(!isequal(0), S_fista))")
 println("      rank(L)   = $(rank(L_fista))")
-println("      ||A||     = $(vecnorm(A, Inf))")
-println("      ||A-S-L|| = $(vecnorm(A - S_fista - L_fista, Inf))")
+println("      ||A||     = $(norm(A, Inf))")
+println("      ||A-S-L|| = $(norm(A - S_fista - L_fista, Inf))")

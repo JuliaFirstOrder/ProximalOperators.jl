@@ -1,6 +1,11 @@
+using LinearAlgebra
+using SparseArrays
+using Random
+
+Random.seed!(0)
+
 ## Test IndGraph
 
-srand(0)
 m, n = (50, 100)
 sm = n + div(n, 10)
 
@@ -17,7 +22,7 @@ function test_against_IndAffine(f, A, cd)
         return 0.0
     end
 
-    B = ifelse(issparse(A), [A -speye(m)],  [A -eye(m)])
+    B = ifelse(issparse(A), [A -SparseMatrixCSC(I, m, m)],  [A -Matrix(I, m, m)])
     # INIT IndAffine for the case
     faff = IndAffine(B, zeros(T, m))
 
@@ -32,7 +37,7 @@ function test_against_IndAffine(f, A, cd)
     if T <: Complex
         return 0.0# currently complex case has different mappings, though both valid
     else
-        @test ProximalOperators.deepmaxabs(xy - xy_aff) <= TOL_ASSERT
+        @test xy ≈ xy_aff
     end
     return 0.0
 end
@@ -71,20 +76,17 @@ for i = 1:length(stuff)
   end
 
   for j = 1:length(stuff[i]["params"])
-    println("----------------------------------------------------------")
-    println(constr)
     params = stuff[i]["params"][j]
     x      = stuff[i]["args"][j]
     f = constr(params...)
-    println(f)
 
     predicates_test(f)
 
 ##### argument split
     c = view(x, 1:f.n)
     d = view(x, f.n + 1:f.n + f.m)
-    ax = zeros(c)
-    ay = zeros(d)
+    ax = zero(c)
+    ay = zero(d)
 
 ##### just call f
     fx = call_test(f, x)

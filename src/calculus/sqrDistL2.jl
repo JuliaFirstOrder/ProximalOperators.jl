@@ -12,7 +12,6 @@ Given `ind_S` the indicator function of a convex set ``S``, and an optional posi
 g(x) = \\tfrac{λ}{2}\\mathrm{dist}_S^2(x) = \\min \\left\\{ \\tfrac{λ}{2}\\|y - x\\|^2 : y \\in S \\right\\}.
 ```
 """
-
 struct SqrDistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
   ind::T
   lambda::R
@@ -38,12 +37,12 @@ SqrDistL2(ind::T, lambda::R=1.0) where {R <: Real, T <: ProximableFunction} = Sq
 
 function (f::SqrDistL2)(x::AbstractArray{T}) where T <: RealOrComplex
   p, = prox(f.ind, x)
-  return (f.lambda/2)*vecnormdiff2(x,p)
+  return (f.lambda/2)*normdiff2(x,p)
 end
 
 function prox!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   p, = prox(f.ind, x)
-  sqrd = (f.lambda/2)*vecnormdiff2(x,p)
+  sqrd = (f.lambda/2)*normdiff2(x,p)
   c1 = 1/(1+f.lambda*gamma)
   c2 = f.lambda*gamma*c1
   for k in eachindex(p)
@@ -54,7 +53,7 @@ end
 
 function gradient!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}) where T <: RealOrComplex
   p, = prox(f.ind, x)
-  dist2 = vecnormdiff2(x,p)
+  dist2 = normdiff2(x,p)
   y .= f.lambda.*(x .- p)
   return (f.lambda/2)*dist2
 end
@@ -66,7 +65,7 @@ fun_params(f::SqrDistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
 function prox_naive(f::SqrDistL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
   p, = prox(f.ind, x)
-  sqrd = (f.lambda/2)*vecnorm(x-p)^2
+  sqrd = (f.lambda/2)*norm(x-p)^2
   gamlam = f.lambda*gamma
   return 1/(1+gamlam)*x + gamlam/(1+gamlam)*p, sqrd/(1+gamlam)^2
 end

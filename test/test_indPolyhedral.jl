@@ -1,4 +1,6 @@
-srand(0)
+using Random
+
+Random.seed!(0)
 
 # set dimensions
 
@@ -8,14 +10,14 @@ m, n = 25, 10
 
 xmin = -ones(n)
 xmax = +ones(n)
-x0 = min.(xmax, max.(xmin, 10.*rand(n) .- 5.0))
+x0 = min.(xmax, max.(xmin, 10 .* rand(n) .- 5.0))
 A = randn(m, n)
 u = A*x0 .+ 0.1
 l = A*x0 .- 0.1
 
 # pick random point
 
-x = 10.*randn(n)
+x = 10 .* randn(n)
 p = similar(x)
 
 # define test cases

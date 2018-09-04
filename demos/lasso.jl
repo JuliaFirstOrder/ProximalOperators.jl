@@ -3,7 +3,11 @@
 #   minimize 0.5*||A*x - b||^2 + lam*||x||_1
 #
 
+using LinearAlgebra
+using Random
 using ProximalOperators
+
+Random.seed!(0)
 
 # Define solvers
 
@@ -31,11 +35,11 @@ function lasso_fista(A, b, lam, x; tol=1e-3, maxit=50000)
 end
 
 function lasso_admm(A, b, lam, x; tol=1e-5, maxit=50000)
-  u = zeros(x)
+  u = zero(x)
   z = copy(x)
   f = LeastSquares(A, b)
   g = NormL1(lam)
-  gam = 10.0/norm(A)^2
+  gam = 100.0/norm(A)^2
   for it = 1:maxit
     # perform f-update step
     prox!(x, f, z - u, gam)

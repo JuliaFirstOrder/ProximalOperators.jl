@@ -16,7 +16,6 @@ With a nonnegative array `λ`, returns the function
 f(x) = \\tfrac{1}{2}∑_i λ_i x_i^2.
 ```
 """
-
 struct SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableFunction
   lambda::T
   function SqrNormL2{T}(lambda::T) where {T <: Union{Real,AbstractArray}}
@@ -39,7 +38,7 @@ SqrNormL2(lambda::T=1.0) where {T <: Real} = SqrNormL2{T}(lambda)
 SqrNormL2(lambda::T) where {T <: AbstractArray} = SqrNormL2{T}(lambda)
 
 function (f::SqrNormL2{S})(x::AbstractArray{T}) where {S <: Real, T <: RealOrComplex}
-  return (f.lambda/2)*vecnorm(x)^2
+  return (f.lambda/2)*norm(x)^2
 end
 
 function (f::SqrNormL2{S})(x::AbstractArray{T}) where {S <: AbstractArray, T <: RealOrComplex}
@@ -113,6 +112,6 @@ fun_params(f::SqrNormL2{T}) where {T <: Real} = "λ = $(f.lambda)"
 fun_params(f::SqrNormL2{T}) where {T <: AbstractArray} = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
 
 function prox_naive(f::SqrNormL2, x::AbstractArray{T}, gamma=1.0) where T <: RealOrComplex
-  y = x./(1+f.lambda.*gamma)
-  return y, 0.5*real(vecdot(f.lambda.*y,y))
+  y = x./(1.0 .+ f.lambda.*gamma)
+  return y, 0.5*real(dot(f.lambda.*y,y))
 end

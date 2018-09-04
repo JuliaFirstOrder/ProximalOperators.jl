@@ -13,7 +13,6 @@ Returns the indicator function of the primal exponential cone, that is
 C = \\mathrm{cl} \\{ (r,s,t) : s > 0, s⋅e^{r/s} \\leq t \\} \\subset \\mathbb{R}^3.
 ```
 """
-
 struct IndExpPrimal <: ProximableFunction end
 
 is_convex(f::IndExpPrimal) = true
@@ -29,7 +28,6 @@ Returns the indicator function of the dual exponential cone, that is
 C = \\mathrm{cl} \\{ (u,v,w) : u < 0, -u⋅e^{v/u} \\leq w⋅e \\} \\subset \\mathbb{R}^3.
 ```
 """
-
 IndExpDual() = PrecomposeDiagonal(Conjugate(IndExpPrimal()), -1.0)
 
 EXP_PRIMAL_CALL_TOL = 1e-6
@@ -78,16 +76,16 @@ end
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-function prox!(y::AbstractArray{R,1}, f::IndExpPrimal, x::AbstractArray{R,1}, gamma::Real=1.0) where R <: Real
+function prox!(y::AbstractVector{R}, f::IndExpPrimal, x::AbstractVector{R}, gamma::R=1.0) where R <: Real
   r = x[1]
   s = x[2]
   t = x[3]
   if (s*exp(r/s) <= t && s > 0) || (r <= 0 && s == 0 && t >= 0)
     # x in the cone
-    y[:] = x
+    y .= x
   elseif (-r < 0 && r*exp(s/r) <= -exp(1)*t) || (-r == 0 && -s >= 0 && -t >= 0)
     # -x in the dual cone (x in the polar cone)
-    y[:] = 0.0
+    y .= zero(R)
   elseif r < 0 && s < 0
     # analytical solution
     y[1] = x[1]
@@ -108,9 +106,9 @@ function prox!(y::AbstractArray{R,1}, f::IndExpPrimal, x::AbstractArray{R,1}, ga
         break
       end
     end
-    y[:] = v
+    y .= v
   end
-  return 0.0
+  return zero(R)
 end
 
 function getRhoUb(v)

@@ -6,10 +6,10 @@ Please refer to the [GitHub repository](https://github.com/kul-forbes/ProximalOp
 
 ## Installation
 
-To install the package, use the following in the Julia command line
+To install the package, hit `]` from the Julia command line to enter the package manager, then
 
 ```julia
-Pkg.add("ProximalOperators")
+pkg> add ProximalOperators
 ```
 
 To load the package simply type

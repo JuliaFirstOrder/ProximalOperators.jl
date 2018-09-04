@@ -1,3 +1,6 @@
+using LinearAlgebra
+using SparseArrays
+
 # Simply test the call to functions and their prox
 
 stuff = [
@@ -85,6 +88,7 @@ stuff = [
         "params" => ( (), (), () ),
         "args"   => ( randn(5), randn(10), randn(30) )
       ),
+
   Dict( "constr" => IndGraph,
         "params" => (
                 (sprand(50,100, 0.2),),
@@ -103,6 +107,7 @@ stuff = [
                 randn(105)+im*randn(105)
           )
       ),
+
   Dict( "constr" => IndPoint,
         "params" => ( (), (randn(20), ) ),
         "args"   => ( randn(10), randn(20) )
@@ -158,11 +163,6 @@ stuff = [
   Dict( "constr" => IndPSD,
         "params" => ( (), (), () ),
         "args"   => ( randn(6), randn(15), randn(55) )
-      ),
-
-  Dict( "constr" => IndZero,
-        "params" => ( (), () ),
-        "args"   => ( randn(10), randn(20) )
       ),
 
   Dict( "constr" => LogBarrier,
@@ -278,12 +278,9 @@ for i = 1:length(stuff)
   end
 
   for j = 1:length(stuff[i]["params"])
-    println("----------------------------------------------------------")
-    println(constr)
     params = stuff[i]["params"][j]
     x      = stuff[i]["args"][j]
     f = constr(params...)
-    println(f)
 
     predicates_test(f)
 
@@ -299,7 +296,7 @@ for i = 1:length(stuff)
 
 ##### compute prox with multiple random gammas
     if ProximalOperators.is_separable(f)
-      gam = 0.5+2*rand(size(x))
+      gam = 0.5 .+ 2 .* rand(Float64, size(x))
       y, fy = prox_test(f, x, gam)
     end
 

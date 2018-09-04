@@ -1,5 +1,7 @@
 # Test the correctness of f(x) and prox(f,x,gamma) for a few hardcoded cases
 
+using LinearAlgebra
+
 stuff = [
   Dict( "f"      => NormL2(0.5),
         "x"      => [-1.472658469388188,-0.2715944116787317,-0.05323943816203797,1.0714599486778327,-1.5331256392574706,0.4083764366610342,-0.9444383691511559,-0.7504607478410741,0.7438914169983039,-0.15652009656239366],
@@ -319,35 +321,25 @@ stuff = [
 
 for i = 1:length(stuff)
 
-  println("----------------------------------------------------------")
+    f = stuff[i]["f"]
+    x = stuff[i]["x"]
 
-  f = stuff[i]["f"]
-  x = stuff[i]["x"]
+    ref_fx = stuff[i]["f(x)"]
+    gamma = stuff[i]["gamma"]
+    ref_y = stuff[i]["y"]
+    ref_fy = stuff[i]["f(y)"]
 
-  println(string(typeof(f), " on ", typeof(x)))
-
-  ref_fx = stuff[i]["f(x)"]
-  gamma = stuff[i]["gamma"]
-  ref_y = stuff[i]["y"]
-  ref_fy = stuff[i]["f(y)"]
-
-  fx = 0.0
-
-  try
     fx = call_test(f, x)
-  catch e
-    if isa(e, MethodError)
-      println("(not defined)")
-      continue
+
+    if fx !== nothing
+        @test fx ≈ ref_fx
     end
-  end
 
-  @test fx == ref_fx || abs(fx-ref_fx)/(1+abs(ref_fx)) <= TOL_ASSERT
-  y, fy = prox_test(f, x, gamma)
-  @test vecnorm(y-ref_y, Inf)/(1+norm(ref_y, Inf)) <= TOL_ASSERT
+    y, fy = prox_test(f, x, gamma)
+    @test y ≈ ref_y
 
-  if ProximalOperators.is_prox_accurate(f)
-    @test fy == ref_fy || abs(fy-ref_fy)/(1+abs(ref_fy)) <= TOL_ASSERT
-  end
+    if ProximalOperators.is_prox_accurate(f)
+        @test fy ≈ ref_fy
+    end
 
 end

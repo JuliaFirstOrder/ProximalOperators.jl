@@ -12,7 +12,6 @@ Returns the function
 g(x) = a\\cdot f(x) + b.
 ```
 """
-
 struct Postcompose{T <: ProximableFunction, R <: Real} <: ProximableFunction
   f::T
   a::R

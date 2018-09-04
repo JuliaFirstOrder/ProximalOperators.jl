@@ -1,3 +1,5 @@
+using LinearAlgebra
+
 y = [1.0, -1.0, 1.0, -1.0, 1.0]
 mu = 1.5
 

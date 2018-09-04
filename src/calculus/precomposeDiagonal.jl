@@ -13,7 +13,6 @@ g(x) = f(\\mathrm{diag}(a)x + b)
 ```
 where ``f`` is a convex function. Furthermore, ``f`` must be separable, or `a` must be a scalar, for the `prox` of ``g`` to be computable. Parametes `a` and `b` can be arrays of multiple dimensions, according to the shape/size of the input `x` that will be provided to the function: the way the above expression for ``g`` should be thought of, is `g(x) = f(a.*x + b)`.
 """
-
 struct PrecomposeDiagonal{T <: ProximableFunction, R <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
   f::T
   a::R
@@ -71,9 +70,9 @@ function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, 
 end
 
 function prox_naive(g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
-  z = g.a .* x + g.b
+  z = g.a .* x .+ g.b
   y, fy = prox_naive(g.f, z, (g.a .* g.a) .* gamma)
-  return (y - g.b)./g.a, fy
+  return (y .- g.b)./g.a, fy
 end
 
 fun_name(f::PrecomposeDiagonal) = string("Precomposition by affine diagonal mapping of ", fun_name(f.f))

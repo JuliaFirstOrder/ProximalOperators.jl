@@ -1,5 +1,7 @@
 # Huber loss function
 
+using LinearAlgebra
+
 export HuberLoss
 
 """
@@ -9,14 +11,13 @@ export HuberLoss
 
 Returns the function
 ```math
-f(x) = \\begin\{cases\}
+f(x) = \\begin{cases}
   \\tfrac{μ}{2}\\|x\\|^2 & \\text{if}\\ \\|x\\| ⩽ ρ \\\\
   ρμ(\\|x\\| - \\tfrac{ρ}{2}) & \\text{otherwise},
-\\end\{cases\}
+\\end{cases}
 ```
 where `ρ` and `μ` are positive parameters.
 """
-
 struct HuberLoss{R <: Real} <: ProximableFunction
   rho::R
   mu::R
@@ -35,7 +36,7 @@ is_smooth(f::HuberLoss) = true
 HuberLoss(rho::R=1.0, mu::R=1.0) where {R <: Real} = HuberLoss{R}(rho, mu)
 
 function (f::HuberLoss)(x::AbstractArray{T}) where T <: Union{Real, Complex}
-  normx = vecnorm(x)
+  normx = norm(x)
   if normx <= f.rho
     return (f.mu/2)*normx^2
   else
@@ -44,7 +45,7 @@ function (f::HuberLoss)(x::AbstractArray{T}) where T <: Union{Real, Complex}
 end
 
 function gradient!(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}) where T <: Union{Real, Complex}
-  normx = vecnorm(x)
+  normx = norm(x)
   if normx <= f.rho
     y .= f.mu .* x
     v = (f.mu/2)*normx^2
@@ -56,7 +57,7 @@ function gradient!(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}) where
 end
 
 function prox!(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}, gamma::Real=1.0) where T <: Union{Real, Complex}
-  normx = vecnorm(x)
+  normx = norm(x)
   mugam = f.mu*gamma
   scal = (1-min(mugam/(1+mugam), mugam*f.rho/(normx)))
   for k in eachindex(y)
@@ -76,10 +77,10 @@ fun_expr(f::HuberLoss) = "x ↦ (μ/2)||x||² if ||x||⩽ρ, μρ(||x||-ρ/2) ot
 fun_params(f::HuberLoss) = string("ρ = $(f.rho), μ = $(f.mu)")
 
 function prox_naive(f::HuberLoss, x::AbstractArray{T}, gamma::Real=1.0) where T <: Union{Real, Complex}
-  y = (1-min(f.mu*gamma/(1+f.mu*gamma), f.mu*gamma*f.rho/(vecnorm(x))))*x
-  if vecnorm(y) <= f.rho
-    return y, (f.mu/2)*vecnorm(y)^2
+  y = (1-min(f.mu*gamma/(1+f.mu*gamma), f.mu*gamma*f.rho/(norm(x))))*x
+  if norm(y) <= f.rho
+    return y, (f.mu/2)*norm(y)^2
   else
-    return y, f.rho*f.mu*(vecnorm(y)-f.rho/2)
+    return y, f.rho*f.mu*(norm(y)-f.rho/2)
   end
 end

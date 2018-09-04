@@ -1,3 +1,5 @@
+using LinearAlgebra
+
 # Postcompose HuberLoss
 
 f = HuberLoss(1.0, 1.0)
@@ -45,4 +47,3 @@ yh, hyh = prox_test(h, x, 1.3)
 
 @test abs(gyg-hyh)/(1+abs(gyg)) <= 1e-12
 @test norm(yg-yh, Inf)/(1+norm(yg, Inf)) <= 1e-12
-

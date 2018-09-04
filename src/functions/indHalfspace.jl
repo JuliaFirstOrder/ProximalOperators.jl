@@ -12,12 +12,11 @@ For an array `a` and a scalar `b`, returns the indicator of set
 S = \\{x : \\langle a,x \\rangle \\leq b \\}.
 ```
 """
-
 struct IndHalfspace{R <: Real, T <: AbstractVector{R}} <: ProximableFunction
   a::T
   b::R
   function IndHalfspace{R,T}(a::T, b::R) where {R <: Real, T <: AbstractVector{R}}
-    norma = vecnorm(a)
+    norma = norm(a)
     new(a/norma, b/norma)
   end
 end
@@ -29,23 +28,23 @@ is_cone(f::IndHalfspace) = (f.b == 0)
 IndHalfspace(a::T, b::R) where {R <: Real, T <: AbstractVector{R}} = IndHalfspace{R, T}(a, b)
 
 function (f::IndHalfspace)(x::AbstractArray{T}) where T <: Real
-  s = vecdot(f.a,x)-f.b
+  s = dot(f.a, x) - f.b
   if s <= 1e-14
-    return 0.0
+    return zero(T)
   end
   return +Inf
 end
 
 function prox!(y::AbstractArray{T}, f::IndHalfspace, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
-  s = vecdot(f.a,x)-f.b
+  s = dot(f.a, x) - f.b
   if s <= 0
-    y[:] = x
-    return 0.0
+    y .= x
+    return zero(T)
   end
   for k in eachindex(x)
     y[k] = x[k] - s*f.a[k]
   end
-  return 0.0
+  return zero(T)
 end
 
 fun_name(f::IndHalfspace) = "indicator of a halfspace"
@@ -56,7 +55,7 @@ fun_params(f::IndHalfspace) =
           "b = $(f.b)")
 
 function prox_naive(f::IndHalfspace, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
-  s = vecdot(f.a,x)-f.b
+  s = dot(f.a, x) - f.b
   if s <= 0
     return x, 0.0
   end

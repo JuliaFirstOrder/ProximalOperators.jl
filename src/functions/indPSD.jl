@@ -27,7 +27,6 @@ I.e. when when `scaling=true`, let `X,Y` be matrices and
 
 then `prox!(Y, f, X)` is equivalent to `prox!(y, f, x)`.
 """
-
 struct IndPSD <: ProximableFunction
     scaling::Bool
 end
@@ -35,7 +34,7 @@ end
 IndPSD(;scaling=false) = IndPSD(scaling)
 
 function (f::IndPSD)(X::HermOrSym{T}) where T <: RealOrComplex
-  F = eigfact(X);
+  F = eigen(X)
   for i in eachindex(F.values)
     #Do we allow for some tolerance here?
     if F.values[i] <= -1e-14
@@ -49,10 +48,10 @@ is_convex(f::IndPSD) = true
 is_cone(f::IndPSD) = true
 
 function prox!(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) where T <: RealOrComplex
-  n = size(X, 1);
-  F = eigfact(X);
+  n = size(X, 1)
+  F = eigen(X)
   for i in eachindex(F.values)
-    F.values[i] = max.(0.0, F.values[i]);
+    F.values[i] = max.(0.0, F.values[i])
   end
   for i = 1:n
     for j = 1:n
@@ -71,8 +70,8 @@ fun_expr(f::IndPSD) = "x ↦ 0 if A ⪰ 0, +∞ otherwise"
 fun_params(f::IndPSD) = "none"
 
 function prox_naive(f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) where T <: RealOrComplex
-  F = eigfact(X);
-  return F.vectors * diagm(max.(0.0, F.values)) * F.vectors', 0.0;
+  F = eigen(X)
+  return F.vectors * Diagonal(max.(0.0, F.values)) * F.vectors', 0.0
 end
 
 """
@@ -84,9 +83,8 @@ function scale_diagonal!(x, val)
     k = -n
     for i = 1:n
          k += n - i + 2    #Calculate indices of diagonal elements recursively (paralell faster?)
-         x[k] .*= val      #Scale diagonal
+         x[k] *= val      #Scale diagonal
     end
-    return
 end
 
 ### Below: with AbstractVector argument
@@ -95,7 +93,7 @@ function (f::IndPSD)(x::AbstractVector{T}) where T <: Float64
   y = copy(x)
   f.scaling && scale_diagonal!(y, sqrt(2)) #If scaling, scale diagonal (eigenvalues scaled by sqrt(2))
 
-  Z = dspev!('N', 'L', y)
+  Z = dspev!(:N, :L, y)
   for i in 1:length(Z)
     #Do we allow for some tolerance here?
     if Z[i] <= -1e-14
@@ -106,11 +104,11 @@ function (f::IndPSD)(x::AbstractVector{T}) where T <: Float64
 end
 
 function prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}, gamma::Real=1.0)
-  y[:] = x              # Copy x since dspev! corrupts input
+  y .= x              # Copy x since dspev! corrupts input
 
   f.scaling && scale_diagonal!(y, sqrt(2)) #If scaling, scale diagonal
 
-  (W, Z) = dspevV!('L', y)
+  (W, Z) = dspevV!(:L, y)
   W = max.(W, 0.0)         # NonNeg eigenvalues
   M = Z.*W'             # Equivalent to Z*diagm(W) without constructing W matrix
   M = M*Z'              # Now let M = Z*diagm(W)*Z'
@@ -128,7 +126,7 @@ end
 
 function prox_naive(f::IndPSD, x::AbstractVector{T}, gamma::Real=1.0) where T<:Float64
   n = Int(sqrt(1/4+2*length(x))-1/2)  # Formula for size of matrix
-  X = Array{T,2}(n,n)
+  X = Array{T,2}(undef, n, n)
   k = 1
   for j = 1:n, i = j:n                # Store y in M
     X[i,j] = x[k]                   # Lower half
@@ -142,14 +140,14 @@ function prox_naive(f::IndPSD, x::AbstractVector{T}, gamma::Real=1.0) where T<:F
   # It's equivalent to scaling off-diagonal by 1/sqrt(2) and working with sqrt(2)*X
   if f.scaling
     for i = 1:n
-      X[i,i] .*= sqrt(2)
+      X[i,i] *= sqrt(2)
     end
   end
   X, v = prox_naive(f, Symmetric(X), gamma)
 
   if f.scaling  #Scale diagonal elements back
     for i = 1:n
-      X[i,i] ./= sqrt(2)
+      X[i,i] /= sqrt(2)
     end
   end
 

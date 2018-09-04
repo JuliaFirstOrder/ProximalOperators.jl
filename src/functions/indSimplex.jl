@@ -13,7 +13,6 @@ S = \\left\\{ x : x \\geq 0, ∑_i x_i = a \\right\\}.
 ```
 By default `a=1.0`, therefore ``S`` is the probability simplex.
 """
-
 struct IndSimplex{T <: Union{Real, Integer}} <: ProximableFunction
   a::T
   function IndSimplex{T}(a::T) where {T <: Union{Real, Integer}}
@@ -30,9 +29,9 @@ is_set(f::IndSimplex) = true
 
 IndSimplex(a::T=1.0) where {T <: Union{Real, Integer}} = IndSimplex{T}(a)
 
-function (f::IndSimplex)(x::AbstractArray{T,1}) where T <: Real
+function (f::IndSimplex)(x::AbstractArray{T}) where T <: Real
   if all(x .>= 0) && abs(sum(x)-f.a) <= 1e-14
-    return 0.0
+    return zero(T)
   end
   return +Inf
 end
@@ -55,14 +54,14 @@ function prox!(y::AbstractArray{T}, f::IndSimplex, x::AbstractArray{T}, gamma::R
       @inbounds for j in eachindex(y)
         y[j] = x[j] < tmax ? 0.0 : x[j] - tmax
       end
-      return 0.0
+      return zero(T)
     end
   end
   tmax = (s + p[n] - f.a)/n
   @inbounds for j in eachindex(y)
     y[j] = x[j] < tmax ? 0.0 : x[j] - tmax
   end
-  return 0.0
+  return zero(T)
 end
 
 fun_name(f::IndSimplex) = "indicator of the probability simplex"
@@ -80,7 +79,7 @@ function prox_naive(f::IndSimplex, x::AbstractArray{T}, gamma::Real=1.0) where T
       break
     end
     alpha = (low+upp)/2
-    v = max.(x - alpha, 0.0)
+    v = max.(x .- alpha, 0.0)
     s = sum(v) - f.a
     if s <= 0
       upp = alpha

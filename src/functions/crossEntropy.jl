@@ -13,7 +13,6 @@ f(x) = -1/N \\sum_{n = 1}^{N} b \\log (x)+(1-b) \\log (1-x),
 ```
 where `b` is an array with `0 ≤ b ≤ 1`.
 """
-
 struct CrossEntropy{R <: Real, T <: AbstractArray{R}} <: ProximableFunction
 	b::T
 	function CrossEntropy{R, T}(b::T) where {R <: Real, T <: AbstractArray{R}}

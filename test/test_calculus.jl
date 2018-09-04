@@ -1,5 +1,10 @@
 # Test equivalence of functions and prox mappings by means of calculus rules
 
+using LinearAlgebra
+using Random
+
+Random.seed!(0)
+
 stuff = [
   Dict( "funcs"  => (IndBallLinf(), Conjugate(NormL1())),
         "args"   => ( randn(10), ),
@@ -18,23 +23,23 @@ stuff = [
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
-  Dict( "funcs"  => (lambda -> (NormL1(lambda), Conjugate(IndBox(-lambda,lambda))))(0.1+10.0*rand(30)),
+  Dict( "funcs"  => (lambda -> (NormL1(lambda), Conjugate(IndBox(-lambda,lambda))))(0.1 .+ 10.0*rand(30)),
         "args"   => ( 5.0*sign.(randn(30)) + 5.0*randn(30), ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
-  Dict( "funcs"  => (lambda -> (IndBox(-lambda,lambda), Conjugate(NormL1(lambda))))(0.1+10.0*rand(30)),
+  Dict( "funcs"  => (lambda -> (IndBox(-lambda,lambda), Conjugate(NormL1(lambda))))(0.1 .+ 10.0*rand(30)),
         "args"   => ( 5.0*sign.(randn(30)) + 5.0*randn(30), ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
-  Dict( "funcs"  => (lambda -> (NormL2(lambda), Conjugate(IndBallL2(lambda))))(0.1+10.0*rand()),
+  Dict( "funcs"  => (lambda -> (NormL2(lambda), Conjugate(IndBallL2(lambda))))(0.1 .+ 10.0*rand()),
         "args"   => ( 5.0*sign.(randn(10)) + 5.0*randn(10),
                       5.0*sign.(randn(20)) + 5.0*randn(20) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
       ),
 
-  Dict( "funcs"  => (lambda -> (IndBallL2(lambda), Conjugate(NormL2(lambda))))(0.1+10.0*rand()),
+  Dict( "funcs"  => (lambda -> (IndBallL2(lambda), Conjugate(NormL2(lambda))))(0.1 .+ 10.0*rand()),
         "args"   => ( 5.0*sign.(randn(10)) + 5.0*randn(10),
                       5.0*sign.(randn(20)) + 5.0*randn(20) ),
         "gammas" => ( 0.5+rand(), 0.5+rand() )
@@ -70,12 +75,12 @@ stuff = [
         "gammas" => ( 1.0, rand(), 5.0*rand() )
       ),
 
-  Dict( "funcs"  => (lambda -> (SqrNormL2(lambda), Conjugate(SqrNormL2(1.0/lambda))))(0.1+5.0*rand()),
+  Dict( "funcs"  => (lambda -> (SqrNormL2(lambda), Conjugate(SqrNormL2(1.0/lambda))))(0.1 .+ 5.0*rand()),
         "args"   => ( randn(50), randn(50), randn(50) ),
         "gammas" => ( 1.0, rand(), 5.0*rand() )
       ),
 
-  Dict( "funcs"  => ((A, b) -> (LeastSquares(A, b), Tilt(LeastSquares(A, zeros(size(A, 1))), -A'*b, 0.5*vecdot(b, b))))(randn(10,20), randn(10)),
+  Dict( "funcs"  => ((A, b) -> (LeastSquares(A, b), Tilt(LeastSquares(A, zeros(size(A, 1))), -A'*b, 0.5*dot(b, b))))(randn(10,20), randn(10)),
         "args"   => ( randn(20), randn(20), randn(20) ),
         "gammas" => ( 1.0, rand(), 5.0*rand() )
       ),
@@ -85,7 +90,7 @@ stuff = [
         "gammas" => ( 1.0, rand(), 5.0*rand() )
       ),
 
-  Dict( "funcs"  => ((b, mu) -> (HingeLoss(b, mu), Postcompose(PrecomposeDiagonal(SumPositive(), -b, 1.0), mu)))([0.5+rand(10); -0.5-rand(10)], 0.5+rand()),
+  Dict( "funcs"  => ((b, mu) -> (HingeLoss(b, mu), Postcompose(PrecomposeDiagonal(SumPositive(), -b, 1.0), mu)))([0.5 .+ rand(10); -0.5 .- rand(10)], 0.5+rand()),
         "args"   => ( randn(20), randn(20), randn(20) ),
         "gammas" => ( 1.0, rand(), 5.0*rand() )
       ),
@@ -97,10 +102,8 @@ stuff = [
 ]
 
 for i = 1:length(stuff)
-  println("----------------------------------------------------------")
   f = stuff[i]["funcs"][1]
   g = stuff[i]["funcs"][2]
-  println(string(rpad(typeof(f), 25, " "), " VS ", typeof(g)))
 
   for j = 1:length(stuff[i]["args"])
     x = stuff[i]["args"][j]
@@ -113,7 +116,7 @@ for i = 1:length(stuff)
     yg, gy = prox_test(g, x, gamma)
 
     # compare results of f and g
-    @test vecnorm(yf-yg, Inf)/(1+norm(yf, Inf)) <= TOL_ASSERT
+    @test norm(yf-yg, Inf)/(1+norm(yf, Inf)) <= TOL_ASSERT
     @test fy == gy || abs(fy-gy)/(1+abs(fy)) <= TOL_ASSERT
   end
 

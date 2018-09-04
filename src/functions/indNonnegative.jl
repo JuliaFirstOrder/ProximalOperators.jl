@@ -12,7 +12,6 @@ Returns the indicator of the set
 C = \\{ x : x \\geq 0 \\}.
 ```
 """
-
 struct IndNonnegative <: ProximableFunction end
 
 is_separable(f::IndNonnegative) = true
@@ -25,7 +24,7 @@ function (f::IndNonnegative)(x::AbstractArray{R}) where R <: Real
       return +Inf
     end
   end
-  return 0.0
+  return zero(R)
 end
 
 function prox!(y::AbstractArray{R}, f::IndNonnegative, x::AbstractArray{R}, gamma::Real=1.0) where R <: Real
@@ -36,7 +35,7 @@ function prox!(y::AbstractArray{R}, f::IndNonnegative, x::AbstractArray{R}, gamm
       y[k] = x[k]
     end
   end
-  return 0.0
+  return zero(R)
 end
 
 prox!(y::AbstractArray{R}, f::IndNonnegative, x::AbstractArray{R}, gamma::AbstractArray{R}) where {R <: Real} = prox!(y, f, x, 1.0)
