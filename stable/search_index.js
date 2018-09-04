@@ -68,15 +68,15 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndAffine",
     "page": "Functions",
     "title": "ProximalOperators.IndAffine",
-    "category": "Type",
-    "text": "Indicator of an affine subspace\n\nIndAffine(A, b; iterative=false)\n\nIf A is a matrix (dense or sparse) and b is a vector, returns the indicator function of the set\n\nS = x  Ax = b\n\nIf A is a vector and b is a scalar, returns the indicator function of the set\n\nS = x  langle A x rangle = b\n\nBy default, a direct method (QR factorization of matrix A') is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
+    "category": "type",
+    "text": "Indicator of an affine subspace\n\nIndAffine(A, b; iterative=false)\n\nIf A is a matrix (dense or sparse) and b is a vector, returns the indicator function of the set\n\nS = x  Ax = b\n\nIf A is a vector and b is a scalar, returns the indicator function of the set\n\nS = x  langle A x rangle = b\n\nBy default, a direct method (QR factorization of matrix A\') is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
 },
 
 {
     "location": "functions.html#ProximalOperators.IndBallLinf",
     "page": "Functions",
     "title": "ProximalOperators.IndBallLinf",
-    "category": "Function",
+    "category": "function",
     "text": "Indicator of a L_ norm ball\n\nIndBallLinf(r=1.0)\n\nReturns the indicator function of the set\n\nS =  x  max (x_i) leq r \n\nParameter r must be positive.\n\n\n\n"
 },
 
@@ -84,7 +84,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndBallL0",
     "page": "Functions",
     "title": "ProximalOperators.IndBallL0",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of a L_0 pseudo-norm ball\n\nIndBallL0(r=1)\n\nReturns the indicator function of the set\n\nS =  x  mathrmnnz(x) leq r \n\nParameter r must be a positive integer.\n\n\n\n"
 },
 
@@ -92,7 +92,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndBallL1",
     "page": "Functions",
     "title": "ProximalOperators.IndBallL1",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of a L_1 norm ball\n\nIndBallL1(r=1.0)\n\nReturns the indicator function of the set\n\nS = left x  _i x_i leq r right\n\nParameter r must be positive.\n\n\n\n"
 },
 
@@ -100,7 +100,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndBallL2",
     "page": "Functions",
     "title": "ProximalOperators.IndBallL2",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of a Euclidean ball\n\nIndBallL2(r=1.0)\n\nReturns the indicator function of the set\n\nS =  x  x leq r \n\nwhere cdot is the L_2 (Euclidean) norm. Parameter r must be positive.\n\n\n\n"
 },
 
@@ -108,7 +108,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndBallRank",
     "page": "Functions",
     "title": "ProximalOperators.IndBallRank",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of rank ball\n\nIndBallRank(r=1)\n\nReturns the indicator function of the set of matrices of rank at most r:\n\nS =  X  mathrmrank(X) leq r \n\nParameter r must be a positive integer.\n\n\n\n"
 },
 
@@ -116,7 +116,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndBinary",
     "page": "Functions",
     "title": "ProximalOperators.IndBinary",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the product of binary sets\n\nIndBinary(low, up)\n\nReturns the indicator function of the set\n\nS =  x  x_i = low_i textor x_i = up_i \n\nParameters low and up can be either scalars or arrays of the same dimension as the space.\n\n\n\n"
 },
 
@@ -124,7 +124,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndBox",
     "page": "Functions",
     "title": "ProximalOperators.IndBox",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of a box\n\nIndBox(low, up)\n\nReturns the indicator function of the set\n\nS =  x  low leq x leq up \n\nParameters low and up can be either scalars or arrays of the same dimension as the space: they must satisfy low <= up, and are allowed to take values -Inf and +Inf to indicate unbounded coordinates.\n\n\n\n"
 },
 
@@ -132,7 +132,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndGraph",
     "page": "Functions",
     "title": "ProximalOperators.IndGraph",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the graph of a linear operator\n\nIndGraph(A)\n\nFor matrix A (dense or sparse) returns the indicator function of the set\n\nG_A = (x y)  Ax = y\n\nThe evaluation of prox! uses direct methods based on LDLt (LL for dense cases) matrix factorization and backsolve.\n\nThe prox! method operates on pairs (x, y) as input/output. So if f = IndGraph(A) is the indicator of the graph G_A, while (x, y) and (c, d) are pairs of vectors of the same sizes, then\n\nprox!((c, d), f, (x, y))\n\nwrites to (c, d) the projection onto G_A of (x, y).\n\n\n\n"
 },
 
@@ -140,7 +140,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndHalfspace",
     "page": "Functions",
     "title": "ProximalOperators.IndHalfspace",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of a halfspace\n\nIndHalfspace(a, b)\n\nFor an array a and a scalar b, returns the indicator of set\n\nS = x  langle ax rangle leq b \n\n\n\n"
 },
 
@@ -148,15 +148,23 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndPoint",
     "page": "Functions",
     "title": "ProximalOperators.IndPoint",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of a singleton\n\nIndPoint(p=0.0)\n\nReturns the indicator of the set\n\nC = p \n\nParameter p can be a scalar, in which case the unique element of S has uniform coefficients.\n\n\n\n"
+},
+
+{
+    "location": "functions.html#ProximalOperators.IndPolyhedral",
+    "page": "Functions",
+    "title": "ProximalOperators.IndPolyhedral",
+    "category": "type",
+    "text": "Indicator of a polyhedral set\n\nIndPolyhedral([l,] A, [u, xmin, xmax])\n\nReturns the indicator function of the polyhedral set:\n\nS =  x  x_min leq x leq x_max l leq Ax leq u \n\nMatrix A is a mandatory argument; when any of the bounds is not provided, it is assumed to be (plus or minus) infinity.\n\n\n\n"
 },
 
 {
     "location": "functions.html#ProximalOperators.IndSimplex",
     "page": "Functions",
     "title": "ProximalOperators.IndSimplex",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of a simplex\n\nIndSimplex(a=1.0)\n\nReturns the indicator of the set\n\nS = left x  x geq 0 _i x_i = a right\n\nBy default a=1.0, therefore S is the probability simplex.\n\n\n\n"
 },
 
@@ -164,7 +172,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndSphereL2",
     "page": "Functions",
     "title": "ProximalOperators.IndSphereL2",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of a Euclidean sphere\n\nIndSphereL2(r=1.0)\n\nReturns the indicator function of the set\n\nS =  x  x = r \n\nwhere cdot is the L_2 (Euclidean) norm. Parameter r must be positive.\n\n\n\n"
 },
 
@@ -173,14 +181,14 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "Indicators of sets",
     "category": "section",
-    "text": "When function f is the indicator function of a set S, that isf(x) = _S(x) =\nbegincases\n0  textif x in S \n+  textotherwise\nendcasesthen mathrmprox_f = _S is the projection onto S. Therefore ProximalOperators includes in particular projections onto commonly used sets, which are here listed.IndAffine\nIndBallLinf   \nIndBallL0     \nIndBallL1     \nIndBallL2     \nIndBallRank   \nIndBinary\nIndBox  \nIndGraph     \nIndHalfspace  \nIndPoint              \nIndSimplex    \nIndSphereL2          "
+    "text": "When function f is the indicator function of a set S, that isf(x) = _S(x) =\nbegincases\n0  textif x in S \n+  textotherwise\nendcasesthen mathrmprox_f = _S is the projection onto S. Therefore ProximalOperators includes in particular projections onto commonly used sets, which are here listed.IndAffine\nIndBallLinf   \nIndBallL0     \nIndBallL1     \nIndBallL2     \nIndBallRank   \nIndBinary\nIndBox  \nIndGraph     \nIndHalfspace  \nIndPoint\nIndPolyhedral              \nIndSimplex    \nIndSphereL2          "
 },
 
 {
     "location": "functions.html#ProximalOperators.IndExpPrimal",
     "page": "Functions",
     "title": "ProximalOperators.IndExpPrimal",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the (primal) exponential cone\n\nIndExpPrimal()\n\nReturns the indicator function of the primal exponential cone, that is\n\nC = mathrmcl  (rst)  s  0 se^rs leq t  subset mathbbR^3\n\n\n\n"
 },
 
@@ -188,7 +196,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndExpDual",
     "page": "Functions",
     "title": "ProximalOperators.IndExpDual",
-    "category": "Function",
+    "category": "function",
     "text": "Indicator of the (dual) exponential cone\n\nIndExpDual()\n\nReturns the indicator function of the dual exponential cone, that is\n\nC = mathrmcl  (uvw)  u  0 -ue^vu leq we  subset mathbbR^3\n\n\n\n"
 },
 
@@ -196,7 +204,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndFree",
     "page": "Functions",
     "title": "ProximalOperators.IndFree",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the free cone\n\nIndFree()\n\nReturns the indicator function of the whole space, or \"free cone\", i.e., a function which is identically zero.\n\n\n\n"
 },
 
@@ -204,7 +212,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndNonnegative",
     "page": "Functions",
     "title": "ProximalOperators.IndNonnegative",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the nonnegative orthant\n\nIndNonnegative()\n\nReturns the indicator of the set\n\nC =  x  x geq 0 \n\n\n\n"
 },
 
@@ -212,7 +220,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndNonpositive",
     "page": "Functions",
     "title": "ProximalOperators.IndNonpositive",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the nonpositive orthant\n\nIndNonpositive()\n\nReturns the indicator of the set\n\nC =  x  x leq 0 \n\n\n\n"
 },
 
@@ -220,7 +228,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndPSD",
     "page": "Functions",
     "title": "ProximalOperators.IndPSD",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the set of positive semi-definite cone\n\nIndPSD(;scaling=false)\n\nReturns the indicator of the set\n\nC =  X  X succeq 0 \n\nThe argument to the function can be either a Symmetric or Hermitian object, or an object of type AbstractVector{Float64} holding a symmetric matrix in (lower triangular) packed storage.\n\nIf scaling = true then the vectors y and x in prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}, args...) have the off-diagonal elements multiplied with √2 to preserve inner products, see Vandenberghe 2010: http://www.seas.ucla.edu/~vandenbe/publications/coneprog.pdf .\n\nI.e. when when scaling=true, let X,Y be matrices and\n\nx = (X_{1,1}, √2⋅X_{2,1}, ... ,√2⋅X_{n,1}, X_{2,2}, √2⋅X_{3,2}, ..., X_{n,n}),\n\ny = (Y_{1,1}, √2⋅Y_{2,1}, ... ,√2⋅Y_{n,1}, Y_{2,2}, √2⋅Y_{3,2}, ..., Y_{n,n})\n\nthen prox!(Y, f, X) is equivalent to prox!(y, f, x).\n\n\n\n"
 },
 
@@ -228,7 +236,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndSOC",
     "page": "Functions",
     "title": "ProximalOperators.IndSOC",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the second-order cone\n\nIndSOC()\n\nReturns the indicator of the second-order cone (also known as ice-cream cone or Lorentz cone), that is\n\nC = left (t x)  x leq t right\n\n\n\n"
 },
 
@@ -236,7 +244,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndRotatedSOC",
     "page": "Functions",
     "title": "ProximalOperators.IndRotatedSOC",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the rotated second-order cone\n\nIndRotatedSOC()\n\nReturns the indicator of the rotated second-order cone (also known as ice-cream cone or Lorentz cone), that is\n\nC = left (p q x)  x^2 leq 2cdot pq p geq 0 q geq 0 right\n\n\n\n"
 },
 
@@ -244,7 +252,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.IndZero",
     "page": "Functions",
     "title": "ProximalOperators.IndZero",
-    "category": "Type",
+    "category": "type",
     "text": "Indicator of the zero cone\n\nIndZero()\n\nReturns the indicator function of the set containing the origin, the \"zero cone\".\n\n\n\n"
 },
 
@@ -260,7 +268,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.ElasticNet",
     "page": "Functions",
     "title": "ProximalOperators.ElasticNet",
-    "category": "Type",
+    "category": "type",
     "text": "Elastic-net regularization\n\nElasticNet(μ=1.0, λ=1.0)\n\nReturns the function\n\nf(x) = x_1 + (2)x^2\n\nfor nonnegative parameters μ and λ.\n\n\n\n"
 },
 
@@ -268,7 +276,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.NormL0",
     "page": "Functions",
     "title": "ProximalOperators.NormL0",
-    "category": "Type",
+    "category": "type",
     "text": "L_0 pseudo-norm\n\nNormL0(λ=1.0)\n\nReturns the function\n\nf(x) = cdotmathrmnnz(x)\n\nfor a nonnegative parameter λ.\n\n\n\n"
 },
 
@@ -276,7 +284,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.NormL1",
     "page": "Functions",
     "title": "ProximalOperators.NormL1",
-    "category": "Type",
+    "category": "type",
     "text": "L_1 norm\n\nNormL1(λ=1.0)\n\nWith a nonnegative scalar parameter λ, returns the function\n\nf(x) = cdot_ix_i\n\nWith a nonnegative array parameter λ, returns the function\n\nf(x) = _i _ix_i\n\n\n\n"
 },
 
@@ -284,7 +292,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.NormL2",
     "page": "Functions",
     "title": "ProximalOperators.NormL2",
-    "category": "Type",
+    "category": "type",
     "text": "L_2 norm\n\nNormL2(λ=1.0)\n\nWith a nonnegative scalar parameter λ, returns the function\n\nf(x) = cdotsqrtx_1^2 +  + x_n^2\n\n\n\n"
 },
 
@@ -292,7 +300,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.NormL21",
     "page": "Functions",
     "title": "ProximalOperators.NormL21",
-    "category": "Type",
+    "category": "type",
     "text": "Sum-of-L_2 norms\n\nNormL21(λ=1.0, dim=1)\n\nReturns the function\n\nf(X) = _ix_i\n\nfor a nonnegative λ, where x_i is the i-th column of X if dim == 1, and the i-th row of X if dim == 2. In words, it is the sum of the Euclidean norms of the columns or rows.\n\n\n\n"
 },
 
@@ -300,7 +308,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.NormLinf",
     "page": "Functions",
     "title": "ProximalOperators.NormLinf",
-    "category": "Function",
+    "category": "function",
     "text": "L_ norm\n\nNormLinf(λ=1.0)\n\nReturns the function\n\nf(x) = maxx_1  x_n\n\nfor a nonnegative parameter λ.\n\n\n\n"
 },
 
@@ -308,7 +316,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.NuclearNorm",
     "page": "Functions",
     "title": "ProximalOperators.NuclearNorm",
-    "category": "Type",
+    "category": "type",
     "text": "Nuclear norm\n\nNuclearNorm(λ=1.0)\n\nReturns the function\n\nf(X) = X_* =  _i _i(X)\n\nwhere λ is a positive parameter and _i(X) is i-th singular value of matrix X.\n\n\n\n"
 },
 
@@ -316,7 +324,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.SqrNormL2",
     "page": "Functions",
     "title": "ProximalOperators.SqrNormL2",
-    "category": "Type",
+    "category": "type",
     "text": "Squared Euclidean norm (weighted)\n\nSqrNormL2(λ=1.0)\n\nWith a nonnegative scalar λ, returns the function\n\nf(x) = tfrac2x^2\n\nWith a nonnegative array λ, returns the function\n\nf(x) = tfrac12_i _i x_i^2\n\n\n\n"
 },
 
@@ -332,7 +340,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.HingeLoss",
     "page": "Functions",
     "title": "ProximalOperators.HingeLoss",
-    "category": "Function",
+    "category": "function",
     "text": "Hinge loss\n\nHingeLoss(y, μ=1.0)\n\nReturns the function\n\nf(x) = _i max0 1 - y_i  x_i\n\nwhere y is an array and μ is a positive parameter.\n\n\n\n"
 },
 
@@ -340,7 +348,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.HuberLoss",
     "page": "Functions",
     "title": "ProximalOperators.HuberLoss",
-    "category": "Type",
+    "category": "type",
     "text": "Huber loss\n\nHuberLoss(ρ=1.0, μ=1.0)\n\nReturns the function\n\nf(x) = begincases\n  tfrac2x^2  textif x   \n  (x - tfrac2)  textotherwise\nendcases\n\nwhere ρ and μ are positive parameters.\n\n\n\n"
 },
 
@@ -348,7 +356,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.LeastSquares",
     "page": "Functions",
     "title": "ProximalOperators.LeastSquares",
-    "category": "Type",
+    "category": "type",
     "text": "Least squares penalty\n\nLeastSquares(A, b, λ=1.0; iterative=false)\n\nFor a matrix A, a vector b and a scalar λ, returns the function\n\nf(x) = tfraclambda2Ax - b^2\n\nBy default, a direct method (based on Cholesky factorization) is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
 },
 
@@ -356,7 +364,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.Linear",
     "page": "Functions",
     "title": "ProximalOperators.Linear",
-    "category": "Type",
+    "category": "type",
     "text": "Linear function\n\nLinear(c)\n\nReturns the function\n\nf(x) = langle c x rangle\n\n\n\n"
 },
 
@@ -364,7 +372,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.LogBarrier",
     "page": "Functions",
     "title": "ProximalOperators.LogBarrier",
-    "category": "Type",
+    "category": "type",
     "text": "Logarithmic barrier\n\nLogBarrier(a=1.0, b=0.0, μ=1.0)\n\nReturns the function\n\nf(x) = -_ilog(ax_i+b)\n\nfor a nonnegative parameter μ.\n\n\n\n"
 },
 
@@ -372,7 +380,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.LogisticLoss",
     "page": "Functions",
     "title": "ProximalOperators.LogisticLoss",
-    "category": "Type",
+    "category": "type",
     "text": "Logistic loss\n\nLogisticLoss(y, μ=1.0)\n\nReturns the function\n\nf(x) = _i log(1+exp(-y_ix_i))\n\nwhere y is an array and μ is a positive parameter.\n\n\n\n"
 },
 
@@ -380,7 +388,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.Maximum",
     "page": "Functions",
     "title": "ProximalOperators.Maximum",
-    "category": "Function",
+    "category": "function",
     "text": "Maximum coefficient\n\nMaximum(λ=1.0)\n\nFor a nonnegative parameter λ ⩾ 0, returns the function\n\nf(x) = lambda cdot max x_i  i = 1ldots n \n\n\n\n"
 },
 
@@ -388,7 +396,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.Quadratic",
     "page": "Functions",
     "title": "ProximalOperators.Quadratic",
-    "category": "Type",
+    "category": "type",
     "text": "Quadratic function\n\nQuadratic(Q, q; iterative=false)\n\nFor a matrix Q (dense or sparse, symmetric and positive semidefinite) and a vector q, returns the function\n\nf(x) = tfrac12langle Qx xrangle + langle q x rangle\n\nBy default, a direct method (based on Cholesky factorization) is used to evaluate prox!. If iterative=true, then prox! is evaluated approximately using an iterative method instead.\n\n\n\n"
 },
 
@@ -396,7 +404,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.SqrHingeLoss",
     "page": "Functions",
     "title": "ProximalOperators.SqrHingeLoss",
-    "category": "Type",
+    "category": "type",
     "text": "Squared Hinge loss\n\nSqrHingeLoss(y, μ=1.0)\n\nReturns the function\n\nf(x) = _i max0 1 - y_i  x_i^2\n\nwhere y is an array and μ is a positive parameter.\n\n\n\n"
 },
 
@@ -404,7 +412,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.SumPositive",
     "page": "Functions",
     "title": "ProximalOperators.SumPositive",
-    "category": "Type",
+    "category": "type",
     "text": "Sum of the positive coefficients\n\nSumPositive()\n\nReturns the function\n\nf(x) = _i max0 x_i\n\n\n\n"
 },
 
@@ -420,7 +428,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.DistL2",
     "page": "Functions",
     "title": "ProximalOperators.DistL2",
-    "category": "Type",
+    "category": "type",
     "text": "Distance from a convex set\n\nDistL2(ind_S)\n\nGiven ind_S the indicator function of a convex set S, and an optional positive parameter λ, returns the (weighted) Euclidean distance from S, that is function\n\ng(x) = mathrmdist_S(x) = min  y - x  y in S \n\n\n\n"
 },
 
@@ -428,7 +436,7 @@ var documenterSearchIndex = {"docs": [
     "location": "functions.html#ProximalOperators.SqrDistL2",
     "page": "Functions",
     "title": "ProximalOperators.SqrDistL2",
-    "category": "Type",
+    "category": "type",
     "text": "Squared distance from a convex set\n\nSqrDistL2(ind_S, λ=1.0)\n\nGiven ind_S the indicator function of a convex set S, and an optional positive parameter λ, returns the (weighted) squared Euclidean distance from S, that is function\n\ng(x) = tfrac2mathrmdist_S^2(x) = min left tfrac2y - x^2  y in S right\n\n\n\n"
 },
 
@@ -460,7 +468,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.Conjugate",
     "page": "Calculus rules",
     "title": "ProximalOperators.Conjugate",
-    "category": "Type",
+    "category": "type",
     "text": "Convex conjugate\n\nConjugate(f)\n\nReturns the convex conjugate (also known as Fenchel conjugate, or Fenchel-Legendre transform) of function f, that is\n\nf^*(x) = sup_y  langle y x rangle - f(y) \n\n\n\n"
 },
 
@@ -476,7 +484,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.SeparableSum",
     "page": "Calculus rules",
     "title": "ProximalOperators.SeparableSum",
-    "category": "Type",
+    "category": "type",
     "text": "Separable sum of functions\n\nSeparableSum(f₁,…,fₖ)\n\nGiven functions f₁ to fₖ, returns their separable sum, that is\n\ng(x_1x_k) = _i=1^k f_i(x_i)\n\nThe object g constructed in this way can be evaluated at Tuples of length k. Likewise, the prox and prox! methods for g operate with (input and output) Tuples of length k.\n\nExample:\n\nf = SeparableSum(NormL1(), NuclearNorm()); # separable sum of two functions\nx = randn(10); # some random vector\nY = randn(20, 30); # some random matrix\nf_xY = f((x, Y)); # evaluates f at (x, Y)\n(u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)\n\n\n\n"
 },
 
@@ -484,7 +492,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.SlicedSeparableSum",
     "page": "Calculus rules",
     "title": "ProximalOperators.SlicedSeparableSum",
-    "category": "Type",
+    "category": "type",
     "text": "Sliced separable sum of functions\n\nSlicedSeparableSum((f₁,…,fₖ), (J₁,…,Jₖ))\n\nReturns the function\n\ng(x) = _i=1^k f_i(x_J_i)\n\nSlicedSeparableSum(f, (J₁,…,Jₖ))\n\nAnalogous to the previous one, but applies the same function f to all slices of the variable x:\n\ng(x) = _i=1^k f(x_J_i)\n\n\n\n"
 },
 
@@ -500,7 +508,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.MoreauEnvelope",
     "page": "Calculus rules",
     "title": "ProximalOperators.MoreauEnvelope",
-    "category": "Type",
+    "category": "type",
     "text": "Moreau envelope\n\nMoreauEnvelope(f, γ=1.0)\n\nReturns the Moreau envelope (also known as Moreau-Yosida regularization) of function f with parameter γ (positive), that is\n\nf^(x) = min_z left f(z) + tfrac12z-x^2 right\n\nIf f is convex, then f^ is a smooth, convex, lower approximation to f, having the same minima as the original function.\n\n\n\n"
 },
 
@@ -508,7 +516,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.Regularize",
     "page": "Calculus rules",
     "title": "ProximalOperators.Regularize",
-    "category": "Type",
+    "category": "type",
     "text": "Regularize\n\nRegularize(f, ρ=1.0, a=0.0)\n\nGiven function f, and optional parameters ρ (positive) and a, returns\n\ng(x) = f(x) + tfrac2x-a\n\nParameter a can be either an array or a scalar, in which case it is subtracted component-wise from x in the above expression.\n\n\n\n"
 },
 
@@ -524,7 +532,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.Postcompose",
     "page": "Calculus rules",
     "title": "ProximalOperators.Postcompose",
-    "category": "Type",
+    "category": "type",
     "text": "Postcomposition with an affine transformation\n\nPostcompose(f, a=1.0, b=0.0)\n\nReturns the function\n\ng(x) = acdot f(x) + b\n\n\n\n"
 },
 
@@ -532,7 +540,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.Precompose",
     "page": "Calculus rules",
     "title": "ProximalOperators.Precompose",
-    "category": "Type",
+    "category": "type",
     "text": "Precomposition with linear mapping/translation\n\nPrecompose(f, L, μ, b)\n\nReturns the function\n\ng(x) = f(Lx + b)\n\nwhere f is a convex function and L is a linear mapping: this must satisfy LL^* = I for   0. Furthermore, either f is separable or parameter μ is a scalar, for the prox of g to be computable.\n\nParameter L defines L through the A_mul_B! and Ac_mul_B! methods. Therefore L can be an AbstractMatrix for example, but not necessarily.\n\nIn this case, prox and prox! are computed according to Prop. 24.14 in Bauschke, Combettes \"Convex Analisys and Monotone Operator Theory in Hilbert Spaces\", 2nd edition, 2016. The same result is Prop. 23.32 in the 1st edition of the same book.\n\n\n\n"
 },
 
@@ -540,7 +548,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.PrecomposeDiagonal",
     "page": "Calculus rules",
     "title": "ProximalOperators.PrecomposeDiagonal",
-    "category": "Type",
+    "category": "type",
     "text": "Precomposition with diagonal scaling/translation\n\nPrecomposeDiagonal(f, a, b)\n\nReturns the function\n\ng(x) = f(mathrmdiag(a)x + b)\n\nwhere f is a convex function. Furthermore, f must be separable, or a must be a scalar, for the prox of g to be computable. Parametes a and b can be arrays of multiple dimensions, according to the shape/size of the input x that will be provided to the function: the way the above expression for g should be thought of, is g(x) = f(a.*x + b).\n\n\n\n"
 },
 
@@ -548,7 +556,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.Tilt",
     "page": "Calculus rules",
     "title": "ProximalOperators.Tilt",
-    "category": "Type",
+    "category": "type",
     "text": "Linear tilting\n\nTilt(f, a, b=0.0)\n\nGiven function f, an array a and a constant b (optional), returns function\n\ng(x) = f(x) + langle a x rangle + b\n\n\n\n"
 },
 
@@ -556,7 +564,7 @@ var documenterSearchIndex = {"docs": [
     "location": "calculus.html#ProximalOperators.Translate",
     "page": "Calculus rules",
     "title": "ProximalOperators.Translate",
-    "category": "Type",
+    "category": "type",
     "text": "Translation\n\nTranslate(f, b)\n\nReturns the translated function\n\ng(x) = f(x + b)\n\n\n\n"
 },
 
@@ -580,7 +588,7 @@ var documenterSearchIndex = {"docs": [
     "location": "operators.html#ProximalOperators.prox",
     "page": "Prox and gradient",
     "title": "ProximalOperators.prox",
-    "category": "Function",
+    "category": "function",
     "text": "Proximal mapping\n\ny, fy = prox(f, x, γ=1.0)\n\nComputes\n\ny = mathrmprox_gamma f(x) = argmin_z left f(z) + tfrac12gammaz-x^2 right\n\nReturn values:\n\ny: the proximal point y\nfy: the value f(y)\n\n\n\n"
 },
 
@@ -588,7 +596,7 @@ var documenterSearchIndex = {"docs": [
     "location": "operators.html#ProximalOperators.prox!",
     "page": "Prox and gradient",
     "title": "ProximalOperators.prox!",
-    "category": "Function",
+    "category": "function",
     "text": "Proximal mapping (in-place)\n\nfy = prox!(y, f, x, γ=1.0)\n\nComputes\n\ny = mathrmprox_gamma f(x) = argmin_z left f(z) + tfrac12gammaz-x^2 right\n\nThe resulting point y is written to the (pre-allocated) array y, which must have the same shape/size as x.\n\nReturn values:\n\nfy: the value f(y)\n\n\n\n"
 },
 
@@ -596,7 +604,7 @@ var documenterSearchIndex = {"docs": [
     "location": "operators.html#Base.LinAlg.gradient",
     "page": "Prox and gradient",
     "title": "Base.LinAlg.gradient",
-    "category": "Function",
+    "category": "function",
     "text": "Gradient mapping\n\ngradfx, fx = gradient(f, x)\n\nComputes the gradient (and value) of f at x. If f is only subdifferentiable at x, then return a subgradient instead.\n\nReturn values:\n\ngradfx: the (sub)gradient of f at x\nfx: the value f(x)\n\n\n\n"
 },
 
@@ -604,7 +612,7 @@ var documenterSearchIndex = {"docs": [
     "location": "operators.html#ProximalOperators.gradient!",
     "page": "Prox and gradient",
     "title": "ProximalOperators.gradient!",
-    "category": "Function",
+    "category": "function",
     "text": "Gradient mapping (in-place)\n\ngradient!(gradfx, f, x)\n\nWrites nabla f(x) to gradfx, which must be pre-allocated and have the same shape/size as x. If f is only subdifferentiable at x, then writes a subgradient instead.\n\nReturn values:\n\nfx: the value f(x)\n\n\n\n"
 },
 
@@ -629,7 +637,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Prox and gradient",
     "title": "Multiple variable blocks",
     "category": "section",
-    "text": "By combining functions together through SeparableSum, the resulting function will have multiple inputs, i.e., it will be defined over the Cartesian product of the domains of the individual functions. To represent elements (points) of such product space, here we use Julia's Tuple objects.Example. Suppose that the following function needs to be represented:f(x Y) = x_1 + Y_*that is, the sum of the L_1 norm of some vector x and the nuclear norm (the sum of the singular values) of some matrix Y. This is accomplished as follows:using ProximalOperators\nf = SeparableSum(NormL1(), NuclearNorm());Now, function f is defined over pairs of appropriate Array objects. Likewise, the prox method will take pairs of Arrays as inputs, and return pairs of Arrays as output:x = randn(10); # some random vector\nY = randn(20, 30); # some random matrix\nf_xY = f((x, Y)); # evaluates f at (x, Y)\n(u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)The same holds for the separable sum of more than two functions, in which case \"pairs\" are to be replaced with Tuples of the appropriate length."
+    "text": "By combining functions together through SeparableSum, the resulting function will have multiple inputs, i.e., it will be defined over the Cartesian product of the domains of the individual functions. To represent elements (points) of such product space, here we use Julia\'s Tuple objects.Example. Suppose that the following function needs to be represented:f(x Y) = x_1 + Y_*that is, the sum of the L_1 norm of some vector x and the nuclear norm (the sum of the singular values) of some matrix Y. This is accomplished as follows:using ProximalOperators\nf = SeparableSum(NormL1(), NuclearNorm());Now, function f is defined over pairs of appropriate Array objects. Likewise, the prox method will take pairs of Arrays as inputs, and return pairs of Arrays as output:x = randn(10); # some random vector\nY = randn(20, 30); # some random matrix\nf_xY = f((x, Y)); # evaluates f at (x, Y)\n(u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)The same holds for the separable sum of more than two functions, in which case \"pairs\" are to be replaced with Tuples of the appropriate length."
 },
 
 {
