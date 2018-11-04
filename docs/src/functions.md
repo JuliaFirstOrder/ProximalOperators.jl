@@ -28,6 +28,7 @@ IndBinary
 IndBox  
 IndGraph     
 IndHalfspace  
+IndHyperslab
 IndPoint
 IndPolyhedral              
 IndSimplex    
