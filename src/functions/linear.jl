@@ -10,7 +10,7 @@ Returns the function
 f(x) = \\langle c, x \\rangle.
 ```
 """
-struct Linear{R <: RealOrComplex, A <: AbstractArray{R}} <: ProximableFunction
+struct Linear{R <: Real, A <: AbstractArray{R}} <: ProximableFunction
   c::A
 end
 
@@ -18,17 +18,17 @@ is_separable(f::Linear) = true
 is_convex(f::Linear) = true
 is_smooth(f::Linear) = true
 
-function (f::Linear{RC, A})(x::AbstractArray{RC}) where {R <: Real, RC <: Union{R, Complex{R}}, A <: AbstractArray{RC}}
+function (f::Linear{R})(x::AbstractArray{R}) where R
   return dot(f.c, x)
 end
 
-function prox!(y::AbstractArray{RC}, f::Linear{RC, A}, x::AbstractArray{RC}, gamma::Union{R, AbstractArray{R}}=1.0) where {R <: Real, RC <: Union{R, Complex{R}}, A <: AbstractArray{RC}}
+function prox!(y::AbstractArray{R}, f::Linear{R}, x::AbstractArray{R}, gamma::Union{R, AbstractArray{R}}=1.0) where R
   y .= x .- gamma.*(f.c)
   fy = dot(f.c, y)
   return fy
 end
 
-function gradient!(y::AbstractArray{RC}, f::Linear{RC, A}, x::AbstractArray{RC}) where {R <: Real, RC <: Union{R, Complex{R}}, A <: AbstractArray{RC}}
+function gradient!(y::AbstractArray{R}, f::Linear{R}, x::AbstractArray{R}) where R
   y .= f.c
   return dot(f.c, x)
 end
