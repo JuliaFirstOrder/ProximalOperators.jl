@@ -5,7 +5,7 @@ export IndHyperslab
 """
 **Indicator of a hyperslab**
 
-    IndHalfspace(low, a, upp)
+    IndHyperslab(low, a, upp)
 
 For an array `a` and scalars `low` and `upp`, returns the indicator of set
 ```math
