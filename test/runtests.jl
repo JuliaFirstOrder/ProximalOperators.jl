@@ -30,7 +30,7 @@ end
 # tests equality of the results of prox, prox! and prox_naive
 function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
     y, fy = prox(f, x, gamma)
-    y_prealloc = similar(x)
+    y_prealloc = zero(x)
     fy_prealloc = prox!(y_prealloc, f, x, gamma)
     y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gamma)
     if ProximalOperators.is_convex(f)
