@@ -1,3 +1,6 @@
+using ProximalOperators
+using LinearAlgebra
+
 # Nonsmooth + regularization
 
 mu, lam = 2.0, 3.0

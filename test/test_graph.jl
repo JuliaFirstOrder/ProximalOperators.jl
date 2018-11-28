@@ -100,15 +100,15 @@ for i = 1:length(stuff)
 
 ##### test calls to prox! with more signatures
     prox!(ax, ay, f, c, d)
-    @test f(ax, ay) <= TOL_ASSERT
+    @test f(ax, ay) ≈ 0
     ax_naive, ay_naive, fv_naive = ProximalOperators.prox_naive(f, c, d, 1.0)
-    @test f(ax_naive, ay_naive) <= TOL_ASSERT
+    @test f(ax_naive, ay_naive) ≈ 0
 
 
     prox!((ax, ay), f, (c, d))
-    @test f((ax, ay)) <= TOL_ASSERT
+    @test f((ax, ay)) ≈ 0
     axy_naive, fv_naive = ProximalOperators.prox_naive(f, (c, d))
-    @test f(axy_naive) <= TOL_ASSERT
+    @test f(axy_naive) ≈ 0
 
 ##### test against IndAffine
     test_against_IndAffine(f, params[1], x)
