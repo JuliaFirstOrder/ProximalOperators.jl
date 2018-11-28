@@ -1,5 +1,8 @@
 using LinearAlgebra
 
+@testset "Precompose" begin
+
+@testset "IndBallL1 w/ OM" begin
 # Indicator of L1 norm ball composed with orthogonal matrix
 
 f = IndBallL1()
@@ -39,6 +42,9 @@ x = randn(500)
 call_test(g, x)
 prox_test(g, x, 1.0)
 
+end
+
+@testset "IndBallL1 w/ OM multiple" begin
 # L1 norm composed with multiple of orthogonal matrix
 
 f = NormL1()
@@ -56,6 +62,9 @@ x = randn(50)
 call_test(g, x)
 prox_test(g, x, 1.0)
 
+end
+
+@testset "NormL2 w/ OM multiple" begin
 # L2 norm composed with multiple of orthogonal matrix
 
 f = NormL2()
@@ -73,6 +82,9 @@ x = randn(500)
 call_test(g, x)
 prox_test(g, x, 1.0)
 
+end
+
+@testset "NormL2 w/ OM + translation" begin
 # L2 norm composed with orthogonal matrix + translation
 
 f = NormL2()
@@ -91,6 +103,9 @@ x = randn(500)
 call_test(g, x)
 prox_test(g, x, 1.0)
 
+end
+
+@testset "NormL2 w/ DM + translation" begin
 # L2 norm composed with diagonal matrix + translation
 # checking that Precompose and PrecomposeDiagonal agree
 
@@ -112,6 +127,9 @@ y2, gy2 = prox_test(g2, x, 1.0)
 @test abs(gy1 - gy2) <= (1 + abs(gy1))*1e-12
 @test norm(y1 - y2) <= (1 + norm(y1))*1e-12
 
+end
+
+@testset "SqrNormL2 w/ DM + translation" begin
 # Squared L2 norm composed with diagonal matrix + translation
 # checking that Precompose and PrecomposeDiagonal agree
 # checking that weighted squared L2 norm + Translate agrees too
@@ -158,6 +176,9 @@ y3, gy3 = prox_test(g3, x, 1.0)
 @test abs(gy2 - gy3) <= (1 + abs(gy2))*1e-12
 @test norm(y2 - y3) <= (1 + norm(y2))*1e-12
 
+end
+
+@testset "IndSOC w/ [I, I, I]" begin
 # IndSOC composed with [I, I, I]
 
 f = IndSOC()
@@ -177,6 +198,9 @@ x = [0.1, 0.2, 0.4, 0.2, 0.3, 0.3, 0.3, 0.4, 0.2]
 call_test(g, x)
 y, gy = prox_test(g, x, 1.0)
 
+end
+
+@testset "ElasticNet w/ [DM, DM, DM]" begin
 # ElasticNet composed with [diag, diag, diag]
 
 f = ElasticNet()
@@ -190,3 +214,7 @@ x = randn(3*n)
 
 call_test(g, x)
 y, gy = prox_test(g, x, 1.0)
+
+end
+
+end

@@ -1,7 +1,9 @@
 using Test
 
 using ProximalOperators
+
 using ProximalOperators:
+  ArrayOrTuple,
   is_prox_accurate,
   is_separable,
   is_convex,
@@ -16,9 +18,10 @@ using ProximalOperators:
 
 TOL_ASSERT = 1e-12
 
-function call_test(f, x)
+function call_test(f, x::ArrayOrTuple{R}) where R <: Real
     try
         fx = f(x)
+        @test typeof(fx) == R
         return fx
     catch e
         if !isa(e, MethodError)
@@ -28,11 +31,20 @@ function call_test(f, x)
 end
 
 # tests equality of the results of prox, prox! and prox_naive
-function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
+function prox_test(f, x::ArrayOrTuple{R}, gamma=one(R)) where R <: Real
     y, fy = prox(f, x, gamma)
+
+    @test typeof(fy) == R
+
     y_prealloc = zero(x)
     fy_prealloc = prox!(y_prealloc, f, x, gamma)
+
+    @test typeof(fy_prealloc) == R
+
     y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gamma)
+
+    @test typeof(fy_naive) == R
+
     if ProximalOperators.is_convex(f)
         @test y_prealloc ≈ y
         @test y_naive ≈ y
@@ -42,12 +54,14 @@ function prox_test(f, x, gamma::Union{Real, AbstractArray}=1.0)
         @test fy_prealloc ≈ fy
         @test fy_naive ≈ fy
     end
+
     if !ProximalOperators.is_set(f) || ProximalOperators.is_prox_accurate(f)
         f_at_y = call_test(f, y)
         if f_at_y !== nothing
-            @test f_at_y ≈ fy atol=TOL_ASSERT
+            @test abs(f_at_y - fy) <= (1 + abs(fy))*sqrt(eps(R))
         end
     end
+
     return y, fy
 end
 
@@ -71,6 +85,7 @@ end
 end
 
 @testset "Functions" begin
+  include("test_cubeNormL2.jl")
   include("test_huberLoss.jl")
   include("test_indAffine.jl")
   include("test_indPolyhedral.jl")
