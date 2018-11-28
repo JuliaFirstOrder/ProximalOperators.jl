@@ -34,6 +34,7 @@ include("utilities/normdiff.jl")
 
 # Basic functions
 
+include("functions/cubeNormL2.jl")
 include("functions/elasticNet.jl")
 include("functions/huberLoss.jl")
 include("functions/indAffine.jl")
