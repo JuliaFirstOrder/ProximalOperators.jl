@@ -14,7 +14,10 @@ for R in [Float16, Float32, Float64]
             predicates_test(f)
             x = randn(T, shape)
             call_test(f, x)
-            prox_test(f, x, R(0.5)+rand(R))
+            gamma = R(0.5)+rand(R)
+            y, f_y = prox_test(f, x, gamma)
+            grad_f_y, f_y = gradient(f, y)
+            @test grad_f_y ≈ x - y
         end
     end
 end
