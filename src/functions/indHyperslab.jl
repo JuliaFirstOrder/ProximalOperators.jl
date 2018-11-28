@@ -61,10 +61,10 @@ end
 function prox_naive(f::IndHyperslab{R}, x::AbstractArray{R}, gamma::R=one(R)) where R
   s = dot(f.a, x)
   if s < f.low && f.norm_a > 0
-    return x - ((s - f.low)/norm(f.a)^2) * f.a, 0
+    return x - ((s - f.low)/norm(f.a)^2) * f.a, R(0)
   elseif s > f.upp && f.norm_a > 0
-    return x - ((s - f.upp)/norm(f.a)^2) * f.a, 0
+    return x - ((s - f.upp)/norm(f.a)^2) * f.a, R(0)
   else
-    return x, 0
+    return x, R(0)
   end
 end
