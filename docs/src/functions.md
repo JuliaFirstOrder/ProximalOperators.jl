@@ -55,6 +55,7 @@ IndZero
 ## Norms and regularization functions
 
 ```@docs
+CubeNormL2
 ElasticNet
 NormL0
 NormL1
