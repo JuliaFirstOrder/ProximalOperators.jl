@@ -29,23 +29,23 @@ is_set(f::IndBallL1) = true
 
 IndBallL1(r::R=1.0) where {R <: Real} = IndBallL1{R}(r)
 
-function (f::IndBallL1)(x::AbstractArray{T}) where T <: RealOrComplex
-  if norm(x,1) - f.r > 1e-12
-    return +Inf
+function (f::IndBallL1)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+  if norm(x, 1) - f.r > 1e-12
+    return R(Inf)
   end
-  return zero(T)
+  return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=one(R)) where {R<: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
   # TODO: a faster algorithm
-  if norm(x,1) - f.r < 1e-14
+  if norm(x, 1) - f.r < 1e-14
     y .= x
-    return zero(T)
+    return R(0)
   else # do a projection of abs(x) onto simplex then recover signs
     n = length(x)
     p = abs.(view(x,:))
     sort!(p, rev=true)
-    s = zero(R)
+    s = R(0)
     @inbounds for i = 1:n-1
       s = s + p[i]
       tmax = (s - f.r)/i
@@ -53,14 +53,14 @@ function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=
         @inbounds for j in eachindex(x)
           y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
         end
-        return zero(T)
+        return R(0)
       end
     end
     tmax = (s + p[n] - f.r)/n
     @inbounds for j in eachindex(x)
       y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
     end
-    return zero(T)
+    return R(0)
   end
 end
 

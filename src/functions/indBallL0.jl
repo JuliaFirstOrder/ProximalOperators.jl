@@ -28,14 +28,14 @@ is_set(f::IndBallL0) = true
 
 IndBallL0(r::I) where {I <: Integer} = IndBallL0{I}(r)
 
-function (f::IndBallL0)(x::AbstractArray{T}) where T <: RealOrComplex
+function (f::IndBallL0)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
   if count(!isequal(0), x) > f.r
-    return +Inf
+    return R(Inf)
   end
-  return zero(T)
+  return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL0, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
+function prox!(y::AbstractArray{T}, f::IndBallL0, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
   p = []
   if ndims(x) == 1
     p = partialsortperm(x, 1:f.r, by=abs, rev=true)
@@ -45,12 +45,12 @@ function prox!(y::AbstractArray{T}, f::IndBallL0, x::AbstractArray{T}, gamma::Re
   sort!(p)
   idx = 1
   for i = 1:length(p)
-    y[idx:p[i]-1] .= zero(T)
+    y[idx:p[i]-1] .= T(0)
     y[p[i]] = x[p[i]]
     idx = p[i]+1
   end
-  y[idx:end] .= zero(T)
-  return zero(T)
+  y[idx:end] .= T(0)
+  return R(0)
 end
 
 fun_name(f::IndBallL0) = "indicator of an L0 pseudo-norm ball"

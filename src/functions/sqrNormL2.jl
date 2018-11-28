@@ -49,7 +49,7 @@ function (f::SqrNormL2{S})(x::AbstractArray{T}) where {S <: AbstractArray, T <: 
   return 0.5*sqnorm
 end
 
-function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Real=1.0) where {S <: Real, T <: RealOrComplex}
+function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}) where {S <: Real, T <: RealOrComplex}
   sqnx = 0.0
   for k in eachindex(x)
     y[k] = f.lambda*x[k]
@@ -58,7 +58,7 @@ function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, ga
   return (f.lambda/2)*sqnx
 end
 
-function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Real=1.0) where {S <: AbstractArray, T <: RealOrComplex}
+function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}) where {S <: AbstractArray, T <: RealOrComplex}
   sqnx = 0.0
   for k in eachindex(x)
     y[k] = f.lambda[k]*x[k]
