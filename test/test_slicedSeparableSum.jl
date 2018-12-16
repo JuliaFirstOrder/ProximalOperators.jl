@@ -85,3 +85,18 @@ y2,fy2 = prox(prox_col[2],x[ind_col[2]...],1.)
 @test norm(yn-y)<1e-11
 @test abs((fy1+fy2)-fy)<1e-11
 @test norm(y-[y1;y2])<1e-11
+
+# Test with Quadratic (iterative)
+
+Q = randn(5,10)
+Q = Q'*Q
+q = randn(10)
+x = randn(10)
+xx = vcat(x, x)
+f = Quadratic(Q, q, iterative=true)
+g = SlicedSeparableSum((f, f), ((1:10,), (11:20,)))
+y, fy = prox(f, x)
+yy, fyy = prox(g, xx)
+
+@test yy ≈ vcat(y, y)
+@test fyy ≈ 2*fy
