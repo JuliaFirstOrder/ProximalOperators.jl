@@ -34,7 +34,7 @@ function lasso_fista(A, b, lam, x; tol=1e-3, maxit=50000)
   return x
 end
 
-function lasso_admm(A, b, lam, x; tol=1e-5, maxit=50000)
+function lasso_admm(A, b, lam, x; tol=1e-8, maxit=50000)
   u = zero(x)
   z = copy(x)
   f = LeastSquares(A, b)
@@ -78,3 +78,5 @@ x_admm = lasso_admm(A, b, lam, zeros(n))
 println("ADMM")
 println("      nnz(x)    = $(norm(x_admm, 0))")
 println("      obj value = $(0.5*norm(A*x_admm-b)^2 + lam*norm(x_admm, 1))")
+
+@test x_fista ≈ x_admm rtol=1e-3

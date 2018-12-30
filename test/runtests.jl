@@ -77,10 +77,7 @@ function predicates_test(f)
   @test !is_strongly_convex(f) || is_convex(f)
 end
 
-@testset "ProximalOperators" begin
-
 @testset "Utilities" begin
-  # include("test_deep.jl") # TODO: remove?
   include("test_symmetricpacked.jl")
 end
 
@@ -126,7 +123,6 @@ end
 end
 
 @testset "Demos" begin
-  include("test_demos.jl")
-end
-
+    include("../demos/lasso.jl")
+    include("../demos/rpca.jl")
 end
