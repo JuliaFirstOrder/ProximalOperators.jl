@@ -69,16 +69,16 @@ fun_dom(f::IndBallL1) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL1) = "x ↦ 0 if ‖x‖_1 ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL1) = "r = $(f.r)"
 
-function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
+function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
   # do a simple bisection (aka binary search) on λ
-  L = 0.0
+  L = R(0)
   U = maximum(abs, x)
   λ = L
-  v = 0.0
+  v = R(0)
   maxit = 120
   for iter in 1:maxit
     λ = 0.5*(L + U)
-    v = sum(max.(abs.(x) .- λ, 0.0))
+    v = sum(max.(abs.(x) .- λ, R(0)))
     # modify lower or upper bound
     (v < f.r) ? U = λ : L = λ
     # exit condition
@@ -86,5 +86,5 @@ function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::Real=1.0) where T 
       break
     end
   end
-  return sign.(x) .* max.(0.0, abs.(x) .- λ), 0.0
+  return sign.(x) .* max.(R(0), abs.(x) .- λ), R(0)
 end

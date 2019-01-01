@@ -29,23 +29,23 @@ is_set(f::IndBallL2) = true
 
 IndBallL2(r::R=1.0) where {R <: Real} = IndBallL2{R}(r)
 
-function (f::IndBallL2)(x::AbstractArray{T}) where T <: RealOrComplex
+function (f::IndBallL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
   if norm(x) - f.r > 1e-14
-    return +Inf
+    return R(Inf)
   end
-  return zero(T)
+  return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
+function prox!(y::AbstractArray{T}, f::IndBallL2{R}, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
   scal = f.r/norm(x)
   if scal > 1
     y .= x
-    return zero(T)
+    return R(0)
   end
   for k in eachindex(x)
     y[k] = scal*x[k]
   end
-  return zero(T)
+  return R(0)
 end
 
 fun_name(f::IndBallL2) = "indicator of an L2 norm ball"
@@ -53,12 +53,12 @@ fun_dom(f::IndBallL2) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL2) = "x ↦ 0 if ||x|| ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL2) = "r = $(f.r)"
 
-function prox_naive(f::IndBallL2, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
+function prox_naive(f::IndBallL2{R}, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
   normx = norm(x)
   if normx > f.r
     y = (f.r/normx)*x
   else
     y = x
   end
-  return y, 0.0
+  return y, R(0)
 end

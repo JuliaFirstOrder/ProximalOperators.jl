@@ -58,10 +58,10 @@ fun_dom(f::IndBallL0) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL0) = "x ↦ 0 if countnz(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL0) = "r = $(f.r)"
 
-function prox_naive(f::IndBallL0, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
+function prox_naive(f::IndBallL0, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
   p = sortperm(abs.(x)[:], rev=true)
   y = similar(x)
   y[p[1:f.r]] .= x[p[1:f.r]]
-  y[p[f.r+1:end]] .= 0.0
-  return y, 0.0
+  y[p[f.r+1:end]] .= T(0)
+  return y, R(0)
 end

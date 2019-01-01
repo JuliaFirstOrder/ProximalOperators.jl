@@ -62,7 +62,7 @@ function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=
       y[k] = x[k]
     end
   end
-  return 0.0
+  return zero(R)
 end
 
 prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) where {R <: Real} = prox!(y, f, x, one(R))
@@ -87,9 +87,7 @@ fun_params(f::IndBox) =
   string( "lb = ", typeof(f.lb) <: AbstractArray ? string(typeof(f.lb), " of size ", size(f.lb)) : f.lb, ", ",
           "ub = ", typeof(f.ub) <: AbstractArray ? string(typeof(f.ub), " of size ", size(f.ub)) : f.ub)
 
-function prox_naive(f::IndBox, x::AbstractArray{R}, gamma::Real=1.0) where R <: Real
+function prox_naive(f::IndBox, x::AbstractArray{R}, gamma=one(R)) where R <: Real
   y = min.(f.ub, max.(f.lb, x))
-  return y, 0.0
+  return y, zero(R)
 end
-
-prox_naive(f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) where {R <: Real} = prox_naive(f, x, 1.0)
