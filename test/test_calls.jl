@@ -151,8 +151,8 @@ stuff = [
 
   Dict( "constr" => IndSphereL2,
         "wrong"  => ( (-rand(),), ),
-        "params" => ( (rand(),), (sqrt(20),) ),
-        "args"   => ( randn(10), randn(20) )
+        "params" => ( (rand(),), (sqrt(20),), (1,), (1,) ),
+        "args"   => ( randn(10), randn(20), 1e-3*randn(10), randn(Complex{Float64}, 10) )
       ),
 
   Dict( "constr" => IndPSD,
