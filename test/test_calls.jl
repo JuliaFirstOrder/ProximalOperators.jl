@@ -46,20 +46,20 @@ stuff = [
 
   Dict( "constr" => IndBallL0,
         "wrong"  => ( (-4,), ),
-        "params" => ( (5,), (5,), (10, ) ),
-        "args"   => ( randn(25), randn(35), randn(10, 10) )
+        "params" => ( (5,), (5,), (10, ), (5, ) ),
+        "args"   => ( randn(25), randn(35), randn(10, 10), randn(Complex{Float64}, 15) )
       ),
 
   Dict( "constr" => IndBallL1,
         "wrong"  => ( (-rand(),), ),
-        "params" => ( (), (3.0,), (0.4,), (rand() + 0.1,), (rand() + 0.1,) ),
-        "args"   => ( rand(15), randn(25), randn(35), randn(60), randn(20,30) )
+        "params" => ( (), (3.0,), (0.4,), (rand() + 0.1,), (rand() + 0.1,), (1.0,) ),
+        "args"   => ( rand(15), randn(25), randn(35), randn(60), randn(20,30), randn(Complex{Float64}, 20) )
       ),
 
   Dict( "constr" => IndBallL2,
         "wrong"  => ( (-rand(),), ),
-        "params" => ( (rand(),), (sqrt(20),), (0.5,) ),
-        "args"   => ( randn(10), randn(20), 0.1*ones(10) )
+        "params" => ( (rand(),), (sqrt(20),), (0.5,), (1.0, ) ),
+        "args"   => ( randn(10), randn(20), 0.1*ones(10), randn(Complex{Float64}, 20) )
       ),
 
   Dict( "constr" => IndBallRank,
@@ -109,8 +109,8 @@ stuff = [
       ),
 
   Dict( "constr" => IndPoint,
-        "params" => ( (), (randn(20), ) ),
-        "args"   => ( randn(10), randn(20) )
+        "params" => ( (), (randn(20),), (randn(Complex{Float64}, 20),) ),
+        "args"   => ( randn(10), randn(20), randn(Complex{Float64}, 20) )
       ),
 
   Dict( "constr" => IndZero,
