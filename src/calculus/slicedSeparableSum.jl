@@ -100,8 +100,8 @@ fun_expr(f::SlicedSeparableSum) = "hard to explain"
 fun_params(f::SlicedSeparableSum) = "n/a" # for now
 
 function prox_naive(f::SlicedSeparableSum, x::AbstractArray, gamma)
-	fy = 0;
-	y = similar(x);
+	fy = 0
+	y = similar(x)
 	for t in eachindex(f.fs)
 		for k in eachindex(f.fs[t])
 			y[f.idxs[t][k]...], fy1 = prox_naive(f.fs[t][k], x[f.idxs[t][k]...], gamma)

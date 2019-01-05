@@ -81,11 +81,11 @@ fun_params(f::SeparableSum) = "n/a"
 
 function prox_naive(f::SeparableSum, xs::Tuple, gamma::Union{Real, Tuple}=1.0)
 	fys = 0.0
-	ys = [];
+	ys = []
 	for k in eachindex(xs)
 		y, fy = prox_naive(f.fs[k], xs[k], typeof(gamma) <: Real ? gamma : gamma[k])
-		fys += fy;
-		append!(ys, [y]);
+		fys += fy
+		append!(ys, [y])
 	end
 	return Tuple(ys), fys
 end

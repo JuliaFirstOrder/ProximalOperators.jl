@@ -29,8 +29,8 @@ is_convex(f::NuclearNorm) = true
 NuclearNorm(lambda::R=1.0) where {R <: Real} = NuclearNorm{R}(lambda)
 
 function (f::NuclearNorm{R})(X::AbstractMatrix{T}) where {R <: Real, T <: Union{R, Complex{R}}}
-	F = svd(X);
-	return f.lambda * sum(F.S);
+	F = svd(X)
+	return f.lambda * sum(F.S)
 end
 
 function prox!(Y::AbstractMatrix{T}, f::NuclearNorm{R}, X::AbstractMatrix{T}, gamma::R=one(R)) where {R <: Real, T <: Union{R, Complex{R}}}
@@ -45,7 +45,7 @@ function prox!(Y::AbstractMatrix{T}, f::NuclearNorm{R}, X::AbstractMatrix{T}, ga
 	# TODO: the order of the following matrix products should depend on the shape of x
 	M = S_thresh[1:rankY] .* Vt_thresh
 	mul!(Y, U_thresh, M)
-	return f.lambda * sum(S_thresh);
+	return f.lambda * sum(S_thresh)
 end
 
 fun_name(f::NuclearNorm) = "nuclear norm"
