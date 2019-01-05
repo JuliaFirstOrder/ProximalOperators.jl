@@ -3,7 +3,7 @@ export MoreauEnvelope
 """
 **Moreau envelope**
 
-    MoreauEnvelope(f, γ=1.0)
+	MoreauEnvelope(f, γ=1.0)
 
 Returns the Moreau envelope (also known as Moreau-Yosida regularization) of function `f` with parameter `γ` (positive), that is
 ```math
@@ -14,10 +14,10 @@ If ``f`` is convex, then ``f^γ`` is a smooth, convex, lower approximation to ``
 mutable struct MoreauEnvelope{R <: Real, T <: ProximableFunction} <: ProximableFunction
 	g::T
 	lambda::R
-    function MoreauEnvelope{R, T}(g::T, lambda::R) where {R, T}
-    	if lambda <= 0 error("parameter lambda must be positive") end
-    	new(g, lambda)
-    end
+	function MoreauEnvelope{R, T}(g::T, lambda::R) where {R, T}
+		if lambda <= 0 error("parameter lambda must be positive") end
+		new(g, lambda)
+	end
 end
 
 MoreauEnvelope(g::T, lambda::R=1.0) where {R <: Real, T <: ProximableFunction} = MoreauEnvelope{R, T}(g, lambda)

@@ -90,10 +90,10 @@ include("functions/normLinf.jl")
 include("functions/sumLargest.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
-  println(io, "description : ", fun_name(f))
-  println(io, "domain      : ", fun_dom(f))
-  println(io, "expression  : ", fun_expr(f))
-  print(  io, "parameters  : ", fun_params(f))
+	println(io, "description : ", fun_name(f))
+	println(io, "domain      : ", fun_dom(f))
+	println(io, "expression  : ", fun_expr(f))
+	print(  io, "parameters  : ", fun_params(f))
 end
 
 fun_name(  f) = "n/a"
@@ -116,7 +116,7 @@ is_strongly_convex(f::ProximableFunction) = false
 """
 **Proximal mapping**
 
-    y, fy = prox(f, x, γ=1.0)
+	y, fy = prox(f, x, γ=1.0)
 
 Computes
 ```math
@@ -127,15 +127,15 @@ Return values:
 * `fy`: the value ``f(y)``
 """
 function prox(f::ProximableFunction, x::ArrayOrTuple{R}, gamma=one(R)) where R
-  y = similar(x)
-  fy = prox!(y, f, x, gamma)
-  return y, fy
+	y = similar(x)
+	fy = prox!(y, f, x, gamma)
+	return y, fy
 end
 
 """
 **Proximal mapping (in-place)**
 
-    fy = prox!(y, f, x, γ=1.0)
+	fy = prox!(y, f, x, γ=1.0)
 
 Computes
 ```math
@@ -153,7 +153,7 @@ prox!
 """
 **Gradient mapping**
 
-    gradfx, fx = gradient(f, x)
+	gradfx, fx = gradient(f, x)
 
 Computes the gradient (and value) of ``f`` at ``x``. If ``f`` is only *subdifferentiable* at ``x``, then return a subgradient instead.
 
@@ -170,7 +170,7 @@ end
 """
 **Gradient mapping (in-place)**
 
-    gradient!(gradfx, f, x)
+	gradient!(gradfx, f, x)
 
 Writes ``\\nabla f(x)`` to `gradfx`, which must be pre-allocated and have the same shape/size as `x`. If ``f`` is only *subdifferentiable* at ``x``, then writes a subgradient instead.
 

@@ -5,7 +5,7 @@ export CrossEntropy
 """
 **Cross Entropy loss**
 
-CrossEntropy(b)
+	CrossEntropy(b)
 
 Returns the function
 ```math

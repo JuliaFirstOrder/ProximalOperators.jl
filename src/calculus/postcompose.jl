@@ -5,7 +5,7 @@ export Postcompose
 """
 **Postcomposition with an affine transformation**
 
-    Postcompose(f, a=1.0, b=0.0)
+	Postcompose(f, a=1.0, b=0.0)
 
 Returns the function
 ```math
@@ -13,16 +13,16 @@ g(x) = a\\cdot f(x) + b.
 ```
 """
 struct Postcompose{T <: ProximableFunction, R <: Real} <: ProximableFunction
-  f::T
-  a::R
-  b::R
-  function Postcompose{T,R}(f::T, a::R, b::R) where {T <: ProximableFunction, R <: Real}
-    if a <= 0.0
-      error("parameter `a` must be positive")
-    else
-      new(f, a, b)
-    end
-  end
+	f::T
+	a::R
+	b::R
+	function Postcompose{T,R}(f::T, a::R, b::R) where {T <: ProximableFunction, R <: Real}
+		if a <= 0.0
+			error("parameter `a` must be positive")
+		else
+			new(f, a, b)
+		end
+	end
 end
 
 is_prox_accurate(f::Postcompose) = is_prox_accurate(f.f)
@@ -42,23 +42,23 @@ Postcompose(f::T, a::R=one(R), b::R=zero(R)) where {T <: ProximableFunction, R <
 Postcompose(f::Postcompose{T, R}, a::R=one(R), b::R=zero(R)) where {T <: ProximableFunction, R <: Real} = Postcompose{T, R}(f.f, a*f.a, b+a*f.b)
 
 function (g::Postcompose)(x::AbstractArray{T}) where T <: RealOrComplex
-  return g.a*g.f(x) + g.b
+	return g.a*g.f(x) + g.b
 end
 
 function gradient!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}) where T <: RealOrComplex
-  v = gradient!(y, g.f, x)
-  y .*= g.a
-  return g.a*v + g.b
+	v = gradient!(y, g.f, x)
+	y .*= g.a
+	return g.a*v + g.b
 end
 
 function prox!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
-  v = prox!(y, g.f, x, g.a*gamma)
-  return g.a*v + g.b
+	v = prox!(y, g.f, x, g.a*gamma)
+	return g.a*v + g.b
 end
 
 function prox_naive(g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
-  y, v = prox_naive(g.f, x, g.a*gamma)
-  return y, g.a*v + g.b
+	y, v = prox_naive(g.f, x, g.a*gamma)
+	return y, g.a*v + g.b
 end
 
 fun_name(f::Postcompose) = string("Postcomposition of ", fun_name(f.f))

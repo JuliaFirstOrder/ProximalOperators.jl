@@ -5,7 +5,7 @@ export SeparableSum
 """
 **Separable sum of functions**
 
-    SeparableSum(f₁,…,fₖ)
+	SeparableSum(f₁,…,fₖ)
 
 Given functions `f₁` to `fₖ`, returns their separable sum, that is
 ```math
@@ -15,11 +15,11 @@ The object `g` constructed in this way can be evaluated at `Tuple`s of length `k
 
 Example:
 
-    f = SeparableSum(NormL1(), NuclearNorm()); # separable sum of two functions
-    x = randn(10); # some random vector
-    Y = randn(20, 30); # some random matrix
-    f_xY = f((x, Y)); # evaluates f at (x, Y)
-    (u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)
+	f = SeparableSum(NormL1(), NuclearNorm()); # separable sum of two functions
+	x = randn(10); # some random vector
+	Y = randn(20, 30); # some random matrix
+	f_xY = f((x, Y)); # evaluates f at (x, Y)
+	(u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)
 """
 struct SeparableSum{T <: Tuple} <: ProximableFunction
 	fs::T
@@ -40,36 +40,36 @@ is_strongly_convex(f::SeparableSum) = all(is_strongly_convex.(f.fs))
 
 function (f::SeparableSum)(x::Tuple)
 	sum = 0.0
-  for k in eachindex(x)
-	  sum += f.fs[k](x[k])
-  end
-  return sum
+	for k in eachindex(x)
+		sum += f.fs[k](x[k])
+	end
+	return sum
 end
 
 function prox!(ys::T, fs::Tuple, xs::T, gamma::Real=1.0) where T <: Tuple
-  sum = 0.0
-  for k in eachindex(xs)
-	  sum += prox!(ys[k], fs[k], xs[k], gamma)
-  end
-  return sum
+	sum = 0.0
+	for k in eachindex(xs)
+		sum += prox!(ys[k], fs[k], xs[k], gamma)
+	end
+	return sum
 end
 
 function prox!(ys::T, fs::Tuple, xs::T, gamma::Tuple) where T <: Tuple
-  sum = 0.0
-  for k in eachindex(xs)
-	  sum += prox!(ys[k], fs[k], xs[k], gamma[k])
-  end
-  return sum
+	sum = 0.0
+	for k in eachindex(xs)
+		sum += prox!(ys[k], fs[k], xs[k], gamma[k])
+	end
+	return sum
 end
 
 prox!(ys::T, f::SeparableSum, xs::T, gamma::Union{Real, Tuple}=1.0) where {T <: Tuple} = prox!(ys, f.fs, xs, gamma)
 
 function gradient!(grad::T, fs::Tuple, x::T) where T <: Tuple
-  val = 0.0
-  for k in eachindex(fs)
-    val += gradient!(grad[k], fs[k], x[k])
-  end
-  return val
+	val = 0.0
+	for k in eachindex(fs)
+		val += gradient!(grad[k], fs[k], x[k])
+	end
+	return val
 end
 
 gradient!(grad::T, f::SeparableSum, x::T) where {T <: Tuple} = gradient!(grad, f.fs, x)
@@ -82,10 +82,10 @@ fun_params(f::SeparableSum) = "n/a"
 function prox_naive(f::SeparableSum, xs::Tuple, gamma::Union{Real, Tuple}=1.0)
 	fys = 0.0
 	ys = [];
-  for k in eachindex(xs)
-	  y, fy = prox_naive(f.fs[k], xs[k], typeof(gamma) <: Real ? gamma : gamma[k])
+	for k in eachindex(xs)
+		y, fy = prox_naive(f.fs[k], xs[k], typeof(gamma) <: Real ? gamma : gamma[k])
 		fys += fy;
 		append!(ys, [y]);
-  end
+	end
 	return Tuple(ys), fys
 end

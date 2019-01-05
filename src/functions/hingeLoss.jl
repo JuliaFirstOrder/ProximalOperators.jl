@@ -5,7 +5,7 @@ export HingeLoss
 """
 **Hinge loss**
 
-  HingeLoss(y, μ=1.0)
+	HingeLoss(y, μ=1.0)
 
 Returns the function
 ```math
