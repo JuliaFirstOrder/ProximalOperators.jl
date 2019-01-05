@@ -13,7 +13,7 @@ g(x) = f(Lx + b)
 ```
 where ``f`` is a convex function and ``L`` is a linear mapping: this must satisfy ``LL^* = μI`` for ``μ ⩾ 0``. Furthermore, either ``f`` is separable or parameter `μ` is a scalar, for the `prox` of ``g`` to be computable.
 
-Parameter `L` defines ``L`` through the `A_mul_B!` and `Ac_mul_B!` methods. Therefore `L` can be an `AbstractMatrix` for example, but not necessarily.
+Parameter `L` defines ``L`` through the `mul!` method. Therefore `L` can be an `AbstractMatrix` for example, but not necessarily.
 
 In this case, `prox` and `prox!` are computed according to Prop. 24.14 in Bauschke, Combettes "Convex Analisys and Monotone Operator Theory in Hilbert Spaces", 2nd edition, 2016. The same result is Prop. 23.32 in the 1st edition of the same book.
 """
@@ -78,7 +78,7 @@ function prox!(y::AbstractArray{C}, g::Precompose, x::AbstractArray{C}, gamma::R
 	return v
 end
 
-function prox_naive(g::Precompose, x::AbstractArray{C}, gamma::R=1.0) where {R <: Real, C <: Union{R, Complex{R}}}
+function prox_naive(g::Precompose, x::AbstractArray{C}, gamma::R=one(R)) where {R <: Real, C <: Union{R, Complex{R}}}
 	res = g.L*x .+ g.b
 	proxres, v = prox_naive(g.f, res, g.mu .* gamma)
 	y = x + g.L'*((proxres .- res)./g.mu)

@@ -38,49 +38,49 @@ is_quadratic(f::SeparableSum) = all(is_quadratic.(f.fs))
 is_generalized_quadratic(f::SeparableSum) = all(is_generalized_quadratic.(f.fs))
 is_strongly_convex(f::SeparableSum) = all(is_strongly_convex.(f.fs))
 
-function (f::SeparableSum)(x::Tuple)
-	sum = 0.0
+function (f::SeparableSum)(x::TupleOfArrays{R}) where R <: Real
+	sum = R(0)
 	for k in eachindex(x)
 		sum += f.fs[k](x[k])
 	end
 	return sum
 end
 
-function prox!(ys::T, fs::Tuple, xs::T, gamma::Real=1.0) where T <: Tuple
-	sum = 0.0
+function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::R=one(R)) where R <: Real
+	sum = R(0)
 	for k in eachindex(xs)
 		sum += prox!(ys[k], fs[k], xs[k], gamma)
 	end
 	return sum
 end
 
-function prox!(ys::T, fs::Tuple, xs::T, gamma::Tuple) where T <: Tuple
-	sum = 0.0
+function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::Tuple) where R <: Real
+	sum = R(0)
 	for k in eachindex(xs)
 		sum += prox!(ys[k], fs[k], xs[k], gamma[k])
 	end
 	return sum
 end
 
-prox!(ys::T, f::SeparableSum, xs::T, gamma::Union{Real, Tuple}=1.0) where {T <: Tuple} = prox!(ys, f.fs, xs, gamma)
+prox!(ys::TupleOfArrays{R}, f::SeparableSum, xs::TupleOfArrays{R}, gamma=one(R)) where R <: Real = prox!(ys, f.fs, xs, gamma)
 
-function gradient!(grad::T, fs::Tuple, x::T) where T <: Tuple
-	val = 0.0
+function gradient!(grad::TupleOfArrays{R}, fs::Tuple, x::TupleOfArrays{R}) where R <: Real
+	val = R(0)
 	for k in eachindex(fs)
 		val += gradient!(grad[k], fs[k], x[k])
 	end
 	return val
 end
 
-gradient!(grad::T, f::SeparableSum, x::T) where {T <: Tuple} = gradient!(grad, f.fs, x)
+gradient!(grad::TupleOfArrays, f::SeparableSum, x::TupleOfArrays) = gradient!(grad, f.fs, x)
 
 fun_name(f::SeparableSum) = "separable sum"
 fun_dom(f::SeparableSum) = "n/a"
 fun_expr(f::SeparableSum) = "(x₁, …, xₖ) ↦ f₁(x₁) + … + fₖ(xₖ)"
 fun_params(f::SeparableSum) = "n/a"
 
-function prox_naive(f::SeparableSum, xs::Tuple, gamma::Union{Real, Tuple}=1.0)
-	fys = 0.0
+function prox_naive(f::SeparableSum, xs::TupleOfArrays{R}, gamma::Union{R, Tuple}=one(R)) where R <: Real
+	fys = R(0)
 	ys = []
 	for k in eachindex(xs)
 		y, fy = prox_naive(f.fs[k], xs[k], typeof(gamma) <: Real ? gamma : gamma[k])

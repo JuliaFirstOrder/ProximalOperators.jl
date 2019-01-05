@@ -36,7 +36,7 @@ function (f::IndBallL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComple
 	return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL2{R}, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::IndBallL2, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
 	scal = f.r/norm(x)
 	if scal > 1
 		y .= x
@@ -53,7 +53,7 @@ fun_dom(f::IndBallL2) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL2) = "x ↦ 0 if ||x|| ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL2) = "r = $(f.r)"
 
-function prox_naive(f::IndBallL2{R}, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndBallL2, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
 	normx = norm(x)
 	if normx > f.r
 		y = (f.r/normx)*x

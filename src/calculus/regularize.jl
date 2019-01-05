@@ -48,7 +48,7 @@ function gradient!(y::AbstractArray{T}, g::Regularize, x::AbstractArray{T}) wher
 	return v + g.rho/2*norm(x .- g.a)^2
 end
 
-function prox!(y::AbstractArray{T}, g::Regularize, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
+function prox!(y::AbstractArray{T}, g::Regularize, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=one(R)) where {R <: Real, T <: RealOrComplex{R}}
 	gr = g.rho*gamma
 	gr2 = 1.0 ./ (1.0 .+ gr)
 	v = prox!(y, g.f, gr2.*(x .+ gr.*g.a), gr2.*gamma)
@@ -60,7 +60,7 @@ fun_dom(f::Regularize) = fun_dom(f.f)
 fun_expr(f::Regularize) = string(fun_expr(f.f), "+(ρ/2)||x-a||²")
 fun_params(f::Regularize) = "ρ = $(f.rho), a = $( typeof(f.a) <: Real ? f.a : typeof(f.a) )"
 
-function prox_naive(g::Regularize, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
+function prox_naive(g::Regularize, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=one(R)) where {R <: Real, T <: RealOrComplex{R}}
 	y, v = prox_naive(g.f, x./(1.0 .+ gamma.*g.rho) .+ g.a./(1.0./(gamma.*g.rho) .+ 1.0), gamma./(1.0 .+ gamma.*g.rho))
 	return y, v + g.rho/2*norm(y .- g.a)^2
 end

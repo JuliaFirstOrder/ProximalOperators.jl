@@ -51,12 +51,12 @@ function gradient!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}) whe
 	return g.a*v + g.b
 end
 
-function prox!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
+function prox!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma=one(R)) where {R <: Real, T <: RealOrComplex{R}}
 	v = prox!(y, g.f, x, g.a*gamma)
 	return g.a*v + g.b
 end
 
-function prox_naive(g::Postcompose, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
+function prox_naive(g::Postcompose, x::AbstractArray{T}, gamma=one(R)) where {R <: Real, T <: RealOrComplex{R}}
 	y, v = prox_naive(g.f, x, g.a*gamma)
 	return y, g.a*v + g.b
 end

@@ -46,7 +46,7 @@ function prox!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}, gamma::R=one
 		y .= (1-gamlamd).*x .+ gamlamd.*y
 		return f.lambda*(d-gamlam)
 	end
-	return zero(R)
+	return R(0)
 end
 
 function gradient!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}) where T <: RealOrComplex
@@ -65,12 +65,12 @@ fun_dom(f::DistL2) = fun_dom(f.ind)
 fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
 fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
-function prox_naive(f::DistL2, x::AbstractArray{R}, gamma::Real=1.0) where R <: RealOrComplex
+function prox_naive(f::DistL2, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
 	p, = prox(f.ind, x)
 	d = norm(x-p)
 	gamlam = gamma*f.lambda
 	if d > gamlam
 		return x + gamlam/d*(p-x), f.lambda*(d-gamlam)
 	end
-	return p, 0.0
+	return p, R(0)
 end
