@@ -33,12 +33,12 @@ function (f::IndAffineDirect{R, T, M, V, F})(x::V) where {R, T, M, V, F}
 	f.res .= f.b .- f.res
 	# the tolerance in the following line should be customizable
 	if norm(f.res, Inf) <= 1e-12
-		return zero(R)
+		return R(0)
 	end
 	return typemax(R)
 end
 
-function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=one(R)) where {R, T, M, V, F <: QRCompactWY}
+function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=R(1)) where {R, T, M, V, F <: QRCompactWY}
 	mul!(f.res, f.A, x)
 	f.res .= f.b .- f.res
 	Rfact = view(f.fact.factors, 1:length(f.b), 1:length(f.b))
@@ -46,10 +46,10 @@ function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=one(R)) w
 	LinearAlgebra.LAPACK.trtrs!('U', 'N', 'N', Rfact, f.res)
 	mul!(y, adjoint(f.A), f.res)
 	y .+= x
-	return zero(R)
+	return R(0)
 end
 
-function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=one(R)) where {R, T, M, V, F <: SuiteSparse.SPQR.Factorization}
+function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=R(1)) where {R, T, M, V, F <: SuiteSparse.SPQR.Factorization}
 	mul!(f.res, f.A, x)
 	f.res .= f.b .- f.res
 	##############################################################################
@@ -65,10 +65,10 @@ function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=one(R)) w
 	##############################################################################
 	mul!(y, adjoint(f.A), RRres)
 	y .+= x
-	return zero(R)
+	return R(0)
 end
 
-function prox_naive(f::IndAffineDirect, x::AbstractArray{T,1}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndAffineDirect, x::AbstractArray{T,1}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	y = x + f.A'*((f.A*f.A')\(f.b - f.A*x))
-	return y, zero(R)
+	return y, R(0)
 end

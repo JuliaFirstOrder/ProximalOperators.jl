@@ -33,10 +33,10 @@ function (f::NuclearNorm{R})(X::AbstractMatrix{T}) where {R <: Real, T <: Union{
 	return f.lambda * sum(F.S)
 end
 
-function prox!(Y::AbstractMatrix{T}, f::NuclearNorm{R}, X::AbstractMatrix{T}, gamma::R=one(R)) where {R <: Real, T <: Union{R, Complex{R}}}
+function prox!(Y::AbstractMatrix{T}, f::NuclearNorm{R}, X::AbstractMatrix{T}, gamma::R=R(1)) where {R <: Real, T <: Union{R, Complex{R}}}
 	F = svd(X)
-	S_thresh = max.(zero(R), F.S .- f.lambda*gamma)
-	rankY = findfirst(S_thresh .== zero(R))
+	S_thresh = max.(R(0), F.S .- f.lambda*gamma)
+	rankY = findfirst(S_thresh .== R(0))
 	if rankY === nothing
 		rankY = minimum(size(X))
 	end
@@ -53,7 +53,7 @@ fun_dom(f::NuclearNorm) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
 fun_expr(f::NuclearNorm) = "X ↦ λ∑σ_i(X)"
 fun_params(f::NuclearNorm) = "λ = $(f.lambda)"
 
-function prox_naive(f::NuclearNorm, X::AbstractMatrix{T}, gamma=1.0) where T
+function prox_naive(f::NuclearNorm, X::AbstractMatrix{T}, gamma::R=R(1)) where {R, T <: Union{R, Complex{R}}}
 	F = svd(X)
 	S = max.(0, F.S .- f.lambda*gamma)
 	Y = F.U * (Diagonal(S) * F.Vt)

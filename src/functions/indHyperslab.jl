@@ -41,12 +41,12 @@ function (f::IndHyperslab{R})(x::AbstractArray{R}) where R
 	# if f.low <= s <= f.upp
 	# tol = (R(1) + abs(s))*eps(R)
 	if f.low - s <= eps(R)*f.norm_a*(1 + abs(f.low)) && s - f.upp <= eps(R)*f.norm_a*(1 + abs(f.upp))
-		return zero(R)
+		return R(0)
 	end
 	return R(Inf)
 end
 
-function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gamma::R=one(R)) where R
+function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
 	s = dot(f.a, x)
 	if s < f.low && f.norm_a > 0
 		y .= x .- ((s - f.low)/f.norm_a^2) .* f.a
@@ -55,10 +55,10 @@ function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gam
 	else
 		copyto!(y, x)
 	end
-	return zero(R)
+	return R(0)
 end
 
-function prox_naive(f::IndHyperslab{R}, x::AbstractArray{R}, gamma::R=one(R)) where R
+function prox_naive(f::IndHyperslab{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
 	s = dot(f.a, x)
 	if s < f.low && f.norm_a > 0
 		return x - ((s - f.low)/norm(f.a)^2) * f.a, R(0)

@@ -46,7 +46,7 @@ function (f::SeparableSum)(x::TupleOfArrays{R}) where R <: Real
 	return sum
 end
 
-function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::R=one(R)) where R <: Real
+function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::R=R(1)) where R <: Real
 	sum = R(0)
 	for k in eachindex(xs)
 		sum += prox!(ys[k], fs[k], xs[k], gamma)
@@ -62,7 +62,7 @@ function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::Tup
 	return sum
 end
 
-prox!(ys::TupleOfArrays{R}, f::SeparableSum, xs::TupleOfArrays{R}, gamma=one(R)) where R <: Real = prox!(ys, f.fs, xs, gamma)
+prox!(ys::TupleOfArrays{R}, f::SeparableSum, xs::TupleOfArrays{R}, gamma=R(1)) where R <: Real = prox!(ys, f.fs, xs, gamma)
 
 function gradient!(grad::TupleOfArrays{R}, fs::Tuple, x::TupleOfArrays{R}) where R <: Real
 	val = R(0)
@@ -79,7 +79,7 @@ fun_dom(f::SeparableSum) = "n/a"
 fun_expr(f::SeparableSum) = "(x₁, …, xₖ) ↦ f₁(x₁) + … + fₖ(xₖ)"
 fun_params(f::SeparableSum) = "n/a"
 
-function prox_naive(f::SeparableSum, xs::TupleOfArrays{R}, gamma::Union{R, Tuple}=one(R)) where R <: Real
+function prox_naive(f::SeparableSum, xs::TupleOfArrays{R}, gamma::Union{R, Tuple}=R(1)) where R <: Real
 	fys = R(0)
 	ys = []
 	for k in eachindex(xs)

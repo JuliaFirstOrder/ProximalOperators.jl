@@ -35,9 +35,9 @@ function (f::ElasticNet)(x::AbstractArray{R}) where R <: RealOrComplex
 	return f.mu*norm(x,1) + (f.lambda/2)*norm(x,2)^2
 end
 
-function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma::R=one(R)) where R <: Real
-	sqnorm2x = zero(R)
-	norm1x = zero(R)
+function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
+	sqnorm2x = R(0)
+	norm1x = R(0)
 	gm = gamma*f.mu
 	gl = gamma*f.lambda
 	for i in eachindex(x)
@@ -49,8 +49,8 @@ function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma
 end
 
 function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma::AbstractArray{R}) where R <: Real
-	sqnorm2x = zero(R)
-	norm1x = zero(R)
+	sqnorm2x = R(0)
+	norm1x = R(0)
 	for i in eachindex(x)
 		gm = gamma[i]*f.mu
 		gl = gamma[i]*f.lambda
@@ -61,9 +61,9 @@ function prox!(y::AbstractArray{R}, f::ElasticNet{R}, x::AbstractArray{R}, gamma
 	return f.mu*norm1x + (f.lambda/2)*sqnorm2x
 end
 
-function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{Complex{R}}, gamma::R=one(R)) where R <: Real
-	sqnorm2x = zero(R)
-	norm1x = zero(R)
+function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{Complex{R}}, gamma::R=R(1)) where R <: Real
+	sqnorm2x = R(0)
+	norm1x = R(0)
 	gm = gamma*f.mu
 	gl = gamma*f.lambda
 	for i in eachindex(x)
@@ -75,8 +75,8 @@ function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{
 end
 
 function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet{R}, x::AbstractArray{Complex{R}}, gamma::AbstractArray{R}) where R <: Real
-	sqnorm2x = zero(R)
-	norm1x = zero(R)
+	sqnorm2x = R(0)
+	norm1x = R(0)
 	for i in eachindex(x)
 		gm = gamma[i]*f.mu
 		gl = gamma[i]*f.lambda

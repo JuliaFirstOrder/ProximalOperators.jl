@@ -35,7 +35,7 @@ function (f::IndPoint{R, C})(x::AbstractArray{C}) where {R, C}
 	return R(Inf)
 end
 
-function prox!(y::AbstractArray{C}, f::IndPoint{R, C}, x::AbstractArray{C}, gamma=one(R)) where {R, C}
+function prox!(y::AbstractArray{C}, f::IndPoint{R, C}, x::AbstractArray{C}, gamma=R(1)) where {R, C}
 	y .= f.p
 	return R(0)
 end
@@ -46,7 +46,7 @@ fun_expr(f::IndPoint) = "x ↦ 0 if x = p, +∞ otherwise"
 fun_params(f::IndPoint) =
 	string( "p = ", typeof(f.p) <: AbstractArray ? string(typeof(f.p), " of size ", size(f.p)) : f.p, ", ")
 
-function prox_naive(f::IndPoint{R, C}, x::AbstractArray{C}, gamma=one(R)) where {R, C}
+function prox_naive(f::IndPoint{R, C}, x::AbstractArray{C}, gamma=R(1)) where {R, C}
 	y = similar(x)
 	y .= f.p
 	return y, R(0)

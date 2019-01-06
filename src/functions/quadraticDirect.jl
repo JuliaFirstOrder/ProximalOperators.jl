@@ -33,7 +33,7 @@ function (f::QuadraticDirect{R, M, V, F})(x::AbstractArray{R}) where {R, M, V, F
 	return 0.5*dot(x, f.temp) + dot(x, f.q)
 end
 
-function prox!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractArray{R}, gamma::R=one(R)) where {R, M, V, F <: Cholesky}
+function prox!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractArray{R}, gamma::R=R(1)) where {R, M, V, F <: Cholesky}
 	if gamma != f.gamma
 		factor_step!(f, gamma)
 	end
@@ -47,7 +47,7 @@ function prox!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractA
 	return fy
 end
 
-function prox!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractArray{R}, gamma::R=one(R)) where {R, M, V, F <: SuiteSparse.CHOLMOD.Factor}
+function prox!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractArray{R}, gamma::R=R(1)) where {R, M, V, F <: SuiteSparse.CHOLMOD.Factor}
 	if gamma != f.gamma
 		factor_step!(f, gamma)
 	end
@@ -75,7 +75,7 @@ function gradient!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::Abstr
 	return 0.5*(dot(x, y) + dot(x, f.q))
 end
 
-function prox_naive(f::QuadraticDirect, x, gamma=1.0)
+function prox_naive(f::QuadraticDirect, x::AbstractArray{R}, gamma::R=one(R)) where R
 	y = (gamma*f.Q + I)\(x - gamma*f.q)
 	fy = 0.5*dot(y, f.Q*y) + dot(y, f.q)
 	return y, fy

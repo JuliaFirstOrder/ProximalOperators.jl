@@ -40,7 +40,7 @@ function (f::SqrDistL2)(x::AbstractArray{T}) where T <: RealOrComplex
 	return (f.lambda/2)*normdiff2(x,p)
 end
 
-function prox!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	p, = prox(f.ind, x)
 	sqrd = (f.lambda/2)*normdiff2(x,p)
 	c1 = 1/(1+f.lambda*gamma)
@@ -63,7 +63,7 @@ fun_dom(f::SqrDistL2) = fun_dom(f.ind)
 fun_expr(f::SqrDistL2) = "x ↦ (λ/2) inf { ||x-y||^2 : y ∈ S} "
 fun_params(f::SqrDistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
-function prox_naive(f::SqrDistL2, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::SqrDistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	p, = prox(f.ind, x)
 	sqrd = (f.lambda/2)*norm(x-p)^2
 	gamlam = f.lambda*gamma

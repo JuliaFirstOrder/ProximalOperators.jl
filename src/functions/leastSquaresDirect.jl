@@ -56,7 +56,7 @@ function (f::LeastSquaresDirect{R, RC, M, V, F})(x::AbstractVector{RC}) where {R
 	return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function prox!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}, gamma::R=one(R)) where {R, RC, M, V, F, D <: RealOrComplex{R}}
+function prox!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}, gamma::R=R(1)) where {R, RC, M, V, F, D <: RealOrComplex{R}}
 	# if gamma different from f.gamma then call factor_step!
 	if gamma != f.gamma
 		factor_step!(f, gamma)
@@ -123,7 +123,7 @@ function gradient!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, 
 	fy = (f.lambda/2)*dot(f.res, f.res)
 end
 
-function prox_naive(f::LeastSquaresDirect, x::AbstractVector, gamma=1.0)
+function prox_naive(f::LeastSquaresDirect, x::AbstractVector{D}, gamma::R=R(1)) where {R, D <: RealOrComplex{R}}
 	lamgam = f.lambda*gamma
 	y = (f.A'*f.A + I/lamgam)\(f.Atb + x/lamgam)
 	fy = (f.lambda/2)*norm(f.A*y-f.b)^2

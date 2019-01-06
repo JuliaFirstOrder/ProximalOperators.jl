@@ -61,7 +61,7 @@ function gradient!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{
 	return v
 end
 
-function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	z = g.a .* x .+ g.b
 	v = prox!(y, g.f, z, (g.a .* g.a) .* gamma)
 	y .-= g.b
@@ -69,7 +69,7 @@ function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, 
 	return v
 end
 
-function prox_naive(g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	z = g.a .* x .+ g.b
 	y, fy = prox_naive(g.f, z, (g.a .* g.a) .* gamma)
 	return (y .- g.b)./g.a, fy

@@ -127,7 +127,7 @@ Return values:
 * `y`: the proximal point ``y``
 * `fy`: the value ``f(y)``
 """
-function prox(f::ProximableFunction, x::ArrayOrTuple{R}, gamma=one(R)) where R
+function prox(f::ProximableFunction, x::ArrayOrTuple{R}, gamma=R(1)) where R
 	y = similar(x)
 	fy = prox!(y, f, x, gamma)
 	return y, fy
@@ -149,7 +149,7 @@ Return values:
 """
 prox!
 # TODO: should we put the following here instead? And remove the default value for gamma in each subtype
-# prox!(y::ArrayOrTuple{R}, f::ProximableFunction, x::ArrayOrTuple{R}) = prox!(y, f, x, one(R))
+# prox!(y::ArrayOrTuple{R}, f::ProximableFunction, x::ArrayOrTuple{R}) = prox!(y, f, x, R(1))
 
 """
 **Gradient mapping**

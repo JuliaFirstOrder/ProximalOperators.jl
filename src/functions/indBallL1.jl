@@ -37,7 +37,7 @@ function (f::IndBallL1)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComple
 	return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	# TODO: a faster algorithm
 	if norm(x, 1) - f.r <= f.r*eps(R)
 		y .= x
@@ -52,14 +52,14 @@ function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=
 			tmax = (s - f.r)/i
 			if tmax >= p[i+1]
 				@inbounds for j in eachindex(x)
-					y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
+					y[j] = sign(x[j])*max(abs(x[j])-tmax, R(0))
 				end
 				return R(0)
 			end
 		end
 		tmax = (s + p[n] - f.r)/n
 		@inbounds for j in eachindex(x)
-			y[j] = sign(x[j])*max(abs(x[j])-tmax, zero(R))
+			y[j] = sign(x[j])*max(abs(x[j])-tmax, R(0))
 		end
 		return R(0)
 	end
@@ -70,7 +70,7 @@ fun_dom(f::IndBallL1) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL1) = "x ↦ 0 if ‖x‖_1 ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL1) = "r = $(f.r)"
 
-function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	# do a simple bisection (aka binary search) on λ
 	L = R(0)
 	U = maximum(abs, x)

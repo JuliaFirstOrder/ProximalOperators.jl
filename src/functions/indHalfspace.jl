@@ -33,19 +33,19 @@ is_cone(f::IndHalfspace) = f.b == 0 || f.b == Inf
 
 function (f::IndHalfspace{R})(x::AbstractArray{R}) where R
 	if dot(f.a, x) - f.b <= eps(R)*f.norm_a*(1 + abs(f.b))
-		return zero(R)
+		return R(0)
 	end
 	return R(Inf)
 end
 
-function prox!(y::AbstractArray{R}, f::IndHalfspace{R}, x::AbstractArray{R}, gamma::R=one(R)) where R
+function prox!(y::AbstractArray{R}, f::IndHalfspace{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
 	s = dot(f.a, x)
 	if s > f.b
 		y .= x .- ((s - f.b)/f.norm_a^2) .* f.a
 	else
 		copyto!(y, x)
 	end
-	return zero(R)
+	return R(0)
 end
 
 fun_name(f::IndHalfspace) = "indicator of a halfspace"
@@ -55,7 +55,7 @@ fun_params(f::IndHalfspace) =
 	string( "a = ", typeof(f.a), " of size ", size(f.a), ", ",
 			"b = $(f.b)")
 
-function prox_naive(f::IndHalfspace{R}, x::AbstractArray{R}, gamma::R=one(R)) where R
+function prox_naive(f::IndHalfspace{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
 	s = dot(f.a, x) - f.b
 	if s <= 0
 		return x, 0.0

@@ -17,14 +17,14 @@ struct LogisticLoss{T <: AbstractArray, R <: Real} <: ProximableFunction
 	y::T
 	mu::R
 	function LogisticLoss{T, R}(y::T, mu::R) where {T, R}
-		if mu <= zero(R)
+		if mu <= R(0)
 			error("parameter mu must be positive")
 		end
 		new(y, mu)
 	end
 end
 
-LogisticLoss(y::T, mu::R=one(R)) where {R, T <: AbstractArray{R}} = LogisticLoss{T, R}(y, mu)
+LogisticLoss(y::T, mu::R=R(1)) where {R, T <: AbstractArray{R}} = LogisticLoss{T, R}(y, mu)
 
 is_separable(f::LogisticLoss) = true
 is_convex(f::LogisticLoss) = true
@@ -34,7 +34,7 @@ is_prox_accurate(f::LogisticLoss) = false
 # f(x)  =  mu log(1 + exp(-y x))
 
 function (f::LogisticLoss{T, R})(x::AbstractArray{R}) where {T, R}
-	val = zero(R)
+	val = R(0)
 	for k in eachindex(x)
 		expyx = exp(f.y[k]*x[k])
 		val += log(1.0 + 1.0/expyx)
@@ -48,7 +48,7 @@ end
 # Lipschitz constant of gradient: (mu y)
 
 function gradient!(g::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}) where {T, R}
-	val = zero(R)
+	val = R(0)
 	for k in eachindex(x)
 		expyx = exp(f.y[k]*x[k])
 		g[k] = -f.mu * f.y[k] / (1.0 + expyx)
@@ -74,7 +74,7 @@ end
 #
 # Alternatively we can use gradient methods with constant step size.
 
-function prox!(z::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}, gamma::R=one(R)) where {T, R}
+function prox!(z::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}, gamma::R=R(1)) where {T, R}
 	c = 1.0/gamma # convexity modulus
 	L = maximum(abs, f.mu .* f.y) + c # Lipschitz constants
 	z .= x
@@ -87,7 +87,7 @@ function prox!(z::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}, 
 		z .-= Fz ./ L
 	end
 	expyz .= exp.(f.y .* z)
-	val = zero(R)
+	val = R(0)
 	for k in eachindex(expyz)
 		val += log(1.0 + 1.0/expyz[k])
 	end

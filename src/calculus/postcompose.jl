@@ -37,9 +37,9 @@ is_quadratic(f::Postcompose) = is_quadratic(f.f)
 is_generalized_quadratic(f::Postcompose) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::Postcompose) = is_strongly_convex(f.f)
 
-Postcompose(f::T, a::R=one(R), b::R=zero(R)) where {T <: ProximableFunction, R <: Real} = Postcompose{T, R}(f, a, b)
+Postcompose(f::T, a::R=R(1), b::R=R(0)) where {T <: ProximableFunction, R <: Real} = Postcompose{T, R}(f, a, b)
 
-Postcompose(f::Postcompose{T, R}, a::R=one(R), b::R=zero(R)) where {T <: ProximableFunction, R <: Real} = Postcompose{T, R}(f.f, a*f.a, b+a*f.b)
+Postcompose(f::Postcompose{T, R}, a::R=R(1), b::R=R(0)) where {T <: ProximableFunction, R <: Real} = Postcompose{T, R}(f.f, a*f.a, b+a*f.b)
 
 function (g::Postcompose)(x::AbstractArray{T}) where T <: RealOrComplex
 	return g.a*g.f(x) + g.b
@@ -51,12 +51,12 @@ function gradient!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}) whe
 	return g.a*v + g.b
 end
 
-function prox!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	v = prox!(y, g.f, x, g.a*gamma)
 	return g.a*v + g.b
 end
 
-function prox_naive(g::Postcompose, x::AbstractArray{T}, gamma=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(g::Postcompose, x::AbstractArray{T}, gamma=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	y, v = prox_naive(g.f, x, g.a*gamma)
 	return y, g.a*v + g.b
 end

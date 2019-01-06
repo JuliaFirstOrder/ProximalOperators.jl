@@ -29,14 +29,14 @@ is_set(f::IndSimplex) = true
 
 IndSimplex(a::R=1.0) where {R <: Real} = IndSimplex{R}(a)
 
-function (f::IndSimplex{T})(x::AbstractArray{R}) where {T, R <: Real}
+function (f::IndSimplex)(x::AbstractArray{R}) where R <: Real
 	if all(x .>= 0) && sum(x) ≈ f.a
-		return zero(R)
+		return R(0)
 	end
 	return R(Inf)
 end
 
-function prox!(y::AbstractArray{R}, f::IndSimplex{T}, x::AbstractArray{R}, gamma::R=one(R)) where {T, R <: Real}
+function prox!(y::AbstractArray{R}, f::IndSimplex, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
 # Implements Algorithm 1 in Condat, "Fast projection onto the simplex and the l1 ball", Mathematical Programming, 158:575–585, 2016.
 # We should consider implementing the other algorithms reviewed there, and the one proposed in the paper.
 	n = length(x)
@@ -52,16 +52,16 @@ function prox!(y::AbstractArray{R}, f::IndSimplex{T}, x::AbstractArray{R}, gamma
 		tmax = (s - f.a)/i
 		if tmax >= p[i+1]
 			@inbounds for j in eachindex(y)
-				y[j] = x[j] < tmax ? zero(R) : x[j] - tmax
+				y[j] = x[j] < tmax ? R(0) : x[j] - tmax
 			end
-			return zero(R)
+			return R(0)
 		end
 	end
 	tmax = (s + p[n] - f.a)/n
 	@inbounds for j in eachindex(y)
-		y[j] = x[j] < tmax ? zero(R) : x[j] - tmax
+		y[j] = x[j] < tmax ? R(0) : x[j] - tmax
 	end
-	return zero(R)
+	return R(0)
 end
 
 fun_name(f::IndSimplex) = "indicator of the probability simplex"
@@ -69,7 +69,7 @@ fun_dom(f::IndSimplex) = "AbstractArray{Real}"
 fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = a, +∞ otherwise"
 fun_params(f::IndSimplex) = "a = $(f.a)"
 
-function prox_naive(f::IndSimplex{T}, x::AbstractArray{R}, gamma::R=one(R)) where {T, R <: Real}
+function prox_naive(f::IndSimplex, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
 	low = minimum(x)
 	upp = maximum(x)
 	v = x
@@ -79,7 +79,7 @@ function prox_naive(f::IndSimplex{T}, x::AbstractArray{R}, gamma::R=one(R)) wher
 			break
 		end
 		alpha = (low+upp)/2
-		v = max.(x .- alpha, zero(R))
+		v = max.(x .- alpha, R(0))
 		s = sum(v) - f.a
 		if s <= 0
 			upp = alpha
@@ -87,5 +87,5 @@ function prox_naive(f::IndSimplex{T}, x::AbstractArray{R}, gamma::R=one(R)) wher
 			low = alpha
 		end
 	end
-	return v, zero(R)
+	return v, R(0)
 end

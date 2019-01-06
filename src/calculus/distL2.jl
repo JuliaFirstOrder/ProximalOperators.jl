@@ -37,7 +37,7 @@ function (f::DistL2)(x::AbstractArray{R}) where R <: RealOrComplex
 	return f.lambda*normdiff(x,p)
 end
 
-function prox!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	prox!(y, f.ind, x)
 	d = normdiff(x,y)
 	gamlam = (gamma*f.lambda)
@@ -65,7 +65,7 @@ fun_dom(f::DistL2) = fun_dom(f.ind)
 fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
 fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
-function prox_naive(f::DistL2, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::DistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	p, = prox(f.ind, x)
 	d = norm(x-p)
 	gamlam = gamma*f.lambda

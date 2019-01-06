@@ -27,17 +27,17 @@ function (f::IndAffineIterative{R, T, M, V})(x::V) where {R, T, M, V}
 	f.res .= f.b .- f.res
 	# the tolerance in the following line should be customizable
 	if norm(f.res, Inf) <= f.tol
-		return zero(R)
+		return R(0)
 	end
 	return typemax(R)
 end
 
-function prox!(y::V, f::IndAffineIterative{R, T, M, V}, x::V, gamma::R=one(R)) where {R, T, M, V}
+function prox!(y::V, f::IndAffineIterative{R, T, M, V}, x::V, gamma::R=R(1)) where {R, T, M, V}
 	# Von Neumann's alternating projections
 	m = size(f.A, 1)
 	y .= x
 	for k = 1:f.maxit
-		maxres = zero(R)
+		maxres = R(0)
 		for i = 1:m
 			resi = (f.b[i] - dot(f.A[i,:], y))
 			y .= y + resi*f.A[i,:] # no need to divide: rows of A are normalized
@@ -48,10 +48,10 @@ function prox!(y::V, f::IndAffineIterative{R, T, M, V}, x::V, gamma::R=one(R)) w
 			break
 		end
 	end
-	return zero(R)
+	return R(0)
 end
 
-function prox_naive(f::IndAffineIterative, x::AbstractArray{T,1}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndAffineIterative, x::AbstractArray{T,1}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	y = x + f.A'*((f.A*f.A')\(f.b - f.A*x))
-	return y, zero(R)
+	return y, R(0)
 end

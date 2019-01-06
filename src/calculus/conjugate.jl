@@ -37,11 +37,11 @@ Conjugate(f::T) where {T <: ProximableFunction} = Conjugate{T}(f)
 # only prox! is provided here, call method would require being able to compute
 # an element of the subdifferential of the conjugate
 
-function prox!(y::AbstractArray{R}, g::Conjugate, x::AbstractArray{R}, gamma::R=one(R)) where R <: Real
+function prox!(y::AbstractArray{R}, g::Conjugate, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
 	# Moreau identity
 	v = prox!(y, g.f, x/gamma, 1/gamma)
 	if is_set(g)
-		v = zero(R)
+		v = R(0)
 	else
 		v = dot(x, y) - gamma * dot(y, y) - v
 	end
@@ -51,10 +51,10 @@ end
 
 # complex case, need to cast inner products to real
 
-function prox!(y::AbstractArray{Complex{T}}, g::Conjugate, x::AbstractArray{Complex{T}}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{Complex{T}}, g::Conjugate, x::AbstractArray{Complex{T}}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	v = prox!(y, g.f, x/gamma, 1/gamma)
 	if is_set(g)
-		v = zero(R)
+		v = R(0)
 	else
 		v = real(dot(x, y)) - gamma * real(dot(y, y)) - v
 	end
@@ -64,7 +64,7 @@ end
 
 # naive implementation
 
-function prox_naive(g::Conjugate, x::AbstractArray{T}, gamma=one(R)) where {R, T <: RealOrComplex{R}}
+function prox_naive(g::Conjugate, x::AbstractArray{T}, gamma=R(1)) where {R, T <: RealOrComplex{R}}
 	y, v = prox_naive(g.f, x/gamma, 1/gamma)
 	return x - gamma * y, real(dot(x, y)) - gamma * real(dot(y, y)) - v
 end

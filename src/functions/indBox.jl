@@ -52,7 +52,7 @@ function (f::IndBox)(x::AbstractArray{R}) where R <: Real
 	return 0.0
 end
 
-function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=one(R)) where R <: Real
+function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=R(1)) where R <: Real
 	for k in eachindex(x)
 		if x[k] < get_kth_elem(f.lb, k)
 			y[k] = get_kth_elem(f.lb, k)
@@ -62,10 +62,10 @@ function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=
 			y[k] = x[k]
 		end
 	end
-	return zero(R)
+	return R(0)
 end
 
-prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) where {R <: Real} = prox!(y, f, x, one(R))
+prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) where {R <: Real} = prox!(y, f, x, R(1))
 
 """
 **Indicator of a ``L_∞`` norm ball**
@@ -87,7 +87,7 @@ fun_params(f::IndBox) =
 	string( "lb = ", typeof(f.lb) <: AbstractArray ? string(typeof(f.lb), " of size ", size(f.lb)) : f.lb, ", ",
 			"ub = ", typeof(f.ub) <: AbstractArray ? string(typeof(f.ub), " of size ", size(f.ub)) : f.ub)
 
-function prox_naive(f::IndBox, x::AbstractArray{R}, gamma=one(R)) where R <: Real
+function prox_naive(f::IndBox, x::AbstractArray{R}, gamma=R(1)) where R <: Real
 	y = min.(f.ub, max.(f.lb, x))
-	return y, zero(R)
+	return y, R(0)
 end

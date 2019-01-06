@@ -41,16 +41,16 @@ function (f::SqrNormL2{S})(x::AbstractArray{T}) where {S <: Real, T <: RealOrCom
 	return (f.lambda/2)*norm(x)^2
 end
 
-function (f::SqrNormL2{S})(x::AbstractArray{T}) where {S <: AbstractArray, T <: RealOrComplex}
-	sqnorm = 0.0
+function (f::SqrNormL2{S})(x::AbstractArray{T}) where {S <: AbstractArray, R <: Real, T <: RealOrComplex{R}}
+	sqnorm = R(0)
 	for k in eachindex(x)
 		sqnorm += f.lambda[k]*abs2(x[k])
 	end
 	return 0.5*sqnorm
 end
 
-function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}) where {S <: Real, T <: RealOrComplex}
-	sqnx = 0.0
+function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}) where {S <: Real, R <: Real, T <: RealOrComplex{R}}
+	sqnx = R(0)
 	for k in eachindex(x)
 		y[k] = f.lambda*x[k]
 		sqnx += abs2(x[k])
@@ -58,8 +58,8 @@ function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}) wh
 	return (f.lambda/2)*sqnx
 end
 
-function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}) where {S <: AbstractArray, T <: RealOrComplex}
-	sqnx = 0.0
+function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}) where {S <: AbstractArray, R <: Real, T <: RealOrComplex{R}}
+	sqnx = R(0)
 	for k in eachindex(x)
 		y[k] = f.lambda[k]*x[k]
 		sqnx += f.lambda[k]*abs2(x[k])
@@ -67,9 +67,9 @@ function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}) wh
 	return 0.5*sqnx
 end
 
-function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Real=1.0) where {S <: Real, T <: RealOrComplex}
+function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::R=R(1)) where {S <: Real, R <: Real, T <: RealOrComplex{R}}
 	gl = gamma*f.lambda
-	sqny = 0.0
+	sqny = R(0)
 	for k in eachindex(x)
 		y[k] = x[k]/(1+gl)
 		sqny += abs2(y[k])
@@ -77,8 +77,8 @@ function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma:
 	return (f.lambda/2)*sqny
 end
 
-function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Real=1.0) where {S <: AbstractArray, T <: RealOrComplex}
-	wsqny = 0.0
+function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::R=R(1)) where {S <: AbstractArray, R <: Real, T <: RealOrComplex{R}}
+	wsqny = R(0)
 	for k in eachindex(x)
 		y[k] = x[k]/(1+gamma*f.lambda[k])
 		wsqny += f.lambda[k]*abs2(y[k])
@@ -86,8 +86,8 @@ function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma:
 	return 0.5*wsqny
 end
 
-function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::AbstractArray) where {S <: Real, T <: RealOrComplex}
-	sqny = 0.0
+function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::AbstractArray{R}) where {S <: Real, R <: Real, T <: RealOrComplex{R}}
+	sqny = R(0)
 	for k in eachindex(x)
 		y[k] = x[k]/(1+gamma[k]*f.lambda)
 		sqny += abs2(y[k])
@@ -95,8 +95,8 @@ function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma:
 	return (f.lambda/2)*sqny
 end
 
-function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::AbstractArray) where {S <: AbstractArray, T <: RealOrComplex}
-	wsqny = 0.0
+function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::AbstractArray{R}) where {S <: AbstractArray, R <: Real, T <: RealOrComplex{R}}
+	wsqny = R(0)
 	for k in eachindex(x)
 		y[k] = x[k]/(1+gamma[k]*f.lambda[k])
 		wsqny += f.lambda[k]*abs2(y[k])
@@ -111,7 +111,7 @@ fun_expr(f::SqrNormL2{T}) where {T <: AbstractArray} = "x ↦ (1/2)sum( λ_i (x_
 fun_params(f::SqrNormL2{T}) where {T <: Real} = "λ = $(f.lambda)"
 fun_params(f::SqrNormL2{T}) where {T <: AbstractArray} = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
 
-function prox_naive(f::SqrNormL2, x::AbstractArray{T}, gamma=1.0) where T <: RealOrComplex
-	y = x./(1.0 .+ f.lambda.*gamma)
+function prox_naive(f::SqrNormL2, x::AbstractArray{T}, gamma=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+	y = x./(R(1) .+ f.lambda.*gamma)
 	return y, 0.5*real(dot(f.lambda.*y,y))
 end

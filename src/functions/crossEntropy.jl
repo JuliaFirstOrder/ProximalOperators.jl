@@ -30,7 +30,7 @@ is_smooth(f::CrossEntropy) = true
 CrossEntropy(b::T) where {R <: Real, T <: AbstractArray{R}} = CrossEntropy{R, T}(b)
 
 function (f::CrossEntropy{R})(x::AbstractArray{R}) where {R <: Real}
-	sum = zero(R)
+	sum = R(0)
 	for i in eachindex(f.b)
 		sum += f.b[i]*log(x[i])+(1-f.b[i])*log(1-x[i])
 	end
@@ -38,7 +38,7 @@ function (f::CrossEntropy{R})(x::AbstractArray{R}) where {R <: Real}
 end
 
 function (f::CrossEntropy{B})(x::AbstractArray{R}) where {B <: Bool, R <: Real}
-	sum = zero(R)
+	sum = R(0)
 	for i in eachindex(f.b)
 		sum += f.b[i] ? log(x[i]) : (1-f.b[i])*log(1-x[i])
 	end
@@ -46,7 +46,7 @@ function (f::CrossEntropy{B})(x::AbstractArray{R}) where {B <: Bool, R <: Real}
 end
 
 function gradient!(y::AbstractArray{R}, f::CrossEntropy{R}, x::AbstractArray{R}) where {R <: Real}
-	sum = zero(R)
+	sum = R(0)
 	for i in eachindex(x)
 		y[i] = 1/length(f.b)*( - f.b[i]/x[i] + (1-f.b[i])/(1-x[i]) )
 		sum += f.b[i]*log(x[i])+(1-f.b[i])*log(1-x[i])
@@ -55,7 +55,7 @@ function gradient!(y::AbstractArray{R}, f::CrossEntropy{R}, x::AbstractArray{R})
 end
 
 function gradient!(y::AbstractArray{R}, f::CrossEntropy{B}, x::AbstractArray{R}) where {R <: Real, B <: Bool}
-	sum = zero(R)
+	sum = R(0)
 	for i in eachindex(x)
 		y[i] = f.b[i] ? - 1/x[i] : 1/(1-x[i])
 		y[i] *= 1/length(f.b)
@@ -64,7 +64,7 @@ function gradient!(y::AbstractArray{R}, f::CrossEntropy{B}, x::AbstractArray{R})
 	return -1/length(f.b)*sum
 end
 
-function prox!(y::AbstractArray{R}, f::CrossEntropy, x::AbstractArray{R}, gamma::R=one(R)) where {R}
+function prox!(y::AbstractArray{R}, f::CrossEntropy, x::AbstractArray{R}, gamma::R=R(1)) where {R}
     # TODO: fill-in here
     error("not implemented")
 end

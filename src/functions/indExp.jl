@@ -85,7 +85,7 @@ function prox!(y::AbstractVector{R}, f::IndExpPrimal, x::AbstractVector{R}, gamm
 		y .= x
 	elseif (-r < 0 && r*exp(s/r) <= -exp(1)*t) || (-r == 0 && -s >= 0 && -t >= 0)
 		# -x in the dual cone (x in the polar cone)
-		y .= zero(R)
+		y .= R(0)
 	elseif r < 0 && s < 0
 		# analytical solution
 		y[1] = x[1]
@@ -108,7 +108,7 @@ function prox!(y::AbstractVector{R}, f::IndExpPrimal, x::AbstractVector{R}, gamm
 		end
 		y .= v
 	end
-	return zero(R)
+	return R(0)
 end
 
 function getRhoUb(v)

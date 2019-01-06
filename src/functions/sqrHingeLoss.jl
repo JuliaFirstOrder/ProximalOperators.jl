@@ -31,21 +31,21 @@ is_smooth(f::SqrHingeLoss) = true
 
 SqrHingeLoss(b::T, mu::R=1.0) where {R <: Real, T <: AbstractArray{R}} = SqrHingeLoss{R, T}(b, mu)
 
-(f::SqrHingeLoss)(x::T) where {R <: Real, T <: AbstractArray{R}} = f.mu*sum(max.(zero(R), (one(R) .- f.y.*x)).^2)
+(f::SqrHingeLoss)(x::T) where {R <: Real, T <: AbstractArray{R}} = f.mu*sum(max.(R(0), (R(1) .- f.y.*x)).^2)
 
 function gradient!(y::AbstractArray{R}, f::SqrHingeLoss{R, T}, x::AbstractArray{R}) where {R <: Real, T}
-	sum = zero(R)
+	sum = R(0)
 	for i in eachindex(x)
 		zz = 1-f.y[i]*x[i]
-		z = max(zero(R), zz)
+		z = max(R(0), zz)
 		y[i] = z .> 0 ? -2*f.mu*f.y[i]*zz : 0
 		sum += z^2
 	end
 	return f.mu*sum
 end
 
-function prox!(z::AbstractArray{R}, f::SqrHingeLoss{R, T}, x::AbstractArray{R}, gamma::R=one(R)) where {R, T}
-	v = zero(R)
+function prox!(z::AbstractArray{R}, f::SqrHingeLoss{R, T}, x::AbstractArray{R}, gamma::R=R(1)) where {R, T}
+	v = R(0)
 	for k in eachindex(x)
 		if f.y[k]*x[k] >= 1
 			z[k] = x[k]
@@ -62,7 +62,7 @@ fun_dom(f::SqrHingeLoss) = "AbstractArray{Real}"
 fun_expr(f::SqrHingeLoss) = "x ↦ μ * sum( max(0,1-b*x_i)^2, i=1,...,n )"
 fun_params(f::SqrHingeLoss) = "b = $(typeof(f.y)), μ = $(f.mu)"
 
-function prox_naive(f::SqrHingeLoss{R, T}, x::AbstractArray{R}, gamma::R=one(R)) where {R, T}
+function prox_naive(f::SqrHingeLoss{R, T}, x::AbstractArray{R}, gamma::R=R(1)) where {R, T}
 	flag = f.y.*x .<= 1
 	z = copy(x)
 	z[flag] = (x[flag] .+ 2 .* f.mu.*gamma.*f.y[flag])./(1. + 2 .* f.mu.*gamma.*f.y[flag].^2)

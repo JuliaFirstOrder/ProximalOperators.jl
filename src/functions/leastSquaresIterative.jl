@@ -43,17 +43,17 @@ function (f::LeastSquaresIterative{R, RC, M, V})(x::AbstractVector{RC}) where {R
 	return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function prox!(y::AbstractVector{D}, f::LeastSquaresIterative{R, RC, M, V}, x::AbstractVector{D}, gamma::R=one(R)) where {R, RC, M, V, D <: RealOrComplex{R}}
+function prox!(y::AbstractVector{D}, f::LeastSquaresIterative{R, RC, M, V}, x::AbstractVector{D}, gamma::R=R(1)) where {R, RC, M, V, D <: RealOrComplex{R}}
 	lamgam = f.lambda*gamma
 	f.q .= f.Atb .+ x./lamgam
 	# two cases: (1) tall A, (2) fat A
 	if f.shape == :Tall
-		op = Shift(f.S, one(R)/lamgam)
+		op = Shift(f.S, R(1)/lamgam)
 		IterativeSolvers.cg!(y, op, f.q)
 	else # f.shape == :Fat
 		# y .= lamgam*(f.q - (f.A'*(f.fact\(f.A*f.q))))
 		mul!(f.res, f.A, f.q)
-		op = Shift(f.S, one(R)/lamgam)
+		op = Shift(f.S, R(1)/lamgam)
 		IterativeSolvers.cg!(f.res2, op, f.res)
 		mul!(y, adjoint(f.A), f.res2)
 		y .-= f.q
@@ -72,7 +72,7 @@ function gradient!(y::AbstractVector{D}, f::LeastSquaresIterative{R, RC, M, V}, 
 	fy = (f.lambda/2)*dot(f.res, f.res)
 end
 
-function prox_naive(f::LeastSquaresIterative, x::AbstractVector, gamma=1.0)
+function prox_naive(f::LeastSquaresIterative, x::AbstractVector{D}, gamma::R=R(1)) where {R, D <: RealOrComplex{R}}
 	lamgam = f.lambda*gamma
 	y = IterativeSolvers.cg(f.A'*f.A + I/lamgam, f.Atb + x/lamgam)
 	fy = (f.lambda/2)*norm(f.A*y-f.b)^2

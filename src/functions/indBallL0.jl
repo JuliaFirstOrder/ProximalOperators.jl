@@ -35,7 +35,7 @@ function (f::IndBallL0)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComple
 	return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL0, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::IndBallL0, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	p = []
 	if ndims(x) == 1
 		p = partialsortperm(x, 1:f.r, by=abs, rev=true)
@@ -58,7 +58,7 @@ fun_dom(f::IndBallL0) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL0) = "x ↦ 0 if countnz(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL0) = "r = $(f.r)"
 
-function prox_naive(f::IndBallL0, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndBallL0, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	p = sortperm(abs.(x)[:], rev=true)
 	y = similar(x)
 	y[p[1:f.r]] .= x[p[1:f.r]]

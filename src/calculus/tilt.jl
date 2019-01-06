@@ -33,7 +33,7 @@ function (g::Tilt)(x::AbstractArray{T}) where T <: RealOrComplex
 	return g.f(x) + dot(g.a, x) + g.b
 end
 
-function prox!(y::AbstractArray{T}, g::Tilt, x::AbstractArray{T}, gamma=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, g::Tilt, x::AbstractArray{T}, gamma=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	v = prox!(y, g.f, x .- gamma .* g.a, gamma)
 	return v + dot(g.a, y) + g.b
 end
@@ -43,7 +43,7 @@ fun_dom(f::Tilt) = fun_dom(f.f)
 fun_expr(f::Tilt) = string(fun_expr(f.f)," + a'x + b")
 fun_params(f::Tilt) = "a = $(typeof(f.a)), b = $(f.b)"
 
-function prox_naive(g::Tilt, x::AbstractArray{T}, gamma=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(g::Tilt, x::AbstractArray{T}, gamma=R(1)) where {R <: Real, T <: RealOrComplex{R}}
 	y, v = prox_naive(g.f, x .- gamma .* g.a, gamma)
 	return y, v + dot(g.a, y) + g.b
 end
