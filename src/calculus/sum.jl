@@ -3,7 +3,7 @@ export Sum
 """
 **Sum of functions**
 
-	Sum(f₁,…,fₖ)
+    Sum(f₁,…,fₖ)
 
 Given functions `f₁` to `fₖ`, returns their sum
 
@@ -32,25 +32,25 @@ is_generalized_quadratic(f::Sum) = all(is_generalized_quadratic.(f.fs))
 is_strongly_convex(f::Sum) = all(is_convex.(f.fs)) && any(is_strongly_convex.(f.fs))
 
 function (sumobj::Sum)(x::AbstractArray{T}) where {R <: Real, T <: Union{R, Complex{R}}}
-	sum = R(0)
-	for f in sumobj.fs
-		sum += f(x)
-	end
-	sum
+    sum = R(0)
+    for f in sumobj.fs
+        sum += f(x)
+    end
+    sum
 end
 
 function gradient!(grad::AbstractArray{T}, sumobj::Sum, x::AbstractArray{T}) where {R <: Real, T <: Union{R, Complex{R}}}
-	# gradient of sum is sum of gradients
-	val = R(0)
-	# to keep track of this sum, i may not be able to
-	# avoid allocating an array
-	grad .= T(0)
-	temp = similar(grad)
-	for f in sumobj.fs
-		val += gradient!(temp, f, x)
-		grad .+= temp
-	end
-	return val
+    # gradient of sum is sum of gradients
+    val = R(0)
+    # to keep track of this sum, i may not be able to
+    # avoid allocating an array
+    grad .= T(0)
+    temp = similar(grad)
+    for f in sumobj.fs
+        val += gradient!(temp, f, x)
+        grad .+= temp
+    end
+    return val
 end
 
 fun_name(f::Sum) = "sum"

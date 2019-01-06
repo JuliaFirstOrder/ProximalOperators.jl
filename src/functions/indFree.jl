@@ -5,7 +5,7 @@ export IndFree
 """
 **Indicator of the free cone**
 
-	IndFree()
+    IndFree()
 
 Returns the indicator function of the whole space, or "free cone", *i.e.*,
 a function which is identically zero.
@@ -22,19 +22,19 @@ is_quadratic(f::IndFree) = true
 const Zero = IndFree
 
 function (f::IndFree)(x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
-	return R(0)
+    return R(0)
 end
 
 function prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, gamma::R=R(1)) where {R, T <: RealOrComplex{R}}
-	y .= x
-	return R(0)
+    y .= x
+    return R(0)
 end
 
 prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, gamma::AbstractArray{T}) where {R, T <: RealOrComplex{R}} = prox!(y, f, x)
 
 function gradient!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
-	y .= T(0)
-	return R(0)
+    y .= T(0)
+    return R(0)
 end
 
 fun_name(f::IndFree) = "indicator of the free cone"
@@ -43,5 +43,5 @@ fun_expr(f::IndFree) = "x ↦ 0"
 fun_params(f::IndFree) = "none"
 
 function prox_naive(f::IndFree, x::AbstractArray{R}, gamma=R(1)) where {R, T <: RealOrComplex{R}}
-	return x, R(0)
+    return x, R(0)
 end

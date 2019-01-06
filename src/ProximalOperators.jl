@@ -8,8 +8,8 @@ const RealOrComplex{R <: Real} = Union{R, Complex{R}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
 const TupleOfArrays{R} = Tuple{Vararg{AbstractArray{C, N} where {C <: RealOrComplex{R}, N}}}
 const ArrayOrTuple{R} = Union{
-	AbstractArray{C, N} where {C <: RealOrComplex{R}, N},
-	TupleOfArrays{R}
+    AbstractArray{C, N} where {C <: RealOrComplex{R}, N},
+    TupleOfArrays{R}
 }
 
 export ProximableFunction
@@ -91,10 +91,10 @@ include("functions/normLinf.jl")
 include("functions/sumLargest.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
-	println(io, "description : ", fun_name(f))
-	println(io, "domain      : ", fun_dom(f))
-	println(io, "expression  : ", fun_expr(f))
-	print(  io, "parameters  : ", fun_params(f))
+    println(io, "description : ", fun_name(f))
+    println(io, "domain      : ", fun_dom(f))
+    println(io, "expression  : ", fun_expr(f))
+    print(  io, "parameters  : ", fun_params(f))
 end
 
 fun_name(  f) = "n/a"
@@ -117,7 +117,7 @@ is_strongly_convex(f::ProximableFunction) = false
 """
 **Proximal mapping**
 
-	y, fy = prox(f, x, γ=1.0)
+    y, fy = prox(f, x, γ=1.0)
 
 Computes
 ```math
@@ -128,15 +128,15 @@ Return values:
 * `fy`: the value ``f(y)``
 """
 function prox(f::ProximableFunction, x::ArrayOrTuple{R}, gamma=R(1)) where R
-	y = similar(x)
-	fy = prox!(y, f, x, gamma)
-	return y, fy
+    y = similar(x)
+    fy = prox!(y, f, x, gamma)
+    return y, fy
 end
 
 """
 **Proximal mapping (in-place)**
 
-	fy = prox!(y, f, x, γ=1.0)
+    fy = prox!(y, f, x, γ=1.0)
 
 Computes
 ```math
@@ -154,7 +154,7 @@ prox!
 """
 **Gradient mapping**
 
-	gradfx, fx = gradient(f, x)
+    gradfx, fx = gradient(f, x)
 
 Computes the gradient (and value) of ``f`` at ``x``. If ``f`` is only *subdifferentiable* at ``x``, then return a subgradient instead.
 
@@ -163,15 +163,15 @@ Return values:
 * `fx`: the value ``f(x)``
 """
 function gradient(f::ProximableFunction, x)
-	y = similar(x)
-	fx = gradient!(y, f, x)
-	return y, fx
+    y = similar(x)
+    fx = gradient!(y, f, x)
+    return y, fx
 end
 
 """
 **Gradient mapping (in-place)**
 
-	gradient!(gradfx, f, x)
+    gradient!(gradfx, f, x)
 
 Writes ``\\nabla f(x)`` to `gradfx`, which must be pre-allocated and have the same shape/size as `x`. If ``f`` is only *subdifferentiable* at ``x``, then writes a subgradient instead.
 

@@ -5,7 +5,7 @@ export Maximum
 """
 **Maximum coefficient**
 
-	Maximum(λ=1.0)
+    Maximum(λ=1.0)
 
 For a nonnegative parameter `λ ⩾ 0`, returns the function
 ```math

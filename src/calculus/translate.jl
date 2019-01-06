@@ -3,7 +3,7 @@ export Translate
 """
 **Translation**
 
-	Translate(f, b)
+    Translate(f, b)
 
 Returns the translated function
 ```math
@@ -11,8 +11,8 @@ g(x) = f(x + b)
 ```
 """
 struct Translate{T <: ProximableFunction, V <: Union{Number, AbstractArray, Tuple}} <: ProximableFunction
-	f::T
-	b::V
+    f::T
+    b::V
 end
 
 is_separable(f::Translate) = is_separable(f.f)
@@ -28,25 +28,25 @@ is_generalized_quadratic(f::Translate) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::Translate) = is_strongly_convex(f.f)
 
 function (g::Translate)(x::T) where {T <: Union{Tuple, AbstractArray}}
-	return g.f(x .+ g.b)
+    return g.f(x .+ g.b)
 end
 
 function gradient!(y, g::Translate, x)
-	z = x .+ g.b
-	v = gradient!(y, g.f, z)
-	return v
+    z = x .+ g.b
+    v = gradient!(y, g.f, z)
+    return v
 end
 
 function prox!(y, g::Translate, x, gamma=1.0)
-	z = x .+ g.b
-	v = prox!(y, g.f, z, gamma)
-	y .-= g.b
-	return v
+    z = x .+ g.b
+    v = prox!(y, g.f, z, gamma)
+    y .-= g.b
+    return v
 end
 
 function prox_naive(g::Translate, x, gamma=1.0)
-	y, v = prox_naive(g.f, x .+ g.b, gamma)
-	return y - g.b, v
+    y, v = prox_naive(g.f, x .+ g.b, gamma)
+    return y - g.b, v
 end
 
 fun_name(f::Translate) = "Translation"
