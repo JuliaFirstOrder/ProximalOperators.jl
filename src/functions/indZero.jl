@@ -17,31 +17,27 @@ is_singleton(f::IndZero) = true
 is_cone(f::IndZero) = true
 is_affine(f::IndZero) = true
 
-function (f::IndZero)(x::AbstractArray{T}) where T <: RealOrComplex
-  for k in eachindex(x)
-    if x[k] != zero(T)
-      return Inf
+function (f::IndZero)(x::AbstractArray{C}) where {R <: Real, C <: Union{R, Complex{R}}}
+    for k in eachindex(x)
+        if x[k] != C(0)
+            return R(Inf)
+        end
     end
-  end
-  return 0.0
+    return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndZero, x::AbstractArray{T}, gamma::Real=1.0) where T <: RealOrComplex
-  for k in eachindex(x)
-    y[k] = zero(T)
-  end
-  return 0.0
+function prox!(y::AbstractArray{C}, f::IndZero, x::AbstractArray{C}, gamma=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
+    for k in eachindex(x)
+        y[k] = C(0)
+    end
+    return R(0)
 end
-
-prox!(y::AbstractArray{T}, f::IndZero, x::AbstractArray{T}, gamma::AbstractArray) where {T <: RealOrComplex} = prox!(y, f, x, 1.0)
 
 fun_name(f::IndZero) = "indicator of the zero cone"
 fun_dom(f::IndZero) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndZero) = "x ↦ 0 if all(x = 0), +∞ otherwise"
 fun_params(f::IndZero) = "none"
 
-function prox_naive(f::IndZero, x::AbstractArray, gamma::Real=1.0)
-  return zero(x), 0.0
+function prox_naive(f::IndZero, x::AbstractArray{C}, gamma=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
+    return zero(x), R(0)
 end
-
-prox_naive(f::IndZero, x::AbstractArray, gamma::AbstractArray) = prox_naive(f, x, 1.0)

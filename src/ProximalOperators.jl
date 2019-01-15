@@ -6,9 +6,10 @@ using LinearAlgebra
 
 const RealOrComplex{R <: Real} = Union{R, Complex{R}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
+const TupleOfArrays{R} = Tuple{Vararg{AbstractArray{C, N} where {C <: RealOrComplex{R}, N}}}
 const ArrayOrTuple{R} = Union{
-	AbstractArray{C, N} where {C <: RealOrComplex{R}, N},
-	Tuple{Vararg{AbstractArray{C, N} where {C <: RealOrComplex{R}, N}}}
+    AbstractArray{C, N} where {C <: RealOrComplex{R}, N},
+    TupleOfArrays{R}
 }
 
 export ProximableFunction
@@ -90,10 +91,10 @@ include("functions/normLinf.jl")
 include("functions/sumLargest.jl")
 
 function Base.show(io::IO, f::ProximableFunction)
-  println(io, "description : ", fun_name(f))
-  println(io, "domain      : ", fun_dom(f))
-  println(io, "expression  : ", fun_expr(f))
-  print(  io, "parameters  : ", fun_params(f))
+    println(io, "description : ", fun_name(f))
+    println(io, "domain      : ", fun_dom(f))
+    println(io, "expression  : ", fun_expr(f))
+    print(  io, "parameters  : ", fun_params(f))
 end
 
 fun_name(  f) = "n/a"
@@ -126,10 +127,10 @@ Return values:
 * `y`: the proximal point ``y``
 * `fy`: the value ``f(y)``
 """
-function prox(f::ProximableFunction, x::ArrayOrTuple{R}, gamma=one(R)) where R
-  y = similar(x)
-  fy = prox!(y, f, x, gamma)
-  return y, fy
+function prox(f::ProximableFunction, x::ArrayOrTuple{R}, gamma=R(1)) where R
+    y = similar(x)
+    fy = prox!(y, f, x, gamma)
+    return y, fy
 end
 
 """
@@ -148,7 +149,7 @@ Return values:
 """
 prox!
 # TODO: should we put the following here instead? And remove the default value for gamma in each subtype
-# prox!(y::ArrayOrTuple{R}, f::ProximableFunction, x::ArrayOrTuple{R}) = prox!(y, f, x, one(R))
+# prox!(y::ArrayOrTuple{R}, f::ProximableFunction, x::ArrayOrTuple{R}) = prox!(y, f, x, R(1))
 
 """
 **Gradient mapping**
@@ -162,9 +163,9 @@ Return values:
 * `fx`: the value ``f(x)``
 """
 function gradient(f::ProximableFunction, x)
-	y = similar(x)
-	fx = gradient!(y, f, x)
-	return y, fx
+    y = similar(x)
+    fx = gradient!(y, f, x)
+    return y, fx
 end
 
 """

@@ -26,12 +26,12 @@ f(x) = \\tfrac{\\lambda}{2}\\|Ax - b\\|^2.
 By default, a direct method (based on Cholesky factorization) is used to evaluate `prox!`.
 If `iterative=true`, then `prox!` is evaluated approximately using an iterative method instead.
 """
-function LeastSquares(A::M, b::V, lam::R=one(R); iterative=false) where {R <: Real, RC <: RealOrComplex{R}, V <: AbstractArray{RC}, M}
-  if iterative == false
-    LeastSquaresDirect(A, b, lam)
-  else
-    LeastSquaresIterative(A, b, lam)
-  end
+function LeastSquares(A::M, b::V, lam::R=R(1); iterative=false) where {R <: Real, RC <: RealOrComplex{R}, V <: AbstractArray{RC}, M}
+    if iterative == false
+        LeastSquaresDirect(A, b, lam)
+    else
+        LeastSquaresIterative(A, b, lam)
+    end
 end
 
 ### INCLUDE CONCRETE TYPES

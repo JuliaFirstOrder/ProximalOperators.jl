@@ -12,11 +12,11 @@ f^γ(x) = \\min_z \\left\\{ f(z) + \\tfrac{1}{2γ}\\|z-x\\|^2 \\right\\}.
 If ``f`` is convex, then ``f^γ`` is a smooth, convex, lower approximation to ``f``, having the same minima as the original function.
 """
 mutable struct MoreauEnvelope{R <: Real, T <: ProximableFunction} <: ProximableFunction
-	g::T
-	lambda::R
+    g::T
+    lambda::R
     function MoreauEnvelope{R, T}(g::T, lambda::R) where {R, T}
-    	if lambda <= 0 error("parameter lambda must be positive") end
-    	new(g, lambda)
+        if lambda <= 0 error("parameter lambda must be positive") end
+        new(g, lambda)
     end
 end
 
@@ -28,16 +28,16 @@ is_quadratic(f::MoreauEnvelope) = is_generalized_quadratic(f.g)
 is_strongly_convex(f::MoreauEnvelope) = is_strongly_convex(f.g)
 
 function (f::MoreauEnvelope)(x::AbstractArray)
-	buf = similar(x)
-	g_prox = prox!(buf, f.g, x, f.lambda)
-	return g_prox + 1/(2*f.lambda)*norm(buf .- x)^2
+    buf = similar(x)
+    g_prox = prox!(buf, f.g, x, f.lambda)
+    return g_prox + 1/(2*f.lambda)*norm(buf .- x)^2
 end
 
 function gradient!(grad::AbstractArray, f::MoreauEnvelope, x::AbstractArray)
-	g_prox = prox!(grad, f.g, x, f.lambda)
-	grad .= (x .- grad)./f.lambda
-	fx = g_prox + (f.lambda/2)*norm(grad)^2
-	return fx
+    g_prox = prox!(grad, f.g, x, f.lambda)
+    grad .= (x .- grad)./f.lambda
+    fx = g_prox + (f.lambda/2)*norm(grad)^2
+    return fx
 end
 
 fun_name(f::MoreauEnvelope,i::Int64) =

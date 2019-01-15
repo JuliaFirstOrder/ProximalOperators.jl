@@ -34,11 +34,11 @@ By default, a direct method (QR factorization of matrix `A'`) is used to evaluat
 If `iterative=true`, then `prox!` is evaluated approximately using an iterative method instead.
 """
 function IndAffine(A::M, b::V; iterative=false) where {M, V}
-  if iterative == false
-    IndAffineDirect(A, b)
-  else
-    IndAffineIterative(A, b)
-  end
+    if iterative == false
+        IndAffineDirect(A, b)
+    else
+        IndAffineIterative(A, b)
+    end
 end
 
 ### INCLUDE CONCRETE TYPES

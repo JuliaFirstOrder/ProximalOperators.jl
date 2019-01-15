@@ -57,16 +57,16 @@ IndPolyhedralOSQP(
 
 function (f::IndPolyhedralOSQP{R})(x::AbstractVector{R}) where R
     Ax = f.A * x
-    return all(f.l .<= Ax .<= f.u) ? zero(R) : Inf
+    return all(f.l .<= Ax .<= f.u) ? R(0) : Inf
 end
 
 # prox
 
-function prox!(y::AbstractVector{R}, f::IndPolyhedralOSQP{R}, x::AbstractVector{R}, gamma::R=one(R)) where R
+function prox!(y::AbstractVector{R}, f::IndPolyhedralOSQP{R}, x::AbstractVector{R}, gamma::R=R(1)) where R
     OSQP.update!(f.mod; q=-x)
     results = OSQP.solve!(f.mod)
     y .= results.x
-    return zero(R)
+    return R(0)
 end
 
 # naive prox
@@ -79,13 +79,13 @@ end
 # dual problem is: minimize_y (1/2)||-A'y||^2 - x'A'y + g*(y)
 # can solve with (fast) dual proximal gradient method
 
-function prox_naive(f::IndPolyhedralOSQP{R}, x::AbstractVector{R}, gamma::R=one(R)) where R
+function prox_naive(f::IndPolyhedralOSQP{R}, x::AbstractVector{R}, gamma::R=R(1)) where R
     y = zeros(R, size(f.A, 1)) # dual vector
     y1 = y
     g = IndBox(f.l, f.u)
     gstar = Conjugate(g)
-    gstar_y = zero(R)
-    stepsize = one(R)/opnorm(Matrix(f.A*f.A'))
+    gstar_y = R(0)
+    stepsize = R(1)/opnorm(Matrix(f.A*f.A'))
     for it = 1:1e6
         w = y + (it-1)/(it+2)*(y - y1)
         y1 = y
@@ -94,5 +94,5 @@ function prox_naive(f::IndPolyhedralOSQP{R}, x::AbstractVector{R}, gamma::R=one(
         if norm(y-w)/(1+norm(w)) <= 1e-12 break end
     end
     p = -f.A'*y + x
-    return p, zero(R)
+    return p, R(0)
 end

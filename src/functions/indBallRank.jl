@@ -34,26 +34,26 @@ IndBallRank(r::I=1) where {I <: Integer} = IndBallRank{I}(r)
 
 function (f::IndBallRank)(x::AbstractArray{T, 2}) where {R <: Real, T <: RealOrComplex{R}}
     maxr = minimum(size(x))
-    if maxr <= f.r return zero(R) end
+    if maxr <= f.r return R(0) end
     U, S, V = tsvd(x, f.r+1)
     # the tolerance in the following line should be customizable
     if S[end]/S[1] <= 1e-7
-        return zero(R)
+        return R(0)
     end
-    return +Inf
+    return R(Inf)
 end
 
-function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma::R=one(R)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
     maxr = minimum(size(x))
     if maxr <= f.r
         y .= x
-        return zero(R)
+        return R(0)
     end
     U, S, V = tsvd(x, f.r)
     # TODO: the order of the following matrix products should depend on the shape of x
     M = S .* V'
     mul!(y, U, M)
-    return zero(R)
+    return R(0)
 end
 
 fun_name(f::IndBallRank) = "indicator of the set of rank-r matrices"
@@ -61,13 +61,13 @@ fun_dom(f::IndBallRank) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
 fun_expr(f::IndBallRank) = "x ↦ 0 if rank(x) ⩽ r, +∞ otherwise"
 fun_params(f::IndBallRank) = "r = $(f.r)"
 
-function prox_naive(f::IndBallRank, x::AbstractMatrix{T}, gamma=1.0) where T
+function prox_naive(f::IndBallRank, x::AbstractMatrix{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
     maxr = minimum(size(x))
     if maxr <= f.r
         y = x
-        return y, 0.0
+        return y, R(0)
     end
     F = svd(x)
     y = F.U[:,1:f.r]*(Diagonal(F.S[1:f.r])*F.V[:,1:f.r]')
-    return y, 0.0
+    return y, R(0)
 end

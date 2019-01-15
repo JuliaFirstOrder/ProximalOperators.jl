@@ -22,19 +22,19 @@ is_quadratic(f::IndFree) = true
 const Zero = IndFree
 
 function (f::IndFree)(x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
-  return zero(R)
+    return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, gamma::R=one(R)) where {R, T <: RealOrComplex{R}}
-  y .= x
-  return zero(R)
+function prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, gamma::R=R(1)) where {R, T <: RealOrComplex{R}}
+    y .= x
+    return R(0)
 end
 
 prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, gamma::AbstractArray{T}) where {R, T <: RealOrComplex{R}} = prox!(y, f, x)
 
 function gradient!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
-  y .= zero(T)
-  return zero(R)
+    y .= T(0)
+    return R(0)
 end
 
 fun_name(f::IndFree) = "indicator of the free cone"
@@ -42,6 +42,6 @@ fun_dom(f::IndFree) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndFree) = "x ↦ 0"
 fun_params(f::IndFree) = "none"
 
-function prox_naive(f::IndFree, x::AbstractArray, gamma=1.0)
-  return x, 0.0
+function prox_naive(f::IndFree, x::AbstractArray{R}, gamma=R(1)) where {R, T <: RealOrComplex{R}}
+    return x, R(0)
 end

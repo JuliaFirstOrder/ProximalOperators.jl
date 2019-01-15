@@ -14,18 +14,18 @@ S = \\{ x : low \\leq x \\leq up \\}.
 Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space: they must satisfy `low <= up`, and are allowed to take values `-Inf` and `+Inf` to indicate unbounded coordinates.
 """
 struct IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
-  lb::T
-  ub::S
-  function IndBox{T,S}(lb::T, ub::S) where {T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
-    if !(eltype(lb) <: Real && eltype(ub) <: Real)
-      error("`lb` and `ub` must be real")
+    lb::T
+    ub::S
+    function IndBox{T,S}(lb::T, ub::S) where {T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
+        if !(eltype(lb) <: Real && eltype(ub) <: Real)
+            error("`lb` and `ub` must be real")
+        end
+        if any(lb .> ub)
+            error("`lb` and `ub` must satisfy `lb <= ub`")
+        else
+            new(lb, ub)
+        end
     end
-    if any(lb .> ub)
-      error("`lb` and `ub` must satisfy `lb <= ub`")
-    else
-      new(lb, ub)
-    end
-  end
 end
 
 is_separable(f::IndBox) = true
@@ -40,32 +40,32 @@ IndBox(lb::T, ub::S) where {T <: AbstractArray, S <: Real} = IndBox{T, S}(lb, ub
 IndBox(lb::T, ub::S) where {T <: Real, S <: AbstractArray} = IndBox{T, S}(lb, ub)
 
 IndBox(lb::T, ub::S) where {T <: AbstractArray, S <: AbstractArray} =
-  size(lb) != size(ub) ? error("bounds must have the same dimensions, or at least one of them be scalar") :
-  IndBox{T, S}(lb, ub)
+    size(lb) != size(ub) ? error("bounds must have the same dimensions, or at least one of them be scalar") :
+    IndBox{T, S}(lb, ub)
 
 function (f::IndBox)(x::AbstractArray{R}) where R <: Real
-  for k in eachindex(x)
-    if x[k] < get_kth_elem(f.lb, k) || x[k] > get_kth_elem(f.ub, k)
-      return +Inf
+    for k in eachindex(x)
+        if x[k] < get_kth_elem(f.lb, k) || x[k] > get_kth_elem(f.ub, k)
+            return +Inf
+        end
     end
-  end
-  return 0.0
+    return 0.0
 end
 
-function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=one(R)) where R <: Real
-  for k in eachindex(x)
-    if x[k] < get_kth_elem(f.lb, k)
-      y[k] = get_kth_elem(f.lb, k)
-    elseif x[k] > get_kth_elem(f.ub, k)
-      y[k] = get_kth_elem(f.ub, k)
-    else
-      y[k] = x[k]
+function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=R(1)) where R <: Real
+    for k in eachindex(x)
+        if x[k] < get_kth_elem(f.lb, k)
+            y[k] = get_kth_elem(f.lb, k)
+        elseif x[k] > get_kth_elem(f.ub, k)
+            y[k] = get_kth_elem(f.ub, k)
+        else
+            y[k] = x[k]
+        end
     end
-  end
-  return 0.0
+    return R(0)
 end
 
-prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) where {R <: Real} = prox!(y, f, x, one(R))
+prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) where {R <: Real} = prox!(y, f, x, R(1))
 
 """
 **Indicator of a ``L_∞`` norm ball**
@@ -84,12 +84,10 @@ fun_name(f::IndBox) = "indicator of a box"
 fun_dom(f::IndBox) = "AbstractArray{Real}"
 fun_expr(f::IndBox) = "x ↦ 0 if all(lb ⩽ x ⩽ ub), +∞ otherwise"
 fun_params(f::IndBox) =
-  string( "lb = ", typeof(f.lb) <: AbstractArray ? string(typeof(f.lb), " of size ", size(f.lb)) : f.lb, ", ",
-          "ub = ", typeof(f.ub) <: AbstractArray ? string(typeof(f.ub), " of size ", size(f.ub)) : f.ub)
+    string( "lb = ", typeof(f.lb) <: AbstractArray ? string(typeof(f.lb), " of size ", size(f.lb)) : f.lb, ", ",
+            "ub = ", typeof(f.ub) <: AbstractArray ? string(typeof(f.ub), " of size ", size(f.ub)) : f.ub)
 
-function prox_naive(f::IndBox, x::AbstractArray{R}, gamma::Real=1.0) where R <: Real
-  y = min.(f.ub, max.(f.lb, x))
-  return y, 0.0
+function prox_naive(f::IndBox, x::AbstractArray{R}, gamma=R(1)) where R <: Real
+    y = min.(f.ub, max.(f.lb, x))
+    return y, R(0)
 end
-
-prox_naive(f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) where {R <: Real} = prox_naive(f, x, 1.0)

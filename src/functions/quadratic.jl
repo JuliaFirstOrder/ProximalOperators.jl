@@ -27,11 +27,11 @@ By default, a direct method (based on Cholesky factorization) is used to evaluat
 If `iterative=true`, then `prox!` is evaluated approximately using an iterative method instead.
 """
 function Quadratic(Q::M, q::V; iterative=false) where {M, V}
-  if iterative == false
-    QuadraticDirect(Q, q)
-  else
-    QuadraticIterative(Q, q)
-  end
+    if iterative == false
+        QuadraticDirect(Q, q)
+    else
+        QuadraticIterative(Q, q)
+    end
 end
 
 ### INCLUDE CONCRETE TYPES

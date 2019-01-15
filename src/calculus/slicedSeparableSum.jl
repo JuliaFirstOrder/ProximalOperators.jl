@@ -27,17 +27,17 @@ struct SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N} <: ProximableFuncti
 end
 
 function SlicedSeparableSum(fs::S, idxs::T) where {N,
-						   S <: Tuple{Vararg{<:ProximableFunction,N}},
-						   M,
-						   I <: Integer,
-						   T1 <: NTuple{M,Union{I,
-								       AbstractArray{I},
-								       Colon,
-								       AbstractRange
-								       }
-							       },
-						   T <:NTuple{N,T1}
-						   }
+                           S <: Tuple{Vararg{<:ProximableFunction,N}},
+                           M,
+                           I <: Integer,
+                           T1 <: NTuple{M,Union{I,
+                                       AbstractArray{I},
+                                       Colon,
+                                       AbstractRange
+                                       }
+                                   },
+                           T <:NTuple{N,T1}
+                           }
     ftypes = DataType[]
     fsarr = Array{Any,1}[]
     indarr = Array{eltype(idxs),1}[]
@@ -64,11 +64,11 @@ SlicedSeparableSum(([f for k in eachindex(idxs)]...,), idxs)
 
 # Unroll the loop over the different types of functions to evaluate
 @generated function (f::SlicedSeparableSum{A, B, N})(x::T) where {A, B, N, T <: AbstractArray}
-	ex = :(v = 0.0)
+    ex = :(v = 0.0)
   for i = 1:N # For each function type
     ex = quote $ex;
       for k in eachindex(f.fs[$i]) # For each function of that type
-				v += f.fs[$i][k](view(x,f.idxs[$i][k]...))
+                v += f.fs[$i][k](view(x,f.idxs[$i][k]...))
       end
     end
   end
@@ -100,13 +100,13 @@ fun_expr(f::SlicedSeparableSum) = "hard to explain"
 fun_params(f::SlicedSeparableSum) = "n/a" # for now
 
 function prox_naive(f::SlicedSeparableSum, x::AbstractArray, gamma)
-	fy = 0;
-	y = similar(x);
-	for t in eachindex(f.fs)
-		for k in eachindex(f.fs[t])
-			y[f.idxs[t][k]...], fy1 = prox_naive(f.fs[t][k], x[f.idxs[t][k]...], gamma)
-			fy += fy1
-		end
-	end
-	return y, fy
+    fy = 0
+    y = similar(x)
+    for t in eachindex(f.fs)
+        for k in eachindex(f.fs[t])
+            y[f.idxs[t][k]...], fy1 = prox_naive(f.fs[t][k], x[f.idxs[t][k]...], gamma)
+            fy += fy1
+        end
+    end
+    return y, fy
 end
