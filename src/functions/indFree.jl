@@ -25,12 +25,10 @@ function (f::IndFree)(x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
     return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, gamma::R=R(1)) where {R, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, args...) where {R, T <: RealOrComplex{R}}
     y .= x
     return R(0)
 end
-
-prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, gamma::AbstractArray{T}) where {R, T <: RealOrComplex{R}} = prox!(y, f, x)
 
 function gradient!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
     y .= T(0)

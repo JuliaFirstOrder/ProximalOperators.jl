@@ -7,7 +7,7 @@ using LinearAlgebra
 using SparseArrays
 using SuiteSparse
 
-mutable struct LeastSquaresDirect{R <: Real, RC <: RealOrComplex{R}, M <: AbstractMatrix{RC}, V <: AbstractVector{RC}, F <: Factorization} <: LeastSquares
+mutable struct LeastSquaresDirect{R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractVector{C}, F <: Factorization} <: LeastSquares
     A::M # m-by-n matrix
     b::V
     Atb::V
@@ -15,10 +15,10 @@ mutable struct LeastSquaresDirect{R <: Real, RC <: RealOrComplex{R}, M <: Abstra
     gamma::R
     shape::Symbol
     S::M
-    res::Vector{RC} # m-sized buffer
-    q::Vector{RC} # n-sized buffer
+    res::Vector{C} # m-sized buffer
+    q::Vector{C} # n-sized buffer
     fact::F
-    function LeastSquaresDirect{R, RC, M, V, F}(A::M, b::V, lambda::R) where {R <: Real, RC <: RealOrComplex{R}, M <: AbstractMatrix{RC}, V <: AbstractVector{RC}, F <: Factorization}
+    function LeastSquaresDirect{R, C, M, V, F}(A::M, b::V, lambda::R) where {R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractVector{C}, F <: Factorization}
         if size(A, 1) != length(b)
             error("A and b have incompatible dimensions")
         end
@@ -33,30 +33,30 @@ mutable struct LeastSquaresDirect{R <: Real, RC <: RealOrComplex{R}, M <: Abstra
             S = A*A'
             shape = :Fat
         end
-        new(A, b, A'*b, lambda, -1, shape, S, zeros(RC, m), zeros(RC, n))
+        new(A, b, A'*b, lambda, -1, shape, S, zeros(C, m), zeros(C, n))
     end
 end
 
-function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, RC <: Union{R, Complex{R}}, M <: DenseMatrix{RC}, V <: AbstractVector{RC}}
-    LeastSquaresDirect{R, RC, M, V, Cholesky{RC, M}}(A, b, lambda)
+function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, M <: DenseMatrix{C}, V <: AbstractVector{C}}
+    LeastSquaresDirect{R, C, M, V, Cholesky{C, M}}(A, b, lambda)
 end
 
-function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, RC <: Union{R, Complex{R}}, I <: Integer, M <: SparseMatrixCSC{RC, I}, V <: AbstractVector{RC}}
-    LeastSquaresDirect{R, RC, M, V, SuiteSparse.CHOLMOD.Factor{RC}}(A, b, lambda)
+function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, I <: Integer, M <: SparseMatrixCSC{C, I}, V <: AbstractVector{C}}
+    LeastSquaresDirect{R, C, M, V, SuiteSparse.CHOLMOD.Factor{C}}(A, b, lambda)
 end
 
-function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, RC <: Union{R, Complex{R}}, M <: AbstractMatrix{RC}, V <: AbstractVector{RC}}
+function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, M <: AbstractMatrix{C}, V <: AbstractVector{C}}
     warn("Could not infer type of Factorization for $M in LeastSquaresDirect, this type will be type-unstable")
-    LeastSquaresDirect{R, RC, M, V, Factorization}(A, b, lambda)
+    LeastSquaresDirect{R, C, M, V, Factorization}(A, b, lambda)
 end
 
-function (f::LeastSquaresDirect{R, RC, M, V, F})(x::AbstractVector{RC}) where {R, RC, M, V, F}
+function (f::LeastSquaresDirect)(x::AbstractVector)
     mul!(f.res, f.A, x)
     f.res .-= f.b
     return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function prox!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}, gamma::R=R(1)) where {R, RC, M, V, F, D <: RealOrComplex{R}}
+function prox!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::AbstractVector{C}, gamma::R=R(1)) where {R, C, M, V, F}
     # if gamma different from f.gamma then call factor_step!
     if gamma != f.gamma
         factor_step!(f, gamma)
@@ -67,19 +67,19 @@ function prox!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::A
     return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function factor_step!(f::LeastSquaresDirect{R, RC, M, V, F}, gamma::R) where {R, RC, M <: DenseMatrix, V, F}
+function factor_step!(f::LeastSquaresDirect{R, C, M, V, F}, gamma::R) where {R, C, M <: DenseMatrix, V, F}
     lamgam = f.lambda*gamma
     f.fact = cholesky(f.S + I/lamgam)
     f.gamma = gamma
 end
 
-function factor_step!(f::LeastSquaresDirect{R, RC, M, V, F}, gamma::R) where {R, RC, M <: SparseMatrixCSC, V, F}
+function factor_step!(f::LeastSquaresDirect{R, C, M, V, F}, gamma::R) where {R, C, M <: SparseMatrixCSC, V, F}
     lamgam = f.lambda*gamma
-    f.fact = ldlt(f.S; shift = 1.0/lamgam)
+    f.fact = ldlt(f.S; shift = R(1)/lamgam)
     f.gamma = gamma
 end
 
-function solve_step!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}, gamma::R) where {R, RC, M, V, F <: Cholesky{RC, M}, D <: RealOrComplex{R}}
+function solve_step!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::AbstractVector{C}, gamma::R) where {R, C, M, V, F <: Cholesky{C, M}}
     lamgam = f.lambda*gamma
     f.q .= f.Atb .+ x./lamgam
     # two cases: (1) tall A, (2) fat A
@@ -99,7 +99,7 @@ function solve_step!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}
     end
 end
 
-function solve_step!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}, gamma::R) where {R, RC, M, V, F <: SuiteSparse.CHOLMOD.Factor{RC}, D <: RealOrComplex{R}}
+function solve_step!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::AbstractVector{C}, gamma::R) where {R, C, M, V, F <: SuiteSparse.CHOLMOD.Factor{C}}
     lamgam = f.lambda*gamma
     f.q .= f.Atb .+ x./lamgam
     # two cases: (1) tall A, (2) fat A
@@ -115,7 +115,7 @@ function solve_step!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}
     end
 end
 
-function gradient!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, x::AbstractVector{D}) where {R, RC, M, V, F, D <: Union{R, Complex{R}}}
+function gradient!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::AbstractVector{C}) where {R, C, M, V, F}
     mul!(f.res, f.A, x)
     f.res .-= f.b
     mul!(y, adjoint(f.A), f.res)
@@ -123,7 +123,7 @@ function gradient!(y::AbstractVector{D}, f::LeastSquaresDirect{R, RC, M, V, F}, 
     fy = (f.lambda/2)*dot(f.res, f.res)
 end
 
-function prox_naive(f::LeastSquaresDirect, x::AbstractVector{D}, gamma::R=R(1)) where {R, D <: RealOrComplex{R}}
+function prox_naive(f::LeastSquaresDirect{R, C}, x::AbstractVector{C}, gamma::R=R(1)) where {R, C <: RealOrComplex{R}}
     lamgam = f.lambda*gamma
     y = (f.A'*f.A + I/lamgam)\(f.Atb + x/lamgam)
     fy = (f.lambda/2)*norm(f.A*y-f.b)^2
