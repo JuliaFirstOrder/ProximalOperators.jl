@@ -14,5 +14,4 @@ makedocs(
 
 deploydocs(
     repo   = "github.com/kul-forbes/ProximalOperators.jl.git",
-    versions = "v#.#",
 )
