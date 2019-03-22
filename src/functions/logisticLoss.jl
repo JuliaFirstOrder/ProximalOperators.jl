@@ -37,7 +37,7 @@ function (f::LogisticLoss{T, R})(x::AbstractArray{R}) where {T, R}
     val = R(0)
     for k in eachindex(x)
         expyx = exp(f.y[k]*x[k])
-        val += log(1.0 + 1.0/expyx)
+        val += log(R(1) + R(1)/expyx)
     end
     return f.mu * val
 end
@@ -51,8 +51,8 @@ function gradient!(g::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{
     val = R(0)
     for k in eachindex(x)
         expyx = exp(f.y[k]*x[k])
-        g[k] = -f.mu * f.y[k] / (1.0 + expyx)
-        val += log(1.0 + 1.0/expyx)
+        g[k] = -f.mu * f.y[k] / (R(1) + expyx)
+        val += log(R(1) + R(1)/expyx)
     end
     return f.mu * val
 end
@@ -75,7 +75,7 @@ end
 # Alternatively we can use gradient methods with constant step size.
 
 function prox!(z::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}, gamma::R=R(1)) where {T, R}
-    c = 1.0/gamma # convexity modulus
+    c = R(1)/gamma # convexity modulus
     L = maximum(abs, f.mu .* f.y) + c # Lipschitz constants
     z .= x
     expyz = similar(z)
@@ -89,7 +89,7 @@ function prox!(z::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}, 
     expyz .= exp.(f.y .* z)
     val = R(0)
     for k in eachindex(expyz)
-        val += log(1.0 + 1.0/expyz[k])
+        val += log(R(1) + R(1)/expyz[k])
     end
     return f.mu * val
 end
