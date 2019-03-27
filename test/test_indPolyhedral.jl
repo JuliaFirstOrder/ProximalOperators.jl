@@ -23,32 +23,36 @@ p = similar(x)
 # define test cases
 
 constructors_positive = [
-    () -> IndPolyhedral(l, A),
-    () -> IndPolyhedral(l, A, xmin, xmax),
-    () -> IndPolyhedral(A, u),
-    () -> IndPolyhedral(A, u, xmin, xmax),
-    () -> IndPolyhedral(l, A, u),
-    () -> IndPolyhedral(l, A, u, xmin, xmax),
+    (solver) -> IndPolyhedral(l, A, solver=solver),
+    (solver) -> IndPolyhedral(l, A, xmin, xmax, solver=solver),
+    (solver) -> IndPolyhedral(A, u, solver=solver),
+    (solver) -> IndPolyhedral(A, u, xmin, xmax, solver=solver),
+    (solver) -> IndPolyhedral(l, A, u, solver=solver),
+    (solver) -> IndPolyhedral(l, A, u, xmin, xmax, solver=solver),
 ]
 
 constructors_negative = [
-    () -> IndPolyhedral(l, A, xmax, xmin),
-    () -> IndPolyhedral(A, u, xmax, xmin),
-    () -> IndPolyhedral(l, A, u, xmax, xmin),
+    (solver) -> IndPolyhedral(l, A, xmax, xmin, solver=solver),
+    (solver) -> IndPolyhedral(A, u, xmax, xmin, solver=solver),
+    (solver) -> IndPolyhedral(l, A, u, xmax, xmin, solver=solver),
 ]
 
 # run positive tests
 
 for constr in constructors_positive
-    f = constr()
-    @test ProximalOperators.is_convex(f) == true
-    @test ProximalOperators.is_set(f) == true
-    fx = call_test(f, x)
-    p, fp = prox_test(f, x)
+    for solver in [:osqp, :qpdas]
+        f = constr(solver)
+        @test ProximalOperators.is_convex(f) == true
+        @test ProximalOperators.is_set(f) == true
+        fx = call_test(f, x)
+        p, fp = prox_test(f, x)
+    end
 end
 
 # run negative tests
 
 for constr in constructors_negative
-    @test_throws ErrorException constr()
+    for solver in [:osqp, :qpdas]
+        @test_throws ErrorException constr(solver)
+    end
 end
