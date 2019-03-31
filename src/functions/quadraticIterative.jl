@@ -24,6 +24,7 @@ function (f::QuadraticIterative{R, M, V})(x::AbstractArray{R}) where {R, M, V}
 end
 
 function prox!(y::AbstractArray{R}, f::QuadraticIterative{R, M, V}, x::AbstractArray{R}, gamma::R=R(1)) where {R, M, V}
+    y .= x
     f.temp .= x./gamma .- f.q
     op = Shift(f.Q, R(1)/gamma)
     IterativeSolvers.cg!(y, op, f.temp)
