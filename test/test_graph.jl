@@ -12,17 +12,17 @@ sm = n + div(n, 10)
 function test_against_IndAffine(f, A, cd)
     m, n = size(A)
     if m > n
-        return 0.0  # no variant for skinny case for now
+        return  # no variant for skinny case for now
     end
 
-    T = typeof(A[1,1])
+    T = eltype(A)
 
     ## TODO: remove when IndAffine will be revised
-    if T <: Complex{Float64}
-        return 0.0
+    if T <: Complex
+        return
     end
 
-    B = ifelse(issparse(A), [A -SparseMatrixCSC(I, m, m)],  [A -Matrix(I, m, m)])
+    B = ifelse(issparse(A), [A -SparseMatrixCSC{T}(I, m, m)],  [A -Matrix{T}(I, m, m)])
     # INIT IndAffine for the case
     faff = IndAffine(B, zeros(T, m))
 
@@ -35,11 +35,12 @@ function test_against_IndAffine(f, A, cd)
 
     # test against IndAFfine
     if T <: Complex
-        return 0.0# currently complex case has different mappings, though both valid
+        return  # currently complex case has different mappings, though both valid
     else
         @test xy ≈ xy_aff
     end
-    return 0.0
+    
+    return
 end
 
 ## First, do common tests
