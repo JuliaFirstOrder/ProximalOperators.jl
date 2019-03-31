@@ -48,6 +48,7 @@ function prox!(y::AbstractVector{D}, f::LeastSquaresIterative{R, RC, M, V}, x::A
     f.q .= f.Atb .+ x./lamgam
     # two cases: (1) tall A, (2) fat A
     if f.shape == :Tall
+        y .= x
         op = Shift(f.S, R(1)/lamgam)
         IterativeSolvers.cg!(y, op, f.q)
     else # f.shape == :Fat
