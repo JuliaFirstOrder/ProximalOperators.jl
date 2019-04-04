@@ -20,6 +20,8 @@ it is assumed to be (plus or minus) infinity.
 function IndPolyhedral(args...; solver=:osqp)
     if solver == :osqp
         IndPolyhedralOSQP(args...)
+    elseif solver == :qpdas
+        IndPolyhedralQPDAS(args...)
     else
         error("unknown solver")
     end
@@ -28,3 +30,4 @@ end
 # including concrete types
 
 include("indPolyhedralOSQP.jl")
+include("indPolyhedralQPDAS.jl")
