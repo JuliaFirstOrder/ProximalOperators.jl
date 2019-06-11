@@ -82,6 +82,7 @@ include("calculus/sqrDistL2.jl")
 include("calculus/tilt.jl")
 include("calculus/translate.jl")
 include("calculus/sum.jl")
+include("calculus/pointwiseMinimum.jl")
 
 # Functions obtained from basic (as special cases or using calculus rules)
 
