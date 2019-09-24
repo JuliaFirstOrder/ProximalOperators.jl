@@ -45,8 +45,17 @@ function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{
     LeastSquaresDirect{R, C, M, V, SuiteSparse.CHOLMOD.Factor{C}}(A, b, lambda)
 end
 
+# Adjoint/Transpose versions
+function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, M <: TransposeOrAdjoint{<:DenseMatrix{C}}, V <: AbstractVector{C}}
+    LeastSquaresDirect(copy(A), b, lambda)
+end
+
+function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, I <: Integer, M <: TransposeOrAdjoint{<:SparseMatrixCSC{C, I}}, V <: AbstractVector{C}}
+    LeastSquaresDirect(copy(A), b, lambda)
+end
+
 function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, M <: AbstractMatrix{C}, V <: AbstractVector{C}}
-    warn("Could not infer type of Factorization for $M in LeastSquaresDirect, this type will be type-unstable")
+    @warn "Could not infer type of Factorization for $M in LeastSquaresDirect, this type will be type-unstable"
     LeastSquaresDirect{R, C, M, V, Factorization}(A, b, lambda)
 end
 
