@@ -76,7 +76,7 @@ function prox!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::Ab
     return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function factor_step!(f::LeastSquaresDirect{R, C, M, V, F}, gamma::R) where {R, C, M <: DenseMatrix, V, F}
+function factor_step!(f::LeastSquaresDirect{R, C, M, V, F}, gamma::R) where {R, C, M, V, F}
     lamgam = f.lambda*gamma
     f.fact = cholesky(f.S + I/lamgam)
     f.gamma = gamma
