@@ -45,8 +45,17 @@ function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{
     LeastSquaresDirect{R, C, M, V, SuiteSparse.CHOLMOD.Factor{C}}(A, b, lambda)
 end
 
+# Adjoint/Transpose versions
+function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, M <: TransposeOrAdjoint{<:DenseMatrix{C}}, V <: AbstractVector{C}}
+    LeastSquaresDirect(copy(A), b, lambda)
+end
+
+function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, I <: Integer, M <: TransposeOrAdjoint{<:SparseMatrixCSC{C, I}}, V <: AbstractVector{C}}
+    LeastSquaresDirect(copy(A), b, lambda)
+end
+
 function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, M <: AbstractMatrix{C}, V <: AbstractVector{C}}
-    warn("Could not infer type of Factorization for $M in LeastSquaresDirect, this type will be type-unstable")
+    @warn "Could not infer type of Factorization for $M in LeastSquaresDirect, this type will be type-unstable"
     LeastSquaresDirect{R, C, M, V, Factorization}(A, b, lambda)
 end
 
@@ -67,7 +76,7 @@ function prox!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::Ab
     return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function factor_step!(f::LeastSquaresDirect{R, C, M, V, F}, gamma::R) where {R, C, M <: DenseMatrix, V, F}
+function factor_step!(f::LeastSquaresDirect{R, C, M, V, F}, gamma::R) where {R, C, M, V, F}
     lamgam = f.lambda*gamma
     f.fact = cholesky(f.S + I/lamgam)
     f.gamma = gamma
@@ -99,7 +108,7 @@ function solve_step!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F},
     end
 end
 
-function solve_step!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::AbstractVector{C}, gamma::R) where {R, C, M, V, F <: SuiteSparse.CHOLMOD.Factor{C}}
+function solve_step!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::AbstractVector{C}, gamma::R) where {R, C, M, V, F}
     lamgam = f.lambda*gamma
     f.q .= f.Atb .+ x./lamgam
     # two cases: (1) tall A, (2) fat A

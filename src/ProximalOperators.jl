@@ -11,6 +11,7 @@ const ArrayOrTuple{R} = Union{
     AbstractArray{C, N} where {C <: RealOrComplex{R}, N},
     TupleOfArrays{R}
 }
+const TransposeOrAdjoint{M} = Union{Transpose{C,M} where C, Adjoint{C,M} where C}
 
 export ProximableFunction
 export prox, prox!, gradient, gradient!
