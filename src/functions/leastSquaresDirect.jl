@@ -108,7 +108,7 @@ function solve_step!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F},
     end
 end
 
-function solve_step!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::AbstractVector{C}, gamma::R) where {R, C, M, V, F <: SuiteSparse.CHOLMOD.Factor{C}}
+function solve_step!(y::AbstractVector{C}, f::LeastSquaresDirect{R, C, M, V, F}, x::AbstractVector{C}, gamma::R) where {R, C, M, V, F}
     lamgam = f.lambda*gamma
     f.q .= f.Atb .+ x./lamgam
     # two cases: (1) tall A, (2) fat A
