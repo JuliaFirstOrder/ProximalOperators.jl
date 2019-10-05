@@ -5,18 +5,18 @@ export SlicedSeparableSum
 """
 **Sliced separable sum of functions**
 
-    SlicedSeparableSum((f₁,…,fₖ), (J₁,…,Jₖ))
+    SlicedSeparableSum((f_1, ..., f_k), (J_1, ..., J_k))
 
 Returns the function
 ```math
-g(x) = ∑_{i=1}^k f_i(x_{J_i}).
+g(x) = \\sum_{i=1}^k f_i(x_{J_i}).
 ```
 
-    SlicedSeparableSum(f, (J₁,…,Jₖ))
+    SlicedSeparableSum(f, (J_1, ..., J_k))
 
 Analogous to the previous one, but applies the same function `f` to all slices of the variable `x`:
 ```math
-g(x) = ∑_{i=1}^k f(x_{J_i}).
+g(x) = \sum_{i=1}^k f(x_{J_i}).
 ```
 """
 struct SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N} <: ProximableFunction

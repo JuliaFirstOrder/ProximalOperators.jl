@@ -9,7 +9,7 @@ export IndSimplex
 
 Returns the indicator of the set
 ```math
-S = \\left\\{ x : x \\geq 0, ∑_i x_i = a \\right\\}.
+S = \\left\\{ x : x \\geq 0, \\sum_i x_i = a \\right\\}.
 ```
 By default `a=1.0`, therefore ``S`` is the probability simplex.
 """
