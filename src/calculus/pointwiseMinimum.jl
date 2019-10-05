@@ -1,5 +1,16 @@
 export PointwiseMinimum
 
+"""
+**Pointwise minimum of functions**
+
+    PointwiseMinimum(f_1, ..., f_k)
+
+Given functions `f_1` to `f_k`, returns their pointwise minimum, that is
+```math
+g(x) = \\min\\{f_1(x), ..., f_k(x)\\}
+```
+Note that `g` is a nonconvex function in general.
+"""
 struct PointwiseMinimum{T <: Tuple} <: ProximableFunction
     fs::T
 end
