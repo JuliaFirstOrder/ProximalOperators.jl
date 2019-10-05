@@ -10,11 +10,11 @@ Conjugate
 
 ## Functions combination
 
-The following means of combination are important in that they allow to represent a very common situation: defining the sum of multiple functions, each applied to an independent block of variables. The following two constructors, [`SeparableSum`](@ref) and [`SlicedSeparableSum`](@ref), allow to do this in two (complementary) ways.
-
 ```@docs
+PointwiseMinimum
 SeparableSum
 SlicedSeparableSum
+Sum
 ```
 
 ## Functions regularization

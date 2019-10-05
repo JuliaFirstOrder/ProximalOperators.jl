@@ -3,18 +3,13 @@ export Sum
 """
 **Sum of functions**
 
-    Sum(f₁,…,fₖ)
+    Sum(f_1, ..., f_k)
 
-Given functions `f₁` to `fₖ`, returns their sum
+Given functions `f_1` to `f_k`, returns their sum
 
 ```math
-g(x) = ∑_{i=1}^k f_i(x).
+g(x) = \\sum_{i=1}^k f_i(x).
 ```
-
-The functions `fᵢ` should all have the same domain, which will be the domain of
-the result. If all `fᵢ` have gradients then this function will also have a
-gradient.
-
 """
 struct Sum{T <: Tuple} <: ProximableFunction fs::T end
 

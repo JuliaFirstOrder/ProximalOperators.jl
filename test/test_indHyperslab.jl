@@ -1,7 +1,7 @@
-using Test
-using Random
 using LinearAlgebra
 using ProximalOperators
+using Random
+using Test
 
 Random.seed!(0)
 

@@ -9,7 +9,7 @@ export IndBallL1
 
 Returns the indicator function of the set
 ```math
-S = \\left\\{ x : ∑_i |x_i| \\leq r \\right\\}.
+S = \\left\\{ x : \\sum_i |x_i| \\leq r \\right\\}.
 ```
 Parameter `r` must be positive.
 """

@@ -90,7 +90,7 @@ end
   include("test_logisticLoss.jl")
   include("test_quadratic.jl")
   include("test_linear.jl")
-  include("test_indhyperslab.jl")
+  include("test_indHyperslab.jl")
   include("test_calls.jl")
   include("test_graph.jl")
 end
@@ -103,6 +103,7 @@ end
   include("test_calculus.jl")
   include("test_moreauEnvelope.jl")
   include("test_precompose.jl")
+  include("test_pointwiseMinimum.jl")
   include("test_postcompose.jl")
   include("test_regularize.jl")
   include("test_separableSum.jl")
