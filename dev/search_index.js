@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.IndBallL1",
     "category": "type",
-    "text": "Indicator of a L_1 norm ball\n\nIndBallL1(r=1.0)\n\nReturns the indicator function of the set\n\nS = left x  _i x_i leq r right\n\nParameter r must be positive.\n\n\n\n\n\n"
+    "text": "Indicator of a L_1 norm ball\n\nIndBallL1(r=1.0)\n\nReturns the indicator function of the set\n\nS = left x  sum_i x_i leq r right\n\nParameter r must be positive.\n\n\n\n\n\n"
 },
 
 {
@@ -173,7 +173,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "ProximalOperators.IndSimplex",
     "category": "type",
-    "text": "Indicator of a simplex\n\nIndSimplex(a=1.0)\n\nReturns the indicator of the set\n\nS = left x  x geq 0 _i x_i = a right\n\nBy default a=1.0, therefore S is the probability simplex.\n\n\n\n\n\n"
+    "text": "Indicator of a simplex\n\nIndSimplex(a=1.0)\n\nReturns the indicator of the set\n\nS = left x  x geq 0 sum_i x_i = a right\n\nBy default a=1.0, therefore S is the probability simplex.\n\n\n\n\n\n"
 },
 
 {
@@ -497,11 +497,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "calculus/#ProximalOperators.PointwiseMinimum",
+    "page": "Calculus rules",
+    "title": "ProximalOperators.PointwiseMinimum",
+    "category": "type",
+    "text": "Pointwise minimum of functions\n\nPointwiseMinimum(f_1, ..., f_k)\n\nGiven functions f_1 to f_k, returns their pointwise minimum, that is\n\ng(x) = minf_1(x)  f_k(x)\n\nNote that g is a nonconvex function in general.\n\n\n\n\n\n"
+},
+
+{
     "location": "calculus/#ProximalOperators.SeparableSum",
     "page": "Calculus rules",
     "title": "ProximalOperators.SeparableSum",
     "category": "type",
-    "text": "Separable sum of functions\n\nSeparableSum(f₁,…,fₖ)\n\nGiven functions f₁ to fₖ, returns their separable sum, that is\n\ng(x_1x_k) = _i=1^k f_i(x_i)\n\nThe object g constructed in this way can be evaluated at Tuples of length k. Likewise, the prox and prox! methods for g operate with (input and output) Tuples of length k.\n\nExample:\n\nf = SeparableSum(NormL1(), NuclearNorm()); # separable sum of two functions\nx = randn(10); # some random vector\nY = randn(20, 30); # some random matrix\nf_xY = f((x, Y)); # evaluates f at (x, Y)\n(u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)\n\n\n\n\n\n"
+    "text": "Separable sum of functions\n\nSeparableSum(f_1, ..., f_k)\n\nGiven functions f_1 to f_k, returns their separable sum, that is\n\ng(x_1  x_k) = sum_i=1^k f_i(x_i)\n\nThe object g constructed in this way can be evaluated at Tuples of length k. Likewise, the prox and prox! methods for g operate with (input and output) Tuples of length k.\n\nExample:\n\nf = SeparableSum(NormL1(), NuclearNorm()); # separable sum of two functions\nx = randn(10); # some random vector\nY = randn(20, 30); # some random matrix\nf_xY = f((x, Y)); # evaluates f at (x, Y)\n(u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)\n\n\n\n\n\n"
 },
 
 {
@@ -509,7 +517,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Calculus rules",
     "title": "ProximalOperators.SlicedSeparableSum",
     "category": "type",
-    "text": "Sliced separable sum of functions\n\nSlicedSeparableSum((f₁,…,fₖ), (J₁,…,Jₖ))\n\nReturns the function\n\ng(x) = _i=1^k f_i(x_J_i)\n\nSlicedSeparableSum(f, (J₁,…,Jₖ))\n\nAnalogous to the previous one, but applies the same function f to all slices of the variable x:\n\ng(x) = _i=1^k f(x_J_i)\n\n\n\n\n\n"
+    "text": "Sliced separable sum of functions\n\nSlicedSeparableSum((f_1, ..., f_k), (J_1, ..., J_k))\n\nReturns the function\n\ng(x) = sum_i=1^k f_i(x_J_i)\n\nSlicedSeparableSum(f, (J_1, ..., J_k))\n\nAnalogous to the previous one, but applies the same function f to all slices of the variable x:\n\ng(x) = sum_i=1^k f(x_J_i)\n\n\n\n\n\n"
+},
+
+{
+    "location": "calculus/#ProximalOperators.Sum",
+    "page": "Calculus rules",
+    "title": "ProximalOperators.Sum",
+    "category": "type",
+    "text": "Sum of functions\n\nSum(f_1, ..., f_k)\n\nGiven functions f_1 to f_k, returns their sum\n\ng(x) = sum_i=1^k f_i(x)\n\n\n\n\n\n"
 },
 
 {
@@ -517,7 +533,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Calculus rules",
     "title": "Functions combination",
     "category": "section",
-    "text": "The following means of combination are important in that they allow to represent a very common situation: defining the sum of multiple functions, each applied to an independent block of variables. The following two constructors, SeparableSum and SlicedSeparableSum, allow to do this in two (complementary) ways.SeparableSum\nSlicedSeparableSum"
+    "text": "PointwiseMinimum\nSeparableSum\nSlicedSeparableSum\nSum"
 },
 
 {
