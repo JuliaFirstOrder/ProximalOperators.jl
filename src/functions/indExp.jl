@@ -28,7 +28,7 @@ Returns the indicator function of the dual exponential cone, that is
 C = \\mathrm{cl} \\{ (u,v,w) : u < 0, -u⋅e^{v/u} \\leq w⋅e \\} \\subset \\mathbb{R}^3.
 ```
 """
-IndExpDual() = PrecomposeDiagonal(Conjugate(IndExpPrimal()), -1.0)
+IndExpDual() = PrecomposeDiagonal(Conjugate(IndExpPrimal()), -1)
 
 EXP_PRIMAL_CALL_TOL = 1e-6
 EXP_POLAR_CALL_TOL = 1e-3
@@ -36,19 +36,19 @@ EXP_PROJ_TOL = 1e-15
 EXP_PROJ_MAXIT = 100
 
 function (f::IndExpPrimal)(x::AbstractArray{R,1}) where R <: Real
-    if (x[2] > 0.0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_PRIMAL_CALL_TOL) ||
+    if (x[2] > 0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_PRIMAL_CALL_TOL) ||
         (x[1] <= EXP_PRIMAL_CALL_TOL && abs(x[2]) <= EXP_PRIMAL_CALL_TOL && x[3] >= -EXP_PRIMAL_CALL_TOL)
-        return 0.0
+        return R(0)
     end
-    return +Inf
+    return R(Inf)
 end
 
 function (f::Conjugate{IndExpPrimal})(x::AbstractArray{R,1}) where R <: Real
-    if (x[1] > 0.0 && x[1]*exp(x[2]/x[1]) <= -exp(1)*x[3]+EXP_POLAR_CALL_TOL) ||
+    if (x[1] > 0 && x[1]*exp(x[2]/x[1]) <= -exp(1)*x[3]+EXP_POLAR_CALL_TOL) ||
         (abs(x[1]) <= EXP_POLAR_CALL_TOL && x[2] <= EXP_POLAR_CALL_TOL && x[3] <= EXP_POLAR_CALL_TOL)
-        return 0.0
+        return R(0)
     end
-    return +Inf
+    return R(Inf)
 end
 
 # Projection onto the cone is performed as in SCS (https://github.com/cvxgrp/scs).
@@ -76,7 +76,7 @@ end
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-function prox!(y::AbstractVector{R}, f::IndExpPrimal, x::AbstractVector{R}, gamma::R=1.0) where R <: Real
+function prox!(y::AbstractVector{R}, f::IndExpPrimal, x::AbstractVector{R}, gamma::R=R(1)) where R <: Real
     r = x[1]
     s = x[2]
     t = x[3]
@@ -174,5 +174,5 @@ fun_params(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} 
 prox_naive(f::IndExpPrimal, x::AbstractArray{R}, gamma::Real=1.0) where {R <: Real} =
     prox(f, x, gamma) # we don't have a much simpler way to do this yet
 
-prox_naive(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}}, x::AbstractArray{R}, gamma::Real=1.0) where {R <: Real} =
+prox_naive(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}}, x::AbstractArray{R}, gamma::Real=R(1)) where {R <: Real} =
     prox(f, x, gamma) # we don't have a much simpler way to do this yet

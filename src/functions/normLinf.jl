@@ -13,17 +13,19 @@ f(x) = λ⋅\\max\\{|x_1|, …, |x_n|\\},
 ```
 for a nonnegative parameter `λ`.
 """
-NormLinf(lambda::R=1.0) where {R <: Real} = Conjugate(IndBallL1(lambda))
+NormLinf(lambda::T=1) where {T <: Real} = Conjugate(IndBallL1(lambda))
 
-function (f::Conjugate{IndBallL1{R}})(x::AbstractArray{S}) where {R <: Real, S <: RealOrComplex}
-    return (f.f.r)*norm(x, Inf)
+function (f::Conjugate{IndBallL1{T}})(x::AbstractArray{C}) where {T, R <: Real, C <: RealOrComplex{R}}
+    return (f.f.r) * norm(x, Inf)
 end
 
-function gradient!(y::AbstractArray{T}, f::Conjugate{IndBallL1{R}}, x::AbstractArray{T}) where {T <: RealOrComplex, R <: Real}
+function gradient!(y::AbstractArray{C}, f::Conjugate{IndBallL1{T}}, x::AbstractArray{C}) where {
+    T, R <: Real, C <: RealOrComplex{R}
+}
     absxi, i = findmax(abs.(x)) # Largest absolute value
     y .= 0
-    y[i] = f.f.r*sign(x[i])
-    return f.f.r*absxi
+    y[i] = f.f.r * sign(x[i])
+    return f.f.r * absxi
 end
 
 fun_name(f::Postcompose{Conjugate{IndBallL1{R}}, R}) where {R <: Real} = "weighted L-infinity norm"
