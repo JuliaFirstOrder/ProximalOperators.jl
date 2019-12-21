@@ -68,3 +68,5 @@ function prox_naive(g::Conjugate, x::AbstractArray{T}, gamma=R(1)) where {R, T <
     y, v = prox_naive(g.f, x/gamma, 1/gamma)
     return x - gamma * y, real(dot(x, y)) - gamma * real(dot(y, y)) - v
 end
+
+# TODO: hard-code conjugation rules? E.g. precompose/epicompose

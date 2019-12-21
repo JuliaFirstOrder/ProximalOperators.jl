@@ -101,6 +101,7 @@ end
 
 @testset "Calculus rules" begin
   include("test_calculus.jl")
+  include("test_epicompose.jl")
   include("test_moreauEnvelope.jl")
   include("test_precompose.jl")
   include("test_pointwiseMinimum.jl")

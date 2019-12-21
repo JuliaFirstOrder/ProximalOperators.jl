@@ -1,8 +1,7 @@
-# TODO *Work in progress*, this is highly incomplete code
+# Epi-composition, also known as infimal postcomposition or image function.
 
-# Epi-composition, also known as infimal postcomposition.
 # This is the dual operation to precomposition, see Rockafellar and Wets,
-# "Variational Analisys", Theorem 11.23.
+# "Variational Analysis", Theorem 11.23.
 #
 # Given a function f and a linear operator L, their epi-composition is:
 #
@@ -15,54 +14,37 @@
 #     = L * argmin_x { f(x) + 1/(2\gamma)||Lx - z||^2 }.
 #
 # When L is such that L'*L = mu*Id, then this just requires prox_{\gamma f}.
+#
 # In some other cases the prox can be "easily" computed, such as when f is
 # quadratic or extended-quadratic.
+#
 
 export Epicompose
 
-mutable struct Epicompose{S <: AbstractMatrix, T <: ProximableFunction, F <: Factorization} <: ProximableFunction
-  L::S
-  f::T
-  iter::Bool
-  mu
-  gamma
-  fact::F
-  function Epicompose{S, T, F}(L::S, f::T, iter::Bool) where {T <: ProximableFunction, S <: AbstractMatrix, F <: Factorization}
-    new(L, f, iter, 0.0, -1.0)
-  end
-end
+"""
+**Epi-composition**
 
-function Epicompose(L::S, f::T, iter::Bool=false) where {T <: ProximableFunction, S <: AbstractMatrix}
-  # TODO this is incomplete
-  Epicompose{S, T, Factorization}(L, f, iter)
-end
+    Epicompose(L, f, [mu])
 
-function prox!(y, g::Epicompose{S, T}, x, gamma) where {T <: ProximableFunction, S <: AbstractMatrix}
-  # this line here allocates stuff
-  z = (g.L'*x)/f.mu
-  p, v = prox(g.f, z, gamma/f.mu)
-  A_mul_B!(y, f.L, p)
-  return v
-end
+Returns the epi-composition of ``f`` with ``L``, also known as infimal
+postcomposition or image function. Given a function f and a linear operator L,
+their epi-composition is:
+```math
+g(y) = (Lf)(y) = inf_x { f(x) : Lx = y }
+```
+This is the dual operation to precomposition, see Rockafellar and Wets,
+"Variational Analysis", Theorem 11.23.
 
-function prox!(y, g::Epicompose{S, T}, x, gamma) where {T <: Quadratic, S <: AbstractMatrix}
-  if g.iter == false
-    if gamma != g.gamma
-      factor_step!(g, gamma)
-    end
-    # this line here allocates stuff
-    p = g.fact\((g.L'*x)/gamma - g.f.q)
-    fy = 0.5*vecdot(p, g.f.Q*p) + vecdot(p, g.f.q)
-  else
-    error("not implemented")
-  end
-  A_mul_B!(y, g.L, p)
-  return fy
-end
+If ``mu > 0`` is specified, then ``L`` is assumed to be such that ``L'*L == mu*I``,
+and the proximal operator is computable for any convex ``f``. If ``mu`` is
+not specified, then ``f`` must be of ``Quadratic`` type.
+"""
+abstract type Epicompose <: ProximableFunction end
 
-function factor_step!(g::Epicompose{S, T}, gamma::R) where {T <: Quadratic, S <: AbstractMatrix, R <: Real}
-  g.gamma = gamma;
-  g.fact = cholfact(g.f.Q + (g.L'*g.L)/gamma);
-end
+Epicompose(L, f::T, mu) where {T <: ProximableFunction} = EpicomposeGramDiagonal(L, f, mu)
+Epicompose(L, f::T) where {T <: Quadratic} = EpicomposeQuadratic(L, f)
 
-fun_expr(g::Epicompose) = "x ↦ inf { f(y) : Ly = x }"
+### INCLUDE CONCRETE TYPES
+
+include("epicomposeGramDiagonal.jl")
+include("epicomposeQuadratic.jl")
