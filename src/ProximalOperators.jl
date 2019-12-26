@@ -12,6 +12,7 @@ const ArrayOrTuple{R} = Union{
     TupleOfArrays{R}
 }
 const TransposeOrAdjoint{M} = Union{Transpose{C,M} where C, Adjoint{C,M} where C}
+const Maybe{T} = Union{T, Nothing}
 
 export ProximableFunction
 export prox, prox!, gradient, gradient!
@@ -69,7 +70,7 @@ include("functions/crossEntropy.jl")
 # Calculus rules
 
 include("calculus/conjugate.jl")
-# include("calculus/epicompose.jl")
+include("calculus/epicompose.jl")
 include("calculus/distL2.jl")
 include("calculus/moreauEnvelope.jl")
 include("calculus/postcompose.jl")

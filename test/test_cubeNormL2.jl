@@ -2,8 +2,6 @@ using Test
 using Random
 using ProximalOperators
 
-Random.seed!(0)
-
 @testset "CubeNormL2" begin
 
 for R in [Float16, Float32, Float64]
