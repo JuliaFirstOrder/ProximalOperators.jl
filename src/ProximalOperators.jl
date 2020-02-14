@@ -108,6 +108,7 @@ fun_params(f) = "n/a"
 is_prox_accurate(f::ProximableFunction) = true
 is_separable(f::ProximableFunction) = false
 is_convex(f::ProximableFunction) = false
+is_concave(f::ProximableFunction) = false
 is_singleton(f::ProximableFunction) = false
 is_cone(f::ProximableFunction) = false
 is_affine(f::ProximableFunction) = is_singleton(f)

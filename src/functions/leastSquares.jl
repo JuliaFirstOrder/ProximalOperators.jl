@@ -6,7 +6,6 @@ export LeastSquares
 
 abstract type LeastSquares <: ProximableFunction end
 
-is_convex(f::LeastSquares) = true
 is_smooth(f::LeastSquares) = true
 is_quadratic(f::LeastSquares) = true
 

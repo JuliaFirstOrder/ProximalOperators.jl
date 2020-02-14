@@ -17,13 +17,15 @@ struct LeastSquaresIterative{R <: Real, RC <: RealOrComplex{R}, M, V <: Abstract
 end
 
 is_prox_accurate(f::LeastSquaresIterative) = false
+is_convex(f::LeastSquaresIterative) = f.lambda > 0
+is_concave(f::LeastSquaresIterative) = f.lambda < 0
 
 function LeastSquaresIterative(A::M, b::V, lambda::R) where {R <: Real, RC <: RealOrComplex{R}, M, V <: AbstractVector{RC}}
     if size(A, 1) != length(b)
         error("A and b have incompatible dimensions")
     end
-    if lambda <= 0
-        error("lambda must be positive")
+    if lambda == 0
+        error("lambda must nonzero")
     end
     m, n = size(A)
     if m >= n
