@@ -44,6 +44,8 @@ abstract type Epicompose <: ProximableFunction end
 Epicompose(L, f::T, mu) where {T <: ProximableFunction} = EpicomposeGramDiagonal(L, f, mu)
 Epicompose(L, f::T) where {T <: Quadratic} = EpicomposeQuadratic(L, f)
 
+# TODO add properties
+
 ### INCLUDE CONCRETE TYPES
 
 include("epicomposeGramDiagonal.jl")

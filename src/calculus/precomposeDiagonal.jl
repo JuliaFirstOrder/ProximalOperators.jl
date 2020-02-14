@@ -11,7 +11,12 @@ Returns the function
 ```math
 g(x) = f(\\mathrm{diag}(a)x + b)
 ```
-where ``f`` is a convex function. Furthermore, ``f`` must be separable, or `a` must be a scalar, for the `prox` of ``g`` to be computable. Parametes `a` and `b` can be arrays of multiple dimensions, according to the shape/size of the input `x` that will be provided to the function: the way the above expression for ``g`` should be thought of, is `g(x) = f(a.*x + b)`.
+where ``f`` is a convex function. Function ``f`` must be separable,
+or `a` must be a scalar, for the `prox` of ``g`` to be computable.
+Parametes `a` and `b` can be arrays of multiple dimensions, according to
+the shape/size of the input `x` that will be provided to the function:
+the way the above expression for ``g`` should be thought of, is
+`g(x) = f(a.*x + b)`.
 """
 struct PrecomposeDiagonal{T <: ProximableFunction, R <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
     f::T

@@ -22,8 +22,8 @@ mutable struct LeastSquaresDirect{R <: Real, C <: RealOrComplex{R}, M <: Abstrac
         if size(A, 1) != length(b)
             error("A and b have incompatible dimensions")
         end
-        if lambda <= 0
-            error("lambda must be positive")
+        if lambda == 0
+            error("lambda must be nonzero")
         end
         m, n = size(A)
         if m >= n
@@ -36,6 +36,9 @@ mutable struct LeastSquaresDirect{R <: Real, C <: RealOrComplex{R}, M <: Abstrac
         new(A, b, A'*b, lambda, -1, shape, S, zeros(C, m), zeros(C, n))
     end
 end
+
+is_convex(f::LeastSquaresDirect) = f.lambda > 0
+is_concave(f::LeastSquaresDirect) = f.lambda < 0
 
 function LeastSquaresDirect(A::M, b::V, lambda::R) where {R <: Real, C <: Union{R, Complex{R}}, M <: DenseMatrix{C}, V <: AbstractVector{C}}
     LeastSquaresDirect{R, C, M, V, Cholesky{C, M}}(A, b, lambda)
