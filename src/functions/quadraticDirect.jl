@@ -25,7 +25,7 @@ function QuadraticDirect(Q::M, q::V) where {R <: Real, I <: Integer, M <: Sparse
 end
 
 function QuadraticDirect(Q::M, q::V) where {R <: Real, M <: DenseMatrix{R}, V <: AbstractVector{R}}
-    QuadraticDirect{R, M, V, Cholesky{R}}(Q, q)
+    QuadraticDirect{R, M, V, Cholesky{R, M}}(Q, q)
 end
 
 function (f::QuadraticDirect{R, M, V, F})(x::AbstractArray{R}) where {R, M, V, F}
