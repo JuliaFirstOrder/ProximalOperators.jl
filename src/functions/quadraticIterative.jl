@@ -26,7 +26,7 @@ end
 function prox!(y::AbstractArray{R}, f::QuadraticIterative{R, M, V}, x::AbstractArray{R}, gamma::R=R(1)) where {R, M, V}
     y .= x
     f.temp .= x./gamma .- f.q
-    op = Shift(f.Q, R(1)/gamma)
+    op = ScaleShift(R(1), f.Q, R(1)/gamma)
     IterativeSolvers.cg!(y, op, f.temp)
     mul!(f.temp, f.Q, y)
     fy = 0.5*dot(y, f.temp) + dot(y, f.q)
