@@ -63,28 +63,31 @@ eltype(Op::AcA) = eltype(Op.A)
 
 # Shifted symmetric linear operator
 
-struct Shift{M, T} <: LinOp
+struct ScaleShift{M, T} <: LinOp
+  alpha::T
   A::M
   rho::T
-  function Shift{M, T}(A::M, rho::T) where {M, T}
+  function ScaleShift{M, T}(alpha::T, A::M, rho::T) where {M, T}
     if eltype(A) != T
-      error("type of rho is incompatible with A")
+      error("type of alpha, rho is incompatible with A")
     end
-    new(A, rho)
+    new(alpha, A, rho)
   end
 end
 
-Shift(A::M, rho::T) where {M, T} = Shift{M, T}(A, rho)
+ScaleShift(alpha::T, A::M, rho::T) where {M, T} = ScaleShift{M, T}(alpha, A, rho)
 
-function mul!(y, Op::Shift, x)
+function mul!(y, Op::ScaleShift, x)
   mul!(y, Op.A, x)
+  y .*= Op.alpha
   y .+= Op.rho .* x
 end
 
-function mul!(y, Op::Adjoint{Shift}, x)
+function mul!(y, Op::Adjoint{ScaleShift}, x)
   mul!(y, adjoint(Op.A), x)
+  y .*= Op.alpha
   y .+= Op.rho .* x
 end
 
-size(Op::Shift) = size(Op.A, 2), size(Op.A, 2)
-eltype(Op::Shift) = eltype(Op.A)
+size(Op::ScaleShift) = size(Op.A, 2), size(Op.A, 2)
+eltype(Op::ScaleShift) = eltype(Op.A)
