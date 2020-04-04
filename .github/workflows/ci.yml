@@ -26,6 +26,7 @@ jobs:
           arch: ${{ matrix.arch }}
       - uses: julia-actions/julia-buildpkg@latest
       - uses: julia-actions/julia-runtest@latest
+      - uses: julia-actions/julia-uploadcodecov@latest
   docs:
     name: Documentation
     runs-on: ubuntu-latest
