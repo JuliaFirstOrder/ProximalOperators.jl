@@ -1,6 +1,6 @@
 # ProximalOperators.jl
 
-[![Build status](https://github.com/kul-forbes/ProximalOperators.jl/workflows/CI/badge.svg)](https://github.com/lostella/ProximalOperators.jl/actions?query=workflow%3ACI)
+[![Build status](https://github.com/kul-forbes/ProximalOperators.jl/workflows/CI/badge.svg)](https://github.com/kul-forbes/ProximalOperators.jl/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/kul-forbes/ProximalOperators.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kul-forbes/ProximalOperators.jl)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/ProximalOperators-jl/Lobby)
 
