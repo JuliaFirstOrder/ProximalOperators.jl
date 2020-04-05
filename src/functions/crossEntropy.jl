@@ -9,9 +9,9 @@ export CrossEntropy
 
 Returns the function
 ```math
-f(x) = -1/N \\sum_{n = 1}^{N} b \\log (x)+(1-b) \\log (1-x),
+f(x) = -\\frac{1}{N} \\sum_{i = 1}^{N} b_i \\log (x_i)+(1-b_i) \\log (1-x_i),
 ```
-where `b` is an array with `0 ≤ b ≤ 1`.
+where `b` is an array such that `0 ≤ b ≤ 1` component-wise.
 """
 struct CrossEntropy{R <: Real, T <: AbstractArray{R}} <: ProximableFunction
     b::T

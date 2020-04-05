@@ -69,6 +69,7 @@ SqrNormL2
 ## Penalties and other functions
 
 ```@docs
+CrossEntropy
 HingeLoss
 HuberLoss
 LeastSquares
