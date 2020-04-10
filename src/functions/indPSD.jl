@@ -11,8 +11,9 @@ Returns the indicator of the set
 ```math
 C = \\{ X : X \\succeq 0 \\}.
 ```
-The argument to the function can be either a `Symmetric` or `Hermitian` object,
-or an object of type `AbstractVector{Float64}` holding a symmetric matrix in (lower triangular) packed storage.
+The argument to the function can be either a `Symmetric`, `Hermitian`, or
+`AbstractMatrix` object, or an object of type `AbstractVector{Float64}` holding
+a symmetric matrix in (lower triangular) packed storage.
 
 If `scaling = true` then the vectors `y` and `x` in
 `prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}, args...)`
