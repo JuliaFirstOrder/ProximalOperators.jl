@@ -37,8 +37,8 @@ IndPSD(; scaling=false) = IndPSD(scaling)
 function (f::IndPSD)(X::HermOrSym{T}) where {R <: Real, T <: RealOrComplex{R}}
     F = eigen(X)
     for i in eachindex(F.values)
-        #Do we allow for some tolerance here?
-        if F.values[i] <= -R(1e-14)
+        # Do we allow for some tolerance here?
+        if F.values[i] <= -100 * eps(R)
             return R(Inf)
         end
     end
