@@ -82,8 +82,10 @@ function scale_diagonal!(x, val)
     n = Int(sqrt(1/4+2*length(x))-1/2)
     k = -n
     for i = 1:n
-        k += n - i + 2        #Calculate indices of diagonal elements recursively (paralell faster?)
-        x[k] *= val            #Scale diagonal
+        # Calculate indices of diagonal elements recursively (parallel faster?)
+        k += n - i + 2
+        # Scale diagonal
+        x[k] *= val
     end
 end
 
