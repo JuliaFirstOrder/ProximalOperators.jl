@@ -157,7 +157,22 @@ stuff = [
   
   Dict( "constr" => IndPSD,
         "params" => ( (), () ),
-        "args"   => ( Symmetric(randn(5,5)), Symmetric(rand(20,20)) ),
+        "args"   => ( Symmetric(randn(Float32, 5, 5)), Symmetric(rand(Float64, 20, 20)) ),
+      ),
+
+  Dict( "constr" => IndPSD,
+        "params" => ( (), () ),
+        "args"   => ( Hermitian(randn(Complex{Float32}, 5, 5)), Hermitian(rand(Complex{Float64}, 20, 20)) ),
+      ),
+
+  Dict( "constr" => IndPSD,
+        "params" => ( (), () ),
+        "args"   => ( randn(Float32, 5, 5), rand(Float64, 20, 20) ),
+      ),
+  
+  Dict( "constr" => IndPSD,
+        "params" => ( (), () ),
+        "args"   => ( randn(Complex{Float32}, 5, 5), rand(Complex{Float64}, 20, 20) ),
       ),
   
   Dict( "constr" => IndPSD,
