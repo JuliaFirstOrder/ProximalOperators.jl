@@ -22,12 +22,13 @@ group_baseline = benchmarkpkg(
     mkconfig(id = "baseline"),
 )
 
-judgement = judge(group_target, group_baseline)
-
-displayresult(judgement)
-
 printnewsection("Target result")
 displayresult(group_target)
 
 printnewsection("Baseline result")
 displayresult(group_baseline)
+
+judgement = judge(group_target, group_baseline)
+
+printnewsection("Judgement result")
+displayresult(judgement)

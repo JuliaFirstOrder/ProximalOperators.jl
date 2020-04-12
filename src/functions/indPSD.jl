@@ -54,13 +54,12 @@ function prox!(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) whe
     for i in eachindex(F.values)
         F.values[i] = max.(R(0), F.values[i])
     end
-    for i = 1:n
-        for j = 1:n
-            Y.data[i, j] = R(0)
-            for k = 1:n
-                Y.data[i, j] += F.vectors[i, k] * F.values[k] * conj(F.vectors[j, k])
-            end
+    for i = 1:n, j = i:n
+        Y.data[i, j] = R(0)
+        for k = 1:n
+            Y.data[i, j] += F.vectors[i, k] * F.values[k] * conj(F.vectors[j, k])
         end
+        Y.data[j, i] = conj(Y.data[i, j])
     end
     return R(0)
 end
