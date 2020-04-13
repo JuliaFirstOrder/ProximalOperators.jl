@@ -1,6 +1,7 @@
 using ProximalOperators
 using BenchmarkTools
 using LinearAlgebra
+using Random
 
 const SUITE = BenchmarkGroup()
 
@@ -15,11 +16,42 @@ for T in [Float64, Complex{Float64}]
             else
                 Hermitian
             end
-            X = begin
-                A = randn($T, $n, $n)
-                W((A + A')/2)
-            end
+            Random.seed!(0)
+            A = randn($T, $n, $n)
+            X = W((A + A')/2)
             Y = similar(X)
         end
+    end
+end
+
+k = "IndBox"
+SUITE[k] = BenchmarkGroup(["IndBox"])
+for T in [Float32, Float64]
+    SUITE[k][T] = @benchmarkable prox!(y, f, x) setup=begin
+        low = -ones($T, 10000)
+        upp = +ones($T, 10000)
+        f = IndBox(low, upp)
+        x = [-2*ones($T, 3000); zeros($T, 4000); ones($T, 3000)]
+        y = similar(x)
+    end
+end
+
+k = "IndNonnegative"
+SUITE[k] = BenchmarkGroup(["IndNonnegative"])
+for T in [Float32, Float64]
+    SUITE[k][T] = @benchmarkable prox!(y, f, x) setup=begin
+        f = IndNonnegative()
+        x = [-2*ones($T, 3000); zeros($T, 4000); ones($T, 3000)]
+        y = similar(x)
+    end
+end
+
+k = "NormL2"
+SUITE[k] = BenchmarkGroup(["NormL2"])
+for T in [Float32, Float64]
+    SUITE[k][T] = @benchmarkable prox!(y, f, x) setup=begin
+        f = NormL2()
+        x = ones($T, 10000)
+        y = similar(x)
     end
 end
