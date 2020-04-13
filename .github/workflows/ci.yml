@@ -55,11 +55,9 @@ jobs:
         with:
           version: '1.4'
       - run: git fetch origin '+refs/heads/master:refs/remotes/origin/master'
-      - run: git branch baseline origin/master
       - run: |
           julia --project=benchmark -e '
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
-            Pkg.instantiate()
-            include("benchmark/runbenchmarks.jl")'
-      
+            Pkg.instantiate()'
+      - run: julia --project=benchmark benchmark/runbenchmarks.jl
