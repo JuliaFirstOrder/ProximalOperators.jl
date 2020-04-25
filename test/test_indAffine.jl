@@ -1,8 +1,10 @@
 using LinearAlgebra
 using SparseArrays
 using Random
+using ProximalOperators
+using Test
 
-Random.seed!(0)
+@testset "IndAffine" begin
 
 # Full matrix
 
@@ -49,3 +51,5 @@ call_test(f, x)
 y, fy = prox_test(f, x)
 
 @test f(y) == 0.0
+
+end

@@ -29,7 +29,7 @@ is_set(f::IndSphereL2) = true
 IndSphereL2(r::R=1.0) where {R <: Real} = IndSphereL2{R}(r)
 
 function (f::IndSphereL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
-    if abs(norm(x) - f.r) > f.r*eps(R)
+    if abs(norm(x) - f.r) / f.r > 100 * eps(R)
         return R(Inf)
     end
     return R(0)

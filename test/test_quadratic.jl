@@ -1,8 +1,9 @@
 using LinearAlgebra
 using SparseArrays
-using Random
+using Test
+using ProximalOperators
 
-Random.seed!(0)
+@testset "Quadratic" begin
 
 # Test with full matrices
 
@@ -57,3 +58,5 @@ f = Quadratic(Q, q, iterative=true)
 call_test(f, x)
 prox_test(f, x)
 prox_test(f, x, 1.3)
+
+end

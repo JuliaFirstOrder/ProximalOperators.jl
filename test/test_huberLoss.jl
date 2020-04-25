@@ -1,7 +1,8 @@
 using LinearAlgebra
-using Random
+using ProximalOperators
+using Test
 
-Random.seed!(0)
+@testset "HuberLoss" begin
 
 f = HuberLoss(1.5, 0.7)
 
@@ -30,3 +31,5 @@ grad_fx, fx = gradient(f, x)
 
 @test abs(fx - f(x)) <= 1e-12
 @test norm(0.7*x - grad_fx, Inf) <= 1e-12
+
+end
