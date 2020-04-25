@@ -29,6 +29,8 @@ is_smooth(f::Conjugate) = is_strongly_convex(f.f)
 is_strongly_convex(f::Conjugate) = is_smooth(f.f)
 is_quadratic(f::Conjugate) = is_strongly_convex(f.f) && is_generalized_quadratic(f.f)
 is_generalized_quadratic(f::Conjugate) = is_quadratic(f.f)
+is_set(f::Conjugate) = is_convex(f.f) && is_support(f.f)
+is_support(f::Conjugate) = is_convex(f.f) && is_set(f.f)
 
 fun_dom(f::Conjugate) = fun_dom(f.f)
 
@@ -66,7 +68,7 @@ end
 
 function prox_naive(g::Conjugate, x::AbstractArray{T}, gamma=R(1)) where {R, T <: RealOrComplex{R}}
     y, v = prox_naive(g.f, x/gamma, 1/gamma)
-    return x - gamma * y, real(dot(x, y)) - gamma * real(dot(y, y)) - v
+    return x - gamma * y, if is_set(g) R(0) else real(dot(x, y)) - gamma * real(dot(y, y)) - v end
 end
 
 # TODO: hard-code conjugation rules? E.g. precompose/epicompose

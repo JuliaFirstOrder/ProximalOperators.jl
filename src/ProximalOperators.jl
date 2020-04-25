@@ -113,6 +113,7 @@ is_singleton(f::ProximableFunction) = false
 is_cone(f::ProximableFunction) = false
 is_affine(f::ProximableFunction) = is_singleton(f)
 is_set(f::ProximableFunction) = is_cone(f) || is_affine(f)
+is_support(f::ProximableFunction) = is_convex(f) && is_cone(f)
 is_smooth(f::ProximableFunction) = false
 is_quadratic(f::ProximableFunction) = false
 is_generalized_quadratic(f::ProximableFunction) = is_quadratic(f) || is_affine(f)
