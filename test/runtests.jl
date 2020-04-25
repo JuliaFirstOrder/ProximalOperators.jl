@@ -69,11 +69,11 @@ end
 # i.e., that more specific properties imply less specific ones
 # e.g., the indicator of a subspace is the indicator of a set in particular
 function predicates_test(f)
-  # is_quadratic => is_(generalized_quadratic && smooth)
+  # quadratic => generalized_quadratic && smooth
   @test !is_quadratic(f) || (is_generalized_quadratic(f) && is_smooth(f))
-  # is_(singleton || cone || affine) => is_set
+  # (singleton || cone || affine) => set
   @test !(is_singleton(f) || is_cone(f) || is_affine(f)) || is_set(f)
-  # is_strongly_convex => is_convex
+  # strongly_convex => convex
   @test !is_strongly_convex(f) || is_convex(f)
 end
 

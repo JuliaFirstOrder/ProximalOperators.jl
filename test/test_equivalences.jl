@@ -2,14 +2,16 @@
 
 using Random
 using SparseArrays
-
-Random.seed!(0)
+using ProximalOperators
+using Test
 
 ################################################################################
 ### testing consistency of simplex/L1 ball
 ################################################################################
 # Inspired by Condat, "Fast projection onto the simplex and the l1 ball", Mathematical Programming, 158:575–585, 2016.
 # See Prop. 2.1 there and following remarks.
+
+@testset "IndSimplex/IndBallL1" begin
 
 n = 20
 N = 10
@@ -41,9 +43,13 @@ for i = 1:N
   @test y1 ≈ y2
 end
 
+end
+
 ################################################################################
 ### testing consistency of hinge loss/box indicator
 ################################################################################
+
+@testset "HingeLoss/IndBox" begin
 
 n = 20
 N = 10
@@ -70,9 +76,13 @@ for i = 1:N
   @test y1 ≈ y2
 end
 
+end
+
 ################################################################################
 ### testing regularize
 ################################################################################
+
+@testset "Regularize/ElasticNet" begin
 
 lambda = rand()
 rho = rand()
@@ -85,9 +95,13 @@ y2,f2 = prox(ElasticNet(lambda,rho),x)
 @test f ≈ f2
 @test y ≈ y2
 
+end
+
 ################################################################################
 ### testing IndAffine
 ################################################################################
+
+@testset "IndAffine (sparse/dense)" begin
 
 A = sprand(50,100, 0.1)
 b = randn(50)
@@ -101,3 +115,5 @@ y2, f2 = prox(g2, x)
 
 @test f1 ≈ f2
 @test y1 ≈ y2
+
+end

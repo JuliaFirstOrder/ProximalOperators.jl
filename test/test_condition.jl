@@ -1,10 +1,9 @@
 # test whether prox satisfies some conditions
 
-using Random
 using LinearAlgebra
 using SparseArrays
-
-Random.seed!(0)
+using ProximalOperators
+using Test
 
 stuff = [
   Dict( "constr" => LeastSquares,
@@ -48,18 +47,15 @@ stuff = [
       ),
 ]
 
-for i = 1:length(stuff)
-  constr = stuff[i]["constr"]
-  params = stuff[i]["params"]
-  args = stuff[i]["args"]
-  gammas = stuff[i]["gammas"]
-  test = stuff[i]["test"]
-  for i = 1:length(params)
-    # println("----------------------------------------------------------")
-    # println(constr)
-    f = constr(params[i]...)
-    # println(f)
-    y, fy = prox(f, args[i], gammas[i])
-    @test test(f, args[i], gammas[i], y)
-  end
+@testset "$(d["constr"])" for d in stuff
+      constr = d["constr"]
+      params = d["params"]
+      args = d["args"]
+      gammas = d["gammas"]
+      test = d["test"]
+      for i = 1:length(params)
+            f = constr(params[i]...)
+            y, fy = prox(f, args[i], gammas[i])
+            @test test(f, args[i], gammas[i], y)
+      end
 end
