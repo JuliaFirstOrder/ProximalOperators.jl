@@ -1,8 +1,9 @@
 using LinearAlgebra
 using SparseArrays
-using Random
+using ProximalOperators
+using Test
 
-Random.seed!(0)
+@testset "LeastSquares" begin
 
 # Wide full matrix
 
@@ -328,3 +329,5 @@ grad_fx, fx = gradient(f, x)
 call_test(f, x)
 prox_test(f, x)
 prox_test(f, x, 2.1)
+
+end

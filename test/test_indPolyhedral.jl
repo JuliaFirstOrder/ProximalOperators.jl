@@ -1,6 +1,7 @@
-using Random
+using ProximalOperators
+using Test
 
-Random.seed!(0)
+@testset "IndPolyhedral" begin
 
 # set dimensions
 
@@ -20,9 +21,7 @@ l = A*x0 .- 0.1
 x = 10 .* randn(n)
 p = similar(x)
 
-# define test cases
-
-constructors_positive = [
+@testset "valid" for constr in [
     () -> IndPolyhedral(l, A),
     () -> IndPolyhedral(l, A, xmin, xmax),
     () -> IndPolyhedral(A, u),
@@ -30,16 +29,6 @@ constructors_positive = [
     () -> IndPolyhedral(l, A, u),
     () -> IndPolyhedral(l, A, u, xmin, xmax),
 ]
-
-constructors_negative = [
-    () -> IndPolyhedral(l, A, xmax, xmin),
-    () -> IndPolyhedral(A, u, xmax, xmin),
-    () -> IndPolyhedral(l, A, u, xmax, xmin),
-]
-
-# run positive tests
-
-for constr in constructors_positive
     f = constr()
     @test ProximalOperators.is_convex(f) == true
     @test ProximalOperators.is_set(f) == true
@@ -47,8 +36,12 @@ for constr in constructors_positive
     p, fp = prox_test(f, x)
 end
 
-# run negative tests
-
-for constr in constructors_negative
+@testset "invalid" for constr in [
+    () -> IndPolyhedral(l, A, xmax, xmin),
+    () -> IndPolyhedral(A, u, xmax, xmin),
+    () -> IndPolyhedral(l, A, u, xmax, xmin),
+]
     @test_throws ErrorException constr()
+end
+
 end

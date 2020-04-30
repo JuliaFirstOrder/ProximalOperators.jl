@@ -1,4 +1,8 @@
 using LinearAlgebra
+using Test
+using ProximalOperators
+
+@testset "LogisticLoss" begin
 
 y = [1.0, -1.0, 1.0, -1.0, 1.0]
 mu = 1.5
@@ -26,3 +30,5 @@ z2, f_z2 = prox(f, x, 2.0)
 grad_f_z2, = gradient(f, z2)
 
 @test norm((x - z2)./2.0 - grad_f_z2, Inf)/norm(grad_f_z2, Inf) <= 1e-4
+
+end

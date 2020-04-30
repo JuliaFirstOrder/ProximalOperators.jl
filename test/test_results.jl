@@ -1,6 +1,8 @@
 # Test the correctness of f(x) and prox(f,x,gamma) for a few hardcoded cases
 
 using LinearAlgebra
+using ProximalOperators
+using Test
 
 stuff = [
   Dict( "f"      => NormL2(0.5),
@@ -319,7 +321,7 @@ stuff = [
       )
 ]
 
-for i = 1:length(stuff)
+@testset "$(i)" for i = 1:length(stuff)
 
     f = stuff[i]["f"]
     x = stuff[i]["x"]

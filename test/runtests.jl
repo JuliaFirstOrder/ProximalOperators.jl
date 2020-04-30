@@ -44,10 +44,12 @@ function prox_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
     y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gamma)
 
     @test typeof(fy_naive) == R
+    
+    rtol = if ProximalOperators.is_prox_accurate(f) sqrt(eps(R)) else 1e-4 end
 
     if ProximalOperators.is_convex(f)
-        @test y_prealloc ≈ y
-        @test y_naive ≈ y
+        @test isapprox(y_prealloc, y, rtol=rtol)
+        @test isapprox(y_naive, y, rtol=rtol)
         if ProximalOperators.is_set(f)
             @test fy_prealloc == 0
         end
@@ -69,11 +71,11 @@ end
 # i.e., that more specific properties imply less specific ones
 # e.g., the indicator of a subspace is the indicator of a set in particular
 function predicates_test(f)
-  # is_quadratic => is_(generalized_quadratic && smooth)
+  # quadratic => generalized_quadratic && smooth
   @test !is_quadratic(f) || (is_generalized_quadratic(f) && is_smooth(f))
-  # is_(singleton || cone || affine) => is_set
+  # (singleton || cone || affine) => set
   @test !(is_singleton(f) || is_cone(f) || is_affine(f)) || is_set(f)
-  # is_strongly_convex => is_convex
+  # strongly_convex => convex
   @test !is_strongly_convex(f) || is_convex(f)
 end
 

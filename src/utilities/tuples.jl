@@ -2,7 +2,7 @@
 
 import Base: isapprox, similar, zero
 
-isapprox(x::Tuple, y::Tuple) = all(isapprox.(x, y))
+isapprox(x::Tuple, y::Tuple, args...; kwargs...) = all(isapprox.(x, y, args...; kwargs...))
 
 similar(x::Tuple) = similar.(x)
 
