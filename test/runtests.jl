@@ -44,10 +44,12 @@ function prox_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
     y_naive, fy_naive = ProximalOperators.prox_naive(f, x, gamma)
 
     @test typeof(fy_naive) == R
+    
+    rtol = sqrt(eps(R)) if ProximalOperators.is_prox_accurate(f) else 1e-4
 
     if ProximalOperators.is_convex(f)
-        @test y_prealloc ≈ y
-        @test y_naive ≈ y
+        @test isapprox(y_prealloc, y, rtol=rtol)
+        @test isapprox(y_naive, y, rtol=rtol)
         if ProximalOperators.is_set(f)
             @test fy_prealloc == 0
         end
