@@ -45,7 +45,7 @@ function prox_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
 
     @test typeof(fy_naive) == R
     
-    rtol = sqrt(eps(R)) if ProximalOperators.is_prox_accurate(f) else 1e-4
+    rtol = if ProximalOperators.is_prox_accurate(f) sqrt(eps(R)) else 1e-4 end
 
     if ProximalOperators.is_convex(f)
         @test isapprox(y_prealloc, y, rtol=rtol)
