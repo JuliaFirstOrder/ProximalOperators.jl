@@ -112,6 +112,11 @@ stuff = [
         "params" => ( (), (randn(20),), (randn(Complex{Float64}, 20),) ),
         "args"   => ( randn(10), randn(20), randn(Complex{Float64}, 20) )
       ),
+      
+  Dict( "constr" => IndStiefel,
+        "params" => ( (), (), (), () ),
+        "args"   => ( randn(Float32, 5, 3), randn(Float64, 5, 3), randn(Complex{Float32}, 5, 3), randn(Complex{Float64}, 5, 3) )
+      ),
   
   Dict( "constr" => IndZero,
         "params" => ( (), (), () ),
@@ -306,7 +311,15 @@ for i = 1:length(stuff)
     y, fy = prox_test(f, x)
 
 ##### compute prox with random gamma
-    gam = 5*rand()
+    T = if typeof(x) <: Array
+        eltype(x)
+    elseif typeof(x) <: Tuple
+        eltype(x[1])
+    else
+        Float64
+    end
+    R = real(T)
+    gam = R(0.0001) + 5*rand(R)
     y, fy = prox_test(f, x, gam)
 
 ##### compute prox with multiple random gammas
