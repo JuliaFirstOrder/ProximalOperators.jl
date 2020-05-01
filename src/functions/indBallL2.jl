@@ -30,10 +30,10 @@ is_set(f::IndBallL2) = true
 IndBallL2(r::R=1.0) where {R <: Real} = IndBallL2{R}(r)
 
 function (f::IndBallL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
-    if norm(x) - f.r > f.r*eps(R)
-        return R(Inf)
+    if isapprox_le(norm(x), f.r, atol=eps(R), rtol=sqrt(eps(R))))
+        return R(0)
     end
-    return R(0)
+    return R(Inf)
 end
 
 function prox!(y::AbstractArray{T}, f::IndBallL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
