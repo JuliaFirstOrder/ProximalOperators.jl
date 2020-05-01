@@ -32,7 +32,7 @@ is_set(f::IndHalfspace) = true
 is_cone(f::IndHalfspace) = f.b == 0 || f.b == Inf
 
 function (f::IndHalfspace{R})(x::AbstractArray{R}) where R
-    if dot(f.a, x) - f.b <= eps(R)*f.norm_a*(1 + abs(f.b))
+    if isapprox_le(dot(f.a, x), f.b, atol=eps(R), rtol=sqrt(eps(R)))
         return R(0)
     end
     return R(Inf)

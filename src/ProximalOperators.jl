@@ -21,6 +21,7 @@ abstract type ProximableFunction end
 
 # Utilities
 
+include("utilities/approx_inequality.jl")
 include("utilities/tuples.jl")
 include("utilities/linops.jl")
 include("utilities/symmetricpacked.jl")
