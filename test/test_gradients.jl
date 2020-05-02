@@ -166,12 +166,12 @@ for i = 1:length(stuff)
 	else
 		d = randn(Float64, size(x))
 	end
-        @test f(x+d) ≥ fx + dot(d, ∇f) - TOL_ASSERT
+        @test ProximalOperators.isapprox_le(fx + dot(d, ∇f), f(x+d))
       else
         # Assume smooth function
         d = randn(Float64, size(x))
-        d ./= norm(d).*sqrt(TOL_ASSERT)
-        @test f(x+d) ≈ fx + dot(d, ∇f) atol=TOL_ASSERT
+        d ./= norm(d) .* 1e-6
+        @test f(x+d) ≈ fx + dot(d, ∇f) atol=1e-12
       end
     end
     x = rand(Float64, size(x))

@@ -115,8 +115,8 @@ stuff = [
         yg, gy = prox_test(g, x, gamma)
 
         # compare results of f and g
-        @test norm(yf-yg, Inf)/(1+norm(yf, Inf)) <= TOL_ASSERT
-        @test fy == gy || abs(fy-gy)/(1+abs(fy)) <= TOL_ASSERT
+        @test yf ≈ yg
+        @test fy ≈ gy
     end
 
 end

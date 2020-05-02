@@ -30,7 +30,7 @@ is_strongly_convex(f::Conjugate) = is_smooth(f.f)
 is_quadratic(f::Conjugate) = is_strongly_convex(f.f) && is_generalized_quadratic(f.f)
 is_generalized_quadratic(f::Conjugate) = is_quadratic(f.f)
 is_set(f::Conjugate) = is_convex(f.f) && is_support(f.f)
-is_support(f::Conjugate) = is_convex(f.f) && is_set(f.f)
+is_positively_homogeneous(f::Conjugate) = is_convex(f.f) && is_set(f.f)
 
 fun_dom(f::Conjugate) = fun_dom(f.f)
 

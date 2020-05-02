@@ -24,7 +24,7 @@ struct NormL2{R <: Real} <: ProximableFunction
 end
 
 is_convex(f::NormL2) = true
-is_support(f::NormL2) = true
+is_positively_homogeneous(f::NormL2) = true
 
 NormL2(lambda::R=1.0) where {R <: Real} = NormL2{R}(lambda)
 
