@@ -32,7 +32,8 @@ IndHyperslab
 IndPoint
 IndPolyhedral              
 IndSimplex    
-IndSphereL2          
+IndSphereL2
+IndStiefel
 ```
 
 ## Indicators of convex cones

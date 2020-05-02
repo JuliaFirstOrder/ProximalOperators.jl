@@ -29,10 +29,10 @@ is_set(f::IndSphereL2) = true
 IndSphereL2(r::R=1.0) where {R <: Real} = IndSphereL2{R}(r)
 
 function (f::IndSphereL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
-    if abs(norm(x) - f.r) / f.r > 100 * eps(R)
-        return R(Inf)
+    if isapprox(norm(x), f.r, atol=eps(R), rtol=sqrt(eps(R)))
+        return R(0)
     end
-    return R(0)
+    return R(Inf)
 end
 
 function prox!(y::AbstractArray{T}, f::IndSphereL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}

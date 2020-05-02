@@ -14,9 +14,9 @@ using ProximalOperators:
   is_smooth,
   is_quadratic,
   is_generalized_quadratic,
-  is_strongly_convex
-
-TOL_ASSERT = 1e-12
+  is_strongly_convex,
+  is_positively_homogeneous,
+  is_support
 
 function call_test(f, x::ArrayOrTuple{R}) where R <: Real
     try
@@ -53,8 +53,8 @@ function prox_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
         if ProximalOperators.is_set(f)
             @test fy_prealloc == 0
         end
-        @test fy_prealloc ≈ fy
-        @test fy_naive ≈ fy
+        @test isapprox(fy_prealloc, fy, rtol=rtol)
+        @test isapprox(fy_naive, fy, rtol=rtol)
     end
 
     if !ProximalOperators.is_set(f) || ProximalOperators.is_prox_accurate(f)
@@ -75,6 +75,10 @@ function predicates_test(f)
   @test !is_quadratic(f) || (is_generalized_quadratic(f) && is_smooth(f))
   # (singleton || cone || affine) => set
   @test !(is_singleton(f) || is_cone(f) || is_affine(f)) || is_set(f)
+  # cone => positively homogeneous
+  @test !is_cone(f) || is_positively_homogeneous(f)
+  # (convex && positively homogeneous) <=> (convex && support)
+  @test (is_convex(f) && is_positively_homogeneous(f)) == (is_convex(f) && is_support(f))
   # strongly_convex => convex
   @test !is_strongly_convex(f) || is_convex(f)
 end

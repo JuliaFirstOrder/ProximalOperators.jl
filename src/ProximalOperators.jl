@@ -21,6 +21,7 @@ abstract type ProximableFunction end
 
 # Utilities
 
+include("utilities/approx_inequality.jl")
 include("utilities/tuples.jl")
 include("utilities/linops.jl")
 include("utilities/symmetricpacked.jl")
@@ -51,6 +52,7 @@ include("functions/indPSD.jl")
 include("functions/indSimplex.jl")
 include("functions/indSOC.jl")
 include("functions/indSphereL2.jl")
+include("functions/indStiefel.jl")
 include("functions/indZero.jl")
 include("functions/leastSquares.jl")
 include("functions/linear.jl")
@@ -113,7 +115,8 @@ is_singleton(f::ProximableFunction) = false
 is_cone(f::ProximableFunction) = false
 is_affine(f::ProximableFunction) = is_singleton(f)
 is_set(f::ProximableFunction) = is_cone(f) || is_affine(f)
-is_support(f::ProximableFunction) = is_convex(f) && is_cone(f)
+is_positively_homogeneous(f::ProximableFunction) = is_cone(f)
+is_support(f::ProximableFunction) = is_convex(f) && is_positively_homogeneous(f)
 is_smooth(f::ProximableFunction) = false
 is_quadratic(f::ProximableFunction) = false
 is_generalized_quadratic(f::ProximableFunction) = is_quadratic(f) || is_affine(f)

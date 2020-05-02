@@ -16,7 +16,7 @@ struct IndSOC <: ProximableFunction end
 
 function (f::IndSOC)(x::AbstractVector{T}) where T <: Real
     # the tolerance in the following line should be customizable
-    if norm(x[2:end]) - x[1] <= 1e-14
+    if isapprox_le(norm(x[2:end]), x[1], atol=eps(T), rtol=sqrt(eps(T)))
         return T(0)
     end
     return +Inf
@@ -78,7 +78,9 @@ C = \\left\\{ (p, q, x) : \\|x\\|^2 \\leq 2\\cdot pq, p \\geq 0, q \\geq 0 \\rig
 struct IndRotatedSOC <: ProximableFunction end
 
 function (f::IndRotatedSOC)(x::AbstractVector{T}) where T <: Real
-    if x[1] >= -1e-14 && x[2] >= -1e-14 && norm(x[3:end])^2 - 2*x[1]*x[2] <= 1e-14
+    if isapprox_le(0, x[1], atol=eps(T), rtol=sqrt(eps(T))) &&
+        isapprox_le(0, x[2], atol=eps(T), rtol=sqrt(eps(T))) &&
+        isapprox_le(norm(x[3:end])^2, 2*x[1]*x[2], atol=eps(T), rtol=sqrt(eps(T)))
         return T(0)
     end
     return T(Inf)
