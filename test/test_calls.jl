@@ -236,6 +236,11 @@ stuff = [
         "params" => ( (randn(10,25), randn(10)), (randn(40,13), randn(40), rand()), (rand(Complex{Float64},25,10), rand(Complex{Float64},25)), (sprandn(100,1000,0.05), randn(100), rand()) ),
         "args"   => ( randn(25), randn(13), rand(Complex{Float64},10), randn(1000) )
       ),
+
+  Dict( "constr" => LeastSquares,
+        "params" => ( (randn(10,15), randn(10,4)), (rand(Complex{Float64},10,4), rand(Complex{Float64},10,15)), ),
+        "args"   => ( randn(15,4), rand(Complex{Float64},4, 15), )
+      ),
   
   # Dict( "constr" => SumLargest,
   #       "wrong"  => ( (-1,), (0,), (1, -2.0), (2, 0.0), (2, -rand()) ),
