@@ -59,16 +59,16 @@ end
 
 k = "LeastSquares"
 SUITE[k] = BenchmarkGroup(["LeastSquares"])
-for (T, s, matrix_type, mode) in Iterators.product(
+for (T, s, sparse, iterative) in Iterators.product(
     [Float32, Float64, ComplexF32, ComplexF64],
     [(5, 11), (11, 5)],
-    [:dense, :sparse],
-    [:direct, :iterative],
+    [false, true],
+    [false, true],
 )
-    SUITE[k][(T, s, matrix_type, mode)] = @benchmarkable prox!(y, f, x) setup=begin
-        A = if $matrix_type == :sparse sparse(ones($T, $s)) else ones($T, $s) end
+    SUITE[k][(T, s, sparse, iterative)] = @benchmarkable prox!(y, f, x) setup=begin
+        A = if $sparse sparse(ones($T, $s)) else ones($T, $s) end
         b = ones($T, $(s[1]))
-        f = LeastSquares(A, b, iterative=($mode == :iterative))
+        f = LeastSquares(A, b, iterative=$iterative)
         x = ones($T, $(s[2]))
         y = similar(x)
     end
