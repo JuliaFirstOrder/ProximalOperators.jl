@@ -1,6 +1,7 @@
 using ProximalOperators
 using BenchmarkTools
 using LinearAlgebra
+using SparseArrays
 using Random
 
 const SUITE = BenchmarkGroup()
@@ -52,6 +53,23 @@ for T in [Float32, Float64]
     SUITE[k][T] = @benchmarkable prox!(y, f, x) setup=begin
         f = NormL2()
         x = ones($T, 10000)
+        y = similar(x)
+    end
+end
+
+k = "LeastSquares"
+SUITE[k] = BenchmarkGroup(["LeastSquares"])
+for (T, s, sparse, iterative) in Iterators.product(
+    [Float64, ComplexF64],
+    [(5, 11), (11, 5)],
+    [false, true],
+    [false, true],
+)
+    SUITE[k][(T, s, sparse, iterative)] = @benchmarkable prox!(y, f, x) setup=begin
+        A = if $sparse sparse(ones($T, $s)) else ones($T, $s) end
+        b = ones($T, $(s[1]))
+        f = LeastSquares(A, b, iterative=$iterative)
+        x = ones($T, $(s[2]))
         y = similar(x)
     end
 end

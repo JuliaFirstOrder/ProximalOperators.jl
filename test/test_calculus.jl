@@ -115,8 +115,8 @@ stuff = [
         yg, gy = prox_test(g, x, gamma)
 
         # compare results of f and g
-        @test yf ≈ yg
-        @test fy ≈ gy
+        @test isapprox(yf, yg, atol=1e-12, rtol=1e-8)
+        @test isapprox(fy, gy, atol=1e-12, rtol=1e-8)
     end
 
 end

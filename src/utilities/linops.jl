@@ -69,7 +69,7 @@ struct ScaleShift{M, T} <: LinOp
   rho::T
   function ScaleShift{M, T}(alpha::T, A::M, rho::T) where {M, T}
     if eltype(A) != T
-      error("type of alpha, rho is incompatible with A")
+      error("type of alpha, rho ($T) is different from that of A ($(eltype(A)))")
     end
     new(alpha, A, rho)
   end

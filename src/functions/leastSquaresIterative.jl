@@ -47,12 +47,12 @@ function prox!(y::AbstractVector{D}, f::LeastSquaresIterative{R, RC, M, V}, x::A
     # two cases: (1) tall A, (2) fat A
     if f.shape == :Tall
         y .= x
-        op = ScaleShift(f.lambda, f.S, R(1)/gamma)
+        op = ScaleShift(RC(f.lambda), f.S, RC(1)/gamma)
         IterativeSolvers.cg!(y, op, f.q)
     else # f.shape == :Fat
         # y .= gamma*(f.q - lambda*(f.A'*(f.fact\(f.A*f.q))))
         mul!(f.res, f.A, f.q)
-        op = ScaleShift(f.lambda, f.S, R(1)/gamma)
+        op = ScaleShift(RC(f.lambda), f.S, RC(1)/gamma)
         IterativeSolvers.cg!(f.res2, op, f.res)
         mul!(y, adjoint(f.A), f.res2)
         y .*= -f.lambda
