@@ -60,7 +60,7 @@ end
 k = "LeastSquares"
 SUITE[k] = BenchmarkGroup(["LeastSquares"])
 for (T, s, sparse, iterative) in Iterators.product(
-    [Float32, Float64, ComplexF32, ComplexF64],
+    [Float64, ComplexF64],
     [(5, 11), (11, 5)],
     [false, true],
     [false, true],
