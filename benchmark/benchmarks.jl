@@ -66,7 +66,7 @@ for (T, s, matrix_type, mode) in Iterators.product(
     [:direct, :iterative],
 )
     SUITE[k][(T, s, matrix_type, mode)] = @benchmarkable prox!(y, f, x) setup=begin
-        A = if $matrix_type == :sparse sparse(ones($T, $s)) else ones($T, $s)
+        A = if $matrix_type == :sparse sparse(ones($T, $s)) else ones($T, $s) end
         b = ones($T, $(s[1]))
         f = LeastSquares(A, b, iterative=($mode == :iterative))
         x = ones($T, $(s[2]))
