@@ -7,16 +7,28 @@ using Test
 
 @testset "$(T), $(s), $(matrix_type), $(mode)" for (T, s, matrix_type, mode) in Iterators.product(
     [Float64, ComplexF64],
-    [(10, 29), (29, 10)],
+    [(10, 29), (29, 10), (10, 29, 3), (29, 10, 3)],
     [:dense, :sparse],
     [:direct, :iterative],
 )
 
+if mode == :iterative && length(s) == 3
+    # FIXME this case is currently not supported due to cg! in IterativeSolvers
+    # See https://github.com/JuliaMath/IterativeSolvers.jl/issues/248
+    # The fix is simple, but affects a lot of solvers in IterativeSolvers 
+    # Maybe we can use our own CG here and drop the dependency
+    continue
+end
+
 R = real(T)
 
-A = if matrix_type == :sparse sparse(randn(T, s...)) else randn(T, s...) end
-b = randn(T, s[1])
-x = randn(T, s[2])
+shape_A = s[1:2]
+shape_b = if length(s) == 2 s[1] else s[[1, 3]] end
+shape_x = if length(s) == 2 s[2] else s[2:3] end
+
+A = if matrix_type == :sparse sparse(randn(T, shape_A...)) else randn(T, shape_A...) end
+b = randn(T, shape_b...)
+x = randn(T, shape_x...)
 
 f = LeastSquares(A, b, iterative=(mode == :iterative))
 predicates_test(f)

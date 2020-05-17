@@ -33,6 +33,9 @@ function LeastSquares(A::M, b::V, lam::R=R(1); iterative=false) where {R <: Real
     end
 end
 
+infer_shape_of_x(A, ::AbstractVector) = (size(A, 2), )
+infer_shape_of_x(A, b::AbstractMatrix) = (size(A, 2), size(b, 2))
+
 ### INCLUDE CONCRETE TYPES
 
 include("leastSquaresDirect.jl")
