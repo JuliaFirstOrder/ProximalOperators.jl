@@ -14,7 +14,7 @@ using Test
 
 R = real(T)
 
-A = if matrix_type == :sparse sprandn(T, s..., 0.5) else randn(T, s...) end
+A = if matrix_type == :sparse sparse(randn(T, s...)) else randn(T, s...) end
 b = randn(T, s[1])
 x = randn(T, s[2])
 
