@@ -1,17 +1,15 @@
 # Utility operators for computing prox iteratively, e.g. using CG
-#
-# The idea is that whatever type has the A_mul_B!, Ac_mul_B!, size and eltype
-# methods implemented is a linear operator.
 
 import Base: *, size, eltype
 import LinearAlgebra: mul!
 
 abstract type LinOp end
 
+infer_shape_of_y(Op, ::AbstractVector) = (size(Op, 1), )
+infer_shape_of_y(Op, x::AbstractMatrix) = (size(Op, 1), size(x, 2))
+
 function (*)(Op::LinOp, x)
-    # Is this the right thing to do?
-    # Or maybe just: y = zeros(eltype(x), size(Op, 1))
-    y = zeros(promote_type(eltype(Op), eltype(x)), size(Op, 1))
+    y = zeros(promote_type(eltype(Op), eltype(x)), infer_shape_of_y(Op, x))
     mul!(y, Op, x)
 end
 
