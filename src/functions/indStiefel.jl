@@ -1,4 +1,4 @@
-# nuclear Norm (times a constant)
+# indicator of the Stiefel manifold
 
 export IndStiefel
 
