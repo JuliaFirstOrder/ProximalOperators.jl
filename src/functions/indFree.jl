@@ -40,6 +40,6 @@ fun_dom(f::IndFree) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndFree) = "x ↦ 0"
 fun_params(f::IndFree) = "none"
 
-function prox_naive(f::IndFree, x::AbstractArray{R}, gamma=R(1)) where {R, T <: RealOrComplex{R}}
+function prox_naive(f::IndFree, x::AbstractArray{R}, gamma=R(1)) where {R}
     return x, R(0)
 end

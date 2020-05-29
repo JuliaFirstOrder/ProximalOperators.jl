@@ -6,11 +6,9 @@ using LinearAlgebra
 
 const RealOrComplex{R <: Real} = Union{R, Complex{R}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
-const TupleOfArrays{R} = Tuple{Vararg{AbstractArray{C, N} where {C <: RealOrComplex{R}, N}}}
-const ArrayOrTuple{R} = Union{
-    AbstractArray{C, N} where {C <: RealOrComplex{R}, N},
-    TupleOfArrays{R}
-}
+const RealBasedArray{R} = AbstractArray{C, N} where {C <: RealOrComplex{R}, N}
+const TupleOfArrays{R} = Tuple{RealBasedArray{R}, Vararg{RealBasedArray{R}}}
+const ArrayOrTuple{R} = Union{RealBasedArray{R}, TupleOfArrays{R}}
 const TransposeOrAdjoint{M} = Union{Transpose{C,M} where C, Adjoint{C,M} where C}
 const Maybe{T} = Union{T, Nothing}
 

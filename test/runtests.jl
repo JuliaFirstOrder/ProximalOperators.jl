@@ -83,6 +83,10 @@ function predicates_test(f)
   @test !is_strongly_convex(f) || is_convex(f)
 end
 
+@testset "Sanity checks" begin
+  @test isempty(detect_unbound_args(ProximalOperators))
+end
+
 @testset "Utilities" begin
   include("test_symmetricpacked.jl")
 end
