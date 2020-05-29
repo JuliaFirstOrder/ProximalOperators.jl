@@ -83,7 +83,7 @@ function predicates_test(f)
   @test !is_strongly_convex(f) || is_convex(f)
 end
 
-@test "Sanity checks" begin
+@testset "Sanity checks" begin
   @test isempty(detect_unbound_args(ProximalOperators))
 end
 
