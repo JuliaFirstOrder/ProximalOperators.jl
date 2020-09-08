@@ -40,6 +40,16 @@ function gradient!(grad::AbstractArray, f::MoreauEnvelope, x::AbstractArray)
     return fx
 end
 
+function prox!(u::AbstractArray{T}, f::MoreauEnvelope, x::AbstractArray{T}, gamma::R=one(R)) where {R <: Real, T <: Union{R, Complex{R}}}
+    # See: Thm. 6.63 in A. Beck, "First-Order Methods in Optimization", MOS-SIAM Series on Optimization, SIAM, 2017
+    gamlam = gamma + f.lambda
+    y, fy = prox(f.g, x, gamlam)
+    gam_gamlam = gamma/gamlam
+    lam_gamlam = f.lambda/gamlam
+    u .= (lam_gamlam .* x) .+ (gam_gamlam .* y)
+    return fy + 1 / (2 * f.lambda) * norm(u .- y)^2
+end
+
 fun_name(f::MoreauEnvelope,i::Int64) =
 "f$(i)(prox{λ$(i),f$(i)}(A$(i)x))+ 1/2 ‖x - prox{λ$(i),f$(i)}(A$(i)x)‖²"
 
