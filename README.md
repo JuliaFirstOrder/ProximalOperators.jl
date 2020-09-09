@@ -3,6 +3,7 @@
 [![Build status](https://github.com/kul-forbes/ProximalOperators.jl/workflows/CI/badge.svg?branch=master)](https://github.com/kul-forbes/ProximalOperators.jl/actions?query=workflow%3ACI+branch%3Amaster)
 [![codecov](https://codecov.io/gh/kul-forbes/ProximalOperators.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kul-forbes/ProximalOperators.jl)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/ProximalOperators-jl/Lobby)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4020559.svg)](https://doi.org/10.5281/zenodo.4020559)
 
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kul-forbes.github.io/ProximalOperators.jl/stable)
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://kul-forbes.github.io/ProximalOperators.jl/latest)
