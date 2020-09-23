@@ -1,4 +1,4 @@
-name: CI (Julia nightly)
+name: CI nightly
 
 on:
   push:
