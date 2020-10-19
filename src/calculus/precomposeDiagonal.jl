@@ -56,7 +56,7 @@ function (g::PrecomposeDiagonal)(x::AbstractArray{T}) where {R <: Real, T <: Rea
 end
 
 function gradient!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}) where {
-    R <: Real, T <: RealOrComplex
+    R <: Real, T <: RealOrComplex{R}
 }
     z = g.a .* x .+ g.b
     v = gradient!(y, g.f, z)

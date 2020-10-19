@@ -31,7 +31,7 @@ is_convex(f::ElasticNet) = true
 
 ElasticNet(mu::R=1.0, lambda::R=1.0) where {R <: Real} = ElasticNet{R}(mu, lambda)
 
-function (f::ElasticNet)(x::AbstractArray{R}) where {
+function (f::ElasticNet)(x::AbstractArray{T}) where {
     R <: Real, T <: RealOrComplex{R}
 }
     return R(f.mu) * norm(x, 1) + R(f.lambda/2) * norm(x, 2)^2
