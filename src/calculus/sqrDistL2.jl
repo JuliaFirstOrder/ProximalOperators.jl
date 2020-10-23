@@ -5,7 +5,7 @@ export SqrDistL2
 """
 **Squared distance from a convex set**
 
-    SqrDistL2(ind_S, λ=1.0)
+    SqrDistL2(ind_S, λ=1)
 
 Given `ind_S` the indicator function of a convex set ``S``, and an optional positive parameter `λ`, returns the (weighted) squared Euclidean distance from ``S``, that is function
 ```math
@@ -33,18 +33,18 @@ is_smooth(f::SqrDistL2) = true
 is_quadratic(f::SqrDistL2) = is_affine(f.ind)
 is_strongly_convex(f::SqrDistL2) = is_singleton(f.ind)
 
-SqrDistL2(ind::T, lambda=1e0) where {T <: ProximableFunction} = SqrDistL2{typeof(lambda), T}(ind, lambda)
+SqrDistL2(ind::T, lambda=1) where {T <: ProximableFunction} = SqrDistL2{typeof(lambda), T}(ind, lambda)
 
 function (f::SqrDistL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
-    return R(f.lambda/2) * normdiff2(x, p)
+    return f.lambda / R(2) * normdiff2(x, p)
 end
 
 function prox!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
-    sqrd = R(f.lambda/2) * normdiff2(x, p)
-    c1 = 1/(1 + R(f.lambda) * gamma)
-    c2 = R(f.lambda) * gamma * c1
+    sqrd = f.lambda / R(2) * normdiff2(x, p)
+    c1 = 1/(1 + f.lambda * gamma)
+    c2 = f.lambda * gamma * c1
     for k in eachindex(p)
         y[k] = c1 * x[k] + c2 * p[k]
     end
@@ -54,8 +54,8 @@ end
 function gradient!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
     dist2 = normdiff2(x,p)
-    y .= R(f.lambda) .* (x .- p)
-    return R(f.lambda/2) * dist2
+    y .= f.lambda .* (x .- p)
+    return f.lambda / R(2) * dist2
 end
 
 fun_name(f::SqrDistL2) = "squared Euclidean distance from a convex set"
@@ -65,7 +65,7 @@ fun_params(f::SqrDistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
 function prox_naive(f::SqrDistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
-    sqrd = R(f.lambda/2) * norm(x - p)^2
-    gamlam = R(f.lambda) * gamma
+    sqrd = f.lambda / R(2) * norm(x - p)^2
+    gamlam = f.lambda * gamma
     return 1/(1 + gamlam) * x + gamlam/(1 + gamlam) * p, sqrd/(1+gamlam)^2
 end

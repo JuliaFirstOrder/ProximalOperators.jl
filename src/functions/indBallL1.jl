@@ -78,7 +78,7 @@ function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::R=R(1)) where {R <
     v = R(0)
     maxit = 120
     for iter in 1:maxit
-        λ = 0.5*(L + U)
+        λ = (L + U) / 2
         v = sum(max.(abs.(x) .- λ, R(0)))
         # modify lower or upper bound
         (v < f.r) ? U = λ : L = λ

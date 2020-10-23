@@ -1,6 +1,7 @@
 using LinearAlgebra
 using SparseArrays
 using Random
+using Test
 
 Random.seed!(0)
 
@@ -14,10 +15,12 @@ test_cases_spec = [
             (IndBinary(),)
         ],
         "right" => [
+            ( (IndSOC(),), randn(Float32, 10) ),
             ( (IndSOC(),), randn(Float64, 10) ),
             ( (IndNonnegative(), rand()),  randn(Float64, 10) ),
             ( (IndZero(),), randn(Float64, 10) ),
             ( (IndBox(-1, 1),), randn(Float32, 10) ),
+            ( (IndBox(-1, 1),), randn(Float64, 10) ),
         ],
     ),
 
@@ -28,10 +31,12 @@ test_cases_spec = [
             (IndBinary(),)
         ],
         "right" => [
-            ( (IndSimplex(),), randn(Float32, 10) )
-            ( (IndNonnegative(), rand()), randn(Float64, 10) )
-            ( (IndZero(),), randn(Float64, 10) )
-            ( (IndBox(-1, 1),), randn(Float64, 10) )
+            ( (IndSimplex(),), randn(Float32, 10) ),
+            ( (IndSimplex(),), randn(Float64, 10) ),
+            ( (IndNonnegative(), rand()), randn(Float64, 10) ),
+            ( (IndZero(),), randn(Float64, 10) ),
+            ( (IndBox(-1, 1),), randn(Float32, 10) ),
+            ( (IndBox(-1, 1),), randn(Float64, 10) ),
         ],
     ),
 
@@ -45,9 +50,9 @@ test_cases_spec = [
         ],
         "right" => [
             ( (), randn(Float64, 10) ),
-            ( (rand(),), randn(Float32, 10) ),
-            ( (rand(), rand()), randn(Float64, 10) ),
-            ( (rand(), rand()), rand(Complex{Float64}, 20) ),
+            ( (rand(Float32),), randn(Float32, 10) ),
+            ( (rand(Float64), rand(Float64)), randn(Float64, 10) ),
+            ( (rand(Float64), rand(Float64)), rand(Complex{Float64}, 20) ),
         ],
     ),
 
@@ -59,8 +64,8 @@ test_cases_spec = [
         "right" => [
             ( (Int.(sign.(randn(10))), ), randn(Float32, 10) ),
             ( (Int.(sign.(randn(10))), ), randn(Float64, 10) ),
-            ( (Int.(sign.(randn(20))), 0.1+rand()), randn(Float32, 20) ),
-            ( (Int.(sign.(randn(20))), 0.1+rand()), randn(Float64, 20) ),
+            ( (Int.(sign.(randn(20))), 0.1f0 + rand(Float32)), randn(Float32, 20) ),
+            ( (Int.(sign.(randn(20))), 0.1e0 + rand(Float64)), randn(Float64, 20) ),
         ],
     ),
 
@@ -69,12 +74,6 @@ test_cases_spec = [
         "right" => [
             ( (randn(10), randn()), randn(Float32, 10) ),
             ( (randn(10, 20), randn(10)), randn(20) ),
-        ],
-    ),
-
-    Dict(
-        "constr" => IndAffine,
-        "right" => [
             ( (sprand(50,100, 0.1), randn(50)), randn(Float32, 100) ),
             ( (sprand(Complex{Float64}, 50, 100, 0.1), randn(50)+im*randn(50)), randn(100)+im*randn(100) ),
         ],
@@ -86,8 +85,8 @@ test_cases_spec = [
             (-rand(),),
         ],
         "right" => [
-            ( (rand(),), randn(10) ),
-            ( (rand(),), randn(Float32, 10) ),
+            ( (rand(Float32),), randn(Float32, 10) ),
+            ( (rand(Float64),), randn(Float64, 10) ),
         ],
     ),
 
@@ -109,10 +108,12 @@ test_cases_spec = [
             (-rand(),),
         ],
         "right" => [
-            ( (), rand(15) ),
-            ( (3.0,), randn(Float32, 25) ),
-            ( (5.0,), randn(6, 5) ),
-            ( (1.0,), randn(Complex{Float64}, 20) ),
+            ( (), rand(Float32, 5) ),
+            ( (), rand(Float64, 5) ),
+            ( (), rand(Complex{Float32}, 5) ),
+            ( (Float32(3),), randn(Float32, 5) ),
+            ( (Float64(5),), randn(Float64, 2, 3) ),
+            ( (Float64(1),), randn(Complex{Float64}, 5) ),
         ],
     ),
 
@@ -122,10 +123,12 @@ test_cases_spec = [
             (-rand(),),
         ],
         "right" => [
-            ( (rand(),), randn(10) ),
-            ( (sqrt(20),), randn(Float32, 20) ),
-            ( (0.5,), 0.1*ones(10) ),
-            ( (1.0, ), randn(Complex{Float64}, 20) ),
+            ( (), rand(Float32, 5) ),
+            ( (), rand(Float64, 5) ),
+            ( (), rand(Complex{Float32}, 5) ),
+            ( (Float32(3),), randn(Float32, 5) ),
+            ( (Float64(5),), randn(Float64, 2, 3) ),
+            ( (Float64(1),), randn(Complex{Float64}, 5) ),
         ],
     ),
 
@@ -139,7 +142,7 @@ test_cases_spec = [
             ( (10+Int(round(5*rand())),), rand(30, 8)*rand(8,70) ),
             ( (10+Int(round(5*rand())),), randn(Float32, 5, 8) ),
             ( (10+Int(round(5*rand())),), rand(Complex{Float64}, 20, 50) ),
-            ( (10+Int(round(5*rand())),), rand(Complex{Float64}, 5, 8) ),
+            ( (10+Int(round(5*rand())),), rand(Complex{Float32}, 5, 8) ),
         ],
     ),
 
@@ -222,6 +225,8 @@ test_cases_spec = [
             ( (), randn(Float32, 2, 3) ),
             ( (), randn(Float64, 5) ),
             ( (), randn(Float64, 2, 3) ),
+            ( (), randn(Complex{Float32}, 5) ),
+            ( (), randn(Complex{Float32}, 2, 3) ),
         ],
     ),
 
@@ -313,10 +318,11 @@ test_cases_spec = [
             (1.0, 0.0, -rand()),
         ],
         "right" => [
-            ( (), rand(5) ),
-            ( (rand(),), rand(5) ),
-            ( (rand(), rand()), rand(5) ),
-            ( (rand(), rand(), rand()), rand(5) ),
+            ( (), rand(Float32, 5) ),
+            ( (), rand(Float64, 5) ),
+            ( (rand(Float32),), rand(Float32, 5) ),
+            ( (rand(Float64), rand(Float64)), rand(Float64, 5) ),
+            ( (rand(Float32), rand(Float32), rand(Float32)), rand(Float32, 5) ),
         ],
     ),
 
@@ -326,8 +332,9 @@ test_cases_spec = [
             (-rand(),),
         ],
         "right" => [
-            ( (), randn(5) ),
-            ( (rand(),), randn(5) ),
+            ( (), randn(Float32, 5) ),
+            ( (), randn(Float64, 5) ),
+            ( (rand(Float32)), randn(Complex{Float32}, 5) ),
         ],
     ),
 
@@ -338,29 +345,37 @@ test_cases_spec = [
             (-rand(10),)
         ],
         "right" => [
-            ( (), randn(5) ),
-            ( (rand(),), randn(5) ),
-            ( (rand(5),), randn(5) ),
-            ( (rand(5),), rand(Complex{Float64}, 5) ),
-            ( (rand(),), rand(Complex{Float64}, 5) ),
+            ( (), randn(Float32, 5) ),
+            ( (), randn(Float64, 5) ),
+            ( (), randn(Complex{Float32}, 5) ),
+            ( (rand(Float32),), randn(Float32, 5) ),
+            ( (rand(Float64, 5),), randn(Float64, 5) ),
+            ( (rand(Float64, 5),), rand(Complex{Float64}, 5) ),
+            ( (rand(Float32),), rand(Complex{Float32}, 5) ),
         ],
     ),
 
     Dict(
         "constr" => NormL2,
         "right" => [
-            ( (), randn(5), ),
-            ( (rand(),), randn(5), ),
+            ( (), randn(Float32, 5), ),
+            ( (), randn(Float64, 5), ),
+            ( (), randn(Complex{Float32}, 5), ),
+            ( (rand(Float32),), randn(Float32, 5), ),
+            ( (rand(Float64),), randn(Complex{Float64}, 5), ),
         ],
     ),
 
     Dict(
         "constr" => NormL21,
         "right" => [
-            ( (), randn(3, 5) ),
-            ( (rand(),), randn(3, 5) ),
-            ( (rand(), 1), randn(3, 5) ),
-            ( (rand(), 2), randn(3, 5) ),
+            ( (), randn(Float32, 3, 5) ),
+            ( (), randn(Float64, 3, 5) ),
+            ( (), randn(Complex{Float32}, 3, 5) ),
+            ( (rand(Float32),), randn(Float32, 3, 5) ),
+            ( (rand(Float64),), randn(Float64, 3, 5) ),
+            ( (rand(Float32), 1), randn(Complex{Float32}, 3, 5) ),
+            ( (rand(Float64), 2), randn(Complex{Float64}, 3, 5) ),
         ],
     ),
 
@@ -370,11 +385,11 @@ test_cases_spec = [
             (-rand(),),
         ],
         "right" => [
-            ( (), randn(5) ),
-            ( (rand(),), randn(5) ),
-            ( (), rand(Complex{Float64}, 5) ),
-            ( (rand(),), rand(Complex{Float64}, 5) ),
-            ( (rand(),), randn(3, 5) ),
+            ( (), randn(Float32, 5) ),
+            ( (), randn(Float64, 5) ),
+            ( (), randn(Complex{Float32}, 5) ),
+            ( (rand(Float32),), randn(Float32, 5) ),
+            ( (rand(Float32),), rand(Complex{Float32}, 5) ),
         ],
     ),
 
@@ -384,10 +399,14 @@ test_cases_spec = [
             (-rand(),),
         ],
         "right" => [
-            ( (rand(),), rand(5, 5) ),
-            ( (rand(),), rand(3, 5) ),
-            ( (rand(),), rand(Complex{Float64}, 5, 5) ),
-            ( (sqrt(10),), rand(Complex{Float64}, 3, 5) ),
+            ( (), rand(Float32, 5, 5) ),
+            ( (), rand(Float64, 3, 5) ),
+            ( (), rand(Complex{Float32}, 5, 5) ),
+            ( (rand(Float32),), rand(Float32, 5, 5) ),
+            ( (rand(Float64),), rand(Float64, 3, 5) ),
+            ( (rand(Float32),), rand(Complex{Float32}, 5, 5) ),
+            ( (sqrt(10e0),), rand(Complex{Float64}, 3, 5) ),
+            ( (sqrt(10f0),), rand(Complex{Float32}, 5, 3) ),
         ],
     ),
 
@@ -397,9 +416,12 @@ test_cases_spec = [
             (-rand(),),
         ],
         "right" => [
-            ( (), randn(10) ),
-            ( (rand(),), randn(10) ),
-            ( (rand(20),), randn(20) ),
+            ( (), randn(Float32, 10) ),
+            ( (), randn(Float64, 10) ),
+            ( (rand(Float32),), randn(Float32, 10) ),
+            ( (rand(Float64),), randn(Float64, 10) ),
+            ( (rand(Float32, 20),), randn(Float32, 20) ),
+            ( (rand(Float64, 20),), randn(Float64, 20) ),
             ( (rand(30),), rand(Complex{Float64}, 30) ),
             ( (rand(),), rand(Complex{Float64}, 50) ),
         ],
@@ -437,10 +459,11 @@ test_cases_spec = [
             (-rand(),),
         ],
         "right" => [
-            ( (), randn(10) ),
-            ( (rand(),), randn(20) ),
-            ( (), randn(5,10) ),
-            ( (rand()), randn(8,17) ),
+            ( (), randn(Float32, 10) ),
+            ( (), randn(Float64, 10) ),
+            ( (rand(Float64),), randn(Float64, 20) ),
+            ( (), randn(Float32, 5,10) ),
+            ( (rand(Float32)), randn(Float32, 8,17) ),
         ],
     ),
 
@@ -485,10 +508,12 @@ test_cases_spec = [
             (-rand(), -rand())
         ],
         "right" => [
-            ( (), randn(10) ),
-            ( (rand(), ), randn(5, 8) ),
-            ( (rand(), rand()), randn(20) ),
-            ( (rand(), rand()), rand(Complex{Float64}, 8, 12) ),
+            ( (), randn(Float32, 10) ),
+            ( (), randn(Float64, 10) ),
+            ( (rand(Float32), ), randn(Float32, 5, 8) ),
+            ( (rand(Float64), ), randn(Float64, 5, 8) ),
+            ( (rand(Float64), rand(Float64)), randn(Float64, 20) ),
+            ( (rand(Float64), rand(Float64)), rand(Complex{Float64}, 8, 12) ),
         ],
     ),
 

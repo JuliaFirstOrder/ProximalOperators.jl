@@ -5,7 +5,7 @@ export NuclearNorm
 """
 **Nuclear norm**
 
-    NuclearNorm(λ=1.0)
+    NuclearNorm(λ=1)
 
 Returns the function
 ```math
@@ -26,14 +26,14 @@ end
 
 is_convex(f::NuclearNorm) = true
 
-NuclearNorm(lambda::R=1.0) where {R <: Real} = NuclearNorm{R}(lambda)
+NuclearNorm(lambda::R=1) where {R <: Real} = NuclearNorm{R}(lambda)
 
-function (f::NuclearNorm{R})(X::AbstractMatrix{T}) where {R <: Real, T <: Union{R, Complex{R}}}
+function (f::NuclearNorm)(X::AbstractMatrix{T}) where {R <: Real, T <: Union{R, Complex{R}}}
     F = svd(X)
     return f.lambda * sum(F.S)
 end
 
-function prox!(Y::AbstractMatrix{T}, f::NuclearNorm{R}, X::AbstractMatrix{T}, gamma::R=R(1)) where {R <: Real, T <: Union{R, Complex{R}}}
+function prox!(Y::AbstractMatrix{T}, f::NuclearNorm, X::AbstractMatrix{T}, gamma::R=R(1)) where {R <: Real, T <: Union{R, Complex{R}}}
     F = svd(X)
     S_thresh = max.(R(0), F.S .- f.lambda*gamma)
     rankY = findfirst(S_thresh .== R(0))

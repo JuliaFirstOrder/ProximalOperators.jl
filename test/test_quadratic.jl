@@ -24,8 +24,8 @@ predicates_test(f)
 x = randn(n)
 
 grad_fx, fx = gradient(f, x)
-@test abs(fx - 0.5*dot(x, Q*x) - dot(x, q)) <= 1e-12
-@test norm(grad_fx - (Q*x + q), Inf) <= 1e-12
+@test fx ≈ 0.5*dot(x, Q*x) + dot(x, q)
+@test all(grad_fx .≈ (Q*x + q))
 
 call_test(f, x)
 prox_test(f, x)
@@ -45,8 +45,8 @@ f = Quadratic(Q, q)
 @test typeof(f) <: ProximalOperators.QuadraticDirect
 
 grad_fx, fx = gradient(f, x)
-@test abs(fx - 0.5*dot(x, Q*x) - dot(x, q)) <= 1e-12
-@test norm(grad_fx - (Q*x + q), Inf) <= 1e-12
+@test fx ≈ 0.5*dot(x, Q*x) + dot(x, q)
+@test all(grad_fx .≈ (Q*x + q))
 
 call_test(f, x)
 prox_test(f, x)

@@ -30,21 +30,21 @@ end
 is_prox_accurate(f::DistL2) = is_prox_accurate(f.ind)
 is_convex(f::DistL2) = is_convex(f.ind)
 
-DistL2(ind::T, lambda::R=1.0) where {R <: Real, T <: ProximableFunction} = DistL2{R, T}(ind, lambda)
+DistL2(ind::T, lambda::R=1) where {R <: Real, T <: ProximableFunction} = DistL2{R, T}(ind, lambda)
 
 function (f::DistL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
-    return R(f.lambda) * normdiff(x, p)
+    return f.lambda * normdiff(x, p)
 end
 
 function prox!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
     prox!(y, f.ind, x)
     d = normdiff(x, y)
-    gamlam = gamma * R(f.lambda)
+    gamlam = gamma * f.lambda
     if gamlam < d
         gamlamd = gamlam/d
         y .= (1 - gamlamd) .*x .+ gamlamd .* y
-        return R(f.lambda) * (d - gamlam)
+        return f.lambda * (d - gamlam)
     end
     return R(0)
 end
@@ -53,11 +53,11 @@ function gradient!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}) where {R
     prox!(y, f.ind, x) # Use y as temporary storage
     dist = normdiff(x, y)
     if dist > 0
-        y .= (R(f.lambda) / dist) .* (x .- y)
+        y .= (f.lambda / dist) .* (x .- y)
     else
         y .= 0
     end
-    return R(f.lambda) * dist
+    return f.lambda * dist
 end
 
 fun_name(f::DistL2) = "Euclidean distance from a convex set"
@@ -68,9 +68,9 @@ fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 function prox_naive(f::DistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
     d = norm(x - p)
-    gamlam = gamma * R(f.lambda)
+    gamlam = gamma * f.lambda
     if d > gamlam
-        return x + gamlam/d * (p - x), R(f.lambda) * (d - gamlam)
+        return x + gamlam/d * (p - x), f.lambda * (d - gamlam)
     end
     return p, R(0)
 end

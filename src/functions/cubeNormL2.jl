@@ -5,7 +5,7 @@ export CubeNormL2
 """
 **Cubic Euclidean norm (weighted)**
 
-    CubeNormL2(λ=1.0)
+    CubeNormL2(λ=1)
 
 With a nonnegative scalar `λ`, returns the function
 ```math
@@ -26,7 +26,7 @@ end
 is_convex(f::CubeNormL2) = true
 is_smooth(f::CubeNormL2) = true
 
-CubeNormL2(lambda::R=1.0) where {R <: Real} = CubeNormL2{R}(lambda)
+CubeNormL2(lambda::R=1) where {R <: Real} = CubeNormL2{R}(lambda)
 
 function (f::CubeNormL2{R})(x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
     return f.lambda * norm(x)^3

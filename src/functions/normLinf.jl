@@ -5,7 +5,7 @@ export NormLinf
 """
 **``L_∞`` norm**
 
-    NormLinf(λ=1.0)
+    NormLinf(λ=1)
 
 Returns the function
 ```math

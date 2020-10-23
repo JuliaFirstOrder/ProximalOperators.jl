@@ -5,19 +5,19 @@ export Postcompose
 """
 **Postcomposition with an affine transformation**
 
-    Postcompose(f, a=1.0, b=0.0)
+    Postcompose(f, a=1, b=0)
 
 Returns the function
 ```math
 g(x) = a\\cdot f(x) + b.
 ```
 """
-struct Postcompose{T <: ProximableFunction, R <: Real} <: ProximableFunction
+struct Postcompose{T <: ProximableFunction, R <: Real, S <: Real} <: ProximableFunction
     f::T
     a::R
-    b::R
-    function Postcompose{T,R}(f::T, a::R, b::R) where {T <: ProximableFunction, R <: Real}
-        if a <= 0.0
+    b::S
+    function Postcompose{T,R,S}(f::T, a::R, b::S) where {T <: ProximableFunction, R <: Real, S <: Real}
+        if a <= 0
             error("parameter `a` must be positive")
         else
             new(f, a, b)
@@ -37,34 +37,34 @@ is_quadratic(f::Postcompose) = is_quadratic(f.f)
 is_generalized_quadratic(f::Postcompose) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::Postcompose) = is_strongly_convex(f.f)
 
-Postcompose(f::T, a::R=R(1), b::R=R(0)) where {T <: ProximableFunction, R <: Real} = Postcompose{T, R}(f, a, b)
+Postcompose(f::T, a::R=1, b::S=0) where {T <: ProximableFunction, R <: Real, S <: Real} = Postcompose{T, R, S}(f, a, b)
 
-Postcompose(f::Postcompose{T, R}, a::R=R(1), b::R=R(0)) where {T <: ProximableFunction, R <: Real} = Postcompose{T, R}(f.f, a*f.a, b+a*f.b)
+Postcompose(f::Postcompose{T, R, S}, a::R=1, b::S=0) where {T <: ProximableFunction, R <: Real, S <: Real} = Postcompose{T, R, S}(f.f, a * f.a, b + a * f.b)
 
 function (g::Postcompose)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
-    return R(g.a) * g.f(x) + R(g.b)
+    return g.a * g.f(x) + g.b
 end
 
 function gradient!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}) where {
     R <: Real, T <: RealOrComplex{R}
 }
     v = gradient!(y, g.f, x)
-    y .*= R(g.a)
-    return R(g.a) * v + R(g.b)
+    y .*= g.a
+    return g.a * v + g.b
 end
 
 function prox!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma=R(1)) where {
     R <: Real, T <: RealOrComplex{R}
 }
-    v = prox!(y, g.f, x, R(g.a) * gamma)
-    return R(g.a) * v + R(g.b)
+    v = prox!(y, g.f, x, g.a * gamma)
+    return g.a * v + g.b
 end
 
 function prox_naive(g::Postcompose, x::AbstractArray{T}, gamma=R(1)) where {
     R <: Real, T <: RealOrComplex{R}
 }
-    y, v = prox_naive(g.f, x, R(g.a) * gamma)
-    return y, R(g.a) * v + R(g.b)
+    y, v = prox_naive(g.f, x, g.a * gamma)
+    return y, g.a * v + g.b
 end
 
 fun_name(f::Postcompose) = string("Postcomposition of ", fun_name(f.f))
