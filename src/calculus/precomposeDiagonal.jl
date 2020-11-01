@@ -17,7 +17,7 @@ multiple dimensions, according to the shape/size of the input `x` that will be
 provided to the function: the way the above expression for ``g`` should be
 thought of, is `g(x) = f(a.*x + b)`.
 """
-struct PrecomposeDiagonal{T <: ProximableFunction, R <: Union{Number, AbstractArray}, S <: Union{Number, AbstractArray}} <: ProximableFunction
+struct PrecomposeDiagonal{T <: ProximableFunction, R <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
     f::T
     a::R
     b::S
@@ -45,11 +45,11 @@ is_quadratic(f::PrecomposeDiagonal) = is_quadratic(f.f)
 is_generalized_quadratic(f::PrecomposeDiagonal) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::PrecomposeDiagonal) = is_strongly_convex(f.f)
 
-PrecomposeDiagonal(f::T, a::S=1, b::S=0) where {T <: ProximableFunction, S <: Number} = PrecomposeDiagonal{T, S, S}(f, a, b)
+PrecomposeDiagonal(f::T, a::S=1, b::S=0) where {T <: ProximableFunction, S <: Real} = PrecomposeDiagonal{T, S, S}(f, a, b)
 
-PrecomposeDiagonal(f::T, a::R, b::S=0) where {T <: ProximableFunction, R <: AbstractArray, S <: Number} = PrecomposeDiagonal{T, R, S}(f, a, b)
+PrecomposeDiagonal(f::T, a::R, b::S=0) where {T <: ProximableFunction, R <: AbstractArray, S <: Real} = PrecomposeDiagonal{T, R, S}(f, a, b)
 
-PrecomposeDiagonal(f::T, a::R, b::S) where {T <: ProximableFunction, R <: Union{Number, AbstractArray}, S <: AbstractArray} = PrecomposeDiagonal{T, R, S}(f, a, b)
+PrecomposeDiagonal(f::T, a::R, b::S) where {T <: ProximableFunction, R <: Union{AbstractArray, Real}, S <: AbstractArray} = PrecomposeDiagonal{T, R, S}(f, a, b)
 
 function (g::PrecomposeDiagonal)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
     return g.f(g.a .* x .+ g.b)
