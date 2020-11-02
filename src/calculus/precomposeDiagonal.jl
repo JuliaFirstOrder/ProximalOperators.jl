@@ -25,10 +25,7 @@ struct PrecomposeDiagonal{T <: ProximableFunction, R <: Union{Real, AbstractArra
         if R <: AbstractArray && !(is_convex(f) && is_separable(f))
             error("`f` must be convex and separable since `a` is of type $(R)")
         end
-        if !(eltype(a) <: Real)
-            error("`a` must have real elements")
-        end
-        if any(a == 0.0)
+        if any(a == 0)
             error("elements of `a` must be nonzero")
         else
             new(f, a, b)
@@ -48,24 +45,28 @@ is_quadratic(f::PrecomposeDiagonal) = is_quadratic(f.f)
 is_generalized_quadratic(f::PrecomposeDiagonal) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::PrecomposeDiagonal) = is_strongly_convex(f.f)
 
-PrecomposeDiagonal(f::T, a::S=1.0, b::S=0.0) where {T <: ProximableFunction, S <: Real} = PrecomposeDiagonal{T, S, S}(f, a, b)
+PrecomposeDiagonal(f::T, a::S=1, b::S=0) where {T <: ProximableFunction, S <: Real} = PrecomposeDiagonal{T, S, S}(f, a, b)
 
-PrecomposeDiagonal(f::T, a::R, b::S=0.0) where {T <: ProximableFunction, R <: AbstractArray, S <: Real} = PrecomposeDiagonal{T, R, S}(f, a, b)
+PrecomposeDiagonal(f::T, a::R, b::S=0) where {T <: ProximableFunction, R <: AbstractArray, S <: Real} = PrecomposeDiagonal{T, R, S}(f, a, b)
 
 PrecomposeDiagonal(f::T, a::R, b::S) where {T <: ProximableFunction, R <: Union{AbstractArray, Real}, S <: AbstractArray} = PrecomposeDiagonal{T, R, S}(f, a, b)
 
-function (g::PrecomposeDiagonal)(x::AbstractArray{T}) where T <: RealOrComplex
-    return g.f((g.a).*x .+ g.b)
+function (g::PrecomposeDiagonal)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+    return g.f(g.a .* x .+ g.b)
 end
 
-function gradient!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}) where T <: RealOrComplex
+function gradient!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}) where {
+    R <: Real, T <: RealOrComplex{R}
+}
     z = g.a .* x .+ g.b
     v = gradient!(y, g.f, z)
     y .*= g.a
     return v
 end
 
-function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=R(1)) where {
+    R <: Real, T <: RealOrComplex{R}
+}
     z = g.a .* x .+ g.b
     v = prox!(y, g.f, z, (g.a .* g.a) .* gamma)
     y .-= g.b
@@ -73,7 +74,9 @@ function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, 
     return v
 end
 
-function prox_naive(g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(g::PrecomposeDiagonal, x::AbstractArray{T}, gamma::Union{R, AbstractArray{R}}=R(1)) where {
+    R <: Real, T <: RealOrComplex{R}
+}
     z = g.a .* x .+ g.b
     y, fy = prox_naive(g.f, z, (g.a .* g.a) .* gamma)
     return (y .- g.b)./g.a, fy

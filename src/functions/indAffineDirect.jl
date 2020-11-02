@@ -3,12 +3,12 @@
 
 using LinearAlgebra: QRCompactWY
 
-struct IndAffineDirect{R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}, F <: Factorization} <: IndAffine
+struct IndAffineDirect{F <: Factorization, R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}} <: IndAffine
     A::M
     b::V
     fact::F
     res::V
-    function IndAffineDirect{R, T, M, V, F}(A::M, b::V) where {R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}, F <: Factorization}
+    function IndAffineDirect{F, R, T, M, V}(A::M, b::V) where {R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}, F <: Factorization}
         if size(A, 1) > size(A, 2)
             error("A must be full row rank")
         end
@@ -20,15 +20,21 @@ struct IndAffineDirect{R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T},
     end
 end
 
-is_cone(f::IndAffineDirect) = norm(f.b) == 0.0
+is_cone(f::IndAffineDirect) = iszero(norm(f.b))
 
-IndAffineDirect(A::M, b::V) where {R <: Real, T <: RealOrComplex{R}, M <: DenseMatrix{T}, V <: AbstractVector{T}} = IndAffineDirect{R, T, M, V, QRCompactWY{T, M}}(A, b)
+IndAffineDirect(A::M, b::V) where {
+    R <: Real, T <: RealOrComplex{R}, M <: DenseMatrix{T}, V <: AbstractVector{T}
+} = IndAffineDirect{QRCompactWY{T, M}, R, T, M, V}(A, b)
 
-IndAffineDirect(A::M, b::V) where {R <: Real, T <: RealOrComplex{R}, I <: Integer, M <: SparseMatrixCSC{T, I}, V <: AbstractVector{T}} = IndAffineDirect{R, T, M, V, SuiteSparse.SPQR.Factorization{T}}(A, b)
+IndAffineDirect(A::M, b::V) where {
+    R <: Real, T <: RealOrComplex{R}, I <: Integer, M <: SparseMatrixCSC{T, I}, V <: AbstractVector{T}
+} = IndAffineDirect{SuiteSparse.SPQR.Factorization{T}, R, T, M, V}(A, b)
 
-IndAffineDirect(a::V, b::T) where {R <: Real, T <: RealOrComplex{R}, V <: AbstractVector{T}} = IndAffineDirect(reshape(a,1,:), [b])
+IndAffineDirect(a::V, b::T) where {
+    R <: Real, T <: RealOrComplex{R}, V <: AbstractVector{T}
+} = IndAffineDirect(reshape(a,1,:), [b])
 
-function (f::IndAffineDirect{R, T, M, V, F})(x::V) where {R, T, M, V, F}
+function (f::IndAffineDirect{F, R, T, M, V})(x::V) where {R, T, M, V, F}
     mul!(f.res, f.A, x)
     f.res .= f.b .- f.res
     # the tolerance in the following line should be customizable
@@ -38,7 +44,9 @@ function (f::IndAffineDirect{R, T, M, V, F})(x::V) where {R, T, M, V, F}
     return typemax(R)
 end
 
-function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=R(1)) where {R, T, M, V, F <: QRCompactWY}
+function prox!(y::AbstractVector{C}, f::IndAffineDirect{F}, x::AbstractVector{C}, gamma::R=R(1)) where {
+    F <: QRCompactWY, R <: Real, C <: Union{R, Complex{R}}
+}
     mul!(f.res, f.A, x)
     f.res .= f.b .- f.res
     Rfact = view(f.fact.factors, 1:length(f.b), 1:length(f.b))
@@ -49,7 +57,9 @@ function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=R(1)) whe
     return R(0)
 end
 
-function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=R(1)) where {R, T, M, V, F <: SuiteSparse.SPQR.Factorization}
+function prox!(y::AbstractVector{C}, f::IndAffineDirect{F}, x::AbstractVector{C}, gamma::R=R(1)) where {
+    F <: SuiteSparse.SPQR.Factorization, R <: Real, C <: Union{R, Complex{R}}
+}
     mul!(f.res, f.A, x)
     f.res .= f.b .- f.res
     ##############################################################################
@@ -68,7 +78,7 @@ function prox!(y::V, f::IndAffineDirect{R, T, M, V, F}, x::V, gamma::R=R(1)) whe
     return R(0)
 end
 
-function prox_naive(f::IndAffineDirect, x::AbstractArray{T,1}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndAffineDirect, x::AbstractVector{C}, gamma::R=R(1)) where {R <: Real, C <: RealOrComplex{R}}
     y = x + f.A'*((f.A*f.A')\(f.b - f.A*x))
     return y, R(0)
 end

@@ -40,8 +40,8 @@ predicates_test(f)
 
 grad_fx, fx = gradient(f, x)
 lsres = A*x - b
-@test abs(fx - 0.5*norm(lsres)^2) <= 1e-12
-@test norm(grad_fx - (A'*lsres), Inf) <= 1e-12
+@test fx ≈ 0.5*norm(lsres)^2
+@test all(grad_fx .≈ (A'*lsres))
 
 call_test(f, x)
 prox_test(f, x)
@@ -52,8 +52,8 @@ f = LeastSquares(A, b, lam, iterative=(mode == :iterative))
 predicates_test(f)
 
 grad_fx, fx = gradient(f, x)
-@test abs(fx - (lam/2)*norm(lsres)^2) <= 1e-12
-@test norm(grad_fx - lam*(A'*lsres), Inf) <= 1e-12
+@test fx ≈ (lam/2)*norm(lsres)^2
+@test all(grad_fx .≈ lam*(A'*lsres))
 
 call_test(f, x)
 prox_test(f, x)

@@ -5,7 +5,7 @@ export NormL1
 """
 **``L_1`` norm**
 
-    NormL1(λ=1.0)
+    NormL1(λ=1)
 
 With a nonnegative scalar parameter λ, returns the function
 ```math
@@ -39,7 +39,7 @@ is_positively_homogeneous(f::NormL1) = true
 
 Returns the function `g(x) = λ||x||_1`, for a real parameter `λ ⩾ 0`.
 """
-NormL1(lambda::R=1.0) where {R <: Real} = NormL1{R}(lambda)
+NormL1(lambda::R=1) where {R <: Real} = NormL1{R}(lambda)
 
 """
     NormL1(λ::Array{Real})
@@ -154,6 +154,6 @@ fun_params(f::NormL1{R}) where {R <: Real} = "λ = $(f.lambda)"
 fun_params(f::NormL1{A}) where {A <: AbstractArray} = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
 
 function prox_naive(f::NormL1, x::AbstractArray{T}, gamma::Union{Real, AbstractArray}=1.0) where T <: RealOrComplex
-    y = sign.(x).*max.(0.0, abs.(x) .- gamma .* f.lambda)
+    y = sign.(x).*max.(0, abs.(x) .- gamma .* f.lambda)
     return y, norm(f.lambda .* y,1)
 end

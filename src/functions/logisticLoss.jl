@@ -5,7 +5,7 @@ export LogisticLoss
 """
 **Logistic loss**
 
-    LogisticLoss(y, μ=1.0)
+    LogisticLoss(y, μ=1)
 
 Returns the function
 ```math
@@ -24,7 +24,7 @@ struct LogisticLoss{T <: AbstractArray, R <: Real} <: ProximableFunction
     end
 end
 
-LogisticLoss(y::T, mu::R=R(1)) where {R, T <: AbstractArray{R}} = LogisticLoss{T, R}(y, mu)
+LogisticLoss(y::T, mu::R=1) where {R, T <: AbstractArray} = LogisticLoss{T, R}(y, mu)
 
 is_separable(f::LogisticLoss) = true
 is_convex(f::LogisticLoss) = true
@@ -33,11 +33,11 @@ is_prox_accurate(f::LogisticLoss) = false
 
 # f(x)  =  mu log(1 + exp(-y x))
 
-function (f::LogisticLoss{T, R})(x::AbstractArray{R}) where {T, R}
+function (f::LogisticLoss)(x::AbstractArray{R}) where R
     val = R(0)
     for k in eachindex(x)
-        expyx = exp(f.y[k]*x[k])
-        val += log(R(1) + R(1)/expyx)
+        expyx = exp(f.y[k] * x[k])
+        val += log(R(1) + R(1) / expyx)
     end
     return f.mu * val
 end
@@ -47,12 +47,12 @@ end
 #
 # Lipschitz constant of gradient: (mu y)
 
-function gradient!(g::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}) where {T, R}
+function gradient!(g::AbstractArray{R}, f::LogisticLoss, x::AbstractArray{R}) where R
     val = R(0)
     for k in eachindex(x)
-        expyx = exp(f.y[k]*x[k])
+        expyx = exp(f.y[k] * x[k])
         g[k] = -f.mu * f.y[k] / (R(1) + expyx)
-        val += log(R(1) + R(1)/expyx)
+        val += log(R(1) + R(1) / expyx)
     end
     return f.mu * val
 end
@@ -74,8 +74,8 @@ end
 #
 # Alternatively we can use gradient methods with constant step size.
 
-function prox!(z::AbstractArray{R}, f::LogisticLoss{T, R}, x::AbstractArray{R}, gamma::R=R(1)) where {T, R}
-    c = R(1)/gamma # convexity modulus
+function prox!(z::AbstractArray{R}, f::LogisticLoss, x::AbstractArray{R}, gamma::R=R(1)) where R
+    c = R(1) / gamma # convexity modulus
     L = maximum(abs, f.mu .* f.y) + c # Lipschitz constants
     z .= x
     expyz = similar(z)

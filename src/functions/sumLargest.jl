@@ -13,11 +13,11 @@
 # with IndSimplex(k, 1.0). Note that (1) is proper only if x ∈ Rⁿ for n ⩾ r.
 
 """
-    SumLargest(k::Integer=1, λ::Real=1.0)
+    SumLargest(k::Integer=1, λ::Real=1)
 
 Returns the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 1 and `λ ⩾ 0`.
 """
-SumLargest(k::I=1, lambda::R=1.0) where {I <: Integer, R <: Real} = Postcompose(Conjugate(IndSimplex(k)), lambda)
+SumLargest(k::I=1, lambda::R=1) where {I <: Integer, R <: Real} = Postcompose(Conjugate(IndSimplex(k)), lambda)
 
 function (f::Conjugate{IndSimplex{I}})(x::AbstractArray{S}) where {I <: Integer, S <: Real}
     if f.f.a == 1

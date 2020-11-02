@@ -26,38 +26,22 @@ x = randn(10)
 call_test(g, x)
 prox_test(g, x, 1.0)
 
-# Larger example
-
-A = randn(500, 500)
-F = qr(A)
-Q = Matrix(F.Q)
-
-@test Q'*Q ≈ I
-@test Q*Q' ≈ I
-
-g = Precompose(f, Q, 1.0)
-
-x = randn(500)
-
-call_test(g, x)
-prox_test(g, x, 1.0)
-
 end
 
 @testset "IndBallL1 w/ OM multiple" begin
 # L1 norm composed with multiple of orthogonal matrix
 
 f = NormL1()
-A = randn(50, 50)
+A = randn(10, 10)
 F = qr(A)
 Q = Matrix(F.Q)
 
-@test norm(Q'*Q - I) <= 1e-12
-@test norm(Q*Q' - I) <= 1e-12
+@test Q'*Q ≈ I
+@test Q*Q' ≈ I
 
 g = Precompose(f, 3.0*Q, 9.0)
 
-x = randn(50)
+x = randn(10)
 
 call_test(g, x)
 prox_test(g, x, 1.0)
@@ -68,16 +52,16 @@ end
 # L2 norm composed with multiple of orthogonal matrix
 
 f = NormL2()
-A = randn(500, 500)
+A = randn(10, 10)
 F = qr(A)
 Q = Matrix(F.Q)
 
-@test norm(Q'*Q - I) <= 1e-12
-@test norm(Q*Q' - I) <= 1e-12
+@test Q'*Q ≈ I
+@test Q*Q' ≈ I
 
 g = Precompose(f, 0.9*Q, 0.9^2)
 
-x = randn(500)
+x = randn(10)
 
 call_test(g, x)
 prox_test(g, x, 1.0)
@@ -88,17 +72,17 @@ end
 # L2 norm composed with orthogonal matrix + translation
 
 f = NormL2()
-A = randn(500, 500)
-b = randn(500)
+A = randn(10, 10)
+b = randn(10)
 F = qr(A)
 Q = Matrix(F.Q)
 
-@test norm(Q'*Q - I) <= 1e-12
-@test norm(Q*Q' - I) <= 1e-12
+@test Q'*Q ≈ I
+@test Q*Q' ≈ I
 
 g = Precompose(f, Q, 1.0, -b)
 
-x = randn(500)
+x = randn(10)
 
 call_test(g, x)
 prox_test(g, x, 1.0)
@@ -110,13 +94,13 @@ end
 # checking that Precompose and PrecomposeDiagonal agree
 
 f = NormL2()
-A = Diagonal(3.0*ones(500))
-b = randn(500)
+A = Diagonal(3.0*ones(10))
+b = randn(10)
 
 g1 = Precompose(f, A, 9.0, -b)
 g2 = PrecomposeDiagonal(f, 3.0, -b)
 
-x = randn(500)
+x = randn(10)
 
 call_test(g1, x)
 y1, gy1 = prox_test(g1, x, 1.0)
@@ -135,15 +119,15 @@ end
 # checking that weighted squared L2 norm + Translate agrees too
 
 f = SqrNormL2()
-diagA = [rand(250); -rand(250)]
+diagA = [rand(5); -rand(5)]
 A = Diagonal(diagA)
-b = randn(500)
+b = randn(10)
 
 g1 = Precompose(f, A, diagA .* diagA, -diagA .* b)
 g2 = PrecomposeDiagonal(f, diagA, -diagA .* b)
 g3 = Translate(SqrNormL2(diagA .* diagA), -b)
 
-x = randn(500)
+x = randn(10)
 
 gx = 0.5*sum((diagA .* diagA) .* (x-b).^2)
 grad_gx = diagA.*diagA.*(x - b)

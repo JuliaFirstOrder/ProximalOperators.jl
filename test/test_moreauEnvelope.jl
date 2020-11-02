@@ -3,59 +3,65 @@ using LinearAlgebra
 
 @testset "Moreau envelope" begin
 
-@testset "Box indicator" begin
+@testset "Box indicator" for R in [Float32, Float64]
 
     f = IndBox(-1, 1)
-    g = MoreauEnvelope(f, 1e-2)
 
-    predicates_test(g)
+    for g in [
+        MoreauEnvelope(f),
+        MoreauEnvelope(f, R(0.01))
+    ]
 
-    @test ProximalOperators.is_smooth(g) == true
-    @test ProximalOperators.is_quadratic(g) == false
-    @test ProximalOperators.is_set(g) == false
+        predicates_test(g)
 
-    x = [1.0, 2.0, 3.0, 4.0, 5.0]
+        @test ProximalOperators.is_smooth(g) == true
+        @test ProximalOperators.is_quadratic(g) == false
+        @test ProximalOperators.is_set(g) == false
 
-    grad_g_x, g_x = gradient(g, x)
+        x = R[1.0, 2.0, 3.0, 4.0, 5.0]
 
-    y, g_y = prox(g, x, 0.5)
-    grad_g_y, _ = gradient(g, y)
+        grad_g_x, g_x = gradient(g, x)
 
-    @test y + 0.5 * grad_g_y ≈ x
-    @test g(y) ≈ g_y
+        y, g_y = prox_test(g, x, R(1/2))
+        grad_g_y, _ = gradient(g, y)
+
+        @test y + grad_g_y / 2 ≈ x
+        @test g(y) ≈ g_y
+    end
 
 end
 
-@testset "L2 norm" begin
+@testset "L2 norm" for R in [Float32, Float64]
 
-    rho = 1e-1
-    mu = 1e0
-    f = NormL2(mu)
-    g = MoreauEnvelope(f, rho)
-    h = HuberLoss(rho, mu/rho)
+    for (g, h) in [
+        (MoreauEnvelope(NormL2()), HuberLoss()),
+        (MoreauEnvelope(NormL2(R(1)), R(0.1)), HuberLoss(R(0.1), R(1)/R(0.1)))
+    ]
 
-    predicates_test(g)
+        predicates_test(g)
 
-    @test ProximalOperators.is_smooth(g) == true
-    @test ProximalOperators.is_quadratic(g) == false
-    @test ProximalOperators.is_set(g) == false
+        @test ProximalOperators.is_smooth(g) == true
+        @test ProximalOperators.is_quadratic(g) == false
+        @test ProximalOperators.is_set(g) == false
 
-    x = [1.0, 2.0, 3.0, 4.0, 5.0]
+        x = R[1.0, 2.0, 3.0, 4.0, 5.0]
 
-    @test abs(g(x) - h(x)) <= 1e-12
+        @test g(x) ≈ h(x)
 
-    grad_g_x, g_x = gradient(g, x)
-    grad_h_x, h_x = gradient(h, x)
+        grad_g_x, g_x = gradient(g, x)
+        grad_h_x, h_x = gradient(h, x)
 
-    @test abs(g_x - g(x)) <= 1e-12
-    @test abs(h_x - h(x)) <= 1e-12
-    @test norm(grad_g_x - grad_h_x, Inf) <= 1e-12
+        @test g_x ≈ g(x)
+        @test h_x ≈ h(x)
+        @test all(grad_g_x .≈ grad_h_x)
 
-    y, g_y = prox(g, x, 0.5)
-    grad_g_y, _ = gradient(g, y)
+        y, g_y = prox_test(g, x, R(1/2))
+        grad_g_y, _ = gradient(g, y)
 
-    @test y + 0.5 * grad_g_y ≈ x
-    @test g(y) ≈ g_y
+        @test y + grad_g_y / 2 ≈ x
+        @test g(y) ≈ g_y
+    
+    end
 
 end
 

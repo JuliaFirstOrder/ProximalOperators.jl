@@ -18,7 +18,7 @@ struct IndHalfspace{R <: Real, T <: AbstractArray{R}} <: ProximableFunction
     norm_a::R
     function IndHalfspace{R, T}(a::T, b::R) where {R <: Real, T <: AbstractArray{R}}
         norm_a = norm(a)
-        if norm_a == 0 && b < 0
+        if isapprox(norm_a, 0) && b < 0
             error("function is improper")
         end
         new(a, b, norm_a)

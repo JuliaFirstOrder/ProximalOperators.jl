@@ -48,19 +48,19 @@ function prox_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
     rtol = if ProximalOperators.is_prox_accurate(f) sqrt(eps(R)) else 1e-4 end
 
     if ProximalOperators.is_convex(f)
-        @test isapprox(y_prealloc, y, rtol=rtol)
-        @test isapprox(y_naive, y, rtol=rtol)
+        @test all(isapprox.(y_prealloc, y, rtol=sqrt(eps(R)), atol=100*eps(R)))
+        @test all(isapprox.(y_naive, y, rtol=sqrt(eps(R)), atol=100*eps(R)))
         if ProximalOperators.is_set(f)
             @test fy_prealloc == 0
         end
-        @test isapprox(fy_prealloc, fy, rtol=rtol)
-        @test isapprox(fy_naive, fy, rtol=rtol)
+        @test isapprox(fy_prealloc, fy, rtol=sqrt(eps(R)), atol=100*eps(R))
+        @test isapprox(fy_naive, fy, rtol=sqrt(eps(R)), atol=100*eps(R))
     end
 
     if !ProximalOperators.is_set(f) || ProximalOperators.is_prox_accurate(f)
         f_at_y = call_test(f, y)
         if f_at_y !== nothing
-            @test abs(f_at_y - fy) <= (1 + abs(fy))*sqrt(eps(R))
+            @test isapprox(f_at_y, fy, rtol=sqrt(eps(R)), atol=100*eps(R))
         end
     end
 
@@ -95,15 +95,16 @@ end
   include("test_cubeNormL2.jl")
   include("test_huberLoss.jl")
   include("test_indAffine.jl")
-  include("test_indPolyhedral.jl")
   include("test_leastSquares.jl")
   include("test_logisticLoss.jl")
   include("test_quadratic.jl")
   include("test_linear.jl")
   include("test_indHyperslab.jl")
-  include("test_calls.jl")
   include("test_graph.jl")
 end
+
+include("test_calls.jl")
+include("test_indPolyhedral.jl")
 
 @testset "Gradients" begin
   include("test_gradients.jl")

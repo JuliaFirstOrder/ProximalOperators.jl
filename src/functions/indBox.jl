@@ -46,10 +46,10 @@ IndBox(lb::T, ub::S) where {T <: AbstractArray, S <: AbstractArray} =
 function (f::IndBox)(x::AbstractArray{R}) where R <: Real
     for k in eachindex(x)
         if x[k] < get_kth_elem(f.lb, k) || x[k] > get_kth_elem(f.ub, k)
-            return +Inf
+            return R(Inf)
         end
     end
-    return 0.0
+    return R(0)
 end
 
 function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=R(1)) where R <: Real
