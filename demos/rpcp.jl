@@ -1,4 +1,4 @@
-# rpca.jl - Robust PCA solvers using ProximalOperators
+# rpca.jl - Robust Principal Component Pursuit solvers using ProximalOperators
 #
 #   minimize 0.5*||A - S - L||^2_F + lam1*||S||_1 + lam2*||L||_*
 #
