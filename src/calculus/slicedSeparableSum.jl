@@ -29,15 +29,7 @@ end
 
 function SlicedSeparableSum(fs::S, idxs::T) where {N,
                            S <: Tuple{Vararg{<:ProximableFunction,N}},
-                           M,
-                           I <: Integer,
-                           T1 <: NTuple{M,Union{I,
-                                       AbstractArray{I},
-                                       Colon,
-                                       AbstractRange
-                                       }
-                                   },
-                           T <:NTuple{N,T1}
+                           T <: Tuple
                            }
     ftypes = DataType[]
     fsarr = Array{Any,1}[]

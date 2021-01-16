@@ -13,9 +13,9 @@ C = \\{p \\}.
 ```
 Parameter `p` can be a scalar, in which case the unique element of `S` has uniform coefficients.
 """
-struct IndPoint{R <: Real, C <: Union{R, Complex{R}}, T <: Union{C, AbstractArray{C}}} <: ProximableFunction
+struct IndPoint{T} <: ProximableFunction
     p::T
-    function IndPoint{R, C, T}(p::T) where {R, C, T}
+    function IndPoint{T}(p::T) where {T}
         new(p)
     end
 end
@@ -26,7 +26,7 @@ is_singleton(f::IndPoint) = true
 is_cone(f::IndPoint) = norm(f.p) == 0
 is_affine(f::IndPoint) = true
 
-IndPoint(p::T=0.0) where {R <: Real, C <: Union{R, Complex{R}}, T <: Union{C, AbstractArray{C}}} = IndPoint{R, C, T}(p)
+IndPoint(p::T=0.0) where T = IndPoint{T}(p)
 
 function (f::IndPoint)(x::AbstractArray{C}) where {R <: Real, C <: Union{R, Complex{R}}}
     if all(x .≈ f.p)
