@@ -26,7 +26,7 @@ function IndGraphSkinny(A::Array{T, 2}) where {T <: RealOrComplex}
   IndGraphSkinny(m, n, A, AA, F, tmp)
 end
 
-function (f::IndGraphSkinny)(x::AbstractArray{T}, y::AbstractArray{T}) where
+function (f::IndGraphSkinny)(x::AbstractVector{T}, y::AbstractVector{T}) where
     {T <: RealOrComplex}
   # the tolerance in the following line should be customizable
   mul!(f.tmp, f.A, x)
@@ -38,11 +38,11 @@ function (f::IndGraphSkinny)(x::AbstractArray{T}, y::AbstractArray{T}) where
 end
 
 function prox!(
-    x::AbstractArray{T},
-    y::AbstractArray{T},
+    x::AbstractVector{T},
+    y::AbstractVector{T},
     f::IndGraphSkinny,
-    c::AbstractArray{T},
-    d::AbstractArray{T},
+    c::AbstractVector{T},
+    d::AbstractVector{T},
     gamma=1.0
     ) where {T <: RealOrComplex}
 
@@ -63,8 +63,8 @@ fun_name(f::IndGraphSkinny) = "Indicator of an operator graph defined by dense f
 
 function prox_naive(
     f::IndGraphSkinny,
-    c::AbstractArray{T},
-    d::AbstractArray{T},
+    c::AbstractVector{T},
+    d::AbstractVector{T},
     gamma=1.0
     ) where {T <: RealOrComplex}
 
