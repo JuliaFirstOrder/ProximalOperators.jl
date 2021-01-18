@@ -42,9 +42,6 @@ y2,fy2 = prox(NormL21(0.1),X2,1.)
 @test abs((fy1+fy2)-fy)<1e-11
 @test norm(y-[y1; y2])<1e-11
 
-@test_throws MethodError SlicedSeparableSum((NormL1(1.), NormL21(0.1)), ((1.0,:),(11:20,:)))
-@test_throws MethodError SlicedSeparableSum((NormL1(1.), randn()), ((1:10,:),(11:20,:)))
-
 # CASE 3
 
 x1, x2, x3 = randn(10), randn(10), randn(10)

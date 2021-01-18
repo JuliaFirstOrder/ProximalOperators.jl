@@ -23,11 +23,11 @@ function IndGraphFat(A::Array{T,2}) where {T <: RealOrComplex}
 end
 
 function prox!(
-    x::AbstractArray{T},
-    y::AbstractArray{T},
+    x::AbstractVector{T},
+    y::AbstractVector{T},
     f::IndGraphFat,
-    c::AbstractArray{T},
-    d::AbstractArray{T},
+    c::AbstractVector{T},
+    d::AbstractVector{T},
     gamma=1.0
     ) where {T <: RealOrComplex}
 
@@ -45,7 +45,7 @@ function prox!(
   return 0.0
 end
 
-function (f::IndGraphFat)(x::AbstractArray{T}, y::AbstractArray{T}) where
+function (f::IndGraphFat)(x::AbstractVector{T}, y::AbstractVector{T}) where
     {T <: RealOrComplex}
   # the tolerance in the following line should be customizable
   mul!(f.tmp, f.A, x)
@@ -64,8 +64,8 @@ fun_name(f::IndGraphFat) = "Indicator of an operator graph defined by dense full
 
 function prox_naive(
     f::IndGraphFat,
-    c::AbstractArray{T},
-    d::AbstractArray{T},
+    c::AbstractVector{T},
+    d::AbstractVector{T},
     gamma=1.0
   ) where {T <: RealOrComplex}
 

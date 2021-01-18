@@ -4,9 +4,7 @@ mutable struct EpicomposeGramDiagonal{M, P, R} <: Epicompose
     L::M
     f::P
     mu::R
-    function EpicomposeGramDiagonal{M, P, R}(L::M, f::P, mu::R) where {
-        R <: Real, C <: Union{R, Complex{R}}, M, P <: ProximableFunction
-    }
+    function EpicomposeGramDiagonal{M, P, R}(L::M, f::P, mu::R) where {M, P, R}
         if mu <= 0
             error("mu must be positive")
         end

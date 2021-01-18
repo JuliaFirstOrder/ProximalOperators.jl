@@ -13,7 +13,7 @@ S = \\{ x : x_i = low_i\\ \\text{or}\\ x_i = up_i \\},
 ```
 Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space.
 """
-struct IndBinary{C <: RealOrComplex, T <: Union{C, AbstractArray{C}}, S <: Union{C, AbstractArray{C}}} <: ProximableFunction
+struct IndBinary{T, S} <: ProximableFunction
     low::T
     high::S
 end
@@ -22,10 +22,10 @@ is_set(f::IndBinary) = true
 
 IndBinary() = IndBinary(0.0, 1.0)
 
-IndBinary_low(f::IndBinary{C, C, S}, i) where {C, S} = f.low
-IndBinary_low(f::IndBinary{C, T, S}, i) where {C, T <: AbstractArray, S} = f.low[i]
-IndBinary_high(f::IndBinary{C, T, C}, i) where {C, T} = f.high
-IndBinary_high(f::IndBinary{C, T, S}, i) where {C, T, S <: AbstractArray} = f.high[i]
+IndBinary_low(f::IndBinary{<: Number, S}, i) where S = f.low
+IndBinary_low(f::IndBinary{T, S}, i) where {T, S} = f.low[i]
+IndBinary_high(f::IndBinary{T, <: Number}, i) where T = f.high
+IndBinary_high(f::IndBinary{T, S}, i) where {T, S} = f.high[i]
 
 function (f::IndBinary)(x::AbstractArray{C}) where {R <: Real, C <: RealOrComplex{R}}
     for k in eachindex(x)
