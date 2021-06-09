@@ -1,18 +1,18 @@
 # ProximalOperators.jl
 
-[![Build status](https://github.com/kul-forbes/ProximalOperators.jl/workflows/CI/badge.svg?branch=master)](https://github.com/kul-forbes/ProximalOperators.jl/actions?query=workflow%3ACI+branch%3Amaster)
-[![codecov](https://codecov.io/gh/kul-forbes/ProximalOperators.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kul-forbes/ProximalOperators.jl)
+[![Build status](https://github.com/kul-optec/ProximalOperators.jl/workflows/CI/badge.svg?branch=master)](https://github.com/kul-optec/ProximalOperators.jl/actions?query=workflow%3ACI+branch%3Amaster)
+[![codecov](https://codecov.io/gh/kul-optec/ProximalOperators.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kul-optec/ProximalOperators.jl)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/ProximalOperators-jl/Lobby)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4020558.svg)](https://doi.org/10.5281/zenodo.4020558)
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kul-forbes.github.io/ProximalOperators.jl/stable)
-[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://kul-forbes.github.io/ProximalOperators.jl/latest)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kul-optec.github.io/ProximalOperators.jl/stable)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://kul-optec.github.io/ProximalOperators.jl/latest)
 
 
 Proximal operators for nonsmooth optimization in Julia.
 This package can be used to easily implement proximal algorithms for convex and nonconvex optimization problems such as ADMM, the alternating direction method of multipliers.
 
-See the [documentation](https://kul-forbes.github.io/ProximalOperators.jl/latest) on how to use the package.
+See the [documentation](https://kul-optec.github.io/ProximalOperators.jl/latest) on how to use the package.
 
 ## Installation
 
@@ -26,7 +26,7 @@ pkg> add ProximalOperators
 
 With `using ProximalOperators` the package exports the `prox` and `prox!` methods to evaluate the proximal mapping of several functions.
 
-A list of available function constructors is in the [documentation](https://kul-forbes.github.io/ProximalOperators.jl/latest).
+A list of available function constructors is in the [documentation](https://kul-optec.github.io/ProximalOperators.jl/latest).
 
 For example, you can create the L1-norm as follows.
 
@@ -64,8 +64,8 @@ julia> fy = prox!(y, f, x, 0.5) # in-place equivalent to y, fy = prox(f, x, 0.5)
 ## Related packages
 
 * [FirstOrderSolvers.jl](https://github.com/mfalt/FirstOrderSolvers.jl)
-* [ProximalAlgorithms.jl](https://github.com/kul-forbes/ProximalAlgorithms.jl)
-* [StructuredOptimization.jl](https://github.com/kul-forbes/StructuredOptimization.jl)
+* [ProximalAlgorithms.jl](https://github.com/kul-optec/ProximalAlgorithms.jl)
+* [StructuredOptimization.jl](https://github.com/kul-optec/StructuredOptimization.jl)
 
 ## References
 
