@@ -26,7 +26,7 @@ pkg> add ProximalOperators
 
 With `using ProximalOperators` the package exports the `prox` and `prox!` methods to evaluate the proximal mapping of several functions.
 
-A list of available function constructors is in the [documentation](https://kul-optec.github.io/ProximalOperators.jl/latest).
+A list of available function constructors is in the [documentation](https://juliafirstorder.github.io/ProximalOperators.jl/latest).
 
 For example, you can create the L1-norm as follows.
 
