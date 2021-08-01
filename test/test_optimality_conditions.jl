@@ -15,7 +15,7 @@ check_optimality(::IndSimplex, x, _, y) = begin
 end
 check_optimality(f::IndBallL1, x, gamma, y) = begin
     if norm(x, 1) <= f.r
-        return y .== x
+        return all(y .== x)
     end
     sign_is_correct = (sign.(y) .== 0) .| (sign.(x) .== sign.(y))
     return all(sign_is_correct) && check_optimality(IndSimplex(f.r), abs.(x), gamma, abs.(y))
