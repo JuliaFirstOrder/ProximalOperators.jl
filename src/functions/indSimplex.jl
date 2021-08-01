@@ -36,31 +36,52 @@ function (f::IndSimplex)(x::AbstractArray{R}) where R <: Real
     return R(Inf)
 end
 
-function prox!(y::AbstractArray{R}, f::IndSimplex, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
-# Implements Algorithm 1 in Condat, "Fast projection onto the simplex and the l1 ball", Mathematical Programming, 158:575–585, 2016.
-# We should consider implementing the other algorithms reviewed there, and the one proposed in the paper.
-    n = length(x)
-    p = []
-    if ndims(x) == 1
-        p = sort(x, rev=true)
-    else
-        p = sort(x[:], rev=true)
-    end
-    s = 0
-    for i = 1:n-1
-        s = s + p[i]
-        tmax = (s - f.a)/i
-        if tmax >= p[i+1]
-            @inbounds for j in eachindex(y)
-                y[j] = x[j] < tmax ? R(0) : x[j] - tmax
+function simplex_proj_condat!(y::AbstractArray{R}, a, x::AbstractArray{R}) where R
+    # Implements algorithm proposed in:
+    # Condat, L. "Fast projection onto the simplex and the l1 ball",
+    # Mathematical Programming, 158:575–585, 2016.
+    v = [x[1]]
+    v_tilde = R[]
+    rho = x[1] - a
+    N = length(x)
+    for k in 2:N
+        if x[k] > rho
+            rho += (x[k] - rho) / (length(v) + 1)
+            if rho > x[k] - a
+                push!(v, x[k])
+            else
+                append!(v_tilde, v)
+                v = [x[k]]
+                rho = x[k] - a
             end
-            return R(0)
         end
     end
-    tmax = (s + p[n] - f.a)/n
-    @inbounds for j in eachindex(y)
-        y[j] = x[j] < tmax ? R(0) : x[j] - tmax
+    for z in v_tilde
+        if z > rho
+            push!(v, z)
+            rho += (z - rho) / length(v)
+        end
     end
+    v_changes = true
+    while v_changes == true
+        v_changes = false
+        k = 1
+        while k <= length(v)
+            z = v[k]
+            if z <= rho
+                popat!(v, k)
+                v_changes = true
+                rho += (rho - z) / length(v)
+            else
+                k = k + 1
+            end
+        end
+    end
+    y .= max.(x .- rho, R(0))
+end
+
+function prox!(y::AbstractArray{R}, f::IndSimplex, x::AbstractArray{R}, _::R=R(1)) where R <: Real
+    simplex_proj_condat!(y, f.a, x)
     return R(0)
 end
 
@@ -69,7 +90,7 @@ fun_dom(f::IndSimplex) = "AbstractArray{Real}"
 fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = a, +∞ otherwise"
 fun_params(f::IndSimplex) = "a = $(f.a)"
 
-function prox_naive(f::IndSimplex, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
+function prox_naive(f::IndSimplex, x::AbstractArray{R}, _::R=R(1)) where R <: Real
     low = minimum(x)
     upp = maximum(x)
     v = x

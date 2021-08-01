@@ -13,9 +13,9 @@ S = \\left\\{ x : \\sum_i |x_i| \\leq r \\right\\}.
 ```
 Parameter `r` must be positive.
 """
-struct IndBallL1{R <: Real} <: ProximableFunction
+struct IndBallL1{R} <: ProximableFunction
     r::R
-    function IndBallL1{R}(r::R) where {R <: Real}
+    function IndBallL1{R}(r::R) where R
         if r <= 0
             error("parameter r must be positive")
         else
@@ -28,56 +28,53 @@ is_convex(f::IndBallL1) = true
 is_set(f::IndBallL1) = true
 is_prox_accurate(f::IndBallL1) = false
 
-IndBallL1(r::R=1.0) where {R <: Real} = IndBallL1{R}(r)
+IndBallL1(r::R=1.0) where R = IndBallL1{R}(r)
 
-function (f::IndBallL1)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+function (f::IndBallL1)(x::AbstractArray{R}) where R
     if norm(x, 1) - f.r > f.r*eps(R)
         return R(Inf)
     end
     return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
-    # TODO: a faster algorithm
-    if norm(x, 1) - f.r <= f.r*eps(R)
+function prox!(y::AbstractArray{R}, f::IndBallL1, x::AbstractArray{R}, _::R=R(1)) where {R <: Real}
+    if norm(x, 1) <= f.r
         y .= x
         return R(0)
     else # do a projection of abs(x) onto simplex then recover signs
-        n = length(x)
-        p = abs.(view(x,:))
-        sort!(p, rev=true)
-        s = R(0)
-        @inbounds for i = 1:n-1
-            s = s + p[i]
-            tmax = (s - f.r)/i
-            if tmax >= p[i+1]
-                @inbounds for j in eachindex(x)
-                    y[j] = sign(x[j])*max(abs(x[j])-tmax, R(0))
-                end
-                return R(0)
-            end
-        end
-        tmax = (s + p[n] - f.r)/n
-        @inbounds for j in eachindex(x)
-            y[j] = sign(x[j])*max(abs(x[j])-tmax, R(0))
-        end
+        abs_x = abs.(x)
+        simplex_proj_condat!(y, f.r, abs_x)
+        y .*= sign.(x)
+        return R(0)
+    end
+end
+
+function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, _::R=R(1)) where {R <: Real, T <: Complex{R}}
+    if norm(x, 1) <= f.r
+        y .= x
+        return R(0)
+    else # do a projection of abs(x) onto simplex then recover signs
+        abs_x = real.(abs.(x))
+        y_temp = similar(abs_x)
+        simplex_proj_condat!(y_temp, f.r, abs_x)
+        y .= y_temp .* sign.(x)
         return R(0)
     end
 end
 
 fun_name(f::IndBallL1) = "indicator of an L1 norm ball"
-fun_dom(f::IndBallL1) = "AbstractArray{Real}, AbstractArray{Complex}"
+fun_dom(f::IndBallL1) = "AbstractArray{Real}"
 fun_expr(f::IndBallL1) = "x ↦ 0 if ‖x‖_1 ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL1) = "r = $(f.r)"
 
-function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndBallL1, x::AbstractArray{T}, _::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
     # do a simple bisection (aka binary search) on λ
     L = R(0)
     U = maximum(abs, x)
     λ = L
     v = R(0)
     maxit = 120
-    for iter in 1:maxit
+    for _ in 1:maxit
         λ = (L + U) / 2
         v = sum(max.(abs.(x) .- λ, R(0)))
         # modify lower or upper bound
