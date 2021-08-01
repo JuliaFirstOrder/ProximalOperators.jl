@@ -48,19 +48,19 @@ function prox_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
     rtol = if ProximalOperators.is_prox_accurate(f) sqrt(eps(R)) else 1e-4 end
 
     if ProximalOperators.is_convex(f)
-        @test all(isapprox.(y_prealloc, y, rtol=sqrt(eps(R)), atol=100*eps(R)))
-        @test all(isapprox.(y_naive, y, rtol=sqrt(eps(R)), atol=100*eps(R)))
+        @test all(isapprox.(y_prealloc, y, rtol=rtol, atol=100*eps(R)))
+        @test all(isapprox.(y_naive, y, rtol=rtol, atol=100*eps(R)))
         if ProximalOperators.is_set(f)
             @test fy_prealloc == 0
         end
-        @test isapprox(fy_prealloc, fy, rtol=sqrt(eps(R)), atol=100*eps(R))
-        @test isapprox(fy_naive, fy, rtol=sqrt(eps(R)), atol=100*eps(R))
+        @test isapprox(fy_prealloc, fy, rtol=rtol, atol=100*eps(R))
+        @test isapprox(fy_naive, fy, rtol=rtol, atol=100*eps(R))
     end
 
     if !ProximalOperators.is_set(f) || ProximalOperators.is_prox_accurate(f)
         f_at_y = call_test(f, y)
         if f_at_y !== nothing
-            @test isapprox(f_at_y, fy, rtol=sqrt(eps(R)), atol=100*eps(R))
+            @test isapprox(f_at_y, fy, rtol=rtol, atol=100*eps(R))
         end
     end
 
