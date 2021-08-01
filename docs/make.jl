@@ -13,5 +13,5 @@ makedocs(
 )
 
 deploydocs(
-    repo   = "github.com/kul-forbes/ProximalOperators.jl.git",
+    repo   = "github.com/JuliaFirstOrder/ProximalOperators.jl.git",
 )
