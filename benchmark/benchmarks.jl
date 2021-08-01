@@ -89,7 +89,7 @@ SUITE[k] = BenchmarkGroup(["IndSimplex"])
 for T in [Float32, Float64]
     SUITE[k][T] = @benchmarkable prox!(y, f, x) setup=begin
         f = IndSimplex()
-        x = collect(T, -0.5:0.001:2.0)
+        x = collect($T, -0.5:0.001:2.0)
         y = similar(x)
     end
 end
@@ -99,7 +99,7 @@ SUITE[k] = BenchmarkGroup(["IndBallL1"])
 for T in [Float32, Float64]
     SUITE[k][T] = @benchmarkable prox!(y, f, x) setup=begin
         f = IndBallL1()
-        x = collect(T, -2.0:0.001:0.5)
+        x = collect($T, -2.0:0.001:0.5)
         y = similar(x)
     end
 end
