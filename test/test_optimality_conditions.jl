@@ -65,6 +65,12 @@ test_cases = [
     ),
 
     Dict(
+        "f" => IndSimplex(5.0),
+        "x" => [0.5, 0.5, 1.0, 1.0, 2.0] * 3,
+        "gamma" => rand(),
+    ),
+
+    Dict(
         "f" => IndSimplex(rand()),
         "x" => randn(10),
         "gamma" => rand(),
@@ -72,25 +78,31 @@ test_cases = [
 
     Dict(
         "f" => IndBallL1(),
-        "x" => randn(10),
+        "x" => [-0.39, 0.1, -0.2, 0.3],
+        "gamma" => rand(),
+    ),
+
+    Dict(
+        "f" => IndBallL1(),
+        "x" => [0.1, -0.1, 0.2, -0.3, 0.4, 0.5],
         "gamma" => rand(),
     ),
 
     Dict(
         "f" => IndBallL1(1.7),
-        "x" => randn(10),
+        "x" => [0.1, -0.1, 0.2, -0.3, 0.4, 0.5],
         "gamma" => rand(),
     ),
 
     Dict(
-        "f" => IndBallL1(5.0),
-        "x" => randn(10),
+        "f" => IndBallL1(1.7),
+        "x" => [0.4, 0.1, 0.6, 0.2, -0.1, -0.3, 0.5],
         "gamma" => rand(),
     ),
 
     Dict(
-        "f" => IndBallL1(rand()),
-        "x" => randn(10),
+        "f" => IndBallL1(1.7),
+        "x" => [0.5, 0.1, -0.1, 0.4, 0.6, -0.3, 0.2] * 10,
         "gamma" => rand(),
     ),
 
@@ -141,6 +153,7 @@ test_cases = [
     @testset "$(typeof(d["f"]))" for d in test_cases
         f, x, gamma = d["f"], d["x"], d["gamma"]
         y, fy = prox(f, x, gamma)
+        @test fy ≈ f(y)
         @test check_optimality(f, x, gamma, y)
     end
 end
