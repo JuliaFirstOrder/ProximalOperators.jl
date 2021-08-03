@@ -62,15 +62,15 @@ function simplex_proj_condat!(y::AbstractArray{R}, a, x::AbstractArray{R}) where
             rho += (z - rho) / length(v)
         end
     end
-    v_changes = true
-    while v_changes == true
-        v_changes = false
+    v_changed = true
+    while v_changed == true
+        v_changed = false
         k = 1
         while k <= length(v)
             z = v[k]
             if z <= rho
-                popat!(v, k)
-                v_changes = true
+                deleteat!(v, k)
+                v_changed = true
                 rho += (rho - z) / length(v)
             else
                 k = k + 1
