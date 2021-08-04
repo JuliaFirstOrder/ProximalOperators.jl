@@ -65,6 +65,7 @@ NormL21
 NormLinf
 NuclearNorm
 SqrNormL2
+NormTV
 ```
 
 ## Penalties and other functions

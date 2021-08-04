@@ -36,6 +36,7 @@ end
 # Condat algorithm
 # https://lcondat.github.io/publis/Condat-fast_TV-SPL-2013.pdf
 function tvnorm_prox_condat(y::AbstractArray, x::AbstractArray, lambda::Real)
+    # solves y = arg min_z lambda*sum_k |z_{k+1}-z_k| + 1/2 * ||z-x||^2
     N = length(x);
 
     k=k0=kmin=kplus=1;
@@ -101,7 +102,7 @@ end
 
 function prox!(y::AbstractArray{T}, f::NormTV, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
     a = gamma * f.lambda
-    y = tvnorm_prox_condat(y, x, a)
+    tvnorm_prox_condat(y, x, a)
     return f.lambda * norm(y[2:end] - y[1:end-1], 1)
 end
 
