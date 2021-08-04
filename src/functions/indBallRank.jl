@@ -16,7 +16,7 @@ S = \\{ X : \\mathrm{rank}(X) \\leq r \\},
 ```
 Parameter `r` must be a positive integer.
 """
-struct IndBallRank{I <: Integer} <: ProximableFunction
+struct IndBallRank{I <: Integer}
     r::I
     function IndBallRank{I}(r::I) where {I <: Integer}
         if r <= 0
@@ -43,7 +43,7 @@ function (f::IndBallRank)(x::AbstractArray{T, 2}) where {R <: Real, T <: RealOrC
     return R(Inf)
 end
 
-function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
     maxr = minimum(size(x))
     if maxr <= f.r
         y .= x
@@ -56,12 +56,7 @@ function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma
     return R(0)
 end
 
-fun_name(f::IndBallRank) = "indicator of the set of rank-r matrices"
-fun_dom(f::IndBallRank) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
-fun_expr(f::IndBallRank) = "x ↦ 0 if rank(x) ⩽ r, +∞ otherwise"
-fun_params(f::IndBallRank) = "r = $(f.r)"
-
-function prox_naive(f::IndBallRank, x::AbstractMatrix{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndBallRank, x::AbstractMatrix{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
     maxr = minimum(size(x))
     if maxr <= f.r
         y = x

@@ -4,7 +4,7 @@ export Quadratic
 
 ### ABSTRACT TYPE
 
-abstract type Quadratic <: ProximableFunction end
+abstract type Quadratic end
 
 is_convex(f::Quadratic) = true
 is_smooth(f::Quadratic) = true

@@ -11,7 +11,7 @@ g(x) = \\min\\{f_1(x), ..., f_k(x)\\}
 ```
 Note that `g` is a nonconvex function in general.
 """
-struct PointwiseMinimum{T <: Tuple} <: ProximableFunction
+struct PointwiseMinimum{T <: Tuple}
     fs::T
 end
 
@@ -24,7 +24,7 @@ function (g::PointwiseMinimum{T})(x) where T
     return minimum(f(x) for f in g.fs)
 end
 
-function prox!(y::T, g::PointwiseMinimum, x::T, gamma::R=R(1)) where
+function prox!(y::T, g::PointwiseMinimum, x::T, gamma) where
     {R <: Real, C <: Union{R, Complex{R}}, T <: AbstractArray{C}}
     y_temp = similar(y)
     minimum_moreau_env = Inf
@@ -39,7 +39,7 @@ function prox!(y::T, g::PointwiseMinimum, x::T, gamma::R=R(1)) where
     return g(y)
 end
 
-function prox_naive(g::PointwiseMinimum, x::T, gamma::R=R(1)) where
+function prox_naive(g::PointwiseMinimum, x::T, gamma) where
     {R <: Real, C <: Union{R, Complex{R}}, T <: AbstractArray{C}}
     proxes = [prox_naive(f, x, gamma) for f in g.fs]
     moreau_envs = [f_y + R(1)/(R(2)*gamma)*norm(x - y)^2 for (y, f_y) in proxes]

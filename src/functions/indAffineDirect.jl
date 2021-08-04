@@ -44,7 +44,7 @@ function (f::IndAffineDirect{F, R, T, M, V})(x::V) where {R, T, M, V, F}
     return typemax(R)
 end
 
-function prox!(y::AbstractVector{C}, f::IndAffineDirect{F}, x::AbstractVector{C}, gamma::R=R(1)) where {
+function prox!(y::AbstractVector{C}, f::IndAffineDirect{F}, x::AbstractVector{C}, gamma) where {
     F <: QRCompactWY, R <: Real, C <: Union{R, Complex{R}}
 }
     mul!(f.res, f.A, x)
@@ -57,7 +57,7 @@ function prox!(y::AbstractVector{C}, f::IndAffineDirect{F}, x::AbstractVector{C}
     return R(0)
 end
 
-function prox!(y::AbstractVector{C}, f::IndAffineDirect{F}, x::AbstractVector{C}, gamma::R=R(1)) where {
+function prox!(y::AbstractVector{C}, f::IndAffineDirect{F}, x::AbstractVector{C}, gamma) where {
     F <: SuiteSparse.SPQR.Factorization, R <: Real, C <: Union{R, Complex{R}}
 }
     mul!(f.res, f.A, x)
@@ -78,7 +78,7 @@ function prox!(y::AbstractVector{C}, f::IndAffineDirect{F}, x::AbstractVector{C}
     return R(0)
 end
 
-function prox_naive(f::IndAffineDirect, x::AbstractVector{C}, gamma::R=R(1)) where {R <: Real, C <: RealOrComplex{R}}
+function prox_naive(f::IndAffineDirect, x::AbstractVector{C}, gamma) where {R <: Real, C <: RealOrComplex{R}}
     y = x + f.A'*((f.A*f.A')\(f.b - f.A*x))
     return y, R(0)
 end

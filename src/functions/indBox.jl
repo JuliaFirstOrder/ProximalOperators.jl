@@ -13,7 +13,7 @@ S = \\{ x : low \\leq x \\leq up \\}.
 ```
 Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space: they must satisfy `low <= up`, and are allowed to take values `-Inf` and `+Inf` to indicate unbounded coordinates.
 """
-struct IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}} <: ProximableFunction
+struct IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
     lb::T
     ub::S
     function IndBox{T,S}(lb::T, ub::S) where {T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
@@ -52,7 +52,7 @@ function (f::IndBox)(x::AbstractArray{R}) where R <: Real
     return R(0)
 end
 
-function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=R(1)) where R <: Real
+function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma) where R <: Real
     for k in eachindex(x)
         if x[k] < get_kth_elem(f.lb, k)
             y[k] = get_kth_elem(f.lb, k)
@@ -64,8 +64,6 @@ function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::Real=
     end
     return R(0)
 end
-
-prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma::AbstractArray) where {R <: Real} = prox!(y, f, x, R(1))
 
 """
 **Indicator of a ``L_∞`` norm ball**
@@ -80,14 +78,7 @@ Parameter `r` must be positive.
 """
 IndBallLinf(r::R=1.0) where {R <: Real} = IndBox(-r, r)
 
-fun_name(f::IndBox) = "indicator of a box"
-fun_dom(f::IndBox) = "AbstractArray{Real}"
-fun_expr(f::IndBox) = "x ↦ 0 if all(lb ⩽ x ⩽ ub), +∞ otherwise"
-fun_params(f::IndBox) =
-    string( "lb = ", typeof(f.lb) <: AbstractArray ? string(typeof(f.lb), " of size ", size(f.lb)) : f.lb, ", ",
-            "ub = ", typeof(f.ub) <: AbstractArray ? string(typeof(f.ub), " of size ", size(f.ub)) : f.ub)
-
-function prox_naive(f::IndBox, x::AbstractArray{R}, gamma=R(1)) where R <: Real
+function prox_naive(f::IndBox, x::AbstractArray{R}, gamma) where R <: Real
     y = min.(f.ub, max.(f.lb, x))
     return y, R(0)
 end

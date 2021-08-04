@@ -13,7 +13,7 @@ S = \\{ x : x_i = low_i\\ \\text{or}\\ x_i = up_i \\},
 ```
 Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space.
 """
-struct IndBinary{T, S} <: ProximableFunction
+struct IndBinary{T, S}
     low::T
     high::S
 end
@@ -36,7 +36,7 @@ function (f::IndBinary)(x::AbstractArray{C}) where {R <: Real, C <: RealOrComple
     return R(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndBinary, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: Union{R, Complex{R}}}
+function prox!(y::AbstractArray{T}, f::IndBinary, x::AbstractArray{T}, gamma) where {R <: Real, T <: Union{R, Complex{R}}}
     for k in eachindex(x)
         low = IndBinary_low(f, k)
         high = IndBinary_high(f, k)
@@ -49,10 +49,7 @@ function prox!(y::AbstractArray{T}, f::IndBinary, x::AbstractArray{T}, gamma::R=
     return R(0)
 end
 
-fun_name(f::IndBinary) = "indicator of binary array"
-fun_dom(f::IndBinary) = "AbstractArray{Real}"
-
-function prox_naive(f::IndBinary, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: Union{R, Complex{R}}}
+function prox_naive(f::IndBinary, x::AbstractArray{T}, gamma) where {R <: Real, T <: Union{R, Complex{R}}}
     distlow = abs.(x .- f.low)
     disthigh = abs.(x .- f.high)
     indlow = distlow .< disthigh

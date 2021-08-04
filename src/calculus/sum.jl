@@ -11,9 +11,9 @@ Given functions `f_1` to `f_k`, returns their sum
 g(x) = \\sum_{i=1}^k f_i(x).
 ```
 """
-struct Sum{T <: Tuple} <: ProximableFunction fs::T end
+struct Sum{T <: Tuple} fs::T end
 
-Sum(fs::Vararg{ProximableFunction}) = Sum((fs...,))
+Sum(fs::Vararg) = Sum((fs...,))
 
 # note: is_prox_accurate false because prox in general doesn't exist?
 is_prox_accurate(f::Sum) = false

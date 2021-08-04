@@ -12,7 +12,7 @@ With a nonnegative scalar parameter λ, returns the function
 f(x) = λ ∑_{i=2}^{n} |x_i - x_{i-1}|.
 ```
 """
-struct TotalVariation1D{T <: Real} <: ProximableFunction
+struct TotalVariation1D{T <: Real}
     lambda::T
     function TotalVariation1D{T}(lambda::T) where {T <: Real}
         if lambda < 0
@@ -108,13 +108,8 @@ function tvnorm_prox_condat(y::AbstractArray, x::AbstractArray, lambda::Real)
     end
 end
 
-function prox!(y::AbstractArray{T}, f::TotalVariation1D, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
+function prox!(y::AbstractArray{T}, f::TotalVariation1D, x::AbstractArray{T}, gamma) where T <: Real
     a = gamma * f.lambda
     tvnorm_prox_condat(y, x, a)
     return f.lambda * norm(y[2:end] - y[1:end-1], 1)
 end
-
-fun_name(f::TotalVariation1D) = "1D Total Variation"
-fun_dom(f::TotalVariation1D) = "AbstractArray{Real}"
-fun_expr(f::TotalVariation1D) = "x ↦ λ ∑_{i=2}^{n} |x_i - x_{i-1}|"
-fun_params(f::TotalVariation1D) = "λ = $(f.lambda)"

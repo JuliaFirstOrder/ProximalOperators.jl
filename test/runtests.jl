@@ -20,7 +20,7 @@ using ProximalOperators:
 
 function call_test(f, x::ArrayOrTuple{R}) where R <: Real
     try
-        fx = f(x)
+        fx = @inferred f(x)
         @test typeof(fx) == R
         return fx
     catch e
@@ -32,7 +32,7 @@ end
 
 # tests equality of the results of prox, prox! and prox_naive
 function prox_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
-    y, fy = prox(f, x, gamma)
+    y, fy = @inferred prox(f, x, gamma)
 
     @test typeof(fy) == R
 

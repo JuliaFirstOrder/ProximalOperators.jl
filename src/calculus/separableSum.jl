@@ -23,11 +23,11 @@ Example:
     f_xY = f((x, Y)); # evaluates f at (x, Y)
     (u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)
 """
-struct SeparableSum{T <: Tuple} <: ProximableFunction
+struct SeparableSum{T <: Tuple}
     fs::T
 end
 
-SeparableSum(fs::Vararg{ProximableFunction}) = SeparableSum((fs...,))
+SeparableSum(fs::Vararg) = SeparableSum((fs...,))
 
 is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
 is_convex(f::SeparableSum) = all(is_convex.(f.fs))
@@ -48,7 +48,7 @@ function (f::SeparableSum)(x::TupleOfArrays{R}) where R <: Real
     return sum
 end
 
-function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::R=R(1)) where R <: Real
+function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::Number) where R <: Real
     sum = R(0)
     for k in eachindex(xs)
         sum += prox!(ys[k], fs[k], xs[k], gamma)
@@ -64,7 +64,7 @@ function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::Tup
     return sum
 end
 
-prox!(ys::TupleOfArrays{R}, f::SeparableSum, xs::TupleOfArrays{R}, gamma=R(1)) where R <: Real = prox!(ys, f.fs, xs, gamma)
+prox!(ys::TupleOfArrays{R}, f::SeparableSum, xs::TupleOfArrays{R}, gamma) where R <: Real = prox!(ys, f.fs, xs, gamma)
 
 function gradient!(grad::TupleOfArrays{R}, fs::Tuple, x::TupleOfArrays{R}) where R <: Real
     val = R(0)
@@ -81,11 +81,11 @@ fun_dom(f::SeparableSum) = "n/a"
 fun_expr(f::SeparableSum) = "(x₁, …, xₖ) ↦ f₁(x₁) + … + fₖ(xₖ)"
 fun_params(f::SeparableSum) = "n/a"
 
-function prox_naive(f::SeparableSum, xs::TupleOfArrays{R}, gamma::Union{R, Tuple}=R(1)) where R <: Real
+function prox_naive(f::SeparableSum, xs::TupleOfArrays{R}, gamma) where R <: Real
     fys = R(0)
     ys = []
     for k in eachindex(xs)
-        y, fy = prox_naive(f.fs[k], xs[k], typeof(gamma) <: Real ? gamma : gamma[k])
+        y, fy = prox_naive(f.fs[k], xs[k], typeof(gamma) <: Number ? gamma : gamma[k])
         fys += fy
         append!(ys, [y])
     end

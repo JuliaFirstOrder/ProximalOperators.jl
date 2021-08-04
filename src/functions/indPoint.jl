@@ -13,7 +13,7 @@ C = \\{p \\}.
 ```
 Parameter `p` can be a scalar, in which case the unique element of `S` has uniform coefficients.
 """
-struct IndPoint{T} <: ProximableFunction
+struct IndPoint{T}
     p::T
     function IndPoint{T}(p::T) where {T}
         new(p)
@@ -39,12 +39,6 @@ function prox!(y::AbstractArray{C}, f::IndPoint, x::AbstractArray{C}, gamma=R(1)
     y .= f.p
     return R(0)
 end
-
-fun_name(f::IndPoint) = "indicator of a point"
-fun_dom(f::IndPoint) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::IndPoint) = "x ↦ 0 if x = p, +∞ otherwise"
-fun_params(f::IndPoint) =
-    string( "p = ", typeof(f.p) <: AbstractArray ? string(typeof(f.p), " of size ", size(f.p)) : f.p, ", ")
 
 function prox_naive(f::IndPoint, x::AbstractArray{C}, gamma=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
     y = similar(x)

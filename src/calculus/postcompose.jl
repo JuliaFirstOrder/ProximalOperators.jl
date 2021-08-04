@@ -12,11 +12,11 @@ Returns the function
 g(x) = a\\cdot f(x) + b.
 ```
 """
-struct Postcompose{T <: ProximableFunction, R <: Real, S <: Real} <: ProximableFunction
+struct Postcompose{T, R <: Real, S <: Real}
     f::T
     a::R
     b::S
-    function Postcompose{T,R,S}(f::T, a::R, b::S) where {T <: ProximableFunction, R <: Real, S <: Real}
+    function Postcompose{T,R,S}(f::T, a::R, b::S) where {T, R <: Real, S <: Real}
         if a <= 0
             error("parameter `a` must be positive")
         else
@@ -37,9 +37,9 @@ is_quadratic(f::Postcompose) = is_quadratic(f.f)
 is_generalized_quadratic(f::Postcompose) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::Postcompose) = is_strongly_convex(f.f)
 
-Postcompose(f::T, a::R=1, b::S=0) where {T <: ProximableFunction, R <: Real, S <: Real} = Postcompose{T, R, S}(f, a, b)
+Postcompose(f::T, a::R=1, b::S=0) where {T, R <: Real, S <: Real} = Postcompose{T, R, S}(f, a, b)
 
-Postcompose(f::Postcompose{T, R, S}, a::R=1, b::S=0) where {T <: ProximableFunction, R <: Real, S <: Real} = Postcompose{T, R, S}(f.f, a * f.a, b + a * f.b)
+Postcompose(f::Postcompose{T, R, S}, a::R=1, b::S=0) where {T, R <: Real, S <: Real} = Postcompose{T, R, S}(f.f, a * f.a, b + a * f.b)
 
 function (g::Postcompose)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
     return g.a * g.f(x) + g.b

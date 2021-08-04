@@ -13,7 +13,7 @@ S = \\{ x : \\|x\\| = r \\},
 ```
 where ``\\|\\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
-struct IndSphereL2{R <: Real} <: ProximableFunction
+struct IndSphereL2{R <: Real}
     r::R
     function IndSphereL2{R}(r::R) where {R <: Real}
         if r <= 0
@@ -53,11 +53,6 @@ function prox!(y::AbstractArray{T}, f::IndSphereL2, x::AbstractArray{T}, gamma::
     end
     return R(0)
 end
-
-fun_name(f::IndSphereL2) = "indicator of an L2 norm sphere"
-fun_dom(f::IndSphereL2) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::IndSphereL2) = "x ↦ 0 if ||x|| = r, +∞ otherwise"
-fun_params(f::IndSphereL2) = "r = $(f.r)"
 
 function prox_naive(f::IndSphereL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
     normx = norm(x)

@@ -12,7 +12,7 @@ Given function `f`, an array `a` and a constant `b` (optional), returns function
 g(x) = f(x) + \\langle a, x \\rangle + b.
 ```
 """
-struct Tilt{T <: ProximableFunction, S <: AbstractArray, R <: Real} <: ProximableFunction
+struct Tilt{T, S <: AbstractArray, R <: Real}
     f::T
     a::S
     b::R
@@ -27,7 +27,7 @@ is_quadratic(f::Tilt) = is_quadratic(f.f)
 is_generalized_quadratic(f::Tilt) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::Tilt) = is_strongly_convex(f.f)
 
-Tilt(f::T, a::S) where {R <: Real, T <: ProximableFunction, S <: AbstractArray{R}} = Tilt{T, S, R}(f, a, R(0))
+Tilt(f::T, a::S) where {R <: Real, T, S <: AbstractArray{R}} = Tilt{T, S, R}(f, a, R(0))
 
 function (g::Tilt)(x::AbstractArray{T}) where T <: RealOrComplex
     return g.f(x) + dot(g.a, x) + g.b

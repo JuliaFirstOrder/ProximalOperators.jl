@@ -12,7 +12,7 @@ With a nonnegative scalar parameter λ, returns the function
 f(x) = λ\\cdot\\sqrt{x_1^2 + … + x_n^2}.
 ```
 """
-struct NormL2{R <: Real} <: ProximableFunction
+struct NormL2{R <: Real}
     lambda::R
     function NormL2{R}(lambda::R) where {R <: Real}
         if lambda < 0
@@ -32,7 +32,7 @@ function (f::NormL2)(x::AbstractArray)
     return f.lambda * norm(x)
 end
 
-function prox!(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T}, gamma::Real=1) where T <: RealOrComplex
+function prox!(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T}, gamma) where T <: RealOrComplex
     normx = norm(x)
     scale = max(0, 1 - f.lambda * gamma / normx)
     for i in eachindex(x)
@@ -51,12 +51,7 @@ function gradient!(y::AbstractArray{T}, f::NormL2, x::AbstractArray{T}) where T 
     return f.lambda * fx
 end
 
-fun_name(f::NormL2) = "Euclidean norm"
-fun_dom(f::NormL2) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::NormL2) = "x ↦ λ||x||_2"
-fun_params(f::NormL2) = "λ = $(f.lambda)"
-
-function prox_naive(f::NormL2, x::AbstractArray{T}, gamma::Real=1) where T <: RealOrComplex
+function prox_naive(f::NormL2, x::AbstractArray{T}, gamma) where T <: RealOrComplex
     normx = norm(x)
     scale = max(0, 1 -f.lambda * gamma / normx)
     y = scale * x

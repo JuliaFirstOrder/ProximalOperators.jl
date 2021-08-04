@@ -10,7 +10,7 @@ Returns the function
 f(x) = \\langle c, x \\rangle.
 ```
 """
-struct Linear{R <: Real, A <: AbstractArray{R}} <: ProximableFunction
+struct Linear{R <: Real, A <: AbstractArray{R}}
     c::A
 end
 
@@ -32,9 +32,6 @@ function gradient!(y::AbstractArray{R}, f::Linear{R}, x::AbstractArray{R}) where
     y .= f.c
     return dot(f.c, x)
 end
-
-fun_name(f::Linear) = "Linear function"
-fun_expr(f::Linear) = "x ↦ c'x"
 
 function prox_naive(f::Linear, x, gamma)
     y = x - gamma.*(f.c)

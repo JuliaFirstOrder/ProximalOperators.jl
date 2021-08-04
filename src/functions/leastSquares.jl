@@ -4,12 +4,10 @@ export LeastSquares
 
 ### ABSTRACT TYPE
 
-abstract type LeastSquares <: ProximableFunction end
+abstract type LeastSquares end
 
 is_smooth(f::LeastSquares) = true
 is_quadratic(f::LeastSquares) = true
-
-fun_name(f::LeastSquares) = "Least squares penalty"
 
 ### CONSTRUCTORS
 

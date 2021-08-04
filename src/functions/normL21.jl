@@ -14,7 +14,7 @@ f(X) = λ⋅∑_i\\|x_i\\|
 for a nonnegative `λ`, where ``x_i`` is the ``i``-th column of ``X`` if `dim == 1`, and the ``i``-th row of ``X`` if `dim == 2`.
 In words, it is the sum of the Euclidean norms of the columns or rows.
 """
-struct NormL21{R <: Real, I <: Integer} <: ProximableFunction
+struct NormL21{R <: Real, I <: Integer}
     lambda::R
     dim::I
     function NormL21{R,I}(lambda::R, dim::I) where {R <: Real, I <: Integer}
@@ -88,11 +88,6 @@ function prox!(Y::AbstractArray{T, 2}, f::NormL21, X::AbstractArray{T, 2}, gamma
     end
     return f.lambda * n21X
 end
-
-fun_name(f::NormL21) = "sum of Euclidean norms"
-fun_dom(f::NormL21) = "AbstractArray{Real,2}, AbstractArray{Complex, 2}"
-fun_expr(f::NormL21) = "x ↦ λsum(||x_i||)"
-fun_params(f::NormL21) = "λ = $(f.lambda), dim = $(f.dim)"
 
 function prox_naive(f::NormL21, X::AbstractArray{T,2}, gamma::Real=1.0) where T <: RealOrComplex
     Y = max.(0, 1 .- f.lambda * gamma ./ sqrt.(sum(abs.(X).^2, dims=f.dim))) .* X

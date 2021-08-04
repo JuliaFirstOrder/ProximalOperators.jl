@@ -20,17 +20,14 @@ of the variable `x`:
 g(x) = \\sum_{i=1}^k f(x_{J_i}).
 ```
 """
-struct SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N} <: ProximableFunction
+struct SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N}
   fs::S    # Tuple, where each element is a Vector with elements of the same type; the functions to prox on
   # Example: S = Tuple{Array{ProximalOperators.NormL1{Float64},1}, Array{ProximalOperators.NormL2{Float64},1}}
   idxs::T  # Vector, where each element is a Vector contining the indices to prox on
   # Example: T = Array{Array{Tuple{Colon,UnitRange{Int64}},1},1}
 end
 
-function SlicedSeparableSum(fs::S, idxs::T) where {N,
-                           S <: Tuple{Vararg{<:ProximableFunction,N}},
-                           T <: Tuple
-                           }
+function SlicedSeparableSum(fs::S, idxs::T) where {S <: Tuple, T <: Tuple}
     ftypes = DataType[]
     fsarr = Array{Any,1}[]
     indarr = Array{eltype(idxs),1}[]
@@ -52,7 +49,7 @@ function SlicedSeparableSum(fs::S, idxs::T) where {N,
 end
 
 # Constructor for the case where the same function is applied to all slices
-SlicedSeparableSum(f::F, idxs::T) where {F <: ProximableFunction, T <: Tuple} =
+SlicedSeparableSum(f::F, idxs::T) where {F, T <: Tuple} =
 SlicedSeparableSum(([f for k in eachindex(idxs)]...,), idxs)
 
 # Unroll the loop over the different types of functions to evaluate
@@ -69,7 +66,7 @@ SlicedSeparableSum(([f for k in eachindex(idxs)]...,), idxs)
 end
 
 # Unroll the loop over the different types of functions to prox on
-@generated function prox!(y::AbstractArray{T}, f::SlicedSeparableSum{A, B, N}, x::AbstractArray{T}, gamma::Real=1.0) where {T <: RealOrComplex, A, B, N}
+@generated function prox!(y::AbstractArray{T}, f::SlicedSeparableSum{A, B, N}, x::AbstractArray{T}, gamma) where {T <: RealOrComplex, A, B, N}
   ex = :(v = 0.0)
   for i = 1:N # For each function type
     ex = quote $ex;

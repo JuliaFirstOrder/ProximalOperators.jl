@@ -13,7 +13,7 @@ f(x) = λ\\cdot\\mathrm{nnz}(x)
 ```
 for a nonnegative parameter `λ`.
 """
-struct NormL0{R <: Real} <: ProximableFunction
+struct NormL0{R <: Real}
     lambda::R
     function NormL0{R}(lambda::R) where {R <: Real}
         if lambda < 0
@@ -40,11 +40,6 @@ function prox!(y::AbstractArray{T}, f::NormL0, x::AbstractArray{T}, gamma::Real=
     end
     return f.lambda * countnzy
 end
-
-fun_name(f::NormL0) = "weighted L0 pseudo-norm"
-fun_dom(f::NormL0) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::NormL0) = "x ↦ λ countnz(x)"
-fun_params(f::NormL0) = "λ = $(f.lambda)"
 
 function prox_naive(f::NormL0, x::AbstractArray{T}, gamma::Real=1) where {R, T <: RealOrComplex{R}}
     over = abs.(x) .> sqrt(2 * gamma * f.lambda)

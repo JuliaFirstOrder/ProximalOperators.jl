@@ -13,10 +13,10 @@ f(x) = μ\\|x\\|_1 + (λ/2)\\|x\\|^2,
 ```
 for nonnegative parameters `μ` and `λ`.
 """
-struct ElasticNet{R <: Real, S <: Real} <: ProximableFunction
+struct ElasticNet{R, S}
     mu::R
     lambda::S
-    function ElasticNet{R, S}(mu::R, lambda::S) where {R <: Real, S <: Real}
+    function ElasticNet{R, S}(mu::R, lambda::S) where {R, S}
         if lambda < 0 || mu < 0
             error("parameters `μ` and `λ` must be nonnegative")
         else
@@ -29,17 +29,14 @@ is_separable(f::ElasticNet) = true
 is_prox_accurate(f::ElasticNet) = true
 is_convex(f::ElasticNet) = true
 
-ElasticNet(mu::R=1, lambda::S=1) where {R <: Real, S <: Real} = ElasticNet{R, S}(mu, lambda)
+ElasticNet(mu::R=1, lambda::S=1) where {R, S} = ElasticNet{R, S}(mu, lambda)
 
-function (f::ElasticNet)(x::AbstractArray{T}) where {
-    R <: Real, T <: RealOrComplex{R}
-}
+function (f::ElasticNet)(x)
+    R = real(eltype(x))
     return f.mu * norm(x, 1) + f.lambda / R(2) * norm(x, 2)^2
 end
 
-function prox!(y::AbstractArray{R}, f::ElasticNet, x::AbstractArray{R}, gamma::R=R(1)) where {
-    R <: Real,
-}
+function prox!(y, f::ElasticNet, x::AbstractArray{R}, gamma) where {R <: Real}
     sqnorm2x = R(0)
     norm1x = R(0)
     gm = gamma * f.mu
@@ -52,9 +49,7 @@ function prox!(y::AbstractArray{R}, f::ElasticNet, x::AbstractArray{R}, gamma::R
     return f.mu * norm1x + f.lambda / R(2) * sqnorm2x
 end
 
-function prox!(y::AbstractArray{R}, f::ElasticNet, x::AbstractArray{R}, gamma::AbstractArray{R}) where {
-    R <: Real
-}
+function prox!(y, f::ElasticNet, x::AbstractArray{R}, gamma::AbstractArray) where {R <: Real}
     sqnorm2x = R(0)
     norm1x = R(0)
     for i in eachindex(x)
@@ -67,9 +62,8 @@ function prox!(y::AbstractArray{R}, f::ElasticNet, x::AbstractArray{R}, gamma::A
     return f.mu * norm1x + f.lambda / R(2) * sqnorm2x
 end
 
-function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet, x::AbstractArray{Complex{R}}, gamma::R=R(1)) where {
-    R <: Real
-}
+function prox!(y, f::ElasticNet, x::AbstractArray{C}, gamma) where {C <: Complex}
+    R = real(C)
     sqnorm2x = R(0)
     norm1x = R(0)
     gm = gamma * f.mu
@@ -82,9 +76,8 @@ function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet, x::AbstractArray{Com
     return f.mu * norm1x + f.lambda / R(2) * sqnorm2x
 end
 
-function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet, x::AbstractArray{Complex{R}}, gamma::AbstractArray{R}) where {
-    R <: Real
-}
+function prox!(y, f::ElasticNet, x::AbstractArray{C}, gamma::AbstractArray) where {C <: Complex}
+    R = real(C)
     sqnorm2x = R(0)
     norm1x = R(0)
     for i in eachindex(x)
@@ -97,9 +90,8 @@ function prox!(y::AbstractArray{Complex{R}}, f::ElasticNet, x::AbstractArray{Com
     return f.mu * norm1x + f.lambda / R(2) * sqnorm2x
 end
 
-function gradient!(y::AbstractArray{T}, f::ElasticNet, x::AbstractArray{T}) where {
-    R <: Real, T <: RealOrComplex{R}
-}
+function gradient!(y, f::ElasticNet, x)
+    R = real(eltype(x))
     # Gradient of 1 norm
     y .= f.mu .* sign.(x)
     # Gradient of 2 norm
@@ -107,21 +99,8 @@ function gradient!(y::AbstractArray{T}, f::ElasticNet, x::AbstractArray{T}) wher
     return f.mu * norm(x, 1) + f.lambda / R(2) * norm(x, 2)^2
 end
 
-fun_name(f::ElasticNet) = "elastic-net regularization"
-fun_dom(f::ElasticNet) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::ElasticNet) = "x ↦ μ||x||_1 + (λ/2)||x||²"
-fun_params(f::ElasticNet) = "μ = $(f.mu), λ = $(f.lambda)"
-
-function prox_naive(f::ElasticNet, x::AbstractArray{T}, gamma::R=R(1)) where {
-    R <: Real, T <: RealOrComplex{R}
-}
-    uz = max.(0, abs.(x) .- gamma * f.mu)/(1 + f.lambda * gamma)
-    return sign.(x) .* uz, f.mu * norm(uz, 1) + f.lambda / R(2) * norm(uz)^2
-end
-
-function prox_naive(f::ElasticNet, x::AbstractArray{T}, gamma::AbstractArray{R}) where {
-    R <: Real, T <: RealOrComplex{R}
-}
+function prox_naive(f::ElasticNet, x, gamma)
+    R = real(eltype(x))
     uz = max.(0, abs.(x) .- gamma .* f.mu)./(1 .+ f.lambda .* gamma)
     return sign.(x) .* uz, f.mu * norm(uz, 1) + f.lambda / R(2) * norm(uz)^2
 end

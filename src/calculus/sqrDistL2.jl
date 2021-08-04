@@ -12,10 +12,10 @@ Given `ind_S` the indicator function of a convex set ``S``, and an optional posi
 g(x) = \\tfrac{λ}{2}\\mathrm{dist}_S^2(x) = \\min \\left\\{ \\tfrac{λ}{2}\\|y - x\\|^2 : y \\in S \\right\\}.
 ```
 """
-struct SqrDistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
+struct SqrDistL2{R, T}
     ind::T
     lambda::R
-    function SqrDistL2{R,T}(ind::T, lambda::R) where {R <: Real, T<:ProximableFunction}
+    function SqrDistL2{R,T}(ind::T, lambda::R) where {R, T}
         if !is_convex(ind) || !is_set(ind)
             error("`ind` must be the indicator of a convex set")
         end
@@ -33,14 +33,14 @@ is_smooth(f::SqrDistL2) = true
 is_quadratic(f::SqrDistL2) = is_affine(f.ind)
 is_strongly_convex(f::SqrDistL2) = is_singleton(f.ind)
 
-SqrDistL2(ind::T, lambda=1) where {T <: ProximableFunction} = SqrDistL2{typeof(lambda), T}(ind, lambda)
+SqrDistL2(ind::T, lambda=1) where {T} = SqrDistL2{typeof(lambda), T}(ind, lambda)
 
-function (f::SqrDistL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+function (f::SqrDistL2)(x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
     return f.lambda / R(2) * normdiff2(x, p)
 end
 
-function prox!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}, gamma) where {R, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
     sqrd = f.lambda / R(2) * normdiff2(x, p)
     c1 = 1/(1 + f.lambda * gamma)
@@ -51,7 +51,7 @@ function prox!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}, gamma::R=
     return sqrd * c1^2
 end
 
-function gradient!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+function gradient!(y::AbstractArray{T}, f::SqrDistL2, x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
     dist2 = normdiff2(x,p)
     y .= f.lambda .* (x .- p)
@@ -63,7 +63,7 @@ fun_dom(f::SqrDistL2) = fun_dom(f.ind)
 fun_expr(f::SqrDistL2) = "x ↦ (λ/2) inf { ||x-y||^2 : y ∈ S} "
 fun_params(f::SqrDistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
-function prox_naive(f::SqrDistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::SqrDistL2, x::AbstractArray{T}, gamma) where {R, T <: RealOrComplex{R}}
     p, = prox(f.ind, x)
     sqrd = f.lambda / R(2) * norm(x - p)^2
     gamlam = f.lambda * gamma

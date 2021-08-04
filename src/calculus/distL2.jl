@@ -12,10 +12,10 @@ Given `ind_S` the indicator function of a convex set ``S``, and an optional posi
 g(x) = λ\\mathrm{dist}_S(x) = \\min \\{ λ\\|y - x\\| : y \\in S \\}.
 ```
 """
-struct DistL2{R <: Real, T <: ProximableFunction} <: ProximableFunction
+struct DistL2{R, T}
     ind::T
     lambda::R
-    function DistL2{R, T}(ind::T, lambda::R) where {R <: Real, T <: ProximableFunction}
+    function DistL2{R, T}(ind::T, lambda::R) where {R, T}
         if !is_set(ind) || !is_convex(ind)
             error("`ind` must be a convex set")
         end
@@ -30,14 +30,15 @@ end
 is_prox_accurate(f::DistL2) = is_prox_accurate(f.ind)
 is_convex(f::DistL2) = is_convex(f.ind)
 
-DistL2(ind::T, lambda::R=1) where {R <: Real, T <: ProximableFunction} = DistL2{R, T}(ind, lambda)
+DistL2(ind::T, lambda::R=1) where {R, T} = DistL2{R, T}(ind, lambda)
 
-function (f::DistL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+function (f::DistL2)(x)
     p, = prox(f.ind, x)
     return f.lambda * normdiff(x, p)
 end
 
-function prox!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y, f::DistL2, x, gamma)
+    R = real(eltype(x))
     prox!(y, f.ind, x)
     d = normdiff(x, y)
     gamlam = gamma * f.lambda
@@ -49,7 +50,7 @@ function prox!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}, gamma::R=R(1
     return R(0)
 end
 
-function gradient!(y::AbstractArray{T}, f::DistL2, x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+function gradient!(y, f::DistL2, x)
     prox!(y, f.ind, x) # Use y as temporary storage
     dist = normdiff(x, y)
     if dist > 0
@@ -65,7 +66,8 @@ fun_dom(f::DistL2) = fun_dom(f.ind)
 fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
 fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
 
-function prox_naive(f::DistL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::DistL2, x, gamma)
+    R = real(eltype(x))
     p, = prox(f.ind, x)
     d = norm(x - p)
     gamlam = gamma * f.lambda

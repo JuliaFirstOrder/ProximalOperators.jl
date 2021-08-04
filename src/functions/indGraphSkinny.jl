@@ -43,7 +43,7 @@ function prox!(
     f::IndGraphSkinny,
     c::AbstractVector{T},
     d::AbstractVector{T},
-    gamma=1.0
+    gamma=1
     ) where {T <: RealOrComplex}
 
   # x[:] = f.F \ (c + f.A' * d)
@@ -55,17 +55,11 @@ function prox!(
   return 0.0
 end
 
-fun_name(f::IndGraphSkinny) = "Indicator of an operator graph defined by dense full column rank matrix"
-# fun_dom(f::IndGraph) = "Array{Real,1}, Array{Complex,1}"
-# fun_expr(f::IndGraph) = "x,y ↦ 0 if Ax = y, +∞ otherwise"
-# fun_params(f::IndGraph) =
-#   string( "A = ", typeof(f.A), " of size ", size(f.A))
-
 function prox_naive(
     f::IndGraphSkinny,
     c::AbstractVector{T},
     d::AbstractVector{T},
-    gamma=1.0
+    gamma=1
     ) where {T <: RealOrComplex}
 
   x = f.F \ (c + f.A' * d)

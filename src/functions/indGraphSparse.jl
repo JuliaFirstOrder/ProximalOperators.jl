@@ -35,7 +35,7 @@ function prox!(
     f::IndGraphSparse,
     c::AbstractVector{T},
     d::AbstractVector{T},
-    gamma=1.0
+    gamma=1
   ) where {T <: RealOrComplex}
   #instead of res = [c + f.A' * d; zeros(f.m)]
   mul!(f.tmpx, adjoint(f.A), d)
@@ -60,17 +60,11 @@ function (f::IndGraphSparse)(x::AbstractVector{T}, y::AbstractVector{T}) where
   return +Inf
 end
 
-fun_name(f::IndGraphSparse) = "Indicator of an operator graph defined by sparse matrix"
-# fun_dom(f::IndGraph) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"
-# fun_expr(f::IndGraph) = "x,y ↦ 0 if Ax = y, +∞ otherwise"
-# fun_params(f::IndGraph) =
-#   string( "A = ", typeof(f.A), " of size ", size(f.A))
-
 function prox_naive(
     f::IndGraphSparse,
     c::AbstractVector{T},
     d::AbstractVector{T},
-    gamma=1.0
+    gamma=1
   ) where {T <: RealOrComplex}
 
   tmp = f.A'*d

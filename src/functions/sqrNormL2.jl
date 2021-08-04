@@ -16,7 +16,7 @@ With a nonnegative array `λ`, returns the function
 f(x) = \\tfrac{1}{2}∑_i λ_i x_i^2.
 ```
 """
-struct SqrNormL2{T <: Union{Real, AbstractArray}} <: ProximableFunction
+struct SqrNormL2{T <: Union{Real, AbstractArray}}
     lambda::T
     function SqrNormL2{T}(lambda::T) where {T <: Union{Real,AbstractArray}}
         if any(lambda .< 0)
@@ -67,7 +67,7 @@ function gradient!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}) wh
     return sqnx / R(2)
 end
 
-function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::R=R(1)) where {S <: Real, R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Number) where {S <: Real, R <: Real, T <: RealOrComplex{R}}
     gl = gamma * f.lambda
     sqny = R(0)
     for k in eachindex(x)
@@ -77,7 +77,7 @@ function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma:
     return f.lambda / R(2) * sqny
 end
 
-function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::R=R(1)) where {S <: AbstractArray, R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma::Number) where {S <: AbstractArray, R <: Real, T <: RealOrComplex{R}}
     wsqny = R(0)
     for k in eachindex(x)
         y[k] = x[k] / (1 + gamma * f.lambda[k])
@@ -104,14 +104,7 @@ function prox!(y::AbstractArray{T}, f::SqrNormL2{S}, x::AbstractArray{T}, gamma:
     return wsqny / R(2)
 end
 
-fun_name(f::SqrNormL2) = "weighted squared Euclidean norm"
-fun_dom(f::SqrNormL2) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::SqrNormL2{T}) where {T <: Real} = "x ↦ (λ/2)||x||^2"
-fun_expr(f::SqrNormL2{T}) where {T <: AbstractArray} = "x ↦ (1/2)sum( λ_i (x_i)^2 )"
-fun_params(f::SqrNormL2{T}) where {T <: Real} = "λ = $(f.lambda)"
-fun_params(f::SqrNormL2{T}) where {T <: AbstractArray} = string("λ = ", typeof(f.lambda), " of size ", size(f.lambda))
-
-function prox_naive(f::SqrNormL2, x::AbstractArray{T}, gamma=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::SqrNormL2, x::AbstractArray{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
     y = x./(R(1) .+ f.lambda .* gamma)
     return y, real(dot(f.lambda .* y, y)) / R(2)
 end

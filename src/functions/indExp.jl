@@ -13,7 +13,7 @@ Returns the indicator function of the primal exponential cone, that is
 C = \\mathrm{cl} \\{ (r,s,t) : s > 0, s⋅e^{r/s} \\leq t \\} \\subset \\mathbb{R}^3.
 ```
 """
-struct IndExpPrimal <: ProximableFunction end
+struct IndExpPrimal end
 
 is_convex(f::IndExpPrimal) = true
 is_cone(f::IndExpPrimal) = true
@@ -76,7 +76,7 @@ end
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-function prox!(y::AbstractVector{R}, f::IndExpPrimal, x::AbstractVector{R}, gamma::R=R(1)) where R <: Real
+function prox!(y::AbstractVector{R}, f::IndExpPrimal, x::AbstractVector{R}, gamma) where R <: Real
     r = x[1]
     s = x[2]
     t = x[3]
@@ -162,17 +162,8 @@ function newton_exp_onz(rho, y_hat, z_hat)
     return z
 end
 
-fun_name(f::IndExpPrimal) = "indicator exponential cone (primal)"
-fun_dom(f::IndExpPrimal) = "AbstractArray{Real}"
-fun_expr(f::IndExpPrimal) = "x ↦ 0 if x ∈ cl{(r,s,t) : s > 0, s*exp(r/s) ⩽ t}, +∞ otherwise"
-fun_params(f::IndExpPrimal) = "none"
-
-fun_name(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} = "indicator of the exponential cone (dual)"
-fun_expr(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} = "x ↦ 0 if x ∈ cl{(u,v,w) : u < 0, -u*exp(v/u) ⩽ w*exp(1)}, +∞ otherwise"
-fun_params(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} = "none"
-
 prox_naive(f::IndExpPrimal, x::AbstractArray{R}, gamma::Real=1.0) where {R <: Real} =
     prox(f, x, gamma) # we don't have a much simpler way to do this yet
 
-prox_naive(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}}, x::AbstractArray{R}, gamma::Real=R(1)) where {R <: Real} =
+prox_naive(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}}, x::AbstractArray{R}, gamma) where {R <: Real} =
     prox(f, x, gamma) # we don't have a much simpler way to do this yet

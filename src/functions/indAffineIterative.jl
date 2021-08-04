@@ -32,7 +32,7 @@ function (f::IndAffineIterative{R, T, M, V})(x::V) where {R, T, M, V}
     return typemax(R)
 end
 
-function prox!(y::V, f::IndAffineIterative{R, T, M, V}, x::V, gamma::R=R(1)) where {R, T, M, V}
+function prox!(y::V, f::IndAffineIterative{R, T, M, V}, x::V, gamma) where {R, T, M, V}
     # Von Neumann's alternating projections
     m = size(f.A, 1)
     y .= x
@@ -51,7 +51,7 @@ function prox!(y::V, f::IndAffineIterative{R, T, M, V}, x::V, gamma::R=R(1)) whe
     return R(0)
 end
 
-function prox_naive(f::IndAffineIterative, x::AbstractArray{T,1}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndAffineIterative, x::AbstractArray{T,1}, gamma) where {R <: Real, T <: RealOrComplex{R}}
     y = x + f.A'*((f.A*f.A')\(f.b - f.A*x))
     return y, R(0)
 end

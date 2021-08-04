@@ -12,7 +12,7 @@ Returns the function
 f(x) = ∑_i \\max\\{0, x_i\\}.
 ```
 """
-struct SumPositive <: ProximableFunction end
+struct SumPositive end
 
 is_separable(f::SumPositive) = true
 is_convex(f::SumPositive) = true
@@ -21,7 +21,7 @@ function (f::SumPositive)(x::AbstractArray{T}) where T <: Real
     return sum(xi -> max(xi, 0), x)
 end
 
-function prox!(y::AbstractArray{R}, f::SumPositive, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
+function prox!(y::AbstractArray{R}, f::SumPositive, x::AbstractArray{R}, gamma) where R <: Real
     fsum = R(0)
     for i in eachindex(x)
         y[i] = x[i] < gamma ? (x[i] > 0 ? R(0) : x[i]) : x[i]-gamma
@@ -35,11 +35,7 @@ function gradient!(y::AbstractArray{R}, f::SumPositive, x::AbstractArray{R}) whe
     return sum(xi -> max(xi, 0), x)
 end
 
-fun_name(f::SumPositive) = "Sum of the positive coefficients"
-fun_dom(f::SumPositive) = "AbstractArray{Real}"
-fun_expr(f::SumPositive) = "x ↦ sum(max(0, x))"
-
-function prox_naive(f::SumPositive, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
+function prox_naive(f::SumPositive, x::AbstractArray{R}, gamma) where R <: Real
     y = copy(x)
     indpos = x .> 0
     y[indpos] = max.(R(0), x[indpos] .- gamma)

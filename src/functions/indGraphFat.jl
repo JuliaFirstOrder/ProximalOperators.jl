@@ -28,7 +28,7 @@ function prox!(
     f::IndGraphFat,
     c::AbstractVector{T},
     d::AbstractVector{T},
-    gamma=1.0
+    gamma=1
     ) where {T <: RealOrComplex}
 
   # y .= f.F \ (f.A * c + f.AA * d)
@@ -56,17 +56,11 @@ function (f::IndGraphFat)(x::AbstractVector{T}, y::AbstractVector{T}) where
   return +Inf
 end
 
-fun_name(f::IndGraphFat) = "Indicator of an operator graph defined by dense full row rank matrix"
-# fun_dom(f::IndGraph) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"
-# fun_expr(f::IndGraph) = "x,y ↦ 0 if Ax = y, +∞ otherwise"
-# fun_params(f::IndGraph) =
-#   string( "A = ", typeof(f.A), " of size ", size(f.A))
-
 function prox_naive(
     f::IndGraphFat,
     c::AbstractVector{T},
     d::AbstractVector{T},
-    gamma=1.0
+    gamma=1
   ) where {T <: RealOrComplex}
 
   y = f.F \ (f.A * c + f.AA * d)

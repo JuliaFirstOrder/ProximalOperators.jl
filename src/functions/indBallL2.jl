@@ -13,7 +13,7 @@ S = \\{ x : \\|x\\| \\leq r \\},
 ```
 where ``\\|\\cdot\\|`` is the ``L_2`` (Euclidean) norm. Parameter `r` must be positive.
 """
-struct IndBallL2{R <: Real} <: ProximableFunction
+struct IndBallL2{R <: Real}
     r::R
     function IndBallL2{R}(r::R) where {R <: Real}
         if r <= 0
@@ -36,7 +36,7 @@ function (f::IndBallL2)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComple
     return R(Inf)
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y::AbstractArray{T}, f::IndBallL2, x::AbstractArray{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
     scal = f.r/norm(x)
     if scal > 1
         y .= x
@@ -48,12 +48,7 @@ function prox!(y::AbstractArray{T}, f::IndBallL2, x::AbstractArray{T}, gamma::R=
     return R(0)
 end
 
-fun_name(f::IndBallL2) = "indicator of an L2 norm ball"
-fun_dom(f::IndBallL2) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::IndBallL2) = "x ↦ 0 if ||x|| ⩽ r, +∞ otherwise"
-fun_params(f::IndBallL2) = "r = $(f.r)"
-
-function prox_naive(f::IndBallL2, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndBallL2, x::AbstractArray{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
     normx = norm(x)
     if normx > f.r
         y = (f.r/normx)*x

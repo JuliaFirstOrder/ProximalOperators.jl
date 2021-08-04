@@ -13,7 +13,7 @@ S = \\left\\{ x : x \\geq 0, \\sum_i x_i = a \\right\\}.
 ```
 By default `a=1.0`, therefore ``S`` is the probability simplex.
 """
-struct IndSimplex{R <: Real} <: ProximableFunction
+struct IndSimplex{R <: Real}
     a::R
     function IndSimplex{R}(a::R) where {R <: Real}
         if a <= 0
@@ -80,17 +80,12 @@ function simplex_proj_condat!(y::AbstractArray{R}, a, x::AbstractArray{R}) where
     y .= max.(x .- rho, R(0))
 end
 
-function prox!(y::AbstractArray{R}, f::IndSimplex, x::AbstractArray{R}, _::R=R(1)) where R <: Real
+function prox!(y::AbstractArray{R}, f::IndSimplex, x::AbstractArray{R}, gamma) where R <: Real
     simplex_proj_condat!(y, f.a, x)
     return R(0)
 end
 
-fun_name(f::IndSimplex) = "indicator of the probability simplex"
-fun_dom(f::IndSimplex) = "AbstractArray{Real}"
-fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = a, +∞ otherwise"
-fun_params(f::IndSimplex) = "a = $(f.a)"
-
-function prox_naive(f::IndSimplex, x::AbstractArray{R}, _::R=R(1)) where R <: Real
+function prox_naive(f::IndSimplex, x::AbstractArray{R}, gamma) where R <: Real
     low = minimum(x)
     upp = maximum(x)
     v = x

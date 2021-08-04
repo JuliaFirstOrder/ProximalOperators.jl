@@ -36,14 +36,12 @@ function EpicomposeQuadratic(L, f::Q) where {Q <: Quadratic}
     return EpicomposeQuadratic(L, f.Q, f.q)
 end
 
-function factor_step!(g::EpicomposeQuadratic, gamma::R) where {R <: Real}
+function factor_step!(g::EpicomposeQuadratic, gamma)
     g.gamma = gamma
     g.fact = cholesky(g.Q + (g.L' * g.L)/gamma)
 end
 
-function prox!(y::AbstractArray{R}, g::EpicomposeQuadratic, x::AbstractArray{R}, gamma::R=one(R)) where {
-    R <: Real
-}
+function prox!(y, g::EpicomposeQuadratic, x, gamma)
     if g.gamma === nothing || !isapprox(gamma, g.gamma)
         factor_step!(g, gamma)
     end
@@ -53,9 +51,7 @@ function prox!(y::AbstractArray{R}, g::EpicomposeQuadratic, x::AbstractArray{R},
     return fy
 end
 
-function prox_naive(g::EpicomposeQuadratic, x::AbstractArray{R}, gamma::R=one(R)) where {
-    R <: Real
-}
+function prox_naive(g::EpicomposeQuadratic, x, gamma)
     S = g.Q + (g.L' * g.L) / gamma
     p = S\((g.L' * x) / gamma - g.q)
     fy = dot(p, g.Q * p)/2 + dot(p, g.q)

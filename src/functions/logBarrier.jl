@@ -13,7 +13,7 @@ f(x) = -μ⋅∑_i\\log(a⋅x_i+b),
 ```
 for a nonnegative parameter `μ`.
 """
-struct LogBarrier{R, S, T} <: ProximableFunction
+struct LogBarrier{R, S, T}
     a::R
     b::S
     mu::T
@@ -83,11 +83,6 @@ function gradient!(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T}) wher
     sum *= -f.mu
     return sum
 end
-
-fun_name(f::LogBarrier) = "logarithmic barrier"
-fun_dom(f::LogBarrier) = "AbstractArray{Real}"
-fun_expr(f::LogBarrier) = "x ↦ -μ * sum( log(a*x_i+b), i=1,...,n )"
-fun_params(f::LogBarrier) = "a = $(f.a), b = $(f.b), μ = $(f.mu)"
 
 function prox_naive(f::LogBarrier, x::AbstractArray{T,1}, gamma::Union{Real, AbstractArray}=1) where T <: Real
     asqr = f.a * f.a

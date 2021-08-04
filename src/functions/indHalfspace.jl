@@ -12,7 +12,7 @@ For an array `a` and a scalar `b`, returns the indicator of set
 S = \\{x : \\langle a,x \\rangle \\leq b \\}.
 ```
 """
-struct IndHalfspace{R <: Real, T <: AbstractArray{R}} <: ProximableFunction
+struct IndHalfspace{R <: Real, T <: AbstractArray{R}}
     a::T
     b::R
     norm_a::R
@@ -38,7 +38,7 @@ function (f::IndHalfspace{R})(x::AbstractArray{R}) where R
     return R(Inf)
 end
 
-function prox!(y::AbstractArray{R}, f::IndHalfspace{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
+function prox!(y::AbstractArray{R}, f::IndHalfspace{R}, x::AbstractArray{R}, gamma) where R
     s = dot(f.a, x)
     if s > f.b
         y .= x .- ((s - f.b)/f.norm_a^2) .* f.a
@@ -48,14 +48,7 @@ function prox!(y::AbstractArray{R}, f::IndHalfspace{R}, x::AbstractArray{R}, gam
     return R(0)
 end
 
-fun_name(f::IndHalfspace) = "indicator of a halfspace"
-fun_dom(f::IndHalfspace) = "AbstractArray{Real}"
-fun_expr(f::IndHalfspace) = "x ↦ 0 if <a,x> ⩽ b, +∞ otherwise"
-fun_params(f::IndHalfspace) =
-    string( "a = ", typeof(f.a), " of size ", size(f.a), ", ",
-            "b = $(f.b)")
-
-function prox_naive(f::IndHalfspace{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
+function prox_naive(f::IndHalfspace{R}, x::AbstractArray{R}, gamma) where R
     s = dot(f.a, x) - f.b
     if s <= 0
         return x, 0.0

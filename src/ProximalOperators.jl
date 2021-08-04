@@ -12,10 +12,7 @@ const ArrayOrTuple{R} = Union{RealBasedArray{R}, TupleOfArrays{R}}
 const TransposeOrAdjoint{M} = Union{Transpose{C,M} where C, Adjoint{C,M} where C}
 const Maybe{T} = Union{T, Nothing}
 
-export ProximableFunction
 export prox, prox!, gradient, gradient!
-
-abstract type ProximableFunction end
 
 # Utilities
 
@@ -94,37 +91,25 @@ include("functions/maximum.jl")
 include("functions/normLinf.jl")
 include("functions/sumLargest.jl")
 
-function Base.show(io::IO, f::ProximableFunction)
-    println(io, "description : ", fun_name(f))
-    println(io, "domain      : ", fun_dom(f))
-    println(io, "expression  : ", fun_expr(f))
-    print(  io, "parameters  : ", fun_params(f))
-end
-
-fun_name(  f) = "n/a"
-fun_dom(   f) = "n/a"
-fun_expr(  f) = "n/a"
-fun_params(f) = "n/a"
-
-is_prox_accurate(f::ProximableFunction) = true
-is_separable(f::ProximableFunction) = false
-is_convex(f::ProximableFunction) = false
-is_concave(f::ProximableFunction) = false
-is_singleton(f::ProximableFunction) = false
-is_cone(f::ProximableFunction) = false
-is_affine(f::ProximableFunction) = is_singleton(f)
-is_set(f::ProximableFunction) = is_cone(f) || is_affine(f)
-is_positively_homogeneous(f::ProximableFunction) = is_cone(f)
-is_support(f::ProximableFunction) = is_convex(f) && is_positively_homogeneous(f)
-is_smooth(f::ProximableFunction) = false
-is_quadratic(f::ProximableFunction) = false
-is_generalized_quadratic(f::ProximableFunction) = is_quadratic(f) || is_affine(f)
-is_strongly_convex(f::ProximableFunction) = false
+is_prox_accurate(_) = true
+is_separable(_) = false
+is_convex(_) = false
+is_concave(_) = false
+is_singleton(_) = false
+is_cone(_) = false
+is_affine(f) = is_singleton(f)
+is_set(f) = is_cone(f) || is_affine(f)
+is_positively_homogeneous(f) = is_cone(f)
+is_support(f) = is_convex(f) && is_positively_homogeneous(f)
+is_smooth(_) = false
+is_quadratic(_) = false
+is_generalized_quadratic(f) = is_quadratic(f) || is_affine(f)
+is_strongly_convex(_) = false
 
 """
 **Proximal mapping**
 
-    y, fy = prox(f, x, γ=1.0)
+    y, fy = prox(f, x, gamma=1)
 
 Computes
 ```math
@@ -134,7 +119,7 @@ Return values:
 * `y`: the proximal point ``y``
 * `fy`: the value ``f(y)``
 """
-function prox(f::ProximableFunction, x::ArrayOrTuple{R}, gamma=R(1)) where R
+function prox(f, x, gamma=1)
     y = similar(x)
     fy = prox!(y, f, x, gamma)
     return y, fy
@@ -143,7 +128,7 @@ end
 """
 **Proximal mapping (in-place)**
 
-    fy = prox!(y, f, x, γ=1.0)
+    fy = prox!(y, f, x, gamma=1)
 
 Computes
 ```math
@@ -154,9 +139,7 @@ The resulting point ``y`` is written to the (pre-allocated) array `y`, which mus
 Return values:
 * `fy`: the value ``f(y)``
 """
-prox!
-# TODO: should we put the following here instead? And remove the default value for gamma in each subtype
-# prox!(y::ArrayOrTuple{R}, f::ProximableFunction, x::ArrayOrTuple{R}) = prox!(y, f, x, R(1))
+prox!(y, f, x) = prox!(y, f, x, 1)
 
 """
 **Gradient mapping**
@@ -169,7 +152,7 @@ Return values:
 * `gradfx`: the (sub)gradient of ``f`` at ``x``
 * `fx`: the value ``f(x)``
 """
-function gradient(f::ProximableFunction, x)
+function gradient(f, x)
     y = similar(x)
     fx = gradient!(y, f, x)
     return y, fx

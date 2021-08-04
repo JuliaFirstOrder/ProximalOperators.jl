@@ -23,7 +23,7 @@ function (f::QuadraticIterative{R, M, V})(x::AbstractArray{R}) where {R, M, V}
     return 0.5*dot(x, f.temp) + dot(x, f.q)
 end
 
-function prox!(y::AbstractArray{R}, f::QuadraticIterative{R, M, V}, x::AbstractArray{R}, gamma::R=R(1)) where {R, M, V}
+function prox!(y::AbstractArray{R}, f::QuadraticIterative{R, M, V}, x::AbstractArray{R}, gamma) where {R, M, V}
     y .= x
     f.temp .= x./gamma .- f.q
     op = ScaleShift(R(1), f.Q, R(1)/gamma)
@@ -39,7 +39,7 @@ function gradient!(y::AbstractArray{R}, f::QuadraticIterative{R, M, V}, x::Abstr
     return 0.5*(dot(x, y) + dot(x, f.q))
 end
 
-function prox_naive(f::QuadraticIterative, x::AbstractArray{R}, gamma::R=R(1)) where R
+function prox_naive(f::QuadraticIterative, x::AbstractArray{R}, gamma) where R
     y = IterativeSolvers.cg(gamma*f.Q + I, x - gamma*f.q)
     fy = 0.5*dot(y, f.Q*y) + dot(y, f.q)
     return y, fy

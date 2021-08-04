@@ -10,7 +10,7 @@ Returns the translated function
 g(x) = f(x + b)
 ```
 """
-struct Translate{T <: ProximableFunction, V <: Union{Number, AbstractArray, Tuple}} <: ProximableFunction
+struct Translate{T, V <: Union{Number, AbstractArray, Tuple}}
     f::T
     b::V
 end

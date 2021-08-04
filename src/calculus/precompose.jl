@@ -23,12 +23,12 @@ Bauschke, Combettes "Convex Analysis and Monotone Operator Theory in Hilbert
 Spaces", 2nd edition, 2016. The same result is Prop. 23.32 in the 1st edition
 of the same book.
 """
-struct Precompose{T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{C, AbstractArray{C}}, V <: Union{C, AbstractArray{C}}, M} <: ProximableFunction
+struct Precompose{T, R <: Real, C <: Union{R, Complex{R}}, U <: Union{C, AbstractArray{C}}, V <: Union{C, AbstractArray{C}}, M}
     f::T
     L::M
     mu::U
     b::V
-    function Precompose{T, R, C, U, V, M}(f::T, L::M, mu::U, b::V) where {T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{R, AbstractArray{R}}, V <: Union{C, AbstractArray{C}}, M}
+    function Precompose{T, R, C, U, V, M}(f::T, L::M, mu::U, b::V) where {T, R <: Real, C <: Union{R, Complex{R}}, U <: Union{R, AbstractArray{R}}, V <: Union{C, AbstractArray{C}}, M}
         if !is_convex(f)
             error("f must be convex")
         end
@@ -50,9 +50,9 @@ is_quadratic(f::Precompose) = is_quadratic(f.f)
 is_generalized_quadratic(f::Precompose) = is_generalized_quadratic(f.f)
 is_strongly_convex(f::Precompose) = is_strongly_convex(f.f)
 
-Precompose(f::T, L::M, mu::U, b::V) where {T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{R, AbstractArray{R}}, V <: Union{C, AbstractArray{C}}, M} = Precompose{T, R, C, U, V, M}(f, L, mu, b)
+Precompose(f::T, L::M, mu::U, b::V) where {T, R <: Real, C <: Union{R, Complex{R}}, U <: Union{R, AbstractArray{R}}, V <: Union{C, AbstractArray{C}}, M} = Precompose{T, R, C, U, V, M}(f, L, mu, b)
 
-Precompose(f::T, L::M, mu::U) where {T <: ProximableFunction, R <: Real, U <: Union{R, AbstractArray{R}}, M} = Precompose{T, R, R, U, R, M}(f, L, mu, R(0))
+Precompose(f::T, L::M, mu::U) where {T, R <: Real, U <: Union{R, AbstractArray{R}}, M} = Precompose{T, R, R, U, R, M}(f, L, mu, R(0))
 
 function (g::Precompose)(x::T) where {T <: Union{Tuple, AbstractArray}}
     return g.f(g.L*x .+ g.b)
@@ -66,7 +66,7 @@ function gradient!(y::AbstractArray{T}, g::Precompose, x::AbstractArray{T}) wher
     return v
 end
 
-function prox!(y::AbstractArray{C}, g::Precompose, x::AbstractArray{C}, gamma::R=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
+function prox!(y::AbstractArray{C}, g::Precompose, x::AbstractArray{C}, gamma) where {R <: Real, C <: Union{R, Complex{R}}}
     # See Prop. 24.14 in Bauschke, Combettes "Convex Analysis and Monotone Operator Theory in Hilbert Spaces", 2nd ed., 2016.
     # The same result is Prop. 23.32 in the 1st ed. of the same book.
     #
@@ -84,7 +84,7 @@ function prox!(y::AbstractArray{C}, g::Precompose, x::AbstractArray{C}, gamma::R
     return v
 end
 
-function prox_naive(g::Precompose, x::AbstractArray{C}, gamma::R=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
+function prox_naive(g::Precompose, x::AbstractArray{C}, gamma) where {R <: Real, C <: Union{R, Complex{R}}}
     res = g.L*x .+ g.b
     proxres, v = prox_naive(g.f, res, g.mu .* gamma)
     y = x + g.L'*((proxres .- res)./g.mu)

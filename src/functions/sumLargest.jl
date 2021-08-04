@@ -33,7 +33,3 @@ function (f::Conjugate{IndSimplex{I}})(x::AbstractArray{S}) where {I <: Integer,
     end
     return v
 end
-
-fun_name(f::Postcompose{Conjugate{IndSimplex{I}}, R}) where {I <: Integer, R <: Real} = "sum of k largest components"
-fun_expr(f::Postcompose{Conjugate{IndSimplex{I}}, R}) where {I <: Integer, R <: Real} = "x ↦ λ⋅sum(x_[1], ..., x_[k])"
-fun_params(f::Postcompose{Conjugate{IndSimplex{I}}, R}) where {I <: Integer, R <: Real} = "k = $(f.f.f.a), λ = $(f.a)"

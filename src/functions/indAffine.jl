@@ -8,7 +8,7 @@ export IndAffine
 
 ### ABSTRACT TYPE
 
-abstract type IndAffine <: ProximableFunction end
+abstract type IndAffine end
 
 is_affine(f::IndAffine) = true
 is_generalized_quadratic(f::IndAffine) = true

@@ -28,7 +28,7 @@ I.e. when when `scaling=true`, let `X,Y` be matrices and
 
 then `prox!(Y, f, X)` is equivalent to `prox!(y, f, x)`.
 """
-struct IndPSD <: ProximableFunction
+struct IndPSD
     scaling::Bool
 end
 
@@ -63,11 +63,6 @@ function prox!(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) whe
     end
     return R(0)
 end
-
-fun_name(f::IndPSD) = "indicator of positive semidefinite cone"
-fun_dom(f::IndPSD) = "Symmetric, Hermitian, AbstractArray{Float64}"
-fun_expr(f::IndPSD) = "x ↦ 0 if A ⪰ 0, +∞ otherwise"
-fun_params(f::IndPSD) = "none"
 
 function prox_naive(f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) where {R <: Real, T <: RealOrComplex{R}}
     F = eigen(X)

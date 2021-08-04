@@ -18,10 +18,10 @@ f(x) = \\begin{cases}
 ```
 where `ρ` and `μ` are positive parameters.
 """
-struct HuberLoss{R <: Real, S <: Real} <: ProximableFunction
+struct HuberLoss{R, S}
     rho::R
     mu::S
-    function HuberLoss{R, S}(rho::R, mu::S) where {R <: Real, S <: Real}
+    function HuberLoss{R, S}(rho::R, mu::S) where {R, S}
         if rho <= 0 || mu <= 0
             error("parameters rho and mu must be positive")
         else
@@ -33,9 +33,10 @@ end
 is_convex(f::HuberLoss) = true
 is_smooth(f::HuberLoss) = true
 
-HuberLoss(rho::R=1, mu::S=1) where {R <: Real, S <: Real} = HuberLoss{R, S}(rho, mu)
+HuberLoss(rho::R=1, mu::S=1) where {R, S} = HuberLoss{R, S}(rho, mu)
 
-function (f::HuberLoss)(x::AbstractArray{T}) where {R <: Real, T <: Union{R, Complex{R}}}
+function (f::HuberLoss)(x)
+    R = real(eltype(x))
     normx = norm(x)
     if normx <= f.rho
         return f.mu / R(2) * normx^2
@@ -44,7 +45,8 @@ function (f::HuberLoss)(x::AbstractArray{T}) where {R <: Real, T <: Union{R, Com
     end
 end
 
-function gradient!(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}) where {R <: Real, T <: Union{R, Complex{R}}}
+function gradient!(y, f::HuberLoss, x)
+    R = real(eltype(x))
     normx = norm(x)
     if normx <= f.rho
         y .= f.mu .* x
@@ -56,7 +58,8 @@ function gradient!(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}) where
     return v
 end
 
-function prox!(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: Union{R, Complex{R}}}
+function prox!(y, f::HuberLoss, x, gamma)
+    R = real(eltype(x))
     normx = norm(x)
     mugam = f.mu*gamma
     scal = (1 - min(mugam / (1 + mugam), mugam * f.rho / normx))
@@ -71,12 +74,8 @@ function prox!(y::AbstractArray{T}, f::HuberLoss, x::AbstractArray{T}, gamma::R=
     end
 end
 
-fun_name(f::HuberLoss) = "Huber loss"
-fun_dom(f::HuberLoss) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::HuberLoss) = "x ↦ (μ/2)||x||² if ||x||⩽ρ, μρ(||x||-ρ/2) otherwise"
-fun_params(f::HuberLoss) = string("ρ = $(f.rho), μ = $(f.mu)")
-
-function prox_naive(f::HuberLoss, x::AbstractArray{T}, gamma::R=R(1)) where {R <: Real, T <: Union{R, Complex{R}}}
+function prox_naive(f::HuberLoss, x, gamma)
+    R = real(eltype(x))
     y = (1 - min(f.mu * gamma / (1 + f.mu * gamma), f.mu * gamma * f.rho / norm(x))) * x
     if norm(y) <= f.rho
         return y, f.mu / R(2) * norm(y)^2

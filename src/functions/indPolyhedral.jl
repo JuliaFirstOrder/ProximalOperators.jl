@@ -1,6 +1,6 @@
 export IndPolyhedral
 
-abstract type IndPolyhedral <: ProximableFunction end
+abstract type IndPolyhedral end
 
 is_convex(::IndPolyhedral) = true
 is_set(::IndPolyhedral) = true

@@ -12,7 +12,7 @@ For an array `a` and scalars `low` and `upp`, returns the indicator of set
 S = \\{x : low \\leq \\langle a,x \\rangle \\leq upp \\}.
 ```
 """
-struct IndHyperslab{R <: Real, T <: AbstractArray{R}} <: ProximableFunction
+struct IndHyperslab{R <: Real, T <: AbstractArray{R}}
     low::R
     a::T
     upp::R
@@ -49,7 +49,7 @@ function (f::IndHyperslab{R})(x::AbstractArray{R}) where R
     return R(Inf)
 end
 
-function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
+function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gamma) where R
     s = dot(f.a, x)
     if s < f.low && f.norm_a > 0
         y .= x .- ((s - f.low)/f.norm_a^2) .* f.a
@@ -61,7 +61,7 @@ function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gam
     return R(0)
 end
 
-function prox_naive(f::IndHyperslab{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
+function prox_naive(f::IndHyperslab{R}, x::AbstractArray{R}, gamma) where R
     s = dot(f.a, x)
     if s < f.low && f.norm_a > 0
         return x - ((s - f.low)/norm(f.a)^2) * f.a, R(0)
