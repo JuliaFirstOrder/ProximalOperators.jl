@@ -30,7 +30,7 @@ is_prox_accurate(f::IndBallL1) = false
 
 IndBallL1(r::R=1.0) where R = IndBallL1{R}(r)
 
-function (f::IndBallL1)(x::AbstractArray{R}) where R
+function (f::IndBallL1)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
     if norm(x, 1) - f.r > f.r*eps(R)
         return R(Inf)
     end
@@ -63,7 +63,7 @@ function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, _::R=R(1)
 end
 
 fun_name(f::IndBallL1) = "indicator of an L1 norm ball"
-fun_dom(f::IndBallL1) = "AbstractArray{Real}"
+fun_dom(f::IndBallL1) = "AbstractArray{Real}, AbstractArray{Complex}"
 fun_expr(f::IndBallL1) = "x ↦ 0 if ‖x‖_1 ⩽ r, +∞ otherwise"
 fun_params(f::IndBallL1) = "r = $(f.r)"
 
