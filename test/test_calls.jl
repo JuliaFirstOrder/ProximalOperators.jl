@@ -109,6 +109,7 @@ test_cases_spec = [
         ],
         "right" => [
             ( (), [0.1, -0.2, 0.3, -0.39] ),
+            ( (), Complex{Float64}[0.1, -0.2, 0.3, -0.39] ),
             ( (), rand(Float32, 5) ),
             ( (), rand(Float64, 5) ),
             ( (), rand(Complex{Float32}, 5) ),
