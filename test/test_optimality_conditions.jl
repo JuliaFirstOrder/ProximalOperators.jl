@@ -157,9 +157,9 @@ test_cases = [
     ),
 
     Dict(
-        "f" => TotalVariation1D(1.),
-        "x" => randn(5),
-        "gamma" => 0.1 + rand(),
+        "f" => TotalVariation1D(0.01),
+        "x" => vcat(LinRange(1., -1., 10), -1*ones(3), LinRange(-1., 1., 10)),
+        "gamma" => 1.,
     ),
 
     Dict(
