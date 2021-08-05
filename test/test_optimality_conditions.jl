@@ -21,7 +21,7 @@ check_optimality(f::IndBallL1, x, gamma, y) = begin
     return all(sign_is_correct) && check_optimality(IndSimplex(f.r), abs.(x), gamma, abs.(y))
 end
 
-check_optimality(f::NormTV, x, gamma, y) = begin
+check_optimality(f::TotalVariation1D, x, gamma, y) = begin
     N = length(x)
     # compute dual solution
     u = zeros(N+1)

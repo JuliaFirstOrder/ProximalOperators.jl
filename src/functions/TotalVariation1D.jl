@@ -1,20 +1,20 @@
-# Total variation norm (times a constant)
+# 1-dimensional Total Variation (times a constant)
 
-export NormTV
+export TotalVariation1D
 
 """
-** 1-dimensional ``TV`` norm**
+** 1-dimensional Total Variation**
 
-    NormTV(λ=1)
+    TotalVariation1D(λ=1)
 
 With a nonnegative scalar parameter λ, returns the function
 ```math
 f(x) = λ ∑_{i=2}^{n} |x_i - x_{i-1}|.
 ```
 """
-struct NormTV{T <: Real} <: ProximableFunction
+struct TotalVariation1D{T <: Real} <: ProximableFunction
     lambda::T
-    function NormTV{T}(lambda::T) where {T <: Real}
+    function TotalVariation1D{T}(lambda::T) where {T <: Real}
         if lambda < 0
             error("parameter λ must be nonnegative")
         else
@@ -23,13 +23,13 @@ struct NormTV{T <: Real} <: ProximableFunction
     end
 end
 
-is_separable(f::NormTV) = false
-is_convex(f::NormTV) = true
-is_positively_homogeneous(f::NormTV) = true
+is_separable(f::TotalVariation1D) = false
+is_convex(f::TotalVariation1D) = true
+is_positively_homogeneous(f::TotalVariation1D) = true
 
-NormTV(lambda::R=1) where {R <: Real} = NormTV{R}(lambda)
+TotalVariation1D(lambda::R=1) where {R <: Real} = TotalVariation1D{R}(lambda)
 
-function (f::NormTV)(x::AbstractArray)
+function (f::TotalVariation1D)(x::AbstractArray)
     return f.lambda * norm(x[2:end] - x[1:end-1], 1)
 end
 
@@ -100,13 +100,13 @@ function tvnorm_prox_condat(y::AbstractArray, x::AbstractArray, lambda::Real)
     end
 end
 
-function prox!(y::AbstractArray{T}, f::NormTV, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
+function prox!(y::AbstractArray{T}, f::TotalVariation1D, x::AbstractArray{T}, gamma::Real=1.0) where T <: Real
     a = gamma * f.lambda
     tvnorm_prox_condat(y, x, a)
     return f.lambda * norm(y[2:end] - y[1:end-1], 1)
 end
 
-fun_name(f::NormTV) = "1D Total variation norm"
-fun_dom(f::NormTV) = "AbstractArray{Real}"
-fun_expr(f::NormTV) = "x ↦ λ ∑_{i=2}^{n} |x_i - x_{i-1}|"
-fun_params(f::NormTV) = "λ = $(f.lambda)"
+fun_name(f::TotalVariation1D) = "1D Total Variation"
+fun_dom(f::TotalVariation1D) = "AbstractArray{Real}"
+fun_expr(f::TotalVariation1D) = "x ↦ λ ∑_{i=2}^{n} |x_i - x_{i-1}|"
+fun_params(f::TotalVariation1D) = "λ = $(f.lambda)"
