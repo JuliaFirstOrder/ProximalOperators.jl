@@ -24,16 +24,17 @@ end
 check_optimality(f::TotalVariation1D, x, gamma, y) = begin
     N = length(x)
     # compute dual solution
-    u = zeros(N+1)
+    R = real(eltype(x))
+    u = zeros(R, N+1)
     u[1] = 0
     for k in 2:N+1
         u[k] = x[k-1]-y[k-1]+u[k-1]
     end
 
     # check whether all duals in interval
-    c1 = all(abs.(u) .<= gamma*f.lambda + 1e-10)
+    c1 = all(abs.(u) .<= gamma*f.lambda + 10*eps(R))
     # check whether last equals 0 (first by construction)
-    c2 = isapprox(u[end], 0, atol=1e-12)
+    c2 = isapprox(u[end], 0, atol=10*eps(R))
     # check whether equal +- gamma*lambda
     h = sign.(y[1:end-1] - y[2:end])
     c3 = all(isapprox.( u[2:end-1] .* abs.(h) , h *f.lambda*gamma))
@@ -153,6 +154,18 @@ test_cases = [
         "f" => SqrHingeLoss(randn(3, 5), 0.1+rand()),
         "x" => randn(3, 5),
         "gamma" => 0.1 + rand(),
+    ),
+
+    Dict(
+        "f" => TotalVariation1D(1.),
+        "x" => randn(5),
+        "gamma" => 0.1 + rand(),
+    ),
+
+    Dict(
+        "f" => TotalVariation1D(0.1),
+        "x" => [0.5, 0.4, 0.3, 0.2],
+        "gamma" => 1.0,
     ),
 ]
 
