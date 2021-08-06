@@ -1,6 +1,6 @@
 name = "ProximalOperators"
 uuid = "a725b495-10eb-56fe-b38b-717eba820537"
-version = "0.14.0"
+version = "0.14.1"
 
 [deps]
 IterativeSolvers = "42fd0dbc-a981-5370-80f2-aaf504508153"
