@@ -66,6 +66,7 @@ include("functions/sqrNormL2.jl")
 include("functions/sumPositive.jl")
 include("functions/sqrHingeLoss.jl")
 include("functions/crossEntropy.jl")
+include("functions/TotalVariation1D.jl")
 
 # Calculus rules
 

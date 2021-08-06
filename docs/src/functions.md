@@ -65,6 +65,7 @@ NormL21
 NormLinf
 NuclearNorm
 SqrNormL2
+TotalVariation1D
 ```
 
 ## Penalties and other functions
