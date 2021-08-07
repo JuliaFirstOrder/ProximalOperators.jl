@@ -3,7 +3,7 @@
 export TotalVariation1D
 
 """
-** 1-dimensional Total Variation**
+**1-dimensional Total Variation**
 
     TotalVariation1D(λ=1)
 
@@ -39,7 +39,7 @@ function tvnorm_prox_condat(y::AbstractArray, x::AbstractArray, lambda::Real)
     # solves y = arg min_z lambda*sum_k |z_{k+1}-z_k| + 1/2 * ||z-x||^2
     N = length(x)
 
-    k=k0=kmin=kplus=1
+    k = k0 = kmin = kplus = 1
     vmin = x[1] - lambda
     vmax = x[1] + lambda
     umin = lambda
@@ -51,13 +51,15 @@ function tvnorm_prox_condat(y::AbstractArray, x::AbstractArray, lambda::Real)
                 y[k0:kmin] .= vmin
                 kmin += 1
                 k = k0 = kmin
-                vmin = x[k]; umin = lambda;
+                vmin = x[k]
+                umin = lambda
                 umax = x[k] + lambda - vmax
             elseif umax > 0
                 y[k0:kplus] .= vmax
                 kplus +=1
-                k=k0=kplus
-                vmax = x[k]; umax = -lambda;
+                k = k0 = kplus
+                vmax = x[k]
+                umax = -lambda
                 umin = x[k] - lambda - vmin
             else
                 y[k0:N] .= vmin + umin/(k-k0+1)
@@ -73,28 +75,34 @@ function tvnorm_prox_condat(y::AbstractArray, x::AbstractArray, lambda::Real)
 
         if x[k+1] + umin < vmin - lambda
             y[k0:kmin] .= vmin
-            kmin +=1
-            k = k0 =kplus =kmin
-            vmin = x[k]; vmax = x[k] + 2*lambda;
-            umin = lambda; umax = -lambda;
+            kmin += 1
+            k = k0 = kplus = kmin
+            vmin = x[k]
+            vmax = x[k] + 2*lambda
+            umin = lambda
+            umax = -lambda
         elseif x[k+1] + umax > vmax + lambda
             y[k0:kplus] .= vmax
-            kplus +=1
+            kplus += 1
             k = k0 =kmin = kplus
-            vmin = x[k] - 2*lambda; vmax = x[k];
-            umin = lambda; umax = -lambda;
+            vmin = x[k] - 2*lambda
+            vmax = x[k]
+            umin = lambda
+            umax = -lambda
         else
-            k +=1 ;
+            k += 1
             umin = umin + x[k] - vmin
             umax = umax + x[k] - vmax
             if umin >= lambda
                 vmin = vmin + (umin-lambda)/(k-k0+1)
-                umin = lambda; kmin = k;
+                umin = lambda
+                kmin = k
             end
 
             if umax <= -lambda
                 vmax += (umax+lambda)/(k-k0+1)
-                umax = -lambda; kplus = k;
+                umax = -lambda
+                kplus = k
             end
         end
     end
