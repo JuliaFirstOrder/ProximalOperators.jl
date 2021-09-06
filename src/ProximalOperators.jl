@@ -67,7 +67,7 @@ include("functions/sumPositive.jl")
 include("functions/sqrHingeLoss.jl")
 include("functions/crossEntropy.jl")
 include("functions/TotalVariation1D.jl")
-
+include("functions/L1plusL2.jl")
 # Calculus rules
 
 include("calculus/conjugate.jl")
