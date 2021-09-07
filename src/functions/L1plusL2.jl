@@ -43,8 +43,8 @@ function prox!(y::AbstractArray{T}, f::L1plusL2, x::AbstractArray{T}, gamma::Rea
     f1 = NormL1(f.lambda1)
     f2 = NormL2(f.lambda2)
 
-    prox!(y, f1, x, gamma)
-    prox!(y, f2, x, gamma)
+    y0, t = prox_naive(f1, x, gamma)
+    prox!(y, f2, y0, gamma)
 
     return f.lambda1 * norm(y, 1) + f.lambda2 * norm(y, 2)
 
