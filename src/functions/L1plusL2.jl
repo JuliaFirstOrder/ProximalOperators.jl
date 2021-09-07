@@ -1,9 +1,5 @@
 # (weighted) sum of L2 norm and L1 norm
 # for Group Lasso, this can be used together with src/calculus/slicedSeparableSum
-
-using ProximalOperators
-import ProximalOperators: prox!
-
 export L1plusL2
 
 """
@@ -43,8 +39,8 @@ function prox!(y::AbstractArray{T}, f::L1plusL2, x::AbstractArray{T}, gamma::Rea
     f1 = NormL1(f.lambda1)
     f2 = NormL2(f.lambda2)
 
-    y0, t = prox_naive(f1, x, gamma)
-    prox!(y, f2, y0, gamma)
+    prox!(y, f1, x, gamma)
+    prox!(y, f2, y, gamma)
 
     return f.lambda1 * norm(y, 1) + f.lambda2 * norm(y, 2)
 
