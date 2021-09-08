@@ -119,14 +119,14 @@ y2, f2 = prox(g2, x)
 end
 
 ################################################################################
-### testing L1plusL2 reduces to L1/L2
+### testing NormL1plusL2 reduces to L1/L2
 ################################################################################
 
-@testset "L1plusL2 special case" begin
+@testset "NormL1plusL2 special case" begin
 
 g = NormL1(1.)
 # λ_2 = 0
-f = L1plusL2(1., 0.)
+f = NormL1plusL2(1., 0.)
 
 x = randn(100)
 
@@ -138,13 +138,13 @@ y2, f2 = prox(f, x)
 
 end
 
-@testset "L1plusL2 special case" begin
+@testset "NormL1plusL2 special case" begin
 
 x = randn(50)
 
 g = NormL2(1.)
 # λ_1 = 0
-f = L1plusL2(0., 1.)
+f = NormL1plusL2(0., 1.)
 
 x = randn(100)
 
