@@ -16,8 +16,8 @@ using Test
     
     y3, f3 = prox(fplusg, x)
     
-    @test f2 ≈ f2
-    @test y2 ≈ y3
+    @test f3 ≈ f(y3)+g(y3)
+    @test y3 ≈ y2
 end
 
 
@@ -34,8 +34,8 @@ end
     
     y3, f3 = prox(fplusg, x)
     
-    @test f2 ≈ f2
-    @test y2 ≈ y3
+    @test f3 ≈ f(y3)+g(y3)
+    @test y3 ≈ y2
 end
 
 @testset "NormL1plusL2 vector case" begin
@@ -43,7 +43,7 @@ end
 
     f = NormL1(λ1)
     g = NormL2(2.0)
-    
+
     fplusg = NormL1plusL2(λ1, 2.0)
     
     x = randn(50)
@@ -53,6 +53,6 @@ end
     
     y3, f3 = prox(fplusg, x)
     
-    @test f2 ≈ f2
-    @test y2 ≈ y3
+    @test f3 ≈ f(y3)+g(y3)
+    @test y3 ≈ y2
 end
