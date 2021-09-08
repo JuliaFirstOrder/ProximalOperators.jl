@@ -140,8 +140,6 @@ end
 
 @testset "NormL1plusL2 special case" begin
 
-x = randn(50)
-
 g = NormL2(1.)
 # λ_1 = 0
 f = NormL1plusL2(0., 1.)
