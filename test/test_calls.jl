@@ -369,6 +369,28 @@ test_cases_spec = [
     ),
 
     Dict(
+        "constr" => NormL1plusL2,
+        "wrong"  => [
+            (-rand(), rand()),
+            (-rand(10),),
+            (-rand(10), rand()),
+        ],
+        "right" => [
+            ( (), randn(Float32, 5) ),
+            ( (), randn(Float64, 5) ),
+            ( (), randn(Complex{Float32}, 5) ),
+            ( (rand(Float32),), randn(Float32, 5) ),
+            ( (rand(Float64, 5),), randn(Float64, 5) ),
+            ( (rand(Float64, 5),), rand(Complex{Float64}, 5) ),
+            ( (rand(Float32),), rand(Complex{Float32}, 5) ),
+            ( (rand(Float32), rand(Float32)), randn(Float32, 5) ),
+            ( (rand(Float64, 5), rand(Float64)), randn(Float64, 5) ),
+            ( (rand(Float64, 5), rand(Float64)), rand(Complex{Float64}, 5) ),
+            ( (rand(Float32), rand(Float32)), rand(Complex{Float32}, 5) ),
+        ],
+    ),
+
+    Dict(
         "constr" => NormL21,
         "right" => [
             ( (), randn(Float32, 3, 5) ),
