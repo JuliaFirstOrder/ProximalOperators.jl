@@ -47,7 +47,7 @@ fun_params(f::NormL1plusL2{L1,L2}) where {L1<:NormL1{<:Real}, L2}  = "λ_1 = $(f
 fun_params(f::NormL1plusL2{L1,L2}) where {L1<:NormL1{<:AbstractArray}, L2}  = "λ_1 = $(typeof(f.lambda)) of size $(size(f.lambda)), λ_2 = $(f.l2.lambda)"
 
 function prox_naive(f::NormL1plusL2, x::AbstractArray{T}, gamma::Real=1) where T <: RealOrComplex
-    y1 = prox_naive(f.l1, x, gamma)
-    y2 = prox_naive(f.l2, y1, gamma)
-    return f(y2)
+    y1, v1 = prox_naive(f.l1, x, gamma)
+    y2, v2 = prox_naive(f.l2, y1, gamma)
+    return y2, f(y2)
 end
