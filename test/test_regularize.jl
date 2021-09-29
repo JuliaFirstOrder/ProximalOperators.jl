@@ -41,7 +41,7 @@ gx = call_test(g, x)
 @test abs(0.5*norm(res)^2 + (0.5*lam)*norm(x)^2 - gx)/(1+abs(gx)) <= 1e-12
 
 prox_test(g, x, 0.7)
-grad_gx, gx1 = gradient(g, x)
+grad_gx, gx1 = gradient_test(g, x)
 
 @test abs(gx - gx1)/(1+abs(gx)) <= 1e-12
 @test norm(grad_gx - A'*(A*x - b) - lam*x, Inf)/(1+norm(grad_gx, Inf)) <= 1e-12

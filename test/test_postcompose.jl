@@ -14,8 +14,8 @@ hx = call_test(h, x)
 
 @test abs(gx-hx)/(1+abs(gx)) <= 1e-12
 
-grad_gx, gx1 = gradient(g, x)
-grad_hx, hx1 = gradient(h, x)
+grad_gx, gx1 = gradient_test(g, x)
+grad_hx, hx1 = gradient_test(h, x)
 
 @test abs(gx1-gx)/(1+abs(gx)) <= 1e-12
 @test abs(hx1-hx)/(1+abs(hx)) <= 1e-12
@@ -35,8 +35,8 @@ hx = call_test(h, x)
 
 @test abs(gx-hx)/(1+abs(gx)) <= 1e-12
 
-grad_gx, gx1 = gradient(g, x)
-grad_hx, hx1 = gradient(h, x)
+grad_gx, gx1 = gradient_test(g, x)
+grad_hx, hx1 = gradient_test(h, x)
 
 @test abs(gx1-gx)/(1+abs(gx)) <= 1e-12
 @test abs(hx1-hx)/(1+abs(hx)) <= 1e-12

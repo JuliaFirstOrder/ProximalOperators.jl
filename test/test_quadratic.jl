@@ -23,7 +23,7 @@ predicates_test(f)
 
 x = randn(n)
 
-grad_fx, fx = gradient(f, x)
+grad_fx, fx = gradient_test(f, x)
 @test fx ≈ 0.5*dot(x, Q*x) + dot(x, q)
 @test all(grad_fx .≈ (Q*x + q))
 
@@ -44,7 +44,7 @@ Q = sparse(Q)
 f = Quadratic(Q, q)
 @test typeof(f) <: ProximalOperators.QuadraticDirect
 
-grad_fx, fx = gradient(f, x)
+grad_fx, fx = gradient_test(f, x)
 @test fx ≈ 0.5*dot(x, Q*x) + dot(x, q)
 @test all(grad_fx .≈ (Q*x + q))
 

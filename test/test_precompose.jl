@@ -137,17 +137,17 @@ grad_gx = diagA.*diagA.*(x - b)
 @test abs(g3(x) - gx)/(1+abs(gx)) <= 1e-14
 
 call_test(g1, x)
-grad_g1_x, g1_x = gradient(g1, x)
+grad_g1_x, g1_x = gradient_test(g1, x)
 @test abs(g1_x - gx) <= (1 + abs(gx))*1e-12
 @test norm(grad_gx - grad_g1_x, Inf) <= 1e-12
 
 call_test(g2, x)
-grad_g2_x, g2_x = gradient(g2, x)
+grad_g2_x, g2_x = gradient_test(g2, x)
 @test abs(g2_x - gx) <= (1 + abs(gx))*1e-12
 @test norm(grad_gx - grad_g2_x, Inf) <= 1e-12
 
 call_test(g3, x)
-grad_g3_x, g3_x = gradient(g3, x)
+grad_g3_x, g3_x = gradient_test(g3, x)
 @test abs(g3_x - gx) <= (1 + abs(gx))*1e-12
 @test norm(grad_gx - grad_g3_x, Inf) <= 1e-12
 

@@ -38,7 +38,7 @@ predicates_test(f)
 @test ProximalOperators.is_generalized_quadratic(f) == true
 @test ProximalOperators.is_set(f) == false
 
-grad_fx, fx = gradient(f, x)
+grad_fx, fx = gradient_test(f, x)
 lsres = A*x - b
 @test fx ≈ 0.5*norm(lsres)^2
 @test all(grad_fx .≈ (A'*lsres))
@@ -51,7 +51,7 @@ lam = R(0.1) + rand(R)
 f = LeastSquares(A, b, lam, iterative=(mode == :iterative))
 predicates_test(f)
 
-grad_fx, fx = gradient(f, x)
+grad_fx, fx = gradient_test(f, x)
 @test fx ≈ (lam/2)*norm(lsres)^2
 @test all(grad_fx .≈ lam*(A'*lsres))
 

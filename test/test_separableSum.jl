@@ -49,8 +49,8 @@ fs = (SqrNormL2(), LeastSquares(randn(5,10), randn(5)))
 f = SeparableSum(fs)
 x, y = randn(10), randn(10)
 
-grad_f_x_y, f_x_y = gradient(f, (x, y))
-grad_f_x, f_x = gradient(fs[1], x)
-grad_f_y, f_y = gradient(fs[2], y)
+grad_f_x_y, f_x_y = gradient_test(f, (x, y))
+grad_f_x, f_x = gradient_test(fs[1], x)
+grad_f_y, f_y = gradient_test(fs[2], y)
 @test norm(grad_f_x_y .- (grad_f_x, grad_f_y), Inf) <= 1e-12
 @test abs((f_x+f_y)-f_x_y) <= 1e-12
