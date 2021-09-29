@@ -14,7 +14,7 @@ for R in [Float16, Float32, Float64]
             call_test(f, x)
             gamma = R(0.5)+rand(R)
             y, f_y = prox_test(f, x, gamma)
-            grad_f_y, f_y = gradient(f, y)
+            grad_f_y, f_y = gradient_test(f, y)
             @test grad_f_y ≈ (x - y)/gamma
         end
     end

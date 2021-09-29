@@ -67,6 +67,13 @@ function prox_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
     return y, fy
 end
 
+# tests equality of the results of prox, prox! and prox_naive
+function gradient_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
+    grad_fx, fx = gradient(f, x)
+    @test typeof(fx) == R
+    return grad_fx, fx
+end
+
 # test predicates consistency
 # i.e., that more specific properties imply less specific ones
 # e.g., the indicator of a subspace is the indicator of a set in particular

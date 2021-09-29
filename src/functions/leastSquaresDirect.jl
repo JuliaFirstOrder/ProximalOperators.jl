@@ -128,7 +128,7 @@ function gradient!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, 
     f.res .-= f.b
     mul!(y, adjoint(f.A), f.res)
     y .*= f.lambda
-    fy = (f.lambda/2)*dot(f.res, f.res)
+    return (f.lambda / 2) * real(dot(f.res, f.res))
 end
 
 function prox_naive(f::LeastSquaresDirect{N, R, C}, x::AbstractArray{C, N}, gamma::R=R(1)) where {N, R, C <: RealOrComplex{R}}

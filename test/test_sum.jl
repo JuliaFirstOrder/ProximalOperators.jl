@@ -19,11 +19,10 @@ xtest = randn(10)
 result = f1(xtest) + f2(xtest)
 @test f(xtest) ≈ result
 
-grad1, val1 = gradient(f1, xtest)
-grad2, val2 = gradient(f2, xtest)
+grad1, val1 = gradient_test(f1, xtest)
+grad2, val2 = gradient_test(f2, xtest)
 
-gradsum = randn(size(xtest))
-valsum = gradient!(gradsum, f, xtest)
+gradsum, valsum = gradient_test(f, xtest)
 @test gradsum ≈ grad1 + grad2
 
 # nonsmooth case
@@ -43,9 +42,8 @@ xtest = randn(10)
 result = g1(xtest) + g2(xtest)
 @test g(xtest) ≈ result
 
-grad1, val1 = gradient(g1, xtest)
-grad2, val2 = gradient(g2, xtest)
+grad1, val1 = gradient_test(g1, xtest)
+grad2, val2 = gradient_test(g2, xtest)
 
-gradsum = randn(size(xtest))
-valsum = gradient!(gradsum, g, xtest)
+gradsum, valsum = gradient_test(g, xtest)
 @test gradsum ≈ grad1 + grad2

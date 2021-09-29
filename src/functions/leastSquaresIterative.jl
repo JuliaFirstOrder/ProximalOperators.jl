@@ -70,7 +70,7 @@ function gradient!(y::AbstractArray{D, N}, f::LeastSquaresIterative{N, R, RC, M,
     f.res .-= f.b
     mul!(y, adjoint(f.A), f.res)
     y .*= f.lambda
-    fy = (f.lambda/2)*dot(f.res, f.res)
+    return (f.lambda / 2) * real(dot(f.res, f.res))
 end
 
 function prox_naive(f::LeastSquaresIterative{N}, x::AbstractArray{D, N}, gamma::R=R(1)) where {N, R, D <: RealOrComplex{R}}
