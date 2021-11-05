@@ -149,14 +149,13 @@ for i = 1:length(stuff)
   ref_∇f = stuff[i]["∇f(x)"]
 
   ref_fx = f(x)
-  ∇f = similar(x)
-  fx = gradient!(∇f, f, x)
+  ∇f, fx = gradient_test(f, x)
   @test fx ≈ ref_fx
   @test ∇f ≈ ref_∇f
 
   for j = 1:11
     #For initial point x and 10 other random points
-    fx = gradient!(∇f, f, x)
+    ∇f, fx = gradient_test(f, x)
     for k = 1:10
       # Test conditions in different directions
       if ProximalOperators.is_convex(f)

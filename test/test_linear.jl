@@ -11,7 +11,7 @@ for R in [Float16, Float32, Float64]
         f = Linear(c)
         predicates_test(f)
         x = randn(R, shape)
-        @test gradient(f, x) == (c, f(x))
+        @test gradient_test(f, x) == (c, f(x))
         call_test(f, x)
         prox_test(f, x, R(0.5)+rand(R))
     end

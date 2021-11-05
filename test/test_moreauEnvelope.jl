@@ -20,10 +20,10 @@ using LinearAlgebra
 
         x = R[1.0, 2.0, 3.0, 4.0, 5.0]
 
-        grad_g_x, g_x = gradient(g, x)
+        grad_g_x, g_x = gradient_test(g, x)
 
         y, g_y = prox_test(g, x, R(1/2))
-        grad_g_y, _ = gradient(g, y)
+        grad_g_y, _ = gradient_test(g, y)
 
         @test y + grad_g_y / 2 ≈ x
         @test g(y) ≈ g_y
@@ -48,15 +48,15 @@ end
 
         @test g(x) ≈ h(x)
 
-        grad_g_x, g_x = gradient(g, x)
-        grad_h_x, h_x = gradient(h, x)
+        grad_g_x, g_x = gradient_test(g, x)
+        grad_h_x, h_x = gradient_test(h, x)
 
         @test g_x ≈ g(x)
         @test h_x ≈ h(x)
         @test all(grad_g_x .≈ grad_h_x)
 
         y, g_y = prox_test(g, x, R(1/2))
-        grad_g_y, _ = gradient(g, y)
+        grad_g_y, _ = gradient_test(g, y)
 
         @test y + grad_g_y / 2 ≈ x
         @test g(y) ≈ g_y
