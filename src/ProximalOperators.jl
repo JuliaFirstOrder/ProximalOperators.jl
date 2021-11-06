@@ -60,6 +60,7 @@ include("functions/normL0.jl")
 include("functions/normL1.jl")
 include("functions/normL2.jl")
 include("functions/normL21.jl")
+include("functions/normL1plusL2.jl")
 include("functions/nuclearNorm.jl")
 include("functions/quadratic.jl")
 include("functions/sqrNormL2.jl")
@@ -67,7 +68,6 @@ include("functions/sumPositive.jl")
 include("functions/sqrHingeLoss.jl")
 include("functions/crossEntropy.jl")
 include("functions/TotalVariation1D.jl")
-
 # Calculus rules
 
 include("calculus/conjugate.jl")

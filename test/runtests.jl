@@ -108,6 +108,7 @@ end
     include("test_linear.jl")
     include("test_indHyperslab.jl")
     include("test_graph.jl")
+    include("test_normL1plusL2.jl")
 end
 
 include("test_calls.jl")

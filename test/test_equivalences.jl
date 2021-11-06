@@ -117,3 +117,39 @@ y2, f2 = prox(g2, x)
 @test y1 ≈ y2
 
 end
+
+################################################################################
+### testing NormL1plusL2 reduces to L1/L2
+################################################################################
+
+@testset "NormL1plusL2 special case" begin
+
+g = NormL1(1.)
+# λ_2 = 0
+f = NormL1plusL2(1., 0.)
+
+x = randn(100)
+
+y1, f1 = prox(g, x)
+y2, f2 = prox(f, x)
+
+@test f1 ≈ f2
+@test y1 ≈ y2
+
+end
+
+@testset "NormL1plusL2 special case" begin
+
+g = NormL2(1.)
+# λ_1 = 0
+f = NormL1plusL2(0., 1.)
+
+x = randn(100)
+
+y1, f1 = prox(g, x)
+y2, f2 = prox(f, x)
+
+@test f1 ≈ f2
+@test y1 ≈ y2
+
+end

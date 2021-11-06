@@ -62,6 +62,7 @@ NormL0
 NormL1
 NormL2
 NormL21
+NormL1plusL2
 NormLinf
 NuclearNorm
 SqrNormL2
