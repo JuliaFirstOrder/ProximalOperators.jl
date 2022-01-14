@@ -37,10 +37,12 @@ is_cone(f::IndHyperslab{R}) where R =
     (f.low == -Inf && f.upp == Inf)
 
 function (f::IndHyperslab{R})(x::AbstractArray{R}) where R
+    if iszero(f.norm_a)
+        return R(0)
+    end
     s = dot(f.a, x)
-    atol = eps(R)
-    rtol = sqrt(eps(R))
-    if isapprox_le(f.low, s, atol=atol, rtol=rtol) && isapprox_le(s, f.upp, atol=atol, rtol=rtol)
+    tol = eps(R) * f.norm_a
+    if isapprox_le(f.low, s, atol=tol, rtol=tol) && isapprox_le(s, f.upp, atol=tol, rtol=tol)
         return R(0)
     end
     return R(Inf)
