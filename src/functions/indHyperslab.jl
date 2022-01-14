@@ -31,16 +31,19 @@ IndHyperslab(low::R, a::T, upp::R) where {R <: Real, T <: AbstractArray{R}} = In
 is_convex(f::IndHyperslab) = true
 is_set(f::IndHyperslab) = true
 is_cone(f::IndHyperslab{R}) where R =
+    iszero(f.norm_a) ||
     (f.low == f.upp == 0) ||
     (f.low == 0 && f.upp == Inf) ||
     (f.low == -Inf && f.upp == 0) ||
     (f.low == -Inf && f.upp == Inf)
 
 function (f::IndHyperslab{R})(x::AbstractArray{R}) where R
+    if iszero(f.norm_a)
+        return R(0)
+    end
     s = dot(f.a, x)
-    # if f.low <= s <= f.upp
-    # tol = (R(1) + abs(s))*eps(R)
-    if f.low - s <= eps(R)*f.norm_a*(1 + abs(f.low)) && s - f.upp <= eps(R)*f.norm_a*(1 + abs(f.upp))
+    tol = eps(R) * f.norm_a
+    if isapprox_le(f.low, s, atol=tol, rtol=tol) && isapprox_le(s, f.upp, atol=tol, rtol=tol)
         return R(0)
     end
     return R(Inf)
