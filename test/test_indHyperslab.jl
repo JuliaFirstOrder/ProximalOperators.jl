@@ -1,13 +1,10 @@
 using LinearAlgebra
 using ProximalOperators
-using Random
 using Test
-
-Random.seed!(0)
 
 @testset "IndHyperslab" begin
 
-for R in [Float16, Float32, Float64]
+for R in [Float32, Float64]
     for shape in [(5,), (3, 5), (3, 4, 5)]
         c = randn(R, shape)
         x = randn(R, shape)
