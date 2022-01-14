@@ -43,7 +43,7 @@ function (f::IndHyperslab{R})(x::AbstractArray{R}) where R
     end
     s = dot(f.a, x)
     tol = eps(R) * f.norm_a
-    if isapprox_le(f.low, s, atol=tol, rtol=tol) && isapprox_ge(f.upp, s, atol=tol, rtol=tol)
+    if isapprox_le(f.low, s, atol=tol, rtol=tol) && isapprox_le(s, f.upp, atol=tol, rtol=tol)
         return R(0)
     end
     return R(Inf)
