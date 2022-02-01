@@ -19,7 +19,7 @@ end
 
 function EpicomposeQuadratic(L, Q::P, q) where {R, P <: DenseMatrix{R}}
     return EpicomposeQuadratic{
-        LinearAlgebra.Cholesky{R}, typeof(L), P, typeof(q), real(eltype(L))
+        LinearAlgebra.Cholesky{R, P}, typeof(L), P, typeof(q), real(eltype(L))
     }(L, Q, q)
 end
 
@@ -36,16 +36,17 @@ function EpicomposeQuadratic(L, f::Q) where {Q <: Quadratic}
     return EpicomposeQuadratic(L, f.Q, f.q)
 end
 
-function factor_step!(g::EpicomposeQuadratic, gamma)
-    g.gamma = gamma
-    g.fact = cholesky(g.Q + (g.L' * g.L)/gamma)
+function get_factorization!(g::EpicomposeQuadratic, gamma)
+    if g.gamma === nothing || !isapprox(gamma, g.gamma)
+        g.gamma = gamma
+        g.fact = cholesky(g.Q + (g.L' * g.L)/gamma)
+    end
+    return g.fact
 end
 
 function prox!(y, g::EpicomposeQuadratic, x, gamma)
-    if g.gamma === nothing || !isapprox(gamma, g.gamma)
-        factor_step!(g, gamma)
-    end
-    p = g.fact\((g.L' * x) / gamma - g.q)
+    fact = get_factorization!(g, gamma)
+    p = fact\((g.L' * x) / gamma - g.q)
     fy = dot(p, g.Q * p)/2 + dot(p, g.q)
     mul!(y, g.L, p)
     return fy
