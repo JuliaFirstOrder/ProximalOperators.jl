@@ -3,6 +3,7 @@
 module ProximalOperators
 
 using LinearAlgebra
+import ProximalCore: prox, prox!, gradient, gradient!
 
 const RealOrComplex{R <: Real} = Union{R, Complex{R}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
@@ -105,69 +106,5 @@ is_smooth(_) = false
 is_quadratic(_) = false
 is_generalized_quadratic(f) = is_quadratic(f) || is_affine(f)
 is_strongly_convex(_) = false
-
-"""
-**Proximal mapping**
-
-    y, fy = prox(f, x, gamma=1)
-
-Computes
-```math
-y = \\mathrm{prox}_{\\gamma f}(x) = \\arg\\min_z \\left\\{ f(z) + \\tfrac{1}{2\\gamma}\\|z-x\\|^2 \\right\\}.
-```
-Return values:
-* `y`: the proximal point ``y``
-* `fy`: the value ``f(y)``
-"""
-function prox(f, x, gamma=1)
-    y = similar(x)
-    fy = prox!(y, f, x, gamma)
-    return y, fy
-end
-
-"""
-**Proximal mapping (in-place)**
-
-    fy = prox!(y, f, x, gamma=1)
-
-Computes
-```math
-y = \\mathrm{prox}_{\\gamma f}(x) = \\arg\\min_z \\left\\{ f(z) + \\tfrac{1}{2\\gamma}\\|z-x\\|^2 \\right\\}.
-```
-The resulting point ``y`` is written to the (pre-allocated) array `y`, which must have the same shape/size as `x`.
-
-Return values:
-* `fy`: the value ``f(y)``
-"""
-prox!(y, f, x) = prox!(y, f, x, 1)
-
-"""
-**Gradient mapping**
-
-    gradfx, fx = gradient(f, x)
-
-Computes the gradient (and value) of ``f`` at ``x``. If ``f`` is only *subdifferentiable* at ``x``, then return a subgradient instead.
-
-Return values:
-* `gradfx`: the (sub)gradient of ``f`` at ``x``
-* `fx`: the value ``f(x)``
-"""
-function gradient(f, x)
-    y = similar(x)
-    fx = gradient!(y, f, x)
-    return y, fx
-end
-
-"""
-**Gradient mapping (in-place)**
-
-    gradient!(gradfx, f, x)
-
-Writes ``\\nabla f(x)`` to `gradfx`, which must be pre-allocated and have the same shape/size as `x`. If ``f`` is only *subdifferentiable* at ``x``, then writes a subgradient instead.
-
-Return values:
-* `fx`: the value ``f(x)``
-"""
-gradient!
 
 end

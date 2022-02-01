@@ -16,7 +16,7 @@ With nonnegative array λ_1 and nonnegative scalar λ_2, returns the function
 f(x) =  ∑_{i=1}^{n} {λ_1}_i |x_i| + λ_2 \\sqrt{x_1^2 + … + x_n^2}.
 ```
 """
-struct NormL1plusL2{L1<:NormL1, L2 <: NormL2} <: ProximableFunction
+struct NormL1plusL2{L1<:NormL1, L2 <: NormL2}
     l1::L1
     l2::L2
 end

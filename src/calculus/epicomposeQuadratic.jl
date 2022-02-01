@@ -5,7 +5,7 @@ mutable struct EpicomposeQuadratic{F, M, P, V, R} <: Epicompose
     Q::P
     q::V
     gamma::Maybe{R}
-    fact::Maybe{F}
+    fact::F
     function EpicomposeQuadratic{F, M, P, V, R}(L::M, Q::P, q::V) where {
         R <: Real,
         M <: AbstractMatrix{R},
@@ -13,7 +13,7 @@ mutable struct EpicomposeQuadratic{F, M, P, V, R} <: Epicompose
         V <: AbstractVector{R},
         F <: Factorization,
     }
-        new(L, Q, q, nothing, nothing)
+        new(L, Q, q, nothing)
     end
 end
 
