@@ -26,13 +26,12 @@ struct Regularize{T, S <: Real, A <: Union{Real, AbstractArray}}
     end
 end
 
-is_separable(f::Regularize) = is_separable(f.f)
-is_prox_accurate(f::Regularize) = is_prox_accurate(f.f)
-is_convex(f::Regularize) = is_convex(f.f)
-is_smooth(f::Regularize) = is_smooth(f.f)
-is_quadratic(f::Regularize) = is_quadratic(f.f)
-is_generalized_quadratic(f::Regularize) = is_generalized_quadratic(f.f)
-is_strongly_convex(f::Regularize) = true
+is_separable(::Type{<:Regularize{T}}) where T = is_separable(T)
+is_prox_accurate(::Type{<:Regularize{T}}) where T = is_prox_accurate(T)
+is_convex(::Type{<:Regularize{T}}) where T = is_convex(T)
+is_smooth(::Type{<:Regularize{T}}) where T = is_smooth(T)
+is_generalized_quadratic(::Type{<:Regularize{T}}) where T = is_generalized_quadratic(T)
+is_strongly_convex(::Type{<:Regularize}) = true
 
 Regularize(f::T, rho::S, a::A) where {T, S <: Real, A <: AbstractArray} = Regularize{T, S, A}(f, rho, a)
 

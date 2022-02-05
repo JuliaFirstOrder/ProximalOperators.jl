@@ -16,15 +16,14 @@ struct Sum{T <: Tuple} fs::T end
 Sum(fs::Vararg) = Sum((fs...,))
 
 # note: is_prox_accurate false because prox in general doesn't exist?
-is_prox_accurate(f::Sum) = false
-is_convex(f::Sum) = all(is_convex.(f.fs))
-is_set(f::Sum) = all(is_set.(f.fs))
-is_cone(f::Sum) = all(is_cone.(f.fs))
-is_affine(f::Sum) = all(is_affine.(f.fs))
-is_smooth(f::Sum) = all(is_smooth.(f.fs))
-is_quadratic(f::Sum) = all(is_quadratic.(f.fs))
-is_generalized_quadratic(f::Sum) = all(is_generalized_quadratic.(f.fs))
-is_strongly_convex(f::Sum) = all(is_convex.(f.fs)) && any(is_strongly_convex.(f.fs))
+is_prox_accurate(::Type{<:Sum{T}}) where T = false
+is_convex(::Type{<:Sum{T}}) where T = all(is_convex.(T.parameters))
+is_set(::Type{<:Sum{T}}) where T = all(is_set.(T.parameters))
+is_cone(::Type{<:Sum{T}}) where T = all(is_cone.(T.parameters))
+is_affine(::Type{<:Sum{T}}) where T = all(is_affine.(T.parameters))
+is_smooth(::Type{<:Sum{T}}) where T = all(is_smooth.(T.parameters))
+is_generalized_quadratic(::Type{<:Sum{T}}) where T = all(is_generalized_quadratic.(T.parameters))
+is_strongly_convex(::Type{<:Sum{T}}) where T = all(is_convex.(T.parameters)) && any(is_strongly_convex.(T.parameters))
 
 function (sumobj::Sum)(x::AbstractArray{T}) where {R <: Real, T <: Union{R, Complex{R}}}
     sum = R(0)

@@ -28,10 +28,9 @@ struct IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
     end
 end
 
-is_separable(f::IndBox) = true
-is_convex(f::IndBox) = true
-is_set(f::IndBox) = true
-is_cone(f::IndBox) = all((f.lb .== -Inf) .+ (f.ub .== +Inf) .> 0)
+is_separable(f::Type{<:IndBox}) = true
+is_convex(f::Type{<:IndBox}) = true
+is_set(f::Type{<:IndBox}) = true
 
 IndBox(lb::T, ub::T) where {T <: Real} = IndBox{T, T}(lb, ub)
 

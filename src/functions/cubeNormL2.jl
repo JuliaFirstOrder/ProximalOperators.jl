@@ -23,8 +23,8 @@ struct CubeNormL2{R}
     end
 end
 
-is_convex(f::CubeNormL2) = true
-is_smooth(f::CubeNormL2) = true
+is_convex(f::Type{<:CubeNormL2}) = true
+is_smooth(f::Type{<:CubeNormL2}) = true
 
 CubeNormL2(lambda::R=1) where R = CubeNormL2{R}(lambda)
 

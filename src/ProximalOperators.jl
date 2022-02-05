@@ -4,6 +4,7 @@ module ProximalOperators
 
 using LinearAlgebra
 import ProximalCore: prox, prox!, gradient, gradient!
+import ProximalCore: is_convex, is_generalized_quadratic
 
 const RealOrComplex{R <: Real} = Union{R, Complex{R}}
 const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
@@ -23,6 +24,7 @@ include("utilities/linops.jl")
 include("utilities/symmetricpacked.jl")
 include("utilities/uniformarrays.jl")
 include("utilities/normdiff.jl")
+include("utilities/traits.jl")
 
 # Basic functions
 
@@ -65,7 +67,8 @@ include("functions/sqrNormL2.jl")
 include("functions/sumPositive.jl")
 include("functions/sqrHingeLoss.jl")
 include("functions/crossEntropy.jl")
-include("functions/TotalVariation1D.jl")
+include("functions/totalVariation1D.jl")
+
 # Calculus rules
 
 include("calculus/conjugate.jl")
@@ -91,20 +94,5 @@ include("functions/indExp.jl")
 include("functions/maximum.jl")
 include("functions/normLinf.jl")
 include("functions/sumLargest.jl")
-
-is_prox_accurate(_) = true
-is_separable(_) = false
-is_convex(_) = false
-is_concave(_) = false
-is_singleton(_) = false
-is_cone(_) = false
-is_affine(f) = is_singleton(f)
-is_set(f) = is_cone(f) || is_affine(f)
-is_positively_homogeneous(f) = is_cone(f)
-is_support(f) = is_convex(f) && is_positively_homogeneous(f)
-is_smooth(_) = false
-is_quadratic(_) = false
-is_generalized_quadratic(f) = is_quadratic(f) || is_affine(f)
-is_strongly_convex(_) = false
 
 end

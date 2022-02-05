@@ -18,7 +18,7 @@ struct IndBinary{T, S}
     high::S
 end
 
-is_set(f::IndBinary) = true
+is_set(f::Type{<:IndBinary}) = true
 
 IndBinary() = IndBinary(0.0, 1.0)
 

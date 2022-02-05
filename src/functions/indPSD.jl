@@ -45,8 +45,8 @@ function (f::IndPSD)(X::HermOrSym{T}) where {R <: Real, T <: RealOrComplex{R}}
     return R(0)
 end
 
-is_convex(f::IndPSD) = true
-is_cone(f::IndPSD) = true
+is_convex(f::Type{<:IndPSD}) = true
+is_cone(f::Type{<:IndPSD}) = true
 
 function prox!(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) where {R <: Real, T <: RealOrComplex{R}}
     n = size(X, 1)

@@ -30,8 +30,8 @@ struct HuberLoss{R, S}
     end
 end
 
-is_convex(f::HuberLoss) = true
-is_smooth(f::HuberLoss) = true
+is_convex(f::Type{<:HuberLoss}) = true
+is_smooth(f::Type{<:HuberLoss}) = true
 
 HuberLoss(rho::R=1, mu::S=1) where {R, S} = HuberLoss{R, S}(rho, mu)
 

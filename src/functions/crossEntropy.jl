@@ -24,8 +24,8 @@ struct CrossEntropy{T}
     end
 end
 
-is_convex(f::CrossEntropy) = true
-is_smooth(f::CrossEntropy) = true
+is_convex(f::Type{<:CrossEntropy}) = true
+is_smooth(f::Type{<:CrossEntropy}) = true
 
 CrossEntropy(b::T) where {T} = CrossEntropy{T}(b)
 

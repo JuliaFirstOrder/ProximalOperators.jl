@@ -23,8 +23,8 @@ struct NormL2{R <: Real}
     end
 end
 
-is_convex(f::NormL2) = true
-is_positively_homogeneous(f::NormL2) = true
+is_convex(f::Type{<:NormL2}) = true
+is_positively_homogeneous(f::Type{<:NormL2}) = true
 
 NormL2(lambda::R=1) where {R <: Real} = NormL2{R}(lambda)
 

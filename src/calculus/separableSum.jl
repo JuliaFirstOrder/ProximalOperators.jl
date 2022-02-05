@@ -29,16 +29,15 @@ end
 
 SeparableSum(fs::Vararg) = SeparableSum((fs...,))
 
-is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
-is_convex(f::SeparableSum) = all(is_convex.(f.fs))
-is_set(f::SeparableSum) = all(is_set.(f.fs))
-is_singleton(f::SeparableSum) = all(is_singleton.(f.fs))
-is_cone(f::SeparableSum) = all(is_cone.(f.fs))
-is_affine(f::SeparableSum) = all(is_affine.(f.fs))
-is_smooth(f::SeparableSum) = all(is_smooth.(f.fs))
-is_quadratic(f::SeparableSum) = all(is_quadratic.(f.fs))
-is_generalized_quadratic(f::SeparableSum) = all(is_generalized_quadratic.(f.fs))
-is_strongly_convex(f::SeparableSum) = all(is_strongly_convex.(f.fs))
+is_prox_accurate(::Type{<:SeparableSum{T}}) where T = all(is_prox_accurate.(T.parameters))
+is_convex(::Type{<:SeparableSum{T}}) where T = all(is_convex.(T.parameters))
+is_set(::Type{<:SeparableSum{T}}) where T = all(is_set.(T.parameters))
+is_singleton(::Type{<:SeparableSum{T}}) where T = all(is_singleton.(T.parameters))
+is_cone(::Type{<:SeparableSum{T}}) where T = all(is_cone.(T.parameters))
+is_affine(::Type{<:SeparableSum{T}}) where T = all(is_affine.(T.parameters))
+is_smooth(::Type{<:SeparableSum{T}}) where T = all(is_smooth.(T.parameters))
+is_generalized_quadratic(::Type{<:SeparableSum{T}}) where T = all(is_generalized_quadratic.(T.parameters))
+is_strongly_convex(::Type{<:SeparableSum{T}}) where T = all(is_strongly_convex.(T.parameters))
 
 function (f::SeparableSum)(x::TupleOfArrays{R}) where R <: Real
     sum = R(0)

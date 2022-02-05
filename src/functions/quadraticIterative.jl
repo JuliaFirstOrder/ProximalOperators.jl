@@ -9,7 +9,7 @@ struct QuadraticIterative{R <: Real, M, V <: AbstractVector{R}} <: Quadratic
     temp::V
 end
 
-is_prox_accurate(f::QuadraticIterative) = false
+is_prox_accurate(f::Type{<:QuadraticIterative}) = false
 
 function QuadraticIterative(Q::M, q::V) where {R <: Real, M, V <: AbstractVector{R}}
     if size(Q, 1) != size(Q, 2) || length(q) != size(Q, 2)

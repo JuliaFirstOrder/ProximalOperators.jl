@@ -4,7 +4,7 @@
 
 using LinearAlgebra
 
-struct LeastSquaresIterative{N, R <: Real, RC <: RealOrComplex{R}, M, V <: AbstractArray{RC, N}, O} <: LeastSquares
+struct LeastSquaresIterative{N, R <: Real, RC <: RealOrComplex{R}, M, V <: AbstractArray{RC, N}, O, IsConvex} <: LeastSquares
     A::M # m-by-n operator
     b::V # m (by-p)
     lambda::R
@@ -16,9 +16,8 @@ struct LeastSquaresIterative{N, R <: Real, RC <: RealOrComplex{R}, M, V <: Abstr
     q::Array{RC, N} # n (by-p)
 end
 
-is_prox_accurate(f::LeastSquaresIterative) = false
-is_convex(f::LeastSquaresIterative) = f.lambda >= 0
-is_concave(f::LeastSquaresIterative) = f.lambda <= 0
+is_prox_accurate(f::Type{<:LeastSquaresIterative}) = false
+is_convex(::Type{T}) where {T<:LeastSquaresIterative} = T.parameters[end]
 
 function LeastSquaresIterative(A::M, b::V, lambda::R) where {N, R <: Real, RC <: RealOrComplex{R}, M, V <: AbstractArray{RC, N}}
     if size(A, 1) != size(b, 1)
@@ -29,11 +28,11 @@ function LeastSquaresIterative(A::M, b::V, lambda::R) where {N, R <: Real, RC <:
     if m >= n
         shape = :Tall
         S = AcA(A)
-        LeastSquaresIterative{N, R, RC, M, V, AcA}(A, b, lambda, lambda*(A'*b), shape, S, zero(b), [], zeros(RC, x_shape))
+        LeastSquaresIterative{N, R, RC, M, V, AcA, lambda >= 0}(A, b, lambda, lambda*(A'*b), shape, S, zero(b), [], zeros(RC, x_shape))
     else
         shape = :Fat
         S = AAc(A)
-        LeastSquaresIterative{N, R, RC, M, V, AAc}(A, b, lambda, lambda*(A'*b), shape, S, zero(b), zero(b), zeros(RC, x_shape))
+        LeastSquaresIterative{N, R, RC, M, V, AAc, lambda >= 0}(A, b, lambda, lambda*(A'*b), shape, S, zero(b), zero(b), zeros(RC, x_shape))
     end
 end
 

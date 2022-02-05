@@ -24,8 +24,8 @@ struct IndSimplex{R <: Real}
     end
 end
 
-is_convex(f::IndSimplex) = true
-is_set(f::IndSimplex) = true
+is_convex(f::Type{<:IndSimplex}) = true
+is_set(f::Type{<:IndSimplex}) = true
 
 IndSimplex(a::R=1.0) where {R <: Real} = IndSimplex{R}(a)
 

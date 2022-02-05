@@ -24,7 +24,7 @@ struct NuclearNorm{R <: Real}
     end
 end
 
-is_convex(f::NuclearNorm) = true
+is_convex(f::Type{<:NuclearNorm}) = true
 
 NuclearNorm(lambda::R=1) where {R <: Real} = NuclearNorm{R}(lambda)
 

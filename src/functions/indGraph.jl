@@ -30,9 +30,9 @@ function IndGraph(A::AbstractArray{T,2}) where {T <: RealOrComplex}
     end
 end
 
-is_convex(f::IndGraph) = true
-is_set(f::IndGraph) = true
-is_cone(f::IndGraph) = true
+is_convex(f::Type{<:IndGraph}) = true
+is_set(f::Type{<:IndGraph}) = true
+is_cone(f::Type{<:IndGraph}) = true
 
 IndGraph(a::AbstractArray{T,1}) where {T <: RealOrComplex} = IndGraph{T}(a')
 

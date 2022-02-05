@@ -22,10 +22,10 @@ end
 
 MoreauEnvelope(g::T, lambda::R=1) where {R, T} = MoreauEnvelope{R, T}(g, lambda)
 
-is_convex(f::MoreauEnvelope) = is_convex(f.g)
-is_smooth(f::MoreauEnvelope) = is_convex(f.g)
-is_quadratic(f::MoreauEnvelope) = is_generalized_quadratic(f.g)
-is_strongly_convex(f::MoreauEnvelope) = is_strongly_convex(f.g)
+is_convex(::Type{MoreauEnvelope{R, T}}) where {R, T} = is_convex(T)
+is_smooth(::Type{MoreauEnvelope{R, T}}) where {R, T} = is_convex(T)
+is_generalized_quadratic(::Type{MoreauEnvelope{R, T}}) where {R, T} = is_generalized_quadratic(T)
+is_strongly_convex(::Type{MoreauEnvelope{R, T}}) where {R, T} = is_strongly_convex(T)
 
 function (f::MoreauEnvelope)(x)
     R = eltype(x)

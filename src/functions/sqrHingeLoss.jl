@@ -25,9 +25,9 @@ struct SqrHingeLoss{R <: Real, S <: Real, T <: AbstractArray{S}}
     end
 end
 
-is_separable(f::SqrHingeLoss) = true
-is_convex(f::SqrHingeLoss) = true
-is_smooth(f::SqrHingeLoss) = true
+is_separable(f::Type{<:SqrHingeLoss}) = true
+is_convex(f::Type{<:SqrHingeLoss}) = true
+is_smooth(f::Type{<:SqrHingeLoss}) = true
 
 SqrHingeLoss(b::T, mu::R=1) where {R <: Real, S <: Real, T <: AbstractArray{S}} = SqrHingeLoss{R, S, T}(b, mu)
 

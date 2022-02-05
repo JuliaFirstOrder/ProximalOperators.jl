@@ -24,7 +24,7 @@ struct IndBallL0{I}
     end
 end
 
-is_set(f::IndBallL0) = true
+is_set(f::Type{<:IndBallL0}) = true
 
 IndBallL0(r::I) where {I} = IndBallL0{I}(r)
 

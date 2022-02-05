@@ -3,11 +3,11 @@
 export DistL2
 
 """
-**Distance from a convex set**
+**Distance from a set**
 
     DistL2(ind_S)
 
-Given `ind_S` the indicator function of a convex set ``S``, and an optional positive parameter `λ`, returns the (weighted) Euclidean distance from ``S``, that is function
+Given `ind_S` the indicator function of a set ``S``, and an optional positive parameter `λ`, returns the (weighted) Euclidean distance from ``S``, that is function
 ```math
 g(x) = λ\\mathrm{dist}_S(x) = \\min \\{ λ\\|y - x\\| : y \\in S \\}.
 ```
@@ -16,19 +16,19 @@ struct DistL2{R, T}
     ind::T
     lambda::R
     function DistL2{R, T}(ind::T, lambda::R) where {R, T}
-        if !is_set(ind) || !is_convex(ind)
+        if !is_set(ind)
             error("`ind` must be a convex set")
         end
-        if lambda < 0
-            error("parameter `λ` must be nonnegative")
+        if lambda <= 0
+            error("parameter `λ` must be positive")
         else
             new(ind, lambda)
         end
     end
 end
 
-is_prox_accurate(f::DistL2) = is_prox_accurate(f.ind)
-is_convex(f::DistL2) = is_convex(f.ind)
+is_prox_accurate(::Type{DistL2{R, T}}) where {R, T} = is_prox_accurate(T)
+is_convex(::Type{DistL2{R, T}}) where {R, T} = is_convex(T)
 
 DistL2(ind::T, lambda::R=1) where {R, T} = DistL2{R, T}(ind, lambda)
 

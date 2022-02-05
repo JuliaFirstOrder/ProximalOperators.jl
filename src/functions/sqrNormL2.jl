@@ -7,11 +7,11 @@ export SqrNormL2
 
     SqrNormL2(λ=1)
 
-With a nonnegative scalar `λ`, returns the function
+With a positive scalar `λ`, returns the function
 ```math
 f(x) = \\tfrac{λ}{2}\\|x\\|^2.
 ```
-With a nonnegative array `λ`, returns the function
+With a positive array `λ`, returns the function
 ```math
 f(x) = \\tfrac{1}{2}∑_i λ_i x_i^2.
 ```
@@ -19,19 +19,19 @@ f(x) = \\tfrac{1}{2}∑_i λ_i x_i^2.
 struct SqrNormL2{T <: Union{Real, AbstractArray}}
     lambda::T
     function SqrNormL2{T}(lambda::T) where {T <: Union{Real,AbstractArray}}
-        if any(lambda .< 0)
-            error("coefficients in λ must be nonnegative")
+        if any(lambda .<= 0)
+            error("coefficients in λ must be positive")
         else
             new(lambda)
         end
     end
 end
 
-is_convex(f::SqrNormL2) = true
-is_smooth(f::SqrNormL2) = true
-is_separable(f::SqrNormL2) = true
-is_quadratic(f::SqrNormL2) = true
-is_strongly_convex(f::SqrNormL2) = all(f.lambda .> 0)
+is_convex(f::Type{<:SqrNormL2}) = true
+is_smooth(f::Type{<:SqrNormL2}) = true
+is_separable(f::Type{<:SqrNormL2}) = true
+is_generalized_quadratic(f::Type{<:SqrNormL2}) = true
+is_strongly_convex(f::Type{<:SqrNormL2}) = true
 
 SqrNormL2(lambda::T=1) where {T <: Real} = SqrNormL2{T}(lambda)
 

@@ -24,9 +24,9 @@ struct IndBallL1{R}
     end
 end
 
-is_convex(f::IndBallL1) = true
-is_set(f::IndBallL1) = true
-is_prox_accurate(f::IndBallL1) = false
+is_convex(f::Type{<:IndBallL1}) = true
+is_set(f::Type{<:IndBallL1}) = true
+is_prox_accurate(f::Type{<:IndBallL1}) = false
 
 IndBallL1(r::R=1.0) where R = IndBallL1{R}(r)
 

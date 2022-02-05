@@ -22,15 +22,14 @@ struct Conjugate{T}
     end
 end
 
-is_prox_accurate(f::Conjugate) = is_prox_accurate(f.f)
-is_convex(f::Conjugate) = true
-is_cone(f::Conjugate) = is_cone(f.f) && is_convex(f.f)
-is_smooth(f::Conjugate) = is_strongly_convex(f.f)
-is_strongly_convex(f::Conjugate) = is_smooth(f.f)
-is_quadratic(f::Conjugate) = is_strongly_convex(f.f) && is_generalized_quadratic(f.f)
-is_generalized_quadratic(f::Conjugate) = is_quadratic(f.f)
-is_set(f::Conjugate) = is_convex(f.f) && is_support(f.f)
-is_positively_homogeneous(f::Conjugate) = is_convex(f.f) && is_set(f.f)
+is_prox_accurate(::Type{Conjugate{T}}) where T = is_prox_accurate(T)
+is_convex(::Type{Conjugate{T}}) where T = true
+is_cone(::Type{Conjugate{T}}) where T = is_cone(T) && is_convex(T)
+is_smooth(::Type{Conjugate{T}}) where T = is_strongly_convex(T)
+is_strongly_convex(::Type{Conjugate{T}}) where T = is_smooth(T)
+is_generalized_quadratic(::Type{Conjugate{T}}) where T = is_generalized_quadratic(T)
+is_set(::Type{Conjugate{T}}) where T = is_convex(T) && is_support(T)
+is_positively_homogeneous(::Type{Conjugate{T}}) where T = is_convex(T) && is_set(T)
 
 fun_dom(f::Conjugate) = fun_dom(f.f)
 

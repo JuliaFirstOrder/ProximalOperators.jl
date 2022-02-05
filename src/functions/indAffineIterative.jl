@@ -17,8 +17,7 @@ struct IndAffineIterative{R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{
     end
 end
 
-is_prox_accurate(f::IndAffineIterative) = false
-is_cone(f::IndAffineIterative) = norm(f.b) == 0.0
+is_prox_accurate(f::Type{<:IndAffineIterative}) = false
 
 IndAffineIterative(A::M, b::V) where {R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}} = IndAffineIterative{R, T, M, V}(A, b)
 

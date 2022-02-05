@@ -39,16 +39,15 @@ struct Precompose{T, R <: Real, C <: Union{R, Complex{R}}, U <: Union{C, Abstrac
     end
 end
 
-is_prox_accurate(f::Precompose) = is_prox_accurate(f.f)
-is_convex(f::Precompose) = is_convex(f.f)
-is_set(f::Precompose) = is_set(f.f)
-is_singleton(f::Precompose) = is_singleton(f.f)
-is_cone(f::Precompose) = is_cone(f.f)
-is_affine(f::Precompose) = is_affine(f.f)
-is_smooth(f::Precompose) = is_smooth(f.f)
-is_quadratic(f::Precompose) = is_quadratic(f.f)
-is_generalized_quadratic(f::Precompose) = is_generalized_quadratic(f.f)
-is_strongly_convex(f::Precompose) = is_strongly_convex(f.f)
+is_prox_accurate(::Type{<:Precompose{T}}) where T = is_prox_accurate(T)
+is_convex(::Type{<:Precompose{T}}) where T = is_convex(T)
+is_set(::Type{<:Precompose{T}}) where T = is_set(T)
+is_singleton(::Type{<:Precompose{T}}) where T = is_singleton(T)
+is_cone(::Type{<:Precompose{T}}) where T = is_cone(T)
+is_affine(::Type{<:Precompose{T}}) where T = is_affine(T)
+is_smooth(::Type{<:Precompose{T}}) where T = is_smooth(T)
+is_generalized_quadratic(::Type{<:Precompose{T}}) where T = is_generalized_quadratic(T)
+is_strongly_convex(::Type{<:Precompose{T}}) where T = is_strongly_convex(T)
 
 Precompose(f::T, L::M, mu::U, b::V) where {T, R <: Real, C <: Union{R, Complex{R}}, U <: Union{R, AbstractArray{R}}, V <: Union{C, AbstractArray{C}}, M} = Precompose{T, R, C, U, V, M}(f, L, mu, b)
 

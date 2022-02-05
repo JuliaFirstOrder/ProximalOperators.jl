@@ -6,9 +6,9 @@ export Quadratic
 
 abstract type Quadratic end
 
-is_convex(f::Quadratic) = true
-is_smooth(f::Quadratic) = true
-is_quadratic(f::Quadratic) = true
+is_convex(f::Type{<:Quadratic}) = true
+is_smooth(f::Type{<:Quadratic}) = true
+is_generalized_quadratic(f::Type{<:Quadratic}) = true
 
 fun_name(f::Quadratic) = "Quadratic function"
 

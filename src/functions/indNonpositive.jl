@@ -14,9 +14,9 @@ C = \\{ x : x \\leq 0 \\}.
 """
 struct IndNonpositive end
 
-is_separable(f::IndNonpositive) = true
-is_convex(f::IndNonpositive) = true
-is_cone(f::IndNonpositive) = true
+is_separable(f::Type{<:IndNonpositive}) = true
+is_convex(f::Type{<:IndNonpositive}) = true
+is_cone(f::Type{<:IndNonpositive}) = true
 
 function (f::IndNonpositive)(x::AbstractArray{R}) where R <: Real
     for k in eachindex(x)

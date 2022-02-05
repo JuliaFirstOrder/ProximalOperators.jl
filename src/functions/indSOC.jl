@@ -22,8 +22,8 @@ function (f::IndSOC)(x::AbstractVector{T}) where T <: Real
     return +Inf
 end
 
-is_convex(f::IndSOC) = true
-is_set(f::IndSOC) = true
+is_convex(f::Type{<:IndSOC}) = true
+is_set(f::Type{<:IndSOC}) = true
 
 function prox!(y::AbstractVector{T}, f::IndSOC, x::AbstractVector{T}, gamma) where T <: Real
     @views nx = norm(x[2:end])

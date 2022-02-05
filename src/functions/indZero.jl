@@ -11,11 +11,11 @@ Returns the indicator function of the set containing the origin, the "zero cone"
 """
 struct IndZero end
 
-is_separable(f::IndZero) = true
-is_convex(f::IndZero) = true
-is_singleton(f::IndZero) = true
-is_cone(f::IndZero) = true
-is_affine(f::IndZero) = true
+is_separable(f::Type{<:IndZero}) = true
+is_convex(f::Type{<:IndZero}) = true
+is_singleton(f::Type{<:IndZero}) = true
+is_cone(f::Type{<:IndZero}) = true
+is_affine(f::Type{<:IndZero}) = true
 
 function (f::IndZero)(x::AbstractArray{C}) where {R <: Real, C <: Union{R, Complex{R}}}
     for k in eachindex(x)

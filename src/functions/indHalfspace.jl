@@ -27,9 +27,8 @@ end
 
 IndHalfspace(a::T, b::R) where {R <: Real, T <: AbstractArray{R}} = IndHalfspace{R, T}(a, b)
 
-is_convex(f::IndHalfspace) = true
-is_set(f::IndHalfspace) = true
-is_cone(f::IndHalfspace) = f.b == 0 || f.b == Inf
+is_convex(f::Type{<:IndHalfspace}) = true
+is_set(f::Type{<:IndHalfspace}) = true
 
 function (f::IndHalfspace{R})(x::AbstractArray{R}) where R
     if isapprox_le(dot(f.a, x), f.b, atol=eps(R), rtol=sqrt(eps(R)))

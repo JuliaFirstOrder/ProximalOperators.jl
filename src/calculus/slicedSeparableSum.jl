@@ -23,7 +23,7 @@ g(x) = \\sum_{i=1}^k f(x_{J_i}).
 struct SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N}
   fs::S    # Tuple, where each element is a Vector with elements of the same type; the functions to prox on
   # Example: S = Tuple{Array{ProximalOperators.NormL1{Float64},1}, Array{ProximalOperators.NormL2{Float64},1}}
-  idxs::T  # Vector, where each element is a Vector contining the indices to prox on
+  idxs::T  # Vector, where each element is a Vector containing the indices to prox on
   # Example: T = Array{Array{Tuple{Colon,UnitRange{Int64}},1},1}
 end
 
@@ -79,10 +79,10 @@ end
   ex = :($ex; return v)
 end
 
-is_prox_accurate(f::SlicedSeparableSum) = all([all(is_prox_accurate.(f.fs[k])) for k in eachindex(f.fs)])
-is_convex(f::SlicedSeparableSum) = all([all(is_convex.(f.fs[k])) for k in eachindex(f.fs)])
-is_set(f::SlicedSeparableSum) = all([all(is_set.(f.fs[k])) for k in eachindex(f.fs)])
-is_cone(f::SlicedSeparableSum) = all([all(is_cone.(f.fs[k])) for k in eachindex(f.fs)])
+is_prox_accurate(::Type{<:SlicedSeparableSum{T}}) where T = all(is_prox_accurate(A.parameters[1]) for A in T.parameters)
+is_convex(::Type{<:SlicedSeparableSum{T}}) where T = all(is_convex(A.parameters[1]) for A in T.parameters)
+is_set(::Type{<:SlicedSeparableSum{T}}) where T = all(is_set(A.parameters[1]) for A in T.parameters)
+is_cone(::Type{<:SlicedSeparableSum{T}}) where T = all(is_cone(A.parameters[1]) for A in T.parameters)
 
 fun_name(f::SlicedSeparableSum) = "sliced separable sum"
 fun_dom(f::SlicedSeparableSum) = "n/a" # for now

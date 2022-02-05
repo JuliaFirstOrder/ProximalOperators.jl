@@ -20,8 +20,6 @@ struct IndAffineDirect{F <: Factorization, R <: Real, T <: RealOrComplex{R}, M <
     end
 end
 
-is_cone(f::IndAffineDirect) = iszero(norm(f.b))
-
 IndAffineDirect(A::M, b::V) where {
     R <: Real, T <: RealOrComplex{R}, M <: DenseMatrix{T}, V <: AbstractVector{T}
 } = IndAffineDirect{QRCompactWY{T, M}, R, T, M, V}(A, b)

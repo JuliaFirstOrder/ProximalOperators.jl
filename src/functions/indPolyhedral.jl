@@ -2,8 +2,8 @@ export IndPolyhedral
 
 abstract type IndPolyhedral end
 
-is_convex(::IndPolyhedral) = true
-is_set(::IndPolyhedral) = true
+is_convex(::Type{<:IndPolyhedral}) = true
+is_set(::Type{<:IndPolyhedral}) = true
 
 """
 **Indicator of a polyhedral set**

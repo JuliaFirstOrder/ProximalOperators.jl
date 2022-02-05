@@ -33,17 +33,16 @@ struct PrecomposeDiagonal{T, R <: Union{Real, AbstractArray}, S <: Union{Real, A
     end
 end
 
-is_separable(f::PrecomposeDiagonal) = is_separable(f.f)
-is_prox_accurate(f::PrecomposeDiagonal) = is_prox_accurate(f.f)
-is_convex(f::PrecomposeDiagonal) = is_convex(f.f)
-is_set(f::PrecomposeDiagonal) = is_set(f.f)
-is_singleton(f::PrecomposeDiagonal) = is_singleton(f.f)
-is_cone(f::PrecomposeDiagonal) = is_cone(f.f)
-is_affine(f::PrecomposeDiagonal) = is_affine(f.f)
-is_smooth(f::PrecomposeDiagonal) = is_smooth(f.f)
-is_quadratic(f::PrecomposeDiagonal) = is_quadratic(f.f)
-is_generalized_quadratic(f::PrecomposeDiagonal) = is_generalized_quadratic(f.f)
-is_strongly_convex(f::PrecomposeDiagonal) = is_strongly_convex(f.f)
+is_separable(::Type{<:PrecomposeDiagonal{T}}) where T = is_separable(T)
+is_prox_accurate(::Type{<:PrecomposeDiagonal{T}}) where T = is_prox_accurate(T)
+is_convex(::Type{<:PrecomposeDiagonal{T}}) where T = is_convex(T)
+is_set(::Type{<:PrecomposeDiagonal{T}}) where T = is_set(T)
+is_singleton(::Type{<:PrecomposeDiagonal{T}}) where T = is_singleton(T)
+is_cone(::Type{<:PrecomposeDiagonal{T}}) where T = is_cone(T)
+is_affine(::Type{<:PrecomposeDiagonal{T}}) where T = is_affine(T)
+is_smooth(::Type{<:PrecomposeDiagonal{T}}) where T = is_smooth(T)
+is_generalized_quadratic(::Type{<:PrecomposeDiagonal{T}}) where T = is_generalized_quadratic(T)
+is_strongly_convex(::Type{<:PrecomposeDiagonal{T}}) where T = is_strongly_convex(T)
 
 PrecomposeDiagonal(f::T, a::S=1, b::S=0) where {T, S <: Real} = PrecomposeDiagonal{T, S, S}(f, a, b)
 

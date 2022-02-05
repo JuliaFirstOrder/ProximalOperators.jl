@@ -23,9 +23,9 @@ struct TotalVariation1D{T <: Real}
     end
 end
 
-is_separable(f::TotalVariation1D) = false
-is_convex(f::TotalVariation1D) = true
-is_positively_homogeneous(f::TotalVariation1D) = true
+is_separable(f::Type{<:TotalVariation1D}) = false
+is_convex(f::Type{<:TotalVariation1D}) = true
+is_positively_homogeneous(f::Type{<:TotalVariation1D}) = true
 
 TotalVariation1D(lambda::R=1) where {R <: Real} = TotalVariation1D{R}(lambda)
 

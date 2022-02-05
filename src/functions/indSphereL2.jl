@@ -24,7 +24,7 @@ struct IndSphereL2{R <: Real}
     end
 end
 
-is_set(f::IndSphereL2) = true
+is_set(f::Type{<:IndSphereL2}) = true
 
 IndSphereL2(r::R=1.0) where {R <: Real} = IndSphereL2{R}(r)
 

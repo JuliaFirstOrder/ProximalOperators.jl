@@ -18,14 +18,13 @@ struct Tilt{T, S <: AbstractArray, R <: Real}
     b::R
 end
 
-is_separable(f::Tilt) = is_separable(f.f)
-is_prox_accurate(f::Tilt) = is_prox_accurate(f.f)
-is_convex(f::Tilt) = is_convex(f.f)
-is_singleton(f::Tilt) = is_singleton(f.f)
-is_smooth(f::Tilt) = is_smooth(f.f)
-is_quadratic(f::Tilt) = is_quadratic(f.f)
-is_generalized_quadratic(f::Tilt) = is_generalized_quadratic(f.f)
-is_strongly_convex(f::Tilt) = is_strongly_convex(f.f)
+is_separable(::Type{<:Tilt{T}}) where T = is_separable(T)
+is_prox_accurate(::Type{<:Tilt{T}}) where T = is_prox_accurate(T)
+is_convex(::Type{<:Tilt{T}}) where T = is_convex(T)
+is_singleton(::Type{<:Tilt{T}}) where T = is_singleton(T)
+is_smooth(::Type{<:Tilt{T}}) where T = is_smooth(T)
+is_generalized_quadratic(::Type{<:Tilt{T}}) where T = is_generalized_quadratic(T)
+is_strongly_convex(::Type{<:Tilt{T}}) where T = is_strongly_convex(T)
 
 Tilt(f::T, a::S) where {R <: Real, T, S <: AbstractArray{R}} = Tilt{T, S, R}(f, a, R(0))
 

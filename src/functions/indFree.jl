@@ -12,12 +12,12 @@ a function which is identically zero.
 """
 struct IndFree end
 
-is_separable(f::IndFree) = true
-is_convex(f::IndFree) = true
-is_affine(f::IndFree) = true
-is_cone(f::IndFree) = true
-is_smooth(f::IndFree) = true
-is_quadratic(f::IndFree) = true
+is_separable(f::Type{<:IndFree}) = true
+is_convex(f::Type{<:IndFree}) = true
+is_affine(f::Type{<:IndFree}) = true
+is_cone(f::Type{<:IndFree}) = true
+is_smooth(f::Type{<:IndFree}) = true
+is_generalized_quadratic(f::Type{<:IndFree}) = true
 
 const Zero = IndFree
 

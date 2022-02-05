@@ -25,17 +25,16 @@ struct Postcompose{T, R <: Real, S <: Real}
     end
 end
 
-is_prox_accurate(f::Postcompose) = is_prox_accurate(f.f)
-is_separable(f::Postcompose) = is_separable(f.f)
-is_convex(f::Postcompose) = is_convex(f.f)
-is_set(f::Postcompose) = is_set(f.f)
-is_singleton(f::Postcompose) = is_singleton(f.f)
-is_cone(f::Postcompose) = is_cone(f.f)
-is_affine(f::Postcompose) = is_affine(f.f)
-is_smooth(f::Postcompose) = is_smooth(f.f)
-is_quadratic(f::Postcompose) = is_quadratic(f.f)
-is_generalized_quadratic(f::Postcompose) = is_generalized_quadratic(f.f)
-is_strongly_convex(f::Postcompose) = is_strongly_convex(f.f)
+is_prox_accurate(::Type{<:Postcompose{T}}) where T = is_prox_accurate(T)
+is_separable(::Type{<:Postcompose{T}}) where T = is_separable(T)
+is_convex(::Type{<:Postcompose{T}}) where T = is_convex(T)
+is_set(::Type{<:Postcompose{T}}) where T = is_set(T)
+is_singleton(::Type{<:Postcompose{T}}) where T = is_singleton(T)
+is_cone(::Type{<:Postcompose{T}}) where T = is_cone(T)
+is_affine(::Type{<:Postcompose{T}}) where T = is_affine(T)
+is_smooth(::Type{<:Postcompose{T}}) where T = is_smooth(T)
+is_generalized_quadratic(::Type{<:Postcompose{T}}) where T = is_generalized_quadratic(T)
+is_strongly_convex(::Type{<:Postcompose{T}}) where T = is_strongly_convex(T)
 
 Postcompose(f::T, a::R=1, b::S=0) where {T, R <: Real, S <: Real} = Postcompose{T, R, S}(f, a, b)
 

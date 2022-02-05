@@ -26,8 +26,8 @@ struct LogBarrier{R, S, T}
     end
 end
 
-is_separable(f::LogBarrier) = true
-is_convex(f::LogBarrier) = true
+is_separable(f::Type{<:LogBarrier}) = true
+is_convex(f::Type{<:LogBarrier}) = true
 
 LogBarrier(a::R=1, b::S=0, mu::T=1) where {R, S, T} = LogBarrier{R, S, T}(a, b, mu)
 

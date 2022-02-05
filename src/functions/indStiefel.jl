@@ -16,7 +16,7 @@ are inferred from the matrix provided as input.
 """
 struct IndStiefel end
 
-is_set(f::IndStiefel) = true
+is_set(f::Type{<:IndStiefel}) = true
 
 function (f::IndStiefel)(X::AbstractMatrix{T}) where {R <: Real, T <: Union{R, Complex{R}}}
     F = svd(X)

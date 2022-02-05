@@ -17,8 +17,8 @@ end
 
 PointwiseMinimum(fs...) = PointwiseMinimum{typeof(fs)}(fs)
 
-is_cone(g::PointwiseMinimum{T}) where T = all(is_cone(f) for f in g.fs)
-is_set(g::PointwiseMinimum{T}) where T = all(is_set(f) for f in g.fs)
+is_cone(::Type{PointwiseMinimum{T}}) where T = all(is_cone.(T.parameters))
+is_set(::Type{PointwiseMinimum{T}}) where T = all(is_set.(T.parameters))
 
 function (g::PointwiseMinimum{T})(x) where T
     return minimum(f(x) for f in g.fs)

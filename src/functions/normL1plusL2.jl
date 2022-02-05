@@ -21,9 +21,9 @@ struct NormL1plusL2{L1<:NormL1, L2 <: NormL2}
     l2::L2
 end
 
-is_separable(f::NormL1plusL2) = false
-is_convex(f::NormL1plusL2) = true
-is_positively_homogeneous(f::NormL1plusL2) = true
+is_separable(f::Type{<:NormL1plusL2}) = false
+is_convex(f::Type{<:NormL1plusL2}) = true
+is_positively_homogeneous(f::Type{<:NormL1plusL2}) = true
 
 function NormL1plusL2(lambda1::L=1, lambda2::M=1) where {L <: Union{Real, AbstractArray}, M <: Real}
     NormL1plusL2(NormL1(lambda1), NormL2(lambda2))

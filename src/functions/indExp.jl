@@ -15,8 +15,8 @@ C = \\mathrm{cl} \\{ (r,s,t) : s > 0, s⋅e^{r/s} \\leq t \\} \\subset \\mathbb{
 """
 struct IndExpPrimal end
 
-is_convex(f::IndExpPrimal) = true
-is_cone(f::IndExpPrimal) = true
+is_convex(f::Type{<:IndExpPrimal}) = true
+is_cone(f::Type{<:IndExpPrimal}) = true
 
 """
 **Indicator of the (dual) exponential cone**

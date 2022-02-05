@@ -27,8 +27,8 @@ struct IndBallRank{I <: Integer}
     end
 end
 
-is_set(f::IndBallRank) = true
-is_prox_accurate(f::IndBallRank) = false
+is_set(f::Type{<:IndBallRank}) = true
+is_prox_accurate(f::Type{<:IndBallRank}) = false
 
 IndBallRank(r::I=1) where {I <: Integer} = IndBallRank{I}(r)
 

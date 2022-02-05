@@ -20,11 +20,10 @@ struct IndPoint{T}
     end
 end
 
-is_separable(f::IndPoint) = true
-is_convex(f::IndPoint) = true
-is_singleton(f::IndPoint) = true
-is_cone(f::IndPoint) = norm(f.p) == 0
-is_affine(f::IndPoint) = true
+is_separable(f::Type{<:IndPoint}) = true
+is_convex(f::Type{<:IndPoint}) = true
+is_singleton(f::Type{<:IndPoint}) = true
+is_affine(f::Type{<:IndPoint}) = true
 
 IndPoint(p::T=0.0) where T = IndPoint{T}(p)
 

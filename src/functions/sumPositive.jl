@@ -14,8 +14,8 @@ f(x) = ∑_i \\max\\{0, x_i\\}.
 """
 struct SumPositive end
 
-is_separable(f::SumPositive) = true
-is_convex(f::SumPositive) = true
+is_separable(f::Type{<:SumPositive}) = true
+is_convex(f::Type{<:SumPositive}) = true
 
 function (f::SumPositive)(x::AbstractArray{T}) where T <: Real
     return sum(xi -> max(xi, 0), x)

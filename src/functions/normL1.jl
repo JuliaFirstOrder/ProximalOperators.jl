@@ -30,9 +30,9 @@ struct NormL1{T}
     end
 end
 
-is_separable(f::NormL1) = true
-is_convex(f::NormL1) = true
-is_positively_homogeneous(f::NormL1) = true
+is_separable(f::Type{<:NormL1}) = true
+is_convex(f::Type{<:NormL1}) = true
+is_positively_homogeneous(f::Type{<:NormL1}) = true
 
 NormL1(lambda::R=1) where R = NormL1{R}(lambda)
 

@@ -14,9 +14,9 @@ struct Linear{R <: Real, A <: AbstractArray{R}}
     c::A
 end
 
-is_separable(f::Linear) = true
-is_convex(f::Linear) = true
-is_smooth(f::Linear) = true
+is_separable(f::Type{<:Linear}) = true
+is_convex(f::Type{<:Linear}) = true
+is_smooth(f::Type{<:Linear}) = true
 
 function (f::Linear{R})(x::AbstractArray{R}) where R
     return dot(f.c, x)

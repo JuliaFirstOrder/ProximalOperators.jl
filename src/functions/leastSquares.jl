@@ -6,8 +6,8 @@ export LeastSquares
 
 abstract type LeastSquares end
 
-is_smooth(f::LeastSquares) = true
-is_quadratic(f::LeastSquares) = true
+is_smooth(::Type{<:LeastSquares}) = true
+is_generalized_quadratic(::Type{<:LeastSquares}) = true
 
 ### CONSTRUCTORS
 

@@ -26,7 +26,7 @@ struct NormL21{R <: Real, I <: Integer}
     end
 end
 
-is_convex(f::NormL21) = true
+is_convex(f::Type{<:NormL21}) = true
 
 NormL21(lambda::R=1, dim::I=1) where {R <: Real, I <: Integer} = NormL21{R, I}(lambda, dim)
 

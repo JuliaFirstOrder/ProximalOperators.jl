@@ -15,17 +15,16 @@ struct Translate{T, V <: Union{Number, AbstractArray, Tuple}}
     b::V
 end
 
-is_separable(f::Translate) = is_separable(f.f)
-is_prox_accurate(f::Translate) = is_prox_accurate(f.f)
-is_convex(f::Translate) = is_convex(f.f)
-is_set(f::Translate) = is_set(f.f)
-is_singleton(f::Translate) = is_singleton(f.f)
-is_cone(f::Translate) = is_cone(f.f)
-is_affine(f::Translate) = is_affine(f.f)
-is_smooth(f::Translate) = is_smooth(f.f)
-is_quadratic(f::Translate) = is_quadratic(f.f)
-is_generalized_quadratic(f::Translate) = is_generalized_quadratic(f.f)
-is_strongly_convex(f::Translate) = is_strongly_convex(f.f)
+is_separable(::Type{<:Translate{T}}) where T = is_separable(T)
+is_prox_accurate(::Type{<:Translate{T}}) where T = is_prox_accurate(T)
+is_convex(::Type{<:Translate{T}}) where T = is_convex(T)
+is_set(::Type{<:Translate{T}}) where T = is_set(T)
+is_singleton(::Type{<:Translate{T}}) where T = is_singleton(T)
+is_cone(::Type{<:Translate{T}}) where T = is_cone(T)
+is_affine(::Type{<:Translate{T}}) where T = is_affine(T)
+is_smooth(::Type{<:Translate{T}}) where T = is_smooth(T)
+is_generalized_quadratic(::Type{<:Translate{T}}) where T = is_generalized_quadratic(T)
+is_strongly_convex(::Type{<:Translate{T}}) where T = is_strongly_convex(T)
 
 function (g::Translate)(x::T) where {T <: Union{Tuple, AbstractArray}}
     return g.f(x .+ g.b)

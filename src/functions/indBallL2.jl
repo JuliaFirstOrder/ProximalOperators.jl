@@ -24,8 +24,8 @@ struct IndBallL2{R <: Real}
     end
 end
 
-is_convex(f::IndBallL2) = true
-is_set(f::IndBallL2) = true
+is_convex(f::Type{<:IndBallL2}) = true
+is_set(f::Type{<:IndBallL2}) = true
 
 IndBallL2(r::R=1.0) where {R <: Real} = IndBallL2{R}(r)
 
