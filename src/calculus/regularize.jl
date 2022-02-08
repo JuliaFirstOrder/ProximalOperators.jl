@@ -3,11 +3,9 @@
 export Regularize
 
 """
-**Regularize**
-
     Regularize(f, ρ=1.0, a=0.0)
 
-Given function `f`, and optional parameters `ρ` (positive) and `a`, returns
+Given function `f`, and optional parameters `ρ` (positive) and `a`, return
 ```math
 g(x) = f(x) + \\tfrac{ρ}{2}\\|x-a\\|².
 ```

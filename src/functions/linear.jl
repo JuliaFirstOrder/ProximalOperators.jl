@@ -1,11 +1,9 @@
 export Linear
 
 """
-**Linear function**
-
     Linear(c)
 
-Returns the function
+Return the linear function
 ```math
 f(x) = \\langle c, x \\rangle.
 ```

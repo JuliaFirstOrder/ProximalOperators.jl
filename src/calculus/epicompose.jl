@@ -22,11 +22,9 @@
 export Epicompose
 
 """
-**Epi-composition**
-
     Epicompose(L, f, [mu])
 
-Returns the epi-composition of ``f`` with ``L``, also known as infimal
+Return the epi-composition of ``f`` with ``L``, also known as infimal
 postcomposition or image function. Given a function f and a linear operator L,
 their epi-composition is:
 ```math

@@ -1,11 +1,9 @@
 export Sum
 
 """
-**Sum of functions**
-
     Sum(f_1, ..., f_k)
 
-Given functions `f_1` to `f_k`, returns their sum
+Given functions `f_1` to `f_k`, return their sum
 
 ```math
 g(x) = \\sum_{i=1}^k f_i(x).

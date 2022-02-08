@@ -3,15 +3,13 @@
 export NormL1plusL2
 
 """
-**L1 norm plus L2 norm**
-
     NormL1plusL2(λ_1=1, λ_2=1)
 
-With two nonegative scalars λ_1 and λ_2, returns the function
+With two nonegative scalars λ_1 and λ_2, return the function
 ```math
 f(x) = λ_1 ∑_{i=1}^{n} |x_i| + λ_2 \\sqrt{x_1^2 + … + x_n^2}.
 ```
-With nonnegative array λ_1 and nonnegative scalar λ_2, returns the function
+With nonnegative array λ_1 and nonnegative scalar λ_2, return the function
 ```math
 f(x) =  ∑_{i=1}^{n} {λ_1}_i |x_i| + λ_2 \\sqrt{x_1^2 + … + x_n^2}.
 ```

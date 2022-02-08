@@ -1,11 +1,9 @@
 export PointwiseMinimum
 
 """
-**Pointwise minimum of functions**
-
     PointwiseMinimum(f_1, ..., f_k)
 
-Given functions `f_1` to `f_k`, returns their pointwise minimum, that is
+Given functions `f_1` to `f_k`, return their pointwise minimum, that is function
 ```math
 g(x) = \\min\\{f_1(x), ..., f_k(x)\\}
 ```

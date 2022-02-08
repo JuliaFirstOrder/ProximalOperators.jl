@@ -3,11 +3,9 @@
 export IndStiefel
 
 @doc raw"""
-**Indicator of the Stiefel manifold**
-
     IndStiefel()
 
-Returns the indicator of the Stiefel manifold
+Return the indicator of the Stiefel manifold
 ```math
 S_{n,p} = \left\{ X \in \mathbb{F}^{n \times p} : X^*X = I \right\}.
 ```

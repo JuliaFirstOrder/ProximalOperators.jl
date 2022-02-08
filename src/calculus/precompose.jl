@@ -3,11 +3,9 @@
 export Precompose
 
 """
-**Precomposition with linear mapping/translation**
-
     Precompose(f, L, μ, b)
 
-Returns the function
+Return the function
 ```math
 g(x) = f(Lx + b)
 ```

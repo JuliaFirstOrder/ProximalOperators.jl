@@ -3,11 +3,9 @@
 export IndBallL2
 
 """
-**Indicator of a Euclidean ball**
-
     IndBallL2(r=1.0)
 
-Returns the indicator function of the set
+Return the indicator function of the Euclidean ball
 ```math
 S = \\{ x : \\|x\\| \\leq r \\},
 ```

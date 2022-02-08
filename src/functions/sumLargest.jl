@@ -15,7 +15,7 @@
 """
     SumLargest(k::Integer=1, λ::Real=1)
 
-Returns the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 1 and `λ ⩾ 0`.
+Return the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 1 and `λ ⩾ 0`.
 """
 SumLargest(k::I=1, lambda::R=1) where {I <: Integer, R <: Real} = Postcompose(Conjugate(IndSimplex(k)), lambda)
 

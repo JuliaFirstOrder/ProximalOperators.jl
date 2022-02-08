@@ -3,11 +3,9 @@
 export IndBallL0
 
 """
-**Indicator of a ``L_0`` pseudo-norm ball**
-
     IndBallL0(r=1)
 
-Returns the indicator function of the set
+Return the indicator function of the ``L_0`` pseudo-norm ball
 ```math
 S = \\{ x : \\mathrm{nnz}(x) \\leq r \\}.
 ```

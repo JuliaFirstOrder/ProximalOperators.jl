@@ -3,11 +3,9 @@
 export HingeLoss
 
 """
-**Hinge loss**
-
     HingeLoss(y, μ=1)
 
-Returns the function
+Return the function
 ```math
 f(x) = μ⋅∑_i \\max\\{0, 1 - y_i ⋅ x_i\\},
 ```

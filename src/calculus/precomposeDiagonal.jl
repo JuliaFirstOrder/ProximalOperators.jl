@@ -3,11 +3,9 @@
 export PrecomposeDiagonal
 
 """
-**Precomposition with diagonal scaling/translation**
-
     PrecomposeDiagonal(f, a, b)
 
-Returns the function
+Return the function
 ```math
 g(x) = f(\\mathrm{diag}(a)x + b)
 ```

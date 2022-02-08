@@ -3,11 +3,9 @@
 export IndBox, IndBallLinf
 
 """
-**Indicator of a box**
-
     IndBox(low, up)
 
-Returns the indicator function of the set
+Return the indicator function of the box
 ```math
 S = \\{ x : low \\leq x \\leq up \\}.
 ```
@@ -69,7 +67,7 @@ end
 
     IndBallLinf(r=1.0)
 
-Returns the indicator function of the set
+Return the indicator function of the set
 ```math
 S = \\{ x : \\max (|x_i|) \\leq r \\}.
 ```

@@ -18,15 +18,13 @@ fun_name(f::IndAffine) = "Indicator of an affine subspace"
 ### CONSTRUCTORS
 
 """
-**Indicator of an affine subspace**
-
     IndAffine(A, b; iterative=false)
 
-If `A` is a matrix (dense or sparse) and `b` is a vector, returns the indicator function of the set
+If `A` is a matrix (dense or sparse) and `b` is a vector, return the indicator function of the affine set
 ```math
 S = \\{x : Ax = b\\}.
 ```
-If `A` is a vector and `b` is a scalar, returns the indicator function of the set
+If `A` is a vector and `b` is a scalar, return the indicator function of the set
 ```math
 S = \\{x : \\langle A, x \\rangle = b\\}.
 ```

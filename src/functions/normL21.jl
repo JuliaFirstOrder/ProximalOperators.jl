@@ -3,11 +3,9 @@
 export NormL21
 
 """
-**Sum-of-``L_2`` norms**
-
     NormL21(λ=1, dim=1)
 
-Returns the function
+Return the "sum of ``L_2`` norm" function
 ```math
 f(X) = λ⋅∑_i\\|x_i\\|
 ```

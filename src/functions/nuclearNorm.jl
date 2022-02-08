@@ -3,11 +3,9 @@
 export NuclearNorm
 
 """
-**Nuclear norm**
-
     NuclearNorm(λ=1)
 
-Returns the function
+Return the nuclear norm
 ```math
 f(X) = \\|X\\|_* = λ ∑_i σ_i(X),
 ```

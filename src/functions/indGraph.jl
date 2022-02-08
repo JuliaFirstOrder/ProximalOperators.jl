@@ -3,11 +3,9 @@ export IndGraph
 abstract type IndGraph end
 
 """
-**Indicator of the graph of a linear operator**
-
     IndGraph(A)
 
-For matrix `A` (dense or sparse) returns the indicator function of the set
+For matrix `A` (dense or sparse) return the indicator function of its graph:
 ```math
 G_A = \\{(x, y) : Ax = y\\}.
 ```

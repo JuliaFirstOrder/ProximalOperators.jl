@@ -3,11 +3,9 @@
 export IndSphereL2
 
 """
-**Indicator of a Euclidean sphere**
-
     IndSphereL2(r=1.0)
 
-Returns the indicator function of the set
+Return the indicator function of the Euclidean sphere
 ```math
 S = \\{ x : \\|x\\| = r \\},
 ```

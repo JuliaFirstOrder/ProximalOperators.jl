@@ -3,11 +3,9 @@
 export IndBallL1
 
 """
-**Indicator of a ``L_1`` norm ball**
-
     IndBallL1(r=1.0)
 
-Returns the indicator function of the set
+Return the indicator function of the ``L_1`` norm ball
 ```math
 S = \\left\\{ x : \\sum_i |x_i| \\leq r \\right\\}.
 ```

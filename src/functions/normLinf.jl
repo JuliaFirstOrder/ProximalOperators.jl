@@ -3,11 +3,9 @@
 export NormLinf
 
 """
-**``L_∞`` norm**
-
     NormLinf(λ=1)
 
-Returns the function
+Return the ``L_∞`` norm
 ```math
 f(x) = λ⋅\\max\\{|x_1|, …, |x_n|\\},
 ```

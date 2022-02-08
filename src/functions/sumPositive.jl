@@ -3,11 +3,9 @@
 export SumPositive
 
 """
-**Sum of the positive coefficients**
-
     SumPositive()
 
-Returns the function
+Return the function
 ```math
 f(x) = ∑_i \\max\\{0, x_i\\}.
 ```

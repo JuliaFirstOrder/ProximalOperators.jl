@@ -3,11 +3,9 @@
 export IndNonpositive
 
 """
-**Indicator of the nonpositive orthant**
-
     IndNonpositive()
 
-Returns the indicator of the set
+Return the indicator of the nonpositive orthant
 ```math
 C = \\{ x : x \\leq 0 \\}.
 ```

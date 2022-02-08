@@ -3,11 +3,9 @@
 export CubeNormL2
 
 """
-**Cubic Euclidean norm (weighted)**
-
     CubeNormL2(λ=1)
 
-With a nonnegative scalar `λ`, returns the function
+With a nonnegative scalar `λ`, return the function
 ```math
 f(x) = λ\\|x\\|^3.
 ```

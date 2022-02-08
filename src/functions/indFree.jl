@@ -3,11 +3,9 @@
 export IndFree
 
 """
-**Indicator of the free cone**
-
     IndFree()
 
-Returns the indicator function of the whole space, or "free cone", *i.e.*,
+Return the indicator function of the whole space, or "free cone", *i.e.*,
 a function which is identically zero.
 """
 struct IndFree end

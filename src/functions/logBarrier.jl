@@ -3,11 +3,9 @@
 export LogBarrier
 
 """
-**Logarithmic barrier**
-
     LogBarrier(a=1, b=0, μ=1)
 
-Returns the function
+Return the function
 ```math
 f(x) = -μ⋅∑_i\\log(a⋅x_i+b),
 ```

@@ -3,11 +3,9 @@
 export IndHyperslab
 
 """
-**Indicator of a hyperslab**
-
     IndHyperslab(low, a, upp)
 
-For an array `a` and scalars `low` and `upp`, returns the indicator of set
+For an array `a` and scalars `low` and `upp`, return the so-called hyperslab
 ```math
 S = \\{x : low \\leq \\langle a,x \\rangle \\leq upp \\}.
 ```

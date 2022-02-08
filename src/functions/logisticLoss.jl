@@ -3,11 +3,9 @@
 export LogisticLoss
 
 """
-**Logistic loss**
-
     LogisticLoss(y, μ=1)
 
-Returns the function
+Return the function
 ```math
 f(x) = μ⋅∑_i log(1+exp(-y_i⋅x_i))
 ```

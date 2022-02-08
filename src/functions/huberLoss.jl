@@ -5,11 +5,9 @@ using LinearAlgebra
 export HuberLoss
 
 """
-**Huber loss**
-
     HuberLoss(ρ=1, μ=1)
 
-Returns the function
+Return the function
 ```math
 f(x) = \\begin{cases}
     \\tfrac{μ}{2}\\|x\\|^2 & \\text{if}\\ \\|x\\| ⩽ ρ \\\\

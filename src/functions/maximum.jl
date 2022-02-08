@@ -3,11 +3,9 @@
 export Maximum
 
 """
-**Maximum coefficient**
-
     Maximum(λ=1)
 
-For a nonnegative parameter `λ ⩾ 0`, returns the function
+For a nonnegative parameter `λ ⩾ 0`, return the function
 ```math
 f(x) = \\lambda \\cdot \\max \\{x_i : i = 1,\\ldots, n \\}.
 ```

@@ -3,15 +3,13 @@
 export SqrNormL2
 
 """
-**Squared Euclidean norm (weighted)**
-
     SqrNormL2(λ=1)
 
-With a positive scalar `λ`, returns the function
+With a positive scalar `λ`, return the squared Euclidean norm
 ```math
 f(x) = \\tfrac{λ}{2}\\|x\\|^2.
 ```
-With a positive array `λ`, returns the function
+With a positive array `λ`, return the weighted squared Euclidean norm
 ```math
 f(x) = \\tfrac{1}{2}∑_i λ_i x_i^2.
 ```

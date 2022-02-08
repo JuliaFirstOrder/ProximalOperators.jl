@@ -3,11 +3,9 @@
 export Postcompose
 
 """
-**Postcomposition with an affine transformation**
-
     Postcompose(f, a=1, b=0)
 
-Returns the function
+Return the function
 ```math
 g(x) = a\\cdot f(x) + b.
 ```

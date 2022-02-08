@@ -3,11 +3,9 @@
 export IndBinary
 
 """
-**Indicator of the product of binary sets**
-
     IndBinary(low, up)
 
-Returns the indicator function of the set
+Return the indicator function of the set
 ```math
 S = \\{ x : x_i = low_i\\ \\text{or}\\ x_i = up_i \\},
 ```

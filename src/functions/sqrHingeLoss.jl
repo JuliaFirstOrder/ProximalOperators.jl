@@ -3,11 +3,9 @@
 export SqrHingeLoss
 
 """
-**Squared Hinge loss**
-
     SqrHingeLoss(y, μ=1)
 
-Returns the function
+Return the squared Hinge loss
 ```math
 f(x) = μ⋅∑_i \\max\\{0, 1 - y_i ⋅ x_i\\}^2,
 ```

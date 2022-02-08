@@ -6,11 +6,9 @@ using TSVD
 export IndBallRank
 
 """
-**Indicator of rank ball**
-
     IndBallRank(r=1)
 
-Returns the indicator function of the set of matrices of rank at most `r`:
+Return the indicator function of the set of matrices of rank at most `r`:
 ```math
 S = \\{ X : \\mathrm{rank}(X) \\leq r \\},
 ```

@@ -3,11 +3,9 @@
 export IndZero
 
 """
-**Indicator of the zero cone**
-
     IndZero()
 
-Returns the indicator function of the set containing the origin, the "zero cone".
+Return the indicator function of the set containing the origin, the "zero cone".
 """
 struct IndZero end
 

@@ -3,14 +3,13 @@
 export IndSimplex
 
 """
-**Indicator of a simplex**
-
     IndSimplex(a=1.0)
 
-Returns the indicator of the set
+Return the indicator of the simplex
 ```math
 S = \\left\\{ x : x \\geq 0, \\sum_i x_i = a \\right\\}.
 ```
+
 By default `a=1.0`, therefore ``S`` is the probability simplex.
 """
 struct IndSimplex{R <: Real}

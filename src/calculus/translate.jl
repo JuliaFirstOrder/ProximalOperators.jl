@@ -1,11 +1,9 @@
 export Translate
 
 """
-**Translation**
-
     Translate(f, b)
 
-Returns the translated function
+Return the translated function
 ```math
 g(x) = f(x + b)
 ```

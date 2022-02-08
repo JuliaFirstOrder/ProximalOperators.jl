@@ -3,14 +3,13 @@
 export IndPSD
 
 """
-**Indicator of the set of positive semi-definite cone**
-
     IndPSD(;scaling=false)
 
-Returns the indicator of the set
+Return the indicator of the positive semi-definite cone
 ```math
 C = \\{ X : X \\succeq 0 \\}.
 ```
+
 The argument to the function can be either a `Symmetric`, `Hermitian`, or
 `AbstractMatrix` object, or an object of type `AbstractVector{Float64}` holding
 a symmetric matrix in (lower triangular) packed storage.

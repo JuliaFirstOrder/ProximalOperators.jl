@@ -3,11 +3,9 @@
 export NormL0
 
 """
-**``L_0`` pseudo-norm**
-
     NormL0(λ=1)
 
-Returns the function
+Return the ``L_0`` pseudo-norm function
 ```math
 f(x) = λ\\cdot\\mathrm{nnz}(x)
 ```

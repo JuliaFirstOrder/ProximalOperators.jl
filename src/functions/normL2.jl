@@ -3,11 +3,9 @@
 export NormL2
 
 """
-**``L_2`` norm**
-
     NormL2(λ=1)
 
-With a nonnegative scalar parameter λ, returns the function
+With a nonnegative scalar parameter λ, return the ``L_2`` norm
 ```math
 f(x) = λ\\cdot\\sqrt{x_1^2 + … + x_n^2}.
 ```

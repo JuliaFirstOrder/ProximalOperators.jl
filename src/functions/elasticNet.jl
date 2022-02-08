@@ -3,11 +3,9 @@
 export ElasticNet
 
 """
-**Elastic-net regularization**
-
     ElasticNet(μ=1, λ=1)
 
-Returns the function
+Return the function
 ```math
 f(x) = μ\\|x\\|_1 + (λ/2)\\|x\\|^2,
 ```

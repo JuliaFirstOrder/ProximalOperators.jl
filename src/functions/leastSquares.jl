@@ -12,11 +12,9 @@ is_generalized_quadratic(::Type{<:LeastSquares}) = true
 ### CONSTRUCTORS
 
 """
-**Least squares penalty**
-
     LeastSquares(A, b, λ=1.0; iterative=false)
 
-For a matrix `A`, a vector `b` and a scalar `λ`, returns the function
+For a matrix `A`, a vector `b` and a scalar `λ`, return the function
 ```math
 f(x) = \\tfrac{\\lambda}{2}\\|Ax - b\\|^2.
 ```

@@ -3,11 +3,9 @@
 export IndPoint
 
 """
-**Indicator of a singleton**
-
     IndPoint(p=0.0)
 
-Returns the indicator of the set
+Return the indicator of the singleton set
 ```math
 C = \\{p \\}.
 ```

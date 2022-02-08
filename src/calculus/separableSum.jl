@@ -3,11 +3,9 @@
 export SeparableSum
 
 """
-**Separable sum of functions**
-
     SeparableSum(f_1, ..., f_k)
 
-Given functions `f_1` to `f_k`, returns their separable sum, that is
+Given functions `f_1` to `f_k`, return their separable sum, that is
 ```math
 g(x_1, ..., x_k) = \\sum_{i=1}^k f_i(x_i).
 ```

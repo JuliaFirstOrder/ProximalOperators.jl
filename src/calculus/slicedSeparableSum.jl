@@ -3,18 +3,16 @@
 export SlicedSeparableSum
 
 """
-**Sliced separable sum of functions**
-
     SlicedSeparableSum((f_1, ..., f_k), (J_1, ..., J_k))
 
-Returns the function
+Return the function
 ```math
 g(x) = \\sum_{i=1}^k f_i(x_{J_i}).
 ```
 
     SlicedSeparableSum(f, (J_1, ..., J_k))
 
-Analogous to the previous one, but applies the same function `f` to all slices
+Analogous to the previous one, but apply the same function `f` to all slices
 of the variable `x`:
 ```math
 g(x) = \\sum_{i=1}^k f(x_{J_i}).
@@ -32,16 +30,16 @@ function SlicedSeparableSum(fs::S, idxs::T) where {S <: Tuple, T <: Tuple}
     fsarr = Array{Any,1}[]
     indarr = Array{eltype(idxs),1}[]
     for (i,f) in enumerate(fs)
-      t = typeof(f)
-      fi = findfirst(isequal(t), ftypes)
-      if fi === nothing
-        push!(ftypes, t)
-        push!(fsarr, Any[f])
-        push!(indarr, eltype(idxs)[idxs[i]])
-      else
-        push!(fsarr[fi], f)
-        push!(indarr[fi], idxs[i])
-      end
+        t = typeof(f)
+        fi = findfirst(isequal(t), ftypes)
+        if fi === nothing
+            push!(ftypes, t)
+            push!(fsarr, Any[f])
+            push!(indarr, eltype(idxs)[idxs[i]])
+        else
+            push!(fsarr[fi], f)
+            push!(indarr[fi], idxs[i])
+        end
     end
     fsnew = ((Array{typeof(fs[1]),1}(fs) for fs in fsarr)...,)
     @assert typeof(fsnew) == Tuple{(Array{ft,1} for ft in ftypes)...}
@@ -55,28 +53,28 @@ SlicedSeparableSum(([f for k in eachindex(idxs)]...,), idxs)
 # Unroll the loop over the different types of functions to evaluate
 @generated function (f::SlicedSeparableSum{A, B, N})(x::T) where {A, B, N, T <: AbstractArray}
     ex = :(v = 0.0)
-  for i = 1:N # For each function type
-    ex = quote $ex;
-      for k in eachindex(f.fs[$i]) # For each function of that type
+    for i = 1:N # For each function type
+        ex = quote $ex;
+            for k in eachindex(f.fs[$i]) # For each function of that type
                 v += f.fs[$i][k](view(x,f.idxs[$i][k]...))
-      end
+            end
+        end
     end
-  end
-  ex = :($ex; return v)
+    ex = :($ex; return v)
 end
 
 # Unroll the loop over the different types of functions to prox on
 @generated function prox!(y::AbstractArray{T}, f::SlicedSeparableSum{A, B, N}, x::AbstractArray{T}, gamma) where {T <: RealOrComplex, A, B, N}
-  ex = :(v = 0.0)
-  for i = 1:N # For each function type
-    ex = quote $ex;
-      for k in eachindex(f.fs[$i]) # For each function of that type
-        g = prox!(view(y, f.idxs[$i][k]...), f.fs[$i][k], view(x,f.idxs[$i][k]...), gamma)
-        v += g
-      end
+    ex = :(v = 0.0)
+    for i = 1:N # For each function type
+        ex = quote $ex;
+            for k in eachindex(f.fs[$i]) # For each function of that type
+                g = prox!(view(y, f.idxs[$i][k]...), f.fs[$i][k], view(x,f.idxs[$i][k]...), gamma)
+                v += g
+            end
+        end
     end
-  end
-  ex = :($ex; return v)
+    ex = :($ex; return v)
 end
 
 is_prox_accurate(::Type{<:SlicedSeparableSum{T}}) where T = all(is_prox_accurate(A.parameters[1]) for A in T.parameters)

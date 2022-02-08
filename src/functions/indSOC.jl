@@ -3,11 +3,9 @@
 export IndSOC, IndRotatedSOC
 
 """
-**Indicator of the second-order cone**
-
     IndSOC()
 
-Returns the indicator of the second-order cone (also known as ice-cream cone or Lorentz cone), that is
+Return the indicator of the second-order cone (also known as ice-cream cone or Lorentz cone), that is
 ```math
 C = \\left\\{ (t, x) : \\|x\\| \\leq t \\right\\}.
 ```
@@ -70,7 +68,7 @@ end
 
         IndRotatedSOC()
 
-Returns the indicator of the *rotated* second-order cone (also known as ice-cream cone or Lorentz cone), that is
+Return the indicator of the *rotated* second-order cone (also known as ice-cream cone or Lorentz cone), that is
 ```math
 C = \\left\\{ (p, q, x) : \\|x\\|^2 \\leq 2\\cdot pq, p \\geq 0, q \\geq 0 \\right\\}.
 ```
