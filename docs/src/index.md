@@ -36,10 +36,7 @@ For example, one can create the L1-norm as follows.
 julia> using ProximalOperators
 
 julia> f = NormL1(3.5)
-description : weighted L1 norm
-domain      : AbstractArray{Real}, AbstractArray{Complex}
-expression  : x ↦ λ||x||_1
-parameters  : λ = 3.5
+NormL1{Float64}(3.5)
 ```
 
 Functions created this way are, of course, callable.

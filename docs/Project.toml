@@ -1,6 +1,7 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 ProximalOperators = "a725b495-10eb-56fe-b38b-717eba820537"
+ProximalCore = "dc4f5ac2-75d1-4f31-931e-60435d74994b"
 
 [compat]
 Documenter = "~0.26"

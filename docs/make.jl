@@ -1,7 +1,7 @@
-using Documenter, ProximalOperators
+using Documenter, ProximalOperators, ProximalCore
 
 makedocs(
-    modules = [ProximalOperators],
+    modules = [ProximalOperators, ProximalCore],
     sitename = "ProximalOperators.jl",
     pages = [
         "Home" => "index.md",
