@@ -1,6 +1,6 @@
 name = "ProximalOperators"
 uuid = "a725b495-10eb-56fe-b38b-717eba820537"
-version = "0.14.2"
+version = "0.15.0"
 
 [deps]
 IterativeSolvers = "42fd0dbc-a981-5370-80f2-aaf504508153"
@@ -16,11 +16,4 @@ IterativeSolvers = "0.8, 0.9"
 OSQP = "0.3, 0.4, 0.5, 0.6, 0.7"
 TSVD = "0.3, 0.4"
 ProximalCore = "0.1"
-julia = "1.0.0"
-
-[extras]
-Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[targets]
-test = ["Random", "Test"]
+julia = "1.2"
