@@ -43,8 +43,3 @@ function gradient!(y, f::CrossEntropy, x)
     end
     return -1/length(f.b)*sum
 end
-
-function prox!(y, f::CrossEntropy, x, gamma)
-    # TODO: fill-in here
-    error("not implemented")
-end
