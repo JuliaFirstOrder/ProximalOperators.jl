@@ -12,8 +12,8 @@ SuiteSparse = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 TSVD = "9449cd9e-2762-5aa3-a617-5413e99d722e"
 
 [compat]
-IterativeSolvers = "0.8, 0.9"
-OSQP = "0.3, 0.4, 0.5, 0.6, 0.7"
-TSVD = "0.3, 0.4"
+IterativeSolvers = "0.8 - 0.9"
+OSQP = "0.3 - 0.7"
+TSVD = "0.3 - 0.4"
 ProximalCore = "0.1"
-julia = "1.2"
+julia = "1.4"
