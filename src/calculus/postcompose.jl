@@ -10,11 +10,11 @@ Return the function
 g(x) = a\\cdot f(x) + b.
 ```
 """
-struct Postcompose{T, R <: Real, S <: Real}
+struct Postcompose{T, R, S}
     f::T
     a::R
     b::S
-    function Postcompose{T,R,S}(f::T, a::R, b::S) where {T, R <: Real, S <: Real}
+    function Postcompose{T,R,S}(f::T, a::R, b::S) where {T, R, S}
         if a <= 0
             error("parameter `a` must be positive")
         else
@@ -38,28 +38,22 @@ Postcompose(f::T, a::R=1, b::S=0) where {T, R <: Real, S <: Real} = Postcompose{
 
 Postcompose(f::Postcompose{T, R, S}, a::R=1, b::S=0) where {T, R <: Real, S <: Real} = Postcompose{T, R, S}(f.f, a * f.a, b + a * f.b)
 
-function (g::Postcompose)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+function (g::Postcompose)(x)
     return g.a * g.f(x) + g.b
 end
 
-function gradient!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}) where {
-    R <: Real, T <: RealOrComplex{R}
-}
+function gradient!(y, g::Postcompose, x)
     v = gradient!(y, g.f, x)
     y .*= g.a
     return g.a * v + g.b
 end
 
-function prox!(y::AbstractArray{T}, g::Postcompose, x::AbstractArray{T}, gamma=R(1)) where {
-    R <: Real, T <: RealOrComplex{R}
-}
+function prox!(y, g::Postcompose, x, gamma)
     v = prox!(y, g.f, x, g.a * gamma)
     return g.a * v + g.b
 end
 
-function prox_naive(g::Postcompose, x::AbstractArray{T}, gamma=R(1)) where {
-    R <: Real, T <: RealOrComplex{R}
-}
+function prox_naive(g::Postcompose, x, gamma)
     y, v = prox_naive(g.f, x, g.a * gamma)
     return y, g.a * v + g.b
 end

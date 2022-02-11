@@ -34,24 +34,11 @@ Conjugate(f::T) where T = Conjugate{T}(f)
 # only prox! is provided here, call method would require being able to compute
 # an element of the subdifferential of the conjugate
 
-function prox!(y::AbstractArray{R}, g::Conjugate, x::AbstractArray{R}, gamma) where R
+function prox!(y, g::Conjugate, x, gamma)
     # Moreau identity
     v = prox!(y, g.f, x/gamma, 1/gamma)
     if is_set(g)
-        v = R(0)
-    else
-        v = dot(x, y) - gamma * dot(y, y) - v
-    end
-    y .= x .- gamma .* y
-    return v
-end
-
-# complex case, need to cast inner products to real
-
-function prox!(y::AbstractArray{Complex{R}}, g::Conjugate, x::AbstractArray{Complex{R}}, gamma) where R
-    v = prox!(y, g.f, x/gamma, 1/gamma)
-    if is_set(g)
-        v = R(0)
+        v = real(eltype(x))(0)
     else
         v = real(dot(x, y)) - gamma * real(dot(y, y)) - v
     end
@@ -61,9 +48,9 @@ end
 
 # naive implementation
 
-function prox_naive(g::Conjugate, x::AbstractArray{T}, gamma) where {R, T <: RealOrComplex{R}}
+function prox_naive(g::Conjugate, x, gamma)
     y, v = prox_naive(g.f, x/gamma, 1/gamma)
-    return x - gamma * y, if is_set(g) R(0) else real(dot(x, y)) - gamma * real(dot(y, y)) - v end
+    return x - gamma * y, if is_set(g) real(eltype(x))(0) else real(dot(x, y)) - gamma * real(dot(y, y)) - v end
 end
 
 # TODO: hard-code conjugation rules? E.g. precompose/epicompose

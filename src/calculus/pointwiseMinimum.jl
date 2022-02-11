@@ -22,8 +22,8 @@ function (g::PointwiseMinimum{T})(x) where T
     return minimum(f(x) for f in g.fs)
 end
 
-function prox!(y::T, g::PointwiseMinimum, x::T, gamma) where
-    {R <: Real, C <: Union{R, Complex{R}}, T <: AbstractArray{C}}
+function prox!(y, g::PointwiseMinimum, x, gamma)
+    R = real(eltype(x))
     y_temp = similar(y)
     minimum_moreau_env = Inf
     for f in g.fs
@@ -37,8 +37,8 @@ function prox!(y::T, g::PointwiseMinimum, x::T, gamma) where
     return g(y)
 end
 
-function prox_naive(g::PointwiseMinimum, x::T, gamma) where
-    {R <: Real, C <: Union{R, Complex{R}}, T <: AbstractArray{C}}
+function prox_naive(g::PointwiseMinimum, x, gamma)
+    R = real(eltype(x))
     proxes = [prox_naive(f, x, gamma) for f in g.fs]
     moreau_envs = [f_y + R(1)/(R(2)*gamma)*norm(x - y)^2 for (y, f_y) in proxes]
     _, i_min = findmin(moreau_envs)
