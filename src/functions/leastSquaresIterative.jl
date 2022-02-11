@@ -42,7 +42,7 @@ function (f::LeastSquaresIterative{N, R, RC, M, V})(x::AbstractArray{RC, N}) whe
     return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function prox!(y::AbstractArray{D, N}, f::LeastSquaresIterative{N, R, RC, M, V}, x::AbstractArray{D, N}, gamma::R) where {N, R, RC, M, V, D <: RealOrComplex{R}}
+function prox!(y::AbstractArray{D, N}, f::LeastSquaresIterative{N, R, RC, M, V}, x::AbstractArray{D, N}, gamma) where {N, R, RC, M, V, D <: RealOrComplex{R}}
     f.q .= f.lambdaAtb .+ x./gamma
     # two cases: (1) tall A, (2) fat A
     if f.shape == :Tall
