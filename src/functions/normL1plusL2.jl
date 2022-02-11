@@ -23,21 +23,19 @@ is_separable(f::Type{<:NormL1plusL2}) = false
 is_convex(f::Type{<:NormL1plusL2}) = true
 is_positively_homogeneous(f::Type{<:NormL1plusL2}) = true
 
-function NormL1plusL2(lambda1::L=1, lambda2::M=1) where {L <: Union{Real, AbstractArray}, M <: Real}
-    NormL1plusL2(NormL1(lambda1), NormL2(lambda2))
-end
+NormL1plusL2(lambda1::L=1, lambda2::M=1) where {L, M} = NormL1plusL2(NormL1(lambda1), NormL2(lambda2))
 
-function (f::NormL1plusL2)(x::AbstractArray{T}) where T <: RealOrComplex
+function (f::NormL1plusL2)(x)
     return f.l1(x) + f.l2(x)
 end
 
-function prox!(y::AbstractArray{T}, f::NormL1plusL2, x::AbstractArray{T}, gamma::Real=1) where T <: RealOrComplex
+function prox!(y, f::NormL1plusL2, x, gamma)
     prox!(y, f.l1, x, gamma)
     prox!(y, f.l2, y, gamma)
     return f(y)
 end
 
-function prox_naive(f::NormL1plusL2, x::AbstractArray{T}, gamma::Real=1) where T <: RealOrComplex
+function prox_naive(f::NormL1plusL2, x, gamma)
     y1, v1 = prox_naive(f.l1, x, gamma)
     y2, v2 = prox_naive(f.l2, y1, gamma)
     return y2, f(y2)

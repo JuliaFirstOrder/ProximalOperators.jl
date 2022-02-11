@@ -29,7 +29,8 @@ is_convex(f::Type{<:LogBarrier}) = true
 
 LogBarrier(a::R=1, b::S=0, mu::T=1) where {R, S, T} = LogBarrier{R, S, T}(a, b, mu)
 
-function (f::LogBarrier)(x::AbstractArray{T}) where T <: Real
+function (f::LogBarrier)(x)
+    T = eltype(x)
     sumf = T(0)
     v = T(0)
     for i in eachindex(x)
@@ -42,7 +43,8 @@ function (f::LogBarrier)(x::AbstractArray{T}) where T <: Real
     return -f.mu * sumf
 end
 
-function prox!(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T}, gamma::Real=1) where T <: Real
+function prox!(y, f::LogBarrier, x, gamma)
+    T = eltype(x)
     par = 4 * gamma * f.mu * f.a * f.a
     sumf = T(0)
     z = T(0)
@@ -56,7 +58,8 @@ function prox!(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T}, gamma::R
     return -f.mu * sumf
 end
 
-function prox!(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T}, gamma::AbstractArray) where T <: Real
+function prox!(y, f::LogBarrier, x, gamma::AbstractArray)
+    T = eltype(x)
     par = 4 * f.mu * f.a * f.a
     sumf = T(0)
     z = T(0)
@@ -71,18 +74,17 @@ function prox!(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T}, gamma::A
     return -f.mu * sumf
 end
 
-function gradient!(y::AbstractArray{T}, f::LogBarrier, x::AbstractArray{T}) where T <: Real
-    sum = T(0)
+function gradient!(y, f::LogBarrier, x)
+    sumf = eltype(x)(0)
     for i in eachindex(x)
         logarg = f.a * x[i] + f.b
         y[i] = -f.mu * f.a / logarg
-        sum += log(logarg)
+        sumf += log(logarg)
     end
-    sum *= -f.mu
-    return sum
+    return -f.mu * sumf
 end
 
-function prox_naive(f::LogBarrier, x::AbstractArray{T,1}, gamma::Union{Real, AbstractArray}=1) where T <: Real
+function prox_naive(f::LogBarrier, x, gamma)
     asqr = f.a * f.a
     z = f.a * x .+ f.b
     y = ((z .+ sqrt.(z .* z .+ 4 * gamma * f.mu * asqr)) / 2 .- f.b) / f.a

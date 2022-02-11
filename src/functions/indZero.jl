@@ -15,22 +15,24 @@ is_singleton(f::Type{<:IndZero}) = true
 is_cone(f::Type{<:IndZero}) = true
 is_affine(f::Type{<:IndZero}) = true
 
-function (f::IndZero)(x::AbstractArray{C}) where {R <: Real, C <: Union{R, Complex{R}}}
+function (f::IndZero)(x)
+    C = eltype(x)
     for k in eachindex(x)
         if x[k] != C(0)
             return R(Inf)
         end
     end
-    return R(0)
+    return real(C)(0)
 end
 
-function prox!(y::AbstractArray{C}, f::IndZero, x::AbstractArray{C}, gamma=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
+function prox!(y, f::IndZero, x, gamma)
+    C = eltype(x)
     for k in eachindex(x)
         y[k] = C(0)
     end
-    return R(0)
+    return real(C)(0)
 end
 
-function prox_naive(f::IndZero, x::AbstractArray{C}, gamma=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
-    return zero(x), R(0)
+function prox_naive(f::IndZero, x, gamma)
+    return zero(x), real(eltype(x))(0)
 end

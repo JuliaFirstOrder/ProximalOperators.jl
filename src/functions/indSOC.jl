@@ -12,18 +12,20 @@ C = \\left\\{ (t, x) : \\|x\\| \\leq t \\right\\}.
 """
 struct IndSOC end
 
-function (f::IndSOC)(x::AbstractVector{T}) where T <: Real
+function (::IndSOC)(x)
+    T = eltype(x)
     # the tolerance in the following line should be customizable
     if isapprox_le(norm(x[2:end]), x[1], atol=eps(T), rtol=sqrt(eps(T)))
         return T(0)
     end
-    return +Inf
+    return T(Inf)
 end
 
 is_convex(f::Type{<:IndSOC}) = true
 is_set(f::Type{<:IndSOC}) = true
 
-function prox!(y::AbstractVector{T}, f::IndSOC, x::AbstractVector{T}, gamma) where T <: Real
+function prox!(y, ::IndSOC, x, gamma)
+    T = eltype(x)
     @views nx = norm(x[2:end])
     t = x[1]
     if t <= -nx
@@ -38,7 +40,8 @@ function prox!(y::AbstractVector{T}, f::IndSOC, x::AbstractVector{T}, gamma) whe
     return T(0)
 end
 
-function prox_naive(f::IndSOC, x::AbstractVector{T}, gamma) where T <: Real
+function prox_naive(::IndSOC, x, gamma)
+    T = eltype(x)
     nx = norm(x[2:end])
     t = x[1]
     if t <= -nx
@@ -70,7 +73,8 @@ C = \\left\\{ (p, q, x) : \\|x\\|^2 \\leq 2\\cdot pq, p \\geq 0, q \\geq 0 \\rig
 """
 struct IndRotatedSOC end
 
-function (f::IndRotatedSOC)(x::AbstractVector{T}) where T <: Real
+function (::IndRotatedSOC)(x)
+    T = eltype(x)
     if isapprox_le(0, x[1], atol=eps(T), rtol=sqrt(eps(T))) &&
         isapprox_le(0, x[2], atol=eps(T), rtol=sqrt(eps(T))) &&
         isapprox_le(norm(x[3:end])^2, 2*x[1]*x[2], atol=eps(T), rtol=sqrt(eps(T)))
@@ -82,7 +86,8 @@ end
 is_convex(f::IndRotatedSOC) = true
 is_set(f::IndRotatedSOC) = true
 
-function prox!(y::AbstractVector{T}, f::IndRotatedSOC, x::AbstractVector{T}, gamma) where T <: Real
+function prox!(y, ::IndRotatedSOC, x, gamma)
+    T = eltype(x)
     # sin(pi/4) = cos(pi/4) = 0.7071067811865475
     # rotate x ccw by pi/4
     x1 = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
@@ -110,7 +115,7 @@ function prox!(y::AbstractVector{T}, f::IndRotatedSOC, x::AbstractVector{T}, gam
     return T(0)
 end
 
-function prox_naive(f::IndRotatedSOC, x::AbstractVector{T}, gamma) where T <: Real
+function prox_naive(::IndRotatedSOC, x, gamma)
     g = IndSOC()
     z = copy(x)
     z[1] = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
@@ -120,5 +125,5 @@ function prox_naive(f::IndRotatedSOC, x::AbstractVector{T}, gamma) where T <: Re
     y2 = 0.7071067811865475*y[1] - 0.7071067811865475*y[2]
     y[1] = y1
     y[2] = y2
-    return y, T(0)
+    return y, eltype(x)(0)
 end

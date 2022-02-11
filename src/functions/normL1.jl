@@ -122,7 +122,7 @@ function prox!(y::AbstractArray{C}, f::NormL1{T}, x::AbstractArray{C}, gamma::Ab
     return f.lambda * n1y
 end
 
-function gradient!(y::AbstractArray{T}, f::NormL1, x::AbstractArray{T}) where T <: Union{Real, Complex}
+function gradient!(y, f::NormL1, x)
     y .= f.lambda .* sign.(x)
     return f(x)
 end
