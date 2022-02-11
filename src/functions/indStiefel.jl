@@ -24,7 +24,7 @@ function (f::IndStiefel)(X::AbstractMatrix{T}) where {R <: Real, T <: Union{R, C
     return R(Inf)
 end
 
-function prox!(Y::AbstractMatrix{T}, f::IndStiefel, X::AbstractMatrix{T}, gamma::R=R(1)) where {R <: Real, T <: Union{R, Complex{R}}}
+function prox!(Y::AbstractMatrix{T}, f::IndStiefel, X::AbstractMatrix{T}, gamma::R) where {R <: Real, T <: Union{R, Complex{R}}}
     n, p = size(X)
     F = svd(X)
     U_sliced = view(F.U, :, 1:p)
@@ -32,7 +32,7 @@ function prox!(Y::AbstractMatrix{T}, f::IndStiefel, X::AbstractMatrix{T}, gamma:
     return R(0)
 end
 
-function prox_naive(f::IndStiefel, X::AbstractMatrix{T}, gamma::R=R(1)) where {R, T <: Union{R, Complex{R}}}
+function prox_naive(f::IndStiefel, X::AbstractMatrix{T}, gamma::R) where {R, T <: Union{R, Complex{R}}}
     n, p = size(X)
     F = svd(X)
     Y = F.U[:, 1:p] * F.Vt

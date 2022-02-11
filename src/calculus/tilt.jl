@@ -35,11 +35,6 @@ function prox!(y::AbstractArray{T}, g::Tilt, x::AbstractArray{T}, gamma=R(1)) wh
     return v + dot(g.a, y) + g.b
 end
 
-fun_name(f::Tilt) = string("Tilted ", fun_name(f.f))
-fun_dom(f::Tilt) = fun_dom(f.f)
-fun_expr(f::Tilt) = string(fun_expr(f.f)," + a'x + b")
-fun_params(f::Tilt) = "a = $(typeof(f.a)), b = $(f.b)"
-
 function prox_naive(g::Tilt, x::AbstractArray{T}, gamma=R(1)) where {R <: Real, T <: RealOrComplex{R}}
     y, v = prox_naive(g.f, x .- gamma .* g.a, gamma)
     return y, v + dot(g.a, y) + g.b

@@ -38,11 +38,6 @@ function prox!(y::AbstractVector{T}, f::IndSOC, x::AbstractVector{T}, gamma) whe
     return T(0)
 end
 
-fun_name(f::IndSOC) = "indicator of the second-order cone"
-fun_dom(f::IndSOC) = "AbstractArray{Real,1}"
-fun_expr(f::IndSOC) = "x ↦ 0 if x[1] >= ||x[2:end]||, +∞ otherwise"
-fun_params(f::IndSOC) = "none"
-
 function prox_naive(f::IndSOC, x::AbstractVector{T}, gamma) where T <: Real
     nx = norm(x[2:end])
     t = x[1]

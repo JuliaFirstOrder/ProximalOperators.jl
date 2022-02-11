@@ -59,11 +59,6 @@ function gradient!(y, f::DistL2, x)
     return f.lambda * dist
 end
 
-fun_name(f::DistL2) = "Euclidean distance from a convex set"
-fun_dom(f::DistL2) = fun_dom(f.ind)
-fun_expr(f::DistL2) = "x ↦ λ inf { ||x-y|| : y ∈ S} "
-fun_params(f::DistL2) = string("λ = $(f.lambda), S = ", typeof(f.ind))
-
 function prox_naive(f::DistL2, x, gamma)
     R = real(eltype(x))
     p, = prox(f.ind, x)

@@ -63,8 +63,3 @@ function prox_naive(g::Postcompose, x::AbstractArray{T}, gamma=R(1)) where {
     y, v = prox_naive(g.f, x, g.a * gamma)
     return y, g.a * v + g.b
 end
-
-fun_name(f::Postcompose) = string("Postcomposition of ", fun_name(f.f))
-fun_dom(f::Postcompose) = fun_dom(f.f)
-fun_expr(f::Postcompose) = "x ↦ a*f(x)+b"
-fun_params(f::Postcompose) = string("f(x) = ", fun_expr(f.f), ", a = $(f.a), b = $(f.b)")

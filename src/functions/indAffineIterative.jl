@@ -1,41 +1,41 @@
 ### CONCRETE TYPE: ITERATIVE PROX EVALUATION
 
-struct IndAffineIterative{R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}} <: IndAffine
+struct IndAffineIterative{M, V} <: IndAffine
     A::M
     b::V
     res::V
-    maxit::Integer
-    tol::R
-    function IndAffineIterative{R, T, M, V}(A::M, b::V) where {R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}}
+    function IndAffineIterative{M, V}(A::M, b::V) where {M, V}
         if size(A,1) > size(A,2)
             error("A must be full row rank")
         end
         normrowsinv = 1 ./ vec(sqrt.(sum(abs2.(A); dims=2)))
         A = normrowsinv.*A # normalize rows of A
         b = normrowsinv.*b # and b accordingly
-        new(A, b, similar(b), 1000, 1e-8)
+        new(A, b, similar(b))
     end
 end
 
 is_prox_accurate(f::Type{<:IndAffineIterative}) = false
 
-IndAffineIterative(A::M, b::V) where {R <: Real, T <: RealOrComplex{R}, M <: AbstractMatrix{T}, V <: AbstractVector{T}} = IndAffineIterative{R, T, M, V}(A, b)
+IndAffineIterative(A::M, b::V) where {M, V} = IndAffineIterative{M, V}(A, b)
 
-function (f::IndAffineIterative{R, T, M, V})(x::V) where {R, T, M, V}
+function (f::IndAffineIterative{M, V})(x) where {M, V}
+    R = real(eltype(x))
     mul!(f.res, f.A, x)
     f.res .= f.b .- f.res
     # the tolerance in the following line should be customizable
-    if norm(f.res, Inf) <= f.tol
+    if norm(f.res, Inf) <= sqrt(eps(R))
         return R(0)
     end
     return typemax(R)
 end
 
-function prox!(y::V, f::IndAffineIterative{R, T, M, V}, x::V, gamma) where {R, T, M, V}
+function prox!(y, f::IndAffineIterative{M, V}, x, gamma) where {M, V}
     # Von Neumann's alternating projections
+    R = real(eltype(x))
     m = size(f.A, 1)
     y .= x
-    for k = 1:f.maxit
+    for k = 1:1000
         maxres = R(0)
         for i = 1:m
             resi = (f.b[i] - dot(f.A[i,:], y))
@@ -43,14 +43,9 @@ function prox!(y::V, f::IndAffineIterative{R, T, M, V}, x::V, gamma) where {R, T
             absresi = resi > 0 ? resi : -resi
             maxres = absresi > maxres ? absresi : maxres
         end
-        if maxres < f.tol
+        if maxres < sqrt(eps(R))
             break
         end
     end
     return R(0)
-end
-
-function prox_naive(f::IndAffineIterative, x::AbstractArray{T,1}, gamma) where {R <: Real, T <: RealOrComplex{R}}
-    y = x + f.A'*((f.A*f.A')\(f.b - f.A*x))
-    return y, R(0)
 end

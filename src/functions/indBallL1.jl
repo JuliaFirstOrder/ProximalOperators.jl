@@ -28,14 +28,16 @@ is_prox_accurate(f::Type{<:IndBallL1}) = false
 
 IndBallL1(r::R=1.0) where R = IndBallL1{R}(r)
 
-function (f::IndBallL1)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+function (f::IndBallL1)(x)
+    R = real(eltype(x))
     if norm(x, 1) - f.r > f.r*eps(R)
         return R(Inf)
     end
     return R(0)
 end
 
-function prox!(y::AbstractArray{R}, f::IndBallL1, x::AbstractArray{R}, gamma) where {R <: Real}
+function prox!(y, f::IndBallL1, x::AbstractArray{<:Real}, gamma)
+    R = eltype(x)
     if norm(x, 1) <= f.r
         y .= x
         return R(0)
@@ -47,7 +49,8 @@ function prox!(y::AbstractArray{R}, f::IndBallL1, x::AbstractArray{R}, gamma) wh
     end
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma) where {R <: Real, T <: Complex{R}}
+function prox!(y, f::IndBallL1, x::AbstractArray{<:Complex}, gamma)
+    R = real(eltype(x))
     if norm(x, 1) <= f.r
         y .= x
         return R(0)
@@ -60,7 +63,8 @@ function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, gamma) wh
     end
 end
 
-function prox_naive(f::IndBallL1, x::AbstractArray{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndBallL1, x, gamma)
+    R = real(eltype(x))
     # do a simple bisection (aka binary search) on λ
     L = R(0)
     U = maximum(abs, x)

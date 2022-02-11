@@ -7,7 +7,7 @@ using LinearAlgebra
 using SparseArrays
 using SuiteSparse
 
-mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization, IsConvex} <: LeastSquares
+mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization} <: LeastSquares
     A::M # m-by-n
     b::V # m (by-p)
     lambda::R
@@ -18,7 +18,7 @@ mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: Abst
     res::Array{C, N} # m (by-p)
     q::Array{C, N} # n (by-p)
     fact::F
-    function LeastSquaresDirect{N, R, C, M, V, F, IsConvex}(A::M, b::V, lambda::R) where {N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization, IsConvex}
+    function LeastSquaresDirect{N, R, C, M, V, F}(A::M, b::V, lambda::R) where {N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization}
         if size(A, 1) != size(b, 1)
             error("A and b have incompatible dimensions")
         end
@@ -35,14 +35,15 @@ mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: Abst
     end
 end
 
-is_convex(::Type{T}) where {T<:LeastSquaresDirect} = T.parameters[end]
+is_convex(f::LeastSquaresDirect) = f.lambda >= 0
+is_concave(f::LeastSquaresDirect) = f.lambda <= 0
 
 function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, M <: DenseMatrix{C}, V <: AbstractArray{C, N}}
-    LeastSquaresDirect{N, R, C, M, V, Cholesky{C, M}, lambda >= 0}(A, b, lambda)
+    LeastSquaresDirect{N, R, C, M, V, Cholesky{C, M}}(A, b, lambda)
 end
 
 function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, I <: Integer, M <: SparseMatrixCSC{C, I}, V <: AbstractArray{C, N}}
-    LeastSquaresDirect{N, R, C, M, V, SuiteSparse.CHOLMOD.Factor{C}, lambda >= 0}(A, b, lambda)
+    LeastSquaresDirect{N, R, C, M, V, SuiteSparse.CHOLMOD.Factor{C}}(A, b, lambda)
 end
 
 # Adjoint/Transpose versions
@@ -56,7 +57,7 @@ end
 
 function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}}
     @warn "Could not infer type of Factorization for $M in LeastSquaresDirect, this type will be type-unstable"
-    LeastSquaresDirect{N, R, C, M, V, Factorization, lambda >= 0}(A, b, lambda)
+    LeastSquaresDirect{N, R, C, M, V, Factorization}(A, b, lambda)
 end
 
 function (f::LeastSquaresDirect{N, R, C})(x::AbstractArray{C, N}) where {N, R, C}
@@ -65,7 +66,7 @@ function (f::LeastSquaresDirect{N, R, C})(x::AbstractArray{C, N}) where {N, R, C
     return (f.lambda / 2) * norm(f.res, 2)^2
 end
 
-function prox!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}, gamma::R=R(1)) where {N, R, C, M, V, F}
+function prox!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}, gamma) where {N, R, C, M, V, F}
     # if gamma different from f.gamma then call factor_step!
     if gamma != f.gamma
         factor_step!(f, gamma)
@@ -76,17 +77,17 @@ function prox!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, 
     return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function factor_step!(f::LeastSquaresDirect{N, R, C, M, V, F}, gamma::R) where {N, R, C, M, V, F}
+function factor_step!(f::LeastSquaresDirect{N, R, C, M, V, F}, gamma) where {N, R, C, M, V, F}
     f.fact = cholesky(f.S + I/gamma)
     f.gamma = gamma
 end
 
-function factor_step!(f::LeastSquaresDirect{N, R, C, M, V, F}, gamma::R) where {N, R, C, M <: SparseMatrixCSC, V, F}
+function factor_step!(f::LeastSquaresDirect{N, R, C, M, V, F}, gamma) where {N, R, C, M <: SparseMatrixCSC, V, F}
     f.fact = ldlt(f.S; shift = R(1)/gamma)
     f.gamma = gamma
 end
 
-function solve_step!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}, gamma::R) where {N, R, C, M, V, F <: Cholesky{C, M}}
+function solve_step!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}, gamma) where {N, R, C, M, V, F <: Cholesky{C, M}}
     f.q .= f.lambdaAtb .+ x./gamma
     # two cases: (1) tall A, (2) fat A
     if f.shape == :Tall
@@ -106,7 +107,7 @@ function solve_step!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V
     end
 end
 
-function solve_step!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}, gamma::R) where {N, R, C, M, V, F}
+function solve_step!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}, gamma) where {N, R, C, M, V, F}
     f.q .= f.lambdaAtb .+ x./gamma
     # two cases: (1) tall A, (2) fat A
     if f.shape == :Tall
@@ -130,7 +131,7 @@ function gradient!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, 
     return (f.lambda / 2) * real(dot(f.res, f.res))
 end
 
-function prox_naive(f::LeastSquaresDirect{N, R, C}, x::AbstractArray{C, N}, gamma::R=R(1)) where {N, R, C <: RealOrComplex{R}}
+function prox_naive(f::LeastSquaresDirect{N, R, C}, x::AbstractArray{C, N}, gamma) where {N, R, C}
     lamgam = f.lambda*gamma
     y = (f.A'*f.A + I/lamgam)\(f.A' * f.b + x/lamgam)
     fy = (f.lambda/2)*norm(f.A*y-f.b)^2

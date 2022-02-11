@@ -33,7 +33,8 @@ end
 
 IndPSD(; scaling=false) = IndPSD(scaling)
 
-function (f::IndPSD)(X::HermOrSym{T}) where {R <: Real, T <: RealOrComplex{R}}
+function (::IndPSD)(X::HermOrSym)
+    R = real(eltype(X))
     F = eigen(X)
     for i in eachindex(F.values)
         # Do we allow for some tolerance here?
@@ -47,7 +48,8 @@ end
 is_convex(f::Type{<:IndPSD}) = true
 is_cone(f::Type{<:IndPSD}) = true
 
-function prox!(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(Y::HermOrSym, ::IndPSD, X::HermOrSym, gamma)
+    R = real(eltype(X))
     n = size(X, 1)
     F = eigen(X)
     for i in eachindex(F.values)
@@ -63,7 +65,8 @@ function prox!(Y::HermOrSym{T}, f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) whe
     return R(0)
 end
 
-function prox_naive(f::IndPSD, X::HermOrSym{T}, gamma::Real=1.0) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(::IndPSD, X::HermOrSym, gamma)
+    R = real(eltype(X))
     F = eigen(X)
     return F.vectors * Diagonal(max.(R(0), F.values)) * F.vectors', R(0)
 end
@@ -85,7 +88,7 @@ end
 
 ## Below: with AbstractVector argument
 
-function (f::IndPSD)(x::AbstractVector{T}) where T <: Float64
+function (f::IndPSD)(x::AbstractVector{Float64})
     y = copy(x)
     # If scaling, scale diagonal (eigenvalues scaled by sqrt(2))
     f.scaling && scale_diagonal!(y, sqrt(2))
@@ -100,7 +103,7 @@ function (f::IndPSD)(x::AbstractVector{T}) where T <: Float64
     return 0.0
 end
 
-function prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}, gamma::Real=1.0)
+function prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}, gamma)
     # Copy x since dspev! corrupts input
     y .= x                            
 
@@ -128,10 +131,10 @@ function prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}
     return 0.0
 end
 
-function prox_naive(f::IndPSD, x::AbstractVector{T}, gamma::Real=1.0) where T<:Float64
+function prox_naive(f::IndPSD, x::AbstractVector{Float64}, gamma)
     # Formula for size of matrix
     n = Int(sqrt(1/4+2*length(x))-1/2)
-    X = Array{T,2}(undef, n, n)
+    X = Matrix{Float64}(undef, n, n)
     k = 1
     # Store y in M
     for j = 1:n, i = j:n
@@ -176,11 +179,11 @@ function (f::IndPSD)(X::AbstractMatrix{R}) where R <: Real
     f(Symmetric(X))
 end
     
-function prox!(y::AbstractMatrix{R}, f::IndPSD, x::AbstractMatrix{R}, gamma::Real=1.0) where R <: Real
+function prox!(y::AbstractMatrix{R}, f::IndPSD, x::AbstractMatrix{R}, gamma) where R <: Real
     prox!(Symmetric(y), f, Symmetric(x), gamma)
 end
 
-function prox_naive(f::IndPSD, X::AbstractMatrix{R}, gamma::Real=1.0) where R <: Real
+function prox_naive(f::IndPSD, X::AbstractMatrix{R}, gamma) where R <: Real
     prox_naive(f, Symmetric(X), gamma)
 end
 
@@ -188,10 +191,10 @@ function (f::IndPSD)(X::AbstractMatrix{C}) where C <: Complex
     f(Hermitian(X))
 end
     
-function prox!(y::AbstractMatrix{C}, f::IndPSD, x::AbstractMatrix{C}, gamma::Real=1.0) where C <: Complex
+function prox!(y::AbstractMatrix{C}, f::IndPSD, x::AbstractMatrix{C}, gamma) where C <: Complex
     prox!(Hermitian(y), f, Hermitian(x), gamma)
 end
 
-function prox_naive(f::IndPSD, X::AbstractMatrix{C}, gamma::Real=1.0) where C <: Complex
+function prox_naive(f::IndPSD, X::AbstractMatrix{C}, gamma) where C <: Complex
     prox_naive(f, Hermitian(X), gamma)
 end

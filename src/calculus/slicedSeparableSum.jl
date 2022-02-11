@@ -82,11 +82,6 @@ is_convex(::Type{<:SlicedSeparableSum{T}}) where T = all(is_convex(A.parameters[
 is_set(::Type{<:SlicedSeparableSum{T}}) where T = all(is_set(A.parameters[1]) for A in T.parameters)
 is_cone(::Type{<:SlicedSeparableSum{T}}) where T = all(is_cone(A.parameters[1]) for A in T.parameters)
 
-fun_name(f::SlicedSeparableSum) = "sliced separable sum"
-fun_dom(f::SlicedSeparableSum) = "n/a" # for now
-fun_expr(f::SlicedSeparableSum) = "hard to explain"
-fun_params(f::SlicedSeparableSum) = "n/a" # for now
-
 function prox_naive(f::SlicedSeparableSum, x::AbstractArray, gamma)
     fy = 0
     y = similar(x)

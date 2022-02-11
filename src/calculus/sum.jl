@@ -44,8 +44,3 @@ function gradient!(grad::AbstractArray{T}, sumobj::Sum, x::AbstractArray{T}) whe
     end
     return val
 end
-
-fun_name(f::Sum) = "sum"
-fun_dom(f::Sum) = fun_dom(f.fs[1]) # check to make sure same??
-fun_expr(f::Sum) = "x ↦ f₁(x) + … + fₖ(x)"
-fun_params(f::Sum) = "n/a"

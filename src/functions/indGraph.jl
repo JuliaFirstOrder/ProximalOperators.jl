@@ -34,11 +34,6 @@ is_cone(f::Type{<:IndGraph}) = true
 
 IndGraph(a::AbstractArray{T,1}) where {T <: RealOrComplex} = IndGraph{T}(a')
 
-# fun_name(f::IndGraph) = "Indicator of an operator graph"
-fun_dom(f::IndGraph) = "AbstractArray{Real,1}, AbstractArray{Complex,1}"
-fun_expr(f::IndGraph) = "x,y ↦ 0 if Ax = y, +∞ otherwise"
-fun_params(f::IndGraph) = string( "A = ", typeof(f.A), " of size ", size(f.A))
-
 # Auxiliary function to be used in fused input call
 function splitinput(f::IndGraph, xy::AbstractVector{T}) where
     {T <: RealOrComplex}

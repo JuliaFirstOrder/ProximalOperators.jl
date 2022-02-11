@@ -10,12 +10,12 @@ For an array `a` and scalars `low` and `upp`, return the so-called hyperslab
 S = \\{x : low \\leq \\langle a,x \\rangle \\leq upp \\}.
 ```
 """
-struct IndHyperslab{R <: Real, T <: AbstractArray{R}}
+struct IndHyperslab{R, T}
     low::R
     a::T
     upp::R
     norm_a::R
-    function IndHyperslab{R, T}(low::R, a::T, upp::R) where {R <: Real, T <: AbstractArray{R}}
+    function IndHyperslab{R, T}(low::R, a::T, upp::R) where {R, T}
         norm_a = norm(a)
         if (norm_a == 0 && (upp < 0 || low > 0)) || upp < low
             error("function is improper")
@@ -24,12 +24,13 @@ struct IndHyperslab{R <: Real, T <: AbstractArray{R}}
     end
 end
 
-IndHyperslab(low::R, a::T, upp::R) where {R <: Real, T <: AbstractArray{R}} = IndHyperslab{R, T}(low, a, upp)
+IndHyperslab(low::R, a::T, upp::R) where {R, T} = IndHyperslab{R, T}(low, a, upp)
 
 is_convex(f::Type{<:IndHyperslab}) = true
 is_set(f::Type{<:IndHyperslab}) = true
 
-function (f::IndHyperslab{R})(x::AbstractArray{R}) where R
+function (f::IndHyperslab)(x)
+    R = real(eltype(x))
     if iszero(f.norm_a)
         return R(0)
     end
@@ -41,7 +42,7 @@ function (f::IndHyperslab{R})(x::AbstractArray{R}) where R
     return R(Inf)
 end
 
-function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gamma) where R
+function prox!(y, f::IndHyperslab, x, gamma)
     s = dot(f.a, x)
     if s < f.low && f.norm_a > 0
         y .= x .- ((s - f.low)/f.norm_a^2) .* f.a
@@ -50,10 +51,11 @@ function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gam
     else
         copyto!(y, x)
     end
-    return R(0)
+    return real(eltype(x))(0)
 end
 
-function prox_naive(f::IndHyperslab{R}, x::AbstractArray{R}, gamma) where R
+function prox_naive(f::IndHyperslab, x, gamma)
+    R = real(eltype(x))
     s = dot(f.a, x)
     if s < f.low && f.norm_a > 0
         return x - ((s - f.low)/norm(f.a)^2) * f.a, R(0)

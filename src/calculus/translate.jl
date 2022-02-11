@@ -45,7 +45,3 @@ function prox_naive(g::Translate, x, gamma=1.0)
     y, v = prox_naive(g.f, x .+ g.b, gamma)
     return y - g.b, v
 end
-
-fun_name(f::Translate) = "Translation"
-fun_dom(f::Translate) = fun_dom(f.f)
-fun_expr(f::Translate) = "x ↦ f(x + b)"

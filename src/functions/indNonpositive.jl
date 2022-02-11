@@ -16,7 +16,8 @@ is_separable(f::Type{<:IndNonpositive}) = true
 is_convex(f::Type{<:IndNonpositive}) = true
 is_cone(f::Type{<:IndNonpositive}) = true
 
-function (f::IndNonpositive)(x::AbstractArray{R}) where R <: Real
+function (::IndNonpositive)(x)
+    R = eltype(x)
     for k in eachindex(x)
         if x[k] > 0
             return R(Inf)
@@ -25,7 +26,8 @@ function (f::IndNonpositive)(x::AbstractArray{R}) where R <: Real
     return R(0)
 end
 
-function prox!(y::AbstractArray{R}, f::IndNonpositive, x::AbstractArray{R}, gamma=R(1)) where R <: Real
+function prox!(y, ::IndNonpositive, x, gamma=R(1))
+    R = eltype(x)
     for k in eachindex(x)
         if x[k] > 0
             y[k] = R(0)
@@ -36,7 +38,8 @@ function prox!(y::AbstractArray{R}, f::IndNonpositive, x::AbstractArray{R}, gamm
     return R(0)
 end
 
-function prox_naive(f::IndNonpositive, x::AbstractArray{R}, gamma=R(1)) where R <: Real
+function prox_naive(::IndNonpositive, x, gamma=R(1))
+    R = eltype(x)
     y = min.(R(0), x)
     return y, R(0)
 end

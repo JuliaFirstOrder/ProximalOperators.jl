@@ -87,7 +87,3 @@ function prox_naive(g::Precompose, x::AbstractArray{C}, gamma) where {R <: Real,
     y = x + g.L'*((proxres .- res)./g.mu)
     return y, v
 end
-
-fun_name(f::Precompose) = "Precomposition"
-fun_dom(f::Precompose) = fun_dom(f.f)
-fun_expr(f::Precompose) = "x ↦ f(L(x) + b)"

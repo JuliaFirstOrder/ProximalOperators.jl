@@ -29,8 +29,6 @@ is_generalized_quadratic(::Type{Conjugate{T}}) where T = is_generalized_quadrati
 is_set(::Type{Conjugate{T}}) where T = is_convex(T) && is_support(T)
 is_positively_homogeneous(::Type{Conjugate{T}}) where T = is_convex(T) && is_set(T)
 
-fun_dom(f::Conjugate) = fun_dom(f.f)
-
 Conjugate(f::T) where T = Conjugate{T}(f)
 
 # only prox! is provided here, call method would require being able to compute

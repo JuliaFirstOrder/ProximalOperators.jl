@@ -19,20 +19,21 @@ is_generalized_quadratic(f::Type{<:IndFree}) = true
 
 const Zero = IndFree
 
-function (f::IndFree)(x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
-    return R(0)
+function (::IndFree)(x)
+    return real(eltype(x))(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, gamma) where {R, T <: RealOrComplex{R}}
+function prox!(y, ::IndFree, x, gamma)
     y .= x
-    return R(0)
+    return real(eltype(x))(0)
 end
 
-function gradient!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
+function gradient!(y, ::IndFree, x)
+    T = eltype(x)
     y .= T(0)
-    return R(0)
+    return real(T)(0)
 end
 
-function prox_naive(f::IndFree, x::AbstractArray{R}, gamma) where {R}
-    return x, R(0)
+function prox_naive(::IndFree, x, gamma)
+    return x, real(eltype(x))(0)
 end

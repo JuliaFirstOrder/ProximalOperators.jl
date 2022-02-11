@@ -15,11 +15,11 @@ multiple dimensions, according to the shape/size of the input `x` that will be
 provided to the function: the way the above expression for ``g`` should be
 thought of, is `g(x) = f(a.*x + b)`.
 """
-struct PrecomposeDiagonal{T, R <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
+struct PrecomposeDiagonal{T, R, S}
     f::T
     a::R
     b::S
-    function PrecomposeDiagonal{T,R,S}(f::T, a::R, b::S) where {T, R <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
+    function PrecomposeDiagonal{T,R,S}(f::T, a::R, b::S) where {T, R, S}
         if R <: AbstractArray && !(is_convex(f) && is_separable(f))
             error("`f` must be convex and separable since `a` is of type $(R)")
         end
@@ -48,22 +48,18 @@ PrecomposeDiagonal(f::T, a::R, b::S=0) where {T, R <: AbstractArray, S <: Real} 
 
 PrecomposeDiagonal(f::T, a::R, b::S) where {T, R <: Union{AbstractArray, Real}, S <: AbstractArray} = PrecomposeDiagonal{T, R, S}(f, a, b)
 
-function (g::PrecomposeDiagonal)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+function (g::PrecomposeDiagonal)(x)
     return g.f(g.a .* x .+ g.b)
 end
 
-function gradient!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}) where {
-    R <: Real, T <: RealOrComplex{R}
-}
+function gradient!(y, g::PrecomposeDiagonal, x)
     z = g.a .* x .+ g.b
     v = gradient!(y, g.f, z)
     y .*= g.a
     return v
 end
 
-function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, gamma) where {
-    R <: Real, T <: RealOrComplex{R}
-}
+function prox!(y, g::PrecomposeDiagonal, x, gamma)
     z = g.a .* x .+ g.b
     v = prox!(y, g.f, z, (g.a .* g.a) .* gamma)
     y .-= g.b
@@ -71,9 +67,7 @@ function prox!(y::AbstractArray{T}, g::PrecomposeDiagonal, x::AbstractArray{T}, 
     return v
 end
 
-function prox_naive(g::PrecomposeDiagonal, x::AbstractArray{T}, gamma) where {
-    R <: Real, T <: RealOrComplex{R}
-}
+function prox_naive(g::PrecomposeDiagonal, x, gamma)
     z = g.a .* x .+ g.b
     y, fy = prox_naive(g.f, z, (g.a .* g.a) .* gamma)
     return (y .- g.b)./g.a, fy

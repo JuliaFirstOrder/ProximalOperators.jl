@@ -14,9 +14,9 @@ S = \\{ X : \\mathrm{rank}(X) \\leq r \\},
 ```
 Parameter `r` must be a positive integer.
 """
-struct IndBallRank{I <: Integer}
+struct IndBallRank{I}
     r::I
-    function IndBallRank{I}(r::I) where {I <: Integer}
+    function IndBallRank{I}(r::I) where {I}
         if r <= 0
             error("parameter r must be a positive integer")
         else
@@ -28,9 +28,10 @@ end
 is_set(f::Type{<:IndBallRank}) = true
 is_prox_accurate(f::Type{<:IndBallRank}) = false
 
-IndBallRank(r::I=1) where {I <: Integer} = IndBallRank{I}(r)
+IndBallRank(r::I=1) where I = IndBallRank{I}(r)
 
-function (f::IndBallRank)(x::AbstractArray{T, 2}) where {R <: Real, T <: RealOrComplex{R}}
+function (f::IndBallRank)(x)
+    R = real(eltype(x))
     maxr = minimum(size(x))
     if maxr <= f.r return R(0) end
     U, S, V = tsvd(x, f.r+1)
@@ -41,7 +42,8 @@ function (f::IndBallRank)(x::AbstractArray{T, 2}) where {R <: Real, T <: RealOrC
     return R(Inf)
 end
 
-function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y, f::IndBallRank, x, gamma)
+    R = real(eltype(x))
     maxr = minimum(size(x))
     if maxr <= f.r
         y .= x
@@ -54,7 +56,8 @@ function prox!(y::AbstractMatrix{T}, f::IndBallRank, x::AbstractMatrix{T}, gamma
     return R(0)
 end
 
-function prox_naive(f::IndBallRank, x::AbstractMatrix{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndBallRank, x, gamma)
+    R = real(eltype(x))
     maxr = minimum(size(x))
     if maxr <= f.r
         y = x

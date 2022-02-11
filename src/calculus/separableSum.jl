@@ -73,11 +73,6 @@ end
 
 gradient!(grad::TupleOfArrays, f::SeparableSum, x::TupleOfArrays) = gradient!(grad, f.fs, x)
 
-fun_name(f::SeparableSum) = "separable sum"
-fun_dom(f::SeparableSum) = "n/a"
-fun_expr(f::SeparableSum) = "(x₁, …, xₖ) ↦ f₁(x₁) + … + fₖ(xₖ)"
-fun_params(f::SeparableSum) = "n/a"
-
 function prox_naive(f::SeparableSum, xs::TupleOfArrays{R}, gamma) where R <: Real
     fys = R(0)
     ys = []
