@@ -31,7 +31,7 @@ function call_test(f, x::ArrayOrTuple{R}) where R <: Real
 end
 
 # tests equality of the results of prox, prox! and prox_naive
-function prox_test(f, x::ArrayOrTuple{R}, gamma=R(1)) where R <: Real
+function prox_test(f, x::ArrayOrTuple{R}, gamma=1) where R <: Real
     y, fy = @inferred prox(f, x, gamma)
 
     @test typeof(fy) == R

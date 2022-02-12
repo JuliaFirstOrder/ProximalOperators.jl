@@ -72,8 +72,3 @@ function prox_naive(g::PrecomposeDiagonal, x, gamma)
     y, fy = prox_naive(g.f, z, (g.a .* g.a) .* gamma)
     return (y .- g.b)./g.a, fy
 end
-
-fun_name(f::PrecomposeDiagonal) = string("Precomposition by affine diagonal mapping of ", fun_name(f.f))
-fun_dom(f::PrecomposeDiagonal) = fun_dom(f.f)
-fun_expr(f::PrecomposeDiagonal) = "x ↦ f(diag(a)*x + b)"
-fun_params(f::PrecomposeDiagonal) = string("f(x) = ", fun_expr(f.f), ", a = ", length(f.a) == 1 ? string(f.a[1]) : string(typeof(f.a)), ", b = ", length(f.b) == 1 ? string(f.b[1]) : string(typeof(f.b)))

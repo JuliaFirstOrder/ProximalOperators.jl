@@ -18,7 +18,7 @@ end
 
 is_set(f::Type{<:IndBinary}) = true
 
-IndBinary() = IndBinary(0.0, 1.0)
+IndBinary() = IndBinary(0, 1)
 
 IndBinary_low(f::IndBinary{<: Number, S}, i) where S = f.low
 IndBinary_low(f::IndBinary{T, S}, i) where {T, S} = f.low[i]
@@ -37,8 +37,8 @@ end
 
 function prox!(y, f::IndBinary, x, gamma)
     for k in eachindex(x)
-        low = IndBinary_low(f, k)
-        high = IndBinary_high(f, k)
+        low = eltype(y)(IndBinary_low(f, k))
+        high = eltype(y)(IndBinary_high(f, k))
         if abs(x[k] - low) < abs(x[k] - high)
             y[k] = low
         else

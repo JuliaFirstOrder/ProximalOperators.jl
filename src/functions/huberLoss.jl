@@ -59,8 +59,8 @@ end
 function prox!(y, f::HuberLoss, x, gamma)
     R = real(eltype(x))
     normx = norm(x)
-    mugam = f.mu*gamma
-    scal = (1 - min(mugam / (1 + mugam), mugam * f.rho / normx))
+    mugam = f.mu * gamma
+    scal = (R(1) - min(mugam / (R(1) + mugam), mugam * f.rho / normx))
     for k in eachindex(y)
         y[k] = scal*x[k]
     end
@@ -74,7 +74,7 @@ end
 
 function prox_naive(f::HuberLoss, x, gamma)
     R = real(eltype(x))
-    y = (1 - min(f.mu * gamma / (1 + f.mu * gamma), f.mu * gamma * f.rho / norm(x))) * x
+    y = (R(1) - min(f.mu * gamma / (R(1) + f.mu * gamma), f.mu * gamma * f.rho / norm(x))) * x
     if norm(y) <= f.rho
         return y, f.mu / R(2) * norm(y)^2
     else
