@@ -26,7 +26,7 @@ function (::IndNonpositive)(x)
     return R(0)
 end
 
-function prox!(y, ::IndNonpositive, x, gamma=R(1))
+function prox!(y, ::IndNonpositive, x, gamma)
     R = eltype(x)
     for k in eachindex(x)
         if x[k] > 0
@@ -38,7 +38,7 @@ function prox!(y, ::IndNonpositive, x, gamma=R(1))
     return R(0)
 end
 
-function prox_naive(::IndNonpositive, x, gamma=R(1))
+function prox_naive(::IndNonpositive, x, gamma)
     R = eltype(x)
     y = min.(R(0), x)
     return y, R(0)

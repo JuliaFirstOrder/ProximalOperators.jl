@@ -25,7 +25,7 @@ struct SlicedSeparableSum{S <: Tuple, T <: AbstractArray, N}
   # Example: T = Array{Array{Tuple{Colon,UnitRange{Int64}},1},1}
 end
 
-function SlicedSeparableSum(fs::S, idxs::T) where {S <: Tuple, T <: Tuple}
+function SlicedSeparableSum(fs::Tuple, idxs::Tuple)
     ftypes = DataType[]
     fsarr = Array{Any,1}[]
     indarr = Array{eltype(idxs),1}[]
@@ -48,10 +48,10 @@ end
 
 # Constructor for the case where the same function is applied to all slices
 SlicedSeparableSum(f::F, idxs::T) where {F, T <: Tuple} =
-SlicedSeparableSum(([f for k in eachindex(idxs)]...,), idxs)
+SlicedSeparableSum(Tuple(f for k in eachindex(idxs)), idxs)
 
 # Unroll the loop over the different types of functions to evaluate
-@generated function (f::SlicedSeparableSum{A, B, N})(x::T) where {A, B, N, T <: AbstractArray}
+@generated function (f::SlicedSeparableSum{A, B, N})(x) where {A, B, N}
     ex = :(v = 0.0)
     for i = 1:N # For each function type
         ex = quote $ex;
@@ -64,7 +64,7 @@ SlicedSeparableSum(([f for k in eachindex(idxs)]...,), idxs)
 end
 
 # Unroll the loop over the different types of functions to prox on
-@generated function prox!(y::AbstractArray{T}, f::SlicedSeparableSum{A, B, N}, x::AbstractArray{T}, gamma) where {T <: RealOrComplex, A, B, N}
+@generated function prox!(y, f::SlicedSeparableSum{A, B, N}, x, gamma) where {A, B, N}
     ex = :(v = 0.0)
     for i = 1:N # For each function type
         ex = quote $ex;
@@ -82,7 +82,7 @@ is_convex(::Type{<:SlicedSeparableSum{T}}) where T = all(is_convex(A.parameters[
 is_set(::Type{<:SlicedSeparableSum{T}}) where T = all(is_set(A.parameters[1]) for A in T.parameters)
 is_cone(::Type{<:SlicedSeparableSum{T}}) where T = all(is_cone(A.parameters[1]) for A in T.parameters)
 
-function prox_naive(f::SlicedSeparableSum, x::AbstractArray, gamma)
+function prox_naive(f::SlicedSeparableSum, x, gamma)
     fy = 0
     y = similar(x)
     for t in eachindex(f.fs)

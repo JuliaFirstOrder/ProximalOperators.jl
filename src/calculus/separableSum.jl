@@ -21,7 +21,7 @@ Example:
     f_xY = f((x, Y)); # evaluates f at (x, Y)
     (u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)
 """
-struct SeparableSum{T <: Tuple}
+struct SeparableSum{T}
     fs::T
 end
 
@@ -37,44 +37,20 @@ is_smooth(::Type{<:SeparableSum{T}}) where T = all(is_smooth.(T.parameters))
 is_generalized_quadratic(::Type{<:SeparableSum{T}}) where T = all(is_generalized_quadratic.(T.parameters))
 is_strongly_convex(::Type{<:SeparableSum{T}}) where T = all(is_strongly_convex.(T.parameters))
 
-function (f::SeparableSum)(x::TupleOfArrays{R}) where R <: Real
-    sum = R(0)
-    for k in eachindex(x)
-        sum += f.fs[k](x[k])
-    end
-    return sum
-end
+(g::SeparableSum)(xs::Tuple) = sum(f(x) for (f, x) in zip(g.fs, xs))
 
-function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::Number) where R <: Real
-    sum = R(0)
-    for k in eachindex(xs)
-        sum += prox!(ys[k], fs[k], xs[k], gamma)
-    end
-    return sum
-end
+prox!(ys::Tuple, fs::Tuple, xs::Tuple, gamma::Number) = sum(prox!(y, f, x, gamma) for (y, f, x) in zip(ys, fs, xs))
 
-function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::Tuple) where R <: Real
-    sum = R(0)
-    for k in eachindex(xs)
-        sum += prox!(ys[k], fs[k], xs[k], gamma[k])
-    end
-    return sum
-end
+prox!(ys::Tuple, fs::Tuple, xs::Tuple, gammas::Tuple) = sum(prox!(y, f, x, gamma) for (y, f, x, gamma) in zip(ys, fs, xs, gammas))
 
-prox!(ys::TupleOfArrays{R}, f::SeparableSum, xs::TupleOfArrays{R}, gamma) where R <: Real = prox!(ys, f.fs, xs, gamma)
+prox!(ys::Tuple, g::SeparableSum, xs::Tuple, gamma) = prox!(ys, g.fs, xs, gamma)
 
-function gradient!(grad::TupleOfArrays{R}, fs::Tuple, x::TupleOfArrays{R}) where R <: Real
-    val = R(0)
-    for k in eachindex(fs)
-        val += gradient!(grad[k], fs[k], x[k])
-    end
-    return val
-end
+gradient!(grads::Tuple, fs::Tuple, xs::Tuple) = sum(gradient!(grad, f, x) for (grad, f, x) in zip(grads, fs, xs))
 
-gradient!(grad::TupleOfArrays, f::SeparableSum, x::TupleOfArrays) = gradient!(grad, f.fs, x)
+gradient!(grads::Tuple, g::SeparableSum, xs::Tuple) = gradient!(grads, g.fs, xs)
 
-function prox_naive(f::SeparableSum, xs::TupleOfArrays{R}, gamma) where R <: Real
-    fys = R(0)
+function prox_naive(f::SeparableSum, xs::Tuple, gamma)
+    fys = real(eltype(xs[1]))(0)
     ys = []
     for k in eachindex(xs)
         y, fy = prox_naive(f.fs[k], xs[k], typeof(gamma) <: Number ? gamma : gamma[k])

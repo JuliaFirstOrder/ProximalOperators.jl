@@ -9,7 +9,7 @@ g(x) = \\min\\{f_1(x), ..., f_k(x)\\}
 ```
 Note that `g` is a nonconvex function in general.
 """
-struct PointwiseMinimum{T <: Tuple}
+struct PointwiseMinimum{T}
     fs::T
 end
 

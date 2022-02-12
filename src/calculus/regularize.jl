@@ -11,11 +11,11 @@ g(x) = f(x) + \\tfrac{ρ}{2}\\|x-a\\|².
 ```
 Parameter `a` can be either an array or a scalar, in which case it is subtracted component-wise from `x` in the above expression.
 """
-struct Regularize{T, S <: Real, A <: Union{Real, AbstractArray}}
+struct Regularize{T, S, A}
     f::T
     rho::S
     a::A
-    function Regularize{T,S,A}(f::T, rho::S, a::A) where {T, S <: Real, A <: Union{Real, AbstractArray}}
+    function Regularize{T,S,A}(f::T, rho::S, a::A) where {T, S, A}
         if rho <= 0.0
             error("parameter `ρ` must be positive")
         else
@@ -31,28 +31,28 @@ is_smooth(::Type{<:Regularize{T}}) where T = is_smooth(T)
 is_generalized_quadratic(::Type{<:Regularize{T}}) where T = is_generalized_quadratic(T)
 is_strongly_convex(::Type{<:Regularize}) = true
 
-Regularize(f::T, rho::S, a::A) where {T, S <: Real, A <: AbstractArray} = Regularize{T, S, A}(f, rho, a)
+Regularize(f::T, rho::S=1, a::A=0) where {T, S, A} = Regularize{T, S, A}(f, rho, a)
 
-Regularize(f::T, rho::S=one(S), a::S=zero(S)) where {T, S <: Real} = Regularize{T, S, S}(f, rho, a)
-
-function (g::Regularize)(x::AbstractArray{T}) where T <: RealOrComplex
+function (g::Regularize)(x)
     return g.f(x) + g.rho/2*norm(x .- g.a)^2
 end
 
-function gradient!(y::AbstractArray{T}, g::Regularize, x::AbstractArray{T}) where T <: RealOrComplex
+function gradient!(y, g::Regularize, x)
     v = gradient!(y, g.f, x)
-    y .+= g.rho*(x .- g.a)
-    return v + g.rho/2*norm(x .- g.a)^2
+    y .+= g.rho * (x .- g.a)
+    return v + g.rho / 2 * norm(x .- g.a)^2
 end
 
-function prox!(y::AbstractArray{T}, g::Regularize, x::AbstractArray{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
-    gr = g.rho*gamma
-    gr2 = 1.0 ./ (1.0 .+ gr)
-    v = prox!(y, g.f, gr2.*(x .+ gr.*g.a), gr2.*gamma)
-    return v + g.rho/2*norm(y .- g.a)^2
+function prox!(y, g::Regularize, x, gamma)
+    R = real(eltype(x))
+    gr = g.rho * gamma
+    gr2 = R(1) ./ (R(1) .+ gr)
+    v = prox!(y, g.f, gr2 .* (x .+ gr .* g.a), gr2 .* gamma)
+    return v + g.rho / R(2) * norm(y .- g.a)^2
 end
 
-function prox_naive(g::Regularize, x::AbstractArray{T}, gamma) where {R <: Real, T <: RealOrComplex{R}}
-    y, v = prox_naive(g.f, x./(1.0 .+ gamma.*g.rho) .+ g.a./(1.0./(gamma.*g.rho) .+ 1.0), gamma./(1.0 .+ gamma.*g.rho))
-    return y, v + g.rho/2*norm(y .- g.a)^2
+function prox_naive(g::Regularize, x, gamma)
+    R = real(eltype(x))
+    y, v = prox_naive(g.f, x./(R(1) .+ gamma.*g.rho) .+ g.a./(R(1)./(gamma.*g.rho) .+ R(1)), gamma./(R(1) .+ gamma.*g.rho))
+    return y, v + g.rho/R(2)*norm(y .- g.a)^2
 end
