@@ -4,16 +4,10 @@ mutable struct EpicomposeQuadratic{F, M, P, V, R} <: Epicompose
     L::M
     Q::P
     q::V
-    gamma::Maybe{R}
+    gamma::R
     fact::F
-    function EpicomposeQuadratic{F, M, P, V, R}(L::M, Q::P, q::V) where {
-        R <: Real,
-        M <: AbstractMatrix{R},
-        P <: AbstractMatrix{R},
-        V <: AbstractVector{R},
-        F <: Factorization,
-    }
-        new(L, Q, q, nothing)
+    function EpicomposeQuadratic{F, M, P, V, R}(L::M, Q::P, q::V) where {F, M, P, V, R}
+        new(L, Q, q, -R(1))
     end
 end
 
@@ -32,12 +26,10 @@ end
 # TODO: enable construction from other types of quadratics, e.g. LeastSquares
 # TODO: probably some access methods are needed to obtain Hessian and linear term?
 
-function EpicomposeQuadratic(L, f::Q) where {Q <: Quadratic}
-    return EpicomposeQuadratic(L, f.Q, f.q)
-end
+EpicomposeQuadratic(L, f::Quadratic) = EpicomposeQuadratic(L, f.Q, f.q)
 
 function get_factorization!(g::EpicomposeQuadratic, gamma)
-    if g.gamma === nothing || !isapprox(gamma, g.gamma)
+    if !isapprox(gamma, g.gamma)
         g.gamma = gamma
         g.fact = cholesky(g.Q + (g.L' * g.L)/gamma)
     end

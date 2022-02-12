@@ -11,10 +11,10 @@ S = \\{ x : low \\leq x \\leq up \\}.
 ```
 Parameters `low` and `up` can be either scalars or arrays of the same dimension as the space: they must satisfy `low <= up`, and are allowed to take values `-Inf` and `+Inf` to indicate unbounded coordinates.
 """
-struct IndBox{T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
+struct IndBox{T, S}
     lb::T
     ub::S
-    function IndBox{T,S}(lb::T, ub::S) where {T <: Union{Real, AbstractArray}, S <: Union{Real, AbstractArray}}
+    function IndBox{T,S}(lb::T, ub::S) where {T, S}
         if !(eltype(lb) <: Real && eltype(ub) <: Real)
             error("`lb` and `ub` must be real")
         end
@@ -30,17 +30,19 @@ is_separable(f::Type{<:IndBox}) = true
 is_convex(f::Type{<:IndBox}) = true
 is_set(f::Type{<:IndBox}) = true
 
-IndBox(lb::T, ub::T) where {T <: Real} = IndBox{T, T}(lb, ub)
+compatible_bounds(::Real, ::Real) = true
+compatible_bounds(::Real, ::AbstractArray) = true
+compatible_bounds(::AbstractArray, ::Real) = true
+compatible_bounds(lb::AbstractArray, ub::AbstractArray) = size(lb) == size(ub)
 
-IndBox(lb::T, ub::S) where {T <: AbstractArray, S <: Real} = IndBox{T, S}(lb, ub)
+IndBox(lb, ub) = if compatible_bounds(lb, ub)
+    IndBox{typeof(lb), typeof(ub)}(lb, ub)
+else
+    error("bounds must have the same dimensions, or at least one of them be scalar")
+end
 
-IndBox(lb::T, ub::S) where {T <: Real, S <: AbstractArray} = IndBox{T, S}(lb, ub)
-
-IndBox(lb::T, ub::S) where {T <: AbstractArray, S <: AbstractArray} =
-    size(lb) != size(ub) ? error("bounds must have the same dimensions, or at least one of them be scalar") :
-    IndBox{T, S}(lb, ub)
-
-function (f::IndBox)(x::AbstractArray{R}) where R <: Real
+function (f::IndBox)(x)
+    R = eltype(x)
     for k in eachindex(x)
         if x[k] < get_kth_elem(f.lb, k) || x[k] > get_kth_elem(f.ub, k)
             return R(Inf)
@@ -49,7 +51,7 @@ function (f::IndBox)(x::AbstractArray{R}) where R <: Real
     return R(0)
 end
 
-function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma) where R <: Real
+function prox!(y, f::IndBox, x, gamma)
     for k in eachindex(x)
         if x[k] < get_kth_elem(f.lb, k)
             y[k] = get_kth_elem(f.lb, k)
@@ -59,7 +61,7 @@ function prox!(y::AbstractArray{R}, f::IndBox, x::AbstractArray{R}, gamma) where
             y[k] = x[k]
         end
     end
-    return R(0)
+    return eltype(x)(0)
 end
 
 """
@@ -73,9 +75,9 @@ S = \\{ x : \\max (|x_i|) \\leq r \\}.
 ```
 Parameter `r` must be positive.
 """
-IndBallLinf(r::R=1.0) where {R <: Real} = IndBox(-r, r)
+IndBallLinf(r::R=1) where R = IndBox(-r, r)
 
-function prox_naive(f::IndBox, x::AbstractArray{R}, gamma) where R <: Real
+function prox_naive(f::IndBox, x, gamma)
     y = min.(f.ub, max.(f.lb, x))
-    return y, R(0)
+    return y, eltype(x)(0)
 end

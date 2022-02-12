@@ -40,7 +40,7 @@ not specified, then ``f`` must be of ``Quadratic`` type.
 abstract type Epicompose end
 
 Epicompose(L, f, mu) = EpicomposeGramDiagonal(L, f, mu)
-Epicompose(L, f::T) where {T <: Quadratic} = EpicomposeQuadratic(L, f)
+Epicompose(L, f::Quadratic) = EpicomposeQuadratic(L, f)
 
 # TODO add properties
 
