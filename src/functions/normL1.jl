@@ -34,15 +34,15 @@ is_positively_homogeneous(f::Type{<:NormL1}) = true
 
 NormL1(lambda::R=1) where R = NormL1{R}(lambda)
 
-function (f::NormL1{R})(x) where R <: Number
+function (f::NormL1)(x)
     return f.lambda * norm(x, 1)
 end
 
-function (f::NormL1{A})(x) where A <: AbstractArray
+function (f::NormL1{<:AbstractArray})(x)
     return norm(f.lambda .* x, 1)
 end
 
-function prox!(y::AbstractArray{R}, f::NormL1{A}, x::AbstractArray{R}, gamma) where {A <: AbstractArray, R <: Real}
+function prox!(y, f::NormL1{<:AbstractArray}, x::AbstractArray{<:Real}, gamma)
     @assert length(y) == length(x) == length(f.lambda)
     @inbounds @simd for i in eachindex(x)
         gl = gamma * f.lambda[i]
@@ -51,7 +51,7 @@ function prox!(y::AbstractArray{R}, f::NormL1{A}, x::AbstractArray{R}, gamma) wh
     return sum(f.lambda .* abs.(y))
 end
 
-function prox!(y::AbstractArray{C}, f::NormL1{A}, x::AbstractArray{C}, gamma) where {A <: AbstractArray, C <: Complex}
+function prox!(y, f::NormL1{<:AbstractArray}, x::AbstractArray{<:Complex}, gamma)
     @assert length(y) == length(x) == length(f.lambda)
     @inbounds @simd for i in eachindex(x)
         gl = gamma * f.lambda[i]
@@ -60,9 +60,9 @@ function prox!(y::AbstractArray{C}, f::NormL1{A}, x::AbstractArray{C}, gamma) wh
     return sum(f.lambda .* abs.(y))
 end
 
-function prox!(y::AbstractArray{R}, f::NormL1{T}, x::AbstractArray{R}, gamma) where {T <: Real, R <: Real}
+function prox!(y, f::NormL1, x::AbstractArray{<:Real}, gamma)
     @assert length(y) == length(x)
-    n1y = R(0)
+    n1y = eltype(x)(0)
     gl = gamma * f.lambda
     @inbounds @simd for i in eachindex(x)
         y[i] = x[i] + (x[i] <= -gl ? gl : (x[i] >= gl ? -gl : -x[i]))
@@ -71,10 +71,10 @@ function prox!(y::AbstractArray{R}, f::NormL1{T}, x::AbstractArray{R}, gamma) wh
     return f.lambda * n1y
 end
 
-function prox!(y::AbstractArray{C}, f::NormL1{T}, x::AbstractArray{C}, gamma) where {T <: Real, C <: Complex}
+function prox!(y, f::NormL1, x::AbstractArray{<:Complex}, gamma)
     @assert length(y) == length(x)
     gl = gamma * f.lambda
-    n1y = real(C)(0)
+    n1y = real(eltype(x))(0)
     @inbounds @simd for i in eachindex(x)
         y[i] = sign(x[i]) * (abs(x[i]) <= gl ? 0 : abs(x[i]) - gl)
         n1y += abs(y[i])
@@ -82,7 +82,7 @@ function prox!(y::AbstractArray{C}, f::NormL1{T}, x::AbstractArray{C}, gamma) wh
     return f.lambda * n1y
 end
 
-function prox!(y::AbstractArray{R}, f::NormL1{A}, x::AbstractArray{R}, gamma::AbstractArray) where {A <: AbstractArray, R <: Real}
+function prox!(y, f::NormL1{<:AbstractArray}, x::AbstractArray{<:Real}, gamma::AbstractArray)
     @assert length(y) == length(x) == length(f.lambda) == length(gamma)
     @inbounds @simd for i in eachindex(x)
         gl = gamma[i] * f.lambda[i]
@@ -91,7 +91,7 @@ function prox!(y::AbstractArray{R}, f::NormL1{A}, x::AbstractArray{R}, gamma::Ab
     return sum(f.lambda .* abs.(y))
 end
 
-function prox!(y::AbstractArray{C}, f::NormL1{A}, x::AbstractArray{C}, gamma::AbstractArray) where {A <: AbstractArray, C <: Complex}
+function prox!(y, f::NormL1{<:AbstractArray}, x::AbstractArray{<:Complex}, gamma::AbstractArray)
     @assert length(y) == length(x) == length(f.lambda) == length(gamma)
     @inbounds @simd for i in eachindex(x)
         gl = gamma[i] * f.lambda[i]
@@ -100,9 +100,9 @@ function prox!(y::AbstractArray{C}, f::NormL1{A}, x::AbstractArray{C}, gamma::Ab
     return sum(f.lambda .* abs.(y))
 end
 
-function prox!(y::AbstractArray{R}, f::NormL1{T}, x::AbstractArray{R}, gamma::AbstractArray) where {T <: Real, R <: Real}
+function prox!(y, f::NormL1, x::AbstractArray{<:Real}, gamma::AbstractArray)
     @assert length(y) == length(x) == length(gamma)
-    n1y = R(0)
+    n1y = eltype(x)(0)
     @inbounds @simd for i in eachindex(x)
         gl = gamma[i] * f.lambda
         y[i] = x[i] + (x[i] <= -gl ? gl : (x[i] >= gl ? -gl : -x[i]))
@@ -111,9 +111,9 @@ function prox!(y::AbstractArray{R}, f::NormL1{T}, x::AbstractArray{R}, gamma::Ab
     return f.lambda * n1y
 end
 
-function prox!(y::AbstractArray{C}, f::NormL1{T}, x::AbstractArray{C}, gamma::AbstractArray) where {T <: Real, C <: Complex}
+function prox!(y, f::NormL1, x::AbstractArray{<:Complex}, gamma::AbstractArray)
     @assert length(y) == length(x) == length(gamma)
-    n1y = real(C)(0)
+    n1y = real(eltype(x))(0)
     @inbounds @simd for i in eachindex(x)
         gl = gamma[i] * f.lambda
         y[i] = sign(x[i]) * (abs(x[i]) <= gl ? 0 : abs(x[i]) - gl)
