@@ -17,7 +17,7 @@ struct LeastSquaresIterative{N, R <: Real, RC <: RealOrComplex{R}, M, V <: Abstr
 end
 
 is_prox_accurate(f::Type{<:LeastSquaresIterative}) = false
-is_convex(::Type{T}) where {T<:LeastSquaresIterative} = T.parameters[end]
+is_convex(::Type{LeastSquaresIterative{N, R, RC, M, V, O, IsConvex}}) where {N, R, RC, M, V, O, IsConvex} = IsConvex
 
 function LeastSquaresIterative(A::M, b::V, lambda::R) where {N, R <: Real, RC <: RealOrComplex{R}, M, V <: AbstractArray{RC, N}}
     if size(A, 1) != size(b, 1)

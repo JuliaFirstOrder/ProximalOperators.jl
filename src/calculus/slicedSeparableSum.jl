@@ -77,10 +77,17 @@ end
     ex = :($ex; return v)
 end
 
-is_prox_accurate(::Type{<:SlicedSeparableSum{T}}) where T = all(is_prox_accurate(A.parameters[1]) for A in T.parameters)
-is_convex(::Type{<:SlicedSeparableSum{T}}) where T = all(is_convex(A.parameters[1]) for A in T.parameters)
-is_set(::Type{<:SlicedSeparableSum{T}}) where T = all(is_set(A.parameters[1]) for A in T.parameters)
-is_cone(::Type{<:SlicedSeparableSum{T}}) where T = all(is_cone(A.parameters[1]) for A in T.parameters)
+component_types(::Type{SlicedSeparableSum{S, T, N}}) where {S, T, N} = Tuple(A.parameters[1] for A in fieldtypes(S))
+
+@generated is_prox_accurate(::Type{T}) where T <: SlicedSeparableSum = return all(is_prox_accurate, component_types(T)) ? :(true) : :(false)
+@generated is_convex(::Type{T}) where T <: SlicedSeparableSum = return all(is_convex, component_types(T)) ? :(true) : :(false)
+@generated is_set(::Type{T}) where T <: SlicedSeparableSum = return all(is_set, component_types(T)) ? :(true) : :(false)
+@generated is_singleton(::Type{T}) where T <: SlicedSeparableSum = return all(is_singleton, component_types(T)) ? :(true) : :(false)
+@generated is_cone(::Type{T}) where T <: SlicedSeparableSum = return all(is_cone, component_types(T)) ? :(true) : :(false)
+@generated is_affine(::Type{T}) where T <: SlicedSeparableSum = return all(is_affine, component_types(T)) ? :(true) : :(false)
+@generated is_smooth(::Type{T}) where T <: SlicedSeparableSum = return all(is_smooth, component_types(T)) ? :(true) : :(false)
+@generated is_generalized_quadratic(::Type{T}) where T <: SlicedSeparableSum = return all(is_generalized_quadratic, component_types(T)) ? :(true) : :(false)
+@generated is_strongly_convex(::Type{T}) where T <: SlicedSeparableSum = return all(is_strongly_convex, component_types(T)) ? :(true) : :(false)
 
 function prox_naive(f::SlicedSeparableSum, x, gamma)
     fy = 0

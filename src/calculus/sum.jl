@@ -15,15 +15,18 @@ end
 
 Sum(fs::Vararg) = Sum((fs...,))
 
+component_types(::Type{Sum{T}}) where T = fieldtypes(T)
+
 # note: is_prox_accurate false because prox in general doesn't exist?
-is_prox_accurate(::Type{<:Sum{T}}) where T = false
-is_convex(::Type{<:Sum{T}}) where T = all(is_convex.(T.parameters))
-is_set(::Type{<:Sum{T}}) where T = all(is_set.(T.parameters))
-is_cone(::Type{<:Sum{T}}) where T = all(is_cone.(T.parameters))
-is_affine(::Type{<:Sum{T}}) where T = all(is_affine.(T.parameters))
-is_smooth(::Type{<:Sum{T}}) where T = all(is_smooth.(T.parameters))
-is_generalized_quadratic(::Type{<:Sum{T}}) where T = all(is_generalized_quadratic.(T.parameters))
-is_strongly_convex(::Type{<:Sum{T}}) where T = all(is_convex.(T.parameters)) && any(is_strongly_convex.(T.parameters))
+is_prox_accurate(::Type{<:Sum}) = false
+@generated is_convex(::Type{T}) where T <: Sum = return all(is_convex, component_types(T)) ? :(true) : :(false)
+@generated is_set(::Type{T}) where T <: Sum = return all(is_set, component_types(T)) ? :(true) : :(false)
+@generated is_singleton(::Type{T}) where T <: Sum = return all(is_singleton, component_types(T)) ? :(true) : :(false)
+@generated is_cone(::Type{T}) where T <: Sum = return all(is_cone, component_types(T)) ? :(true) : :(false)
+@generated is_affine(::Type{T}) where T <: Sum = return all(is_affine, component_types(T)) ? :(true) : :(false)
+@generated is_smooth(::Type{T}) where T <: Sum = return all(is_smooth, component_types(T)) ? :(true) : :(false)
+@generated is_generalized_quadratic(::Type{T}) where T <: Sum = return all(is_generalized_quadratic, component_types(T)) ? :(true) : :(false)
+@generated is_strongly_convex(::Type{T}) where T <: Sum = return (all(is_convex, component_types(T)) && any(is_strongly_convex, component_types(T))) ? :(true) : :(false)
 
 function (sumobj::Sum)(x)
     sum = real(eltype(x))(0)

@@ -7,7 +7,7 @@ using LinearAlgebra
 using SparseArrays
 using SuiteSparse
 
-mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization} <: LeastSquares
+mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization, IsConvex} <: LeastSquares
     A::M # m-by-n
     b::V # m (by-p)
     lambda::R
@@ -18,7 +18,7 @@ mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: Abst
     res::Array{C, N} # m (by-p)
     q::Array{C, N} # n (by-p)
     fact::F
-    function LeastSquaresDirect{N, R, C, M, V, F}(A::M, b::V, lambda::R) where {N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization}
+    function LeastSquaresDirect{N, R, C, M, V, F, IsConvex}(A::M, b::V, lambda::R) where {N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization, IsConvex}
         if size(A, 1) != size(b, 1)
             error("A and b have incompatible dimensions")
         end
@@ -35,15 +35,14 @@ mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: Abst
     end
 end
 
-is_convex(f::LeastSquaresDirect) = f.lambda >= 0
-is_concave(f::LeastSquaresDirect) = f.lambda <= 0
+is_convex(::Type{LeastSquaresDirect{N, R, C, M, V, F, IsConvex}}) where {N, R, C, M, V, F, IsConvex} = IsConvex
 
 function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, M <: DenseMatrix{C}, V <: AbstractArray{C, N}}
-    LeastSquaresDirect{N, R, C, M, V, Cholesky{C, M}}(A, b, lambda)
+    LeastSquaresDirect{N, R, C, M, V, Cholesky{C, M}, lambda >= 0}(A, b, lambda)
 end
 
 function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, I <: Integer, M <: SparseMatrixCSC{C, I}, V <: AbstractArray{C, N}}
-    LeastSquaresDirect{N, R, C, M, V, SuiteSparse.CHOLMOD.Factor{C}}(A, b, lambda)
+    LeastSquaresDirect{N, R, C, M, V, SuiteSparse.CHOLMOD.Factor{C}, lambda >= 0}(A, b, lambda)
 end
 
 # Adjoint/Transpose versions
@@ -57,7 +56,7 @@ end
 
 function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}}
     @warn "Could not infer type of Factorization for $M in LeastSquaresDirect, this type will be type-unstable"
-    LeastSquaresDirect{N, R, C, M, V, Factorization}(A, b, lambda)
+    LeastSquaresDirect{N, R, C, M, V, Factorization, lambda >= 0}(A, b, lambda)
 end
 
 function (f::LeastSquaresDirect{N, R, C})(x::AbstractArray{C, N}) where {N, R, C}

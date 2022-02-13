@@ -27,15 +27,17 @@ end
 
 SeparableSum(fs::Vararg) = SeparableSum((fs...,))
 
-is_prox_accurate(::Type{<:SeparableSum{T}}) where T = all(is_prox_accurate.(T.parameters))
-is_convex(::Type{<:SeparableSum{T}}) where T = all(is_convex.(T.parameters))
-is_set(::Type{<:SeparableSum{T}}) where T = all(is_set.(T.parameters))
-is_singleton(::Type{<:SeparableSum{T}}) where T = all(is_singleton.(T.parameters))
-is_cone(::Type{<:SeparableSum{T}}) where T = all(is_cone.(T.parameters))
-is_affine(::Type{<:SeparableSum{T}}) where T = all(is_affine.(T.parameters))
-is_smooth(::Type{<:SeparableSum{T}}) where T = all(is_smooth.(T.parameters))
-is_generalized_quadratic(::Type{<:SeparableSum{T}}) where T = all(is_generalized_quadratic.(T.parameters))
-is_strongly_convex(::Type{<:SeparableSum{T}}) where T = all(is_strongly_convex.(T.parameters))
+component_types(::Type{SeparableSum{T}}) where T = fieldtypes(T)
+
+@generated is_prox_accurate(::Type{T}) where T <: SeparableSum = return all(is_prox_accurate, component_types(T)) ? :(true) : :(false)
+@generated is_convex(::Type{T}) where T <: SeparableSum = return all(is_convex, component_types(T)) ? :(true) : :(false)
+@generated is_set(::Type{T}) where T <: SeparableSum = return all(is_set, component_types(T)) ? :(true) : :(false)
+@generated is_singleton(::Type{T}) where T <: SeparableSum = return all(is_singleton, component_types(T)) ? :(true) : :(false)
+@generated is_cone(::Type{T}) where T <: SeparableSum = return all(is_cone, component_types(T)) ? :(true) : :(false)
+@generated is_affine(::Type{T}) where T <: SeparableSum = return all(is_affine, component_types(T)) ? :(true) : :(false)
+@generated is_smooth(::Type{T}) where T <: SeparableSum = return all(is_smooth, component_types(T)) ? :(true) : :(false)
+@generated is_generalized_quadratic(::Type{T}) where T <: SeparableSum = return all(is_generalized_quadratic, component_types(T)) ? :(true) : :(false)
+@generated is_strongly_convex(::Type{T}) where T <: SeparableSum = return all(is_strongly_convex, component_types(T)) ? :(true) : :(false)
 
 (g::SeparableSum)(xs::Tuple) = sum(f(x) for (f, x) in zip(g.fs, xs))
 
