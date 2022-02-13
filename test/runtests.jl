@@ -78,6 +78,25 @@ end
 # i.e., that more specific properties imply less specific ones
 # e.g., the indicator of a subspace is the indicator of a set in particular
 function predicates_test(f)
+    preds = [
+        is_convex,
+        is_strongly_convex,
+        is_generalized_quadratic,
+        is_quadratic,
+        is_smooth,
+        is_singleton,
+        is_cone,
+        is_affine,
+        is_set,
+        is_positively_homogeneous,
+        is_support,
+    ]
+
+    for pred in preds
+        # check that the value of the predicate can be inferred
+        @inferred (arg -> Val(pred(arg)))(f)
+    end
+
     # quadratic => generalized_quadratic && smooth
     @test !is_quadratic(f) || (is_generalized_quadratic(f) && is_smooth(f))
     # (singleton || cone || affine) => set
