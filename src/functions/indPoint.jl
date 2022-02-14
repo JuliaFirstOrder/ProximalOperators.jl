@@ -3,7 +3,7 @@
 export IndPoint
 
 """
-    IndPoint(p)
+    IndPoint(p=0)
 
 Return the indicator of the singleton set
 ```math
@@ -23,7 +23,7 @@ is_convex(f::Type{<:IndPoint}) = true
 is_singleton(f::Type{<:IndPoint}) = true
 is_affine(f::Type{<:IndPoint}) = true
 
-IndPoint(p::T) where T = IndPoint{T}(p)
+IndPoint(p::T=0) where T = IndPoint{T}(p)
 
 function (f::IndPoint)(x)
     R = real(eltype(x))
