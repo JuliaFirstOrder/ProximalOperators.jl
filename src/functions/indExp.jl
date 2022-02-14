@@ -4,26 +4,22 @@
 export IndExpPrimal, IndExpDual
 
 """
-**Indicator of the (primal) exponential cone**
-
     IndExpPrimal()
 
-Returns the indicator function of the primal exponential cone, that is
+Return the indicator function of the primal exponential cone, that is
 ```math
 C = \\mathrm{cl} \\{ (r,s,t) : s > 0, s⋅e^{r/s} \\leq t \\} \\subset \\mathbb{R}^3.
 ```
 """
-struct IndExpPrimal <: ProximableFunction end
+struct IndExpPrimal end
 
-is_convex(f::IndExpPrimal) = true
-is_cone(f::IndExpPrimal) = true
+is_convex(f::Type{<:IndExpPrimal}) = true
+is_cone(f::Type{<:IndExpPrimal}) = true
 
 """
-**Indicator of the (dual) exponential cone**
-
     IndExpDual()
 
-Returns the indicator function of the dual exponential cone, that is
+Return the indicator function of the dual exponential cone, that is
 ```math
 C = \\mathrm{cl} \\{ (u,v,w) : u < 0, -u⋅e^{v/u} \\leq w⋅e \\} \\subset \\mathbb{R}^3.
 ```
@@ -35,7 +31,8 @@ EXP_POLAR_CALL_TOL = 1e-3
 EXP_PROJ_TOL = 1e-15
 EXP_PROJ_MAXIT = 100
 
-function (f::IndExpPrimal)(x::AbstractArray{R,1}) where R <: Real
+function (::IndExpPrimal)(x)
+    R = real(eltype(x))
     if (x[2] > 0 && x[2]*exp(x[1]/x[2]) <= x[3]+EXP_PRIMAL_CALL_TOL) ||
         (x[1] <= EXP_PRIMAL_CALL_TOL && abs(x[2]) <= EXP_PRIMAL_CALL_TOL && x[3] >= -EXP_PRIMAL_CALL_TOL)
         return R(0)
@@ -43,7 +40,8 @@ function (f::IndExpPrimal)(x::AbstractArray{R,1}) where R <: Real
     return R(Inf)
 end
 
-function (f::Conjugate{IndExpPrimal})(x::AbstractArray{R,1}) where R <: Real
+function (::Conjugate{IndExpPrimal})(x)
+    R = real(eltype(x))
     if (x[1] > 0 && x[1]*exp(x[2]/x[1]) <= -exp(1)*x[3]+EXP_POLAR_CALL_TOL) ||
         (abs(x[1]) <= EXP_POLAR_CALL_TOL && x[2] <= EXP_POLAR_CALL_TOL && x[3] <= EXP_POLAR_CALL_TOL)
         return R(0)
@@ -76,7 +74,8 @@ end
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-function prox!(y::AbstractVector{R}, f::IndExpPrimal, x::AbstractVector{R}, gamma::R=R(1)) where R <: Real
+function prox!(y, ::IndExpPrimal, x, gamma)
+    R = real(eltype(x))
     r = x[1]
     s = x[2]
     t = x[3]
@@ -144,7 +143,7 @@ end
 
 function newton_exp_onz(rho, y_hat, z_hat)
     t = max(-z_hat,EXP_PROJ_TOL)
-    for iter=1:EXP_PROJ_MAXIT
+    for _ in 1:EXP_PROJ_MAXIT
         f = (1.0/rho^2)*t*(t + z_hat) - y_hat/rho + log(t/rho) + 1.0
         fp = (1.0/rho^2)*(2.0*t + z_hat) + 1.0/t
         t = t - f/fp
@@ -162,17 +161,6 @@ function newton_exp_onz(rho, y_hat, z_hat)
     return z
 end
 
-fun_name(f::IndExpPrimal) = "indicator exponential cone (primal)"
-fun_dom(f::IndExpPrimal) = "AbstractArray{Real}"
-fun_expr(f::IndExpPrimal) = "x ↦ 0 if x ∈ cl{(r,s,t) : s > 0, s*exp(r/s) ⩽ t}, +∞ otherwise"
-fun_params(f::IndExpPrimal) = "none"
+prox_naive(f::IndExpPrimal, x, gamma) = prox(f, x, gamma) # we don't have a much simpler way to do this yet
 
-fun_name(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} = "indicator of the exponential cone (dual)"
-fun_expr(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} = "x ↦ 0 if x ∈ cl{(u,v,w) : u < 0, -u*exp(v/u) ⩽ w*exp(1)}, +∞ otherwise"
-fun_params(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}, R}) where {R <: Real} = "none"
-
-prox_naive(f::IndExpPrimal, x::AbstractArray{R}, gamma::Real=1.0) where {R <: Real} =
-    prox(f, x, gamma) # we don't have a much simpler way to do this yet
-
-prox_naive(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}}, x::AbstractArray{R}, gamma::Real=R(1)) where {R <: Real} =
-    prox(f, x, gamma) # we don't have a much simpler way to do this yet
+prox_naive(f::PrecomposeDiagonal{Conjugate{IndExpPrimal}}, x, gamma) = prox(f, x, gamma) # we don't have a much simpler way to do this yet

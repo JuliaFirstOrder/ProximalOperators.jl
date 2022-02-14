@@ -8,25 +8,23 @@ export IndAffine
 
 ### ABSTRACT TYPE
 
-abstract type IndAffine <: ProximableFunction end
+abstract type IndAffine end
 
-is_affine(f::IndAffine) = true
-is_generalized_quadratic(f::IndAffine) = true
+is_affine(f::Type{<:IndAffine}) = true
+is_generalized_quadratic(f::Type{<:IndAffine}) = true
 
 fun_name(f::IndAffine) = "Indicator of an affine subspace"
 
 ### CONSTRUCTORS
 
 """
-**Indicator of an affine subspace**
-
     IndAffine(A, b; iterative=false)
 
-If `A` is a matrix (dense or sparse) and `b` is a vector, returns the indicator function of the set
+If `A` is a matrix (dense or sparse) and `b` is a vector, return the indicator function of the affine set
 ```math
 S = \\{x : Ax = b\\}.
 ```
-If `A` is a vector and `b` is a scalar, returns the indicator function of the set
+If `A` is a vector and `b` is a scalar, return the indicator function of the set
 ```math
 S = \\{x : \\langle A, x \\rangle = b\\}.
 ```
@@ -49,3 +47,8 @@ using SuiteSparse
 
 include("indAffineDirect.jl")
 include("indAffineIterative.jl")
+
+function prox_naive(f::IndAffine, x, gamma)
+    y = x + f.A'*((f.A*f.A')\(f.b - f.A*x))
+    return y, real(eltype(x))(0)
+end

@@ -102,13 +102,13 @@ for i = 1:length(stuff)
 ##### test calls to prox! with more signatures
     prox!(ax, ay, f, c, d)
     @test f(ax, ay) ≈ 0
-    ax_naive, ay_naive, fv_naive = ProximalOperators.prox_naive(f, c, d, 1.0)
+    ax_naive, ay_naive, fv_naive = ProximalOperators.prox_naive(f, c, d, 1)
     @test f(ax_naive, ay_naive) ≈ 0
 
 
     prox!((ax, ay), f, (c, d))
     @test f((ax, ay)) ≈ 0
-    axy_naive, fv_naive = ProximalOperators.prox_naive(f, (c, d))
+    axy_naive, fv_naive = ProximalOperators.prox_naive(f, (c, d), 1)
     @test f(axy_naive) ≈ 0
 
 ##### test against IndAffine

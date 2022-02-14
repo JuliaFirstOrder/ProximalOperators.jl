@@ -3,19 +3,17 @@
 export NuclearNorm
 
 """
-**Nuclear norm**
-
     NuclearNorm(λ=1)
 
-Returns the function
+Return the nuclear norm
 ```math
 f(X) = \\|X\\|_* = λ ∑_i σ_i(X),
 ```
 where `λ` is a positive parameter and ``σ_i(X)`` is ``i``-th singular value of matrix ``X``.
 """
-struct NuclearNorm{R <: Real} <: ProximableFunction
+struct NuclearNorm{R}
     lambda::R
-    function NuclearNorm{R}(lambda::R) where {R <: Real}
+    function NuclearNorm{R}(lambda::R) where {R}
         if lambda < 0
             error("parameter λ must be nonnegative")
         else
@@ -24,16 +22,17 @@ struct NuclearNorm{R <: Real} <: ProximableFunction
     end
 end
 
-is_convex(f::NuclearNorm) = true
+is_convex(f::Type{<:NuclearNorm}) = true
 
-NuclearNorm(lambda::R=1) where {R <: Real} = NuclearNorm{R}(lambda)
+NuclearNorm(lambda::R=1) where {R} = NuclearNorm{R}(lambda)
 
-function (f::NuclearNorm)(X::AbstractMatrix{T}) where {R <: Real, T <: Union{R, Complex{R}}}
+function (f::NuclearNorm)(X)
     F = svd(X)
     return f.lambda * sum(F.S)
 end
 
-function prox!(Y::AbstractMatrix{T}, f::NuclearNorm, X::AbstractMatrix{T}, gamma::R=R(1)) where {R <: Real, T <: Union{R, Complex{R}}}
+function prox!(Y, f::NuclearNorm, X, gamma)
+    R = real(eltype(X))
     F = svd(X)
     S_thresh = max.(R(0), F.S .- f.lambda*gamma)
     rankY = findfirst(S_thresh .== R(0))
@@ -48,12 +47,7 @@ function prox!(Y::AbstractMatrix{T}, f::NuclearNorm, X::AbstractMatrix{T}, gamma
     return f.lambda * sum(S_thresh)
 end
 
-fun_name(f::NuclearNorm) = "nuclear norm"
-fun_dom(f::NuclearNorm) = "AbstractArray{Real,2}, AbstractArray{Complex,2}"
-fun_expr(f::NuclearNorm) = "X ↦ λ∑σ_i(X)"
-fun_params(f::NuclearNorm) = "λ = $(f.lambda)"
-
-function prox_naive(f::NuclearNorm, X::AbstractMatrix{T}, gamma::R=R(1)) where {R, T <: Union{R, Complex{R}}}
+function prox_naive(f::NuclearNorm, X, gamma)
     F = svd(X)
     S = max.(0, F.S .- f.lambda*gamma)
     Y = F.U * (Diagonal(S) * F.Vt)

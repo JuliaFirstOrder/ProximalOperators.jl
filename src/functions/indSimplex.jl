@@ -3,19 +3,18 @@
 export IndSimplex
 
 """
-**Indicator of a simplex**
-
     IndSimplex(a=1.0)
 
-Returns the indicator of the set
+Return the indicator of the simplex
 ```math
 S = \\left\\{ x : x \\geq 0, \\sum_i x_i = a \\right\\}.
 ```
-By default `a=1.0`, therefore ``S`` is the probability simplex.
+
+By default `a=1`, therefore ``S`` is the probability simplex.
 """
-struct IndSimplex{R <: Real} <: ProximableFunction
+struct IndSimplex{R}
     a::R
-    function IndSimplex{R}(a::R) where {R <: Real}
+    function IndSimplex{R}(a::R) where R
         if a <= 0
             error("parameter a must be positive")
         else
@@ -24,22 +23,24 @@ struct IndSimplex{R <: Real} <: ProximableFunction
     end
 end
 
-is_convex(f::IndSimplex) = true
-is_set(f::IndSimplex) = true
+is_convex(f::Type{<:IndSimplex}) = true
+is_set(f::Type{<:IndSimplex}) = true
 
-IndSimplex(a::R=1.0) where {R <: Real} = IndSimplex{R}(a)
+IndSimplex(a::R=1) where R = IndSimplex{R}(a)
 
-function (f::IndSimplex)(x::AbstractArray{R}) where R <: Real
+function (f::IndSimplex)(x)
+    R = eltype(x)
     if all(x .>= 0) && sum(x) ≈ f.a
         return R(0)
     end
     return R(Inf)
 end
 
-function simplex_proj_condat!(y::AbstractArray{R}, a, x::AbstractArray{R}) where R
+function simplex_proj_condat!(y, a, x)
     # Implements algorithm proposed in:
     # Condat, L. "Fast projection onto the simplex and the l1 ball",
     # Mathematical Programming, 158:575–585, 2016.
+    R = eltype(x)
     v = [x[1]]
     v_tilde = R[]
     rho = x[1] - a
@@ -80,17 +81,13 @@ function simplex_proj_condat!(y::AbstractArray{R}, a, x::AbstractArray{R}) where
     y .= max.(x .- rho, R(0))
 end
 
-function prox!(y::AbstractArray{R}, f::IndSimplex, x::AbstractArray{R}, _::R=R(1)) where R <: Real
+function prox!(y, f::IndSimplex, x, gamma)
     simplex_proj_condat!(y, f.a, x)
-    return R(0)
+    return eltype(x)(0)
 end
 
-fun_name(f::IndSimplex) = "indicator of the probability simplex"
-fun_dom(f::IndSimplex) = "AbstractArray{Real}"
-fun_expr(f::IndSimplex) = "x ↦ 0 if x ⩾ 0 and sum(x) = a, +∞ otherwise"
-fun_params(f::IndSimplex) = "a = $(f.a)"
-
-function prox_naive(f::IndSimplex, x::AbstractArray{R}, _::R=R(1)) where R <: Real
+function prox_naive(f::IndSimplex, x, gamma)
+    R = eltype(x)
     low = minimum(x)
     upp = maximum(x)
     v = x

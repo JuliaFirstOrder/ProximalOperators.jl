@@ -3,41 +3,35 @@
 export IndZero
 
 """
-**Indicator of the zero cone**
-
     IndZero()
 
-Returns the indicator function of the set containing the origin, the "zero cone".
+Return the indicator function of the set containing the origin, the "zero cone".
 """
-struct IndZero <: ProximableFunction end
+struct IndZero end
 
-is_separable(f::IndZero) = true
-is_convex(f::IndZero) = true
-is_singleton(f::IndZero) = true
-is_cone(f::IndZero) = true
-is_affine(f::IndZero) = true
+is_separable(f::Type{<:IndZero}) = true
+is_convex(f::Type{<:IndZero}) = true
+is_singleton(f::Type{<:IndZero}) = true
+is_cone(f::Type{<:IndZero}) = true
+is_affine(f::Type{<:IndZero}) = true
 
-function (f::IndZero)(x::AbstractArray{C}) where {R <: Real, C <: Union{R, Complex{R}}}
+function (::IndZero)(x)
+    C = eltype(x)
     for k in eachindex(x)
         if x[k] != C(0)
             return R(Inf)
         end
     end
-    return R(0)
+    return real(C)(0)
 end
 
-function prox!(y::AbstractArray{C}, f::IndZero, x::AbstractArray{C}, gamma=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
-    for k in eachindex(x)
-        y[k] = C(0)
+function prox!(y, ::IndZero, x, gamma)
+    for k in eachindex(y)
+        y[k] = eltype(y)(0)
     end
-    return R(0)
+    return real(eltype(x))(0)
 end
 
-fun_name(f::IndZero) = "indicator of the zero cone"
-fun_dom(f::IndZero) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::IndZero) = "x ↦ 0 if all(x = 0), +∞ otherwise"
-fun_params(f::IndZero) = "none"
-
-function prox_naive(f::IndZero, x::AbstractArray{C}, gamma=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
-    return zero(x), R(0)
+function prox_naive(::IndZero, x, gamma)
+    return zero(x), real(eltype(x))(0)
 end

@@ -3,17 +3,15 @@
 export IndBallL1
 
 """
-**Indicator of a ``L_1`` norm ball**
-
     IndBallL1(r=1.0)
 
-Returns the indicator function of the set
+Return the indicator function of the ``L_1`` norm ball
 ```math
 S = \\left\\{ x : \\sum_i |x_i| \\leq r \\right\\}.
 ```
 Parameter `r` must be positive.
 """
-struct IndBallL1{R} <: ProximableFunction
+struct IndBallL1{R}
     r::R
     function IndBallL1{R}(r::R) where R
         if r <= 0
@@ -24,20 +22,22 @@ struct IndBallL1{R} <: ProximableFunction
     end
 end
 
-is_convex(f::IndBallL1) = true
-is_set(f::IndBallL1) = true
-is_prox_accurate(f::IndBallL1) = false
+is_convex(f::Type{<:IndBallL1}) = true
+is_set(f::Type{<:IndBallL1}) = true
+is_prox_accurate(f::Type{<:IndBallL1}) = false
 
 IndBallL1(r::R=1.0) where R = IndBallL1{R}(r)
 
-function (f::IndBallL1)(x::AbstractArray{T}) where {R <: Real, T <: RealOrComplex{R}}
+function (f::IndBallL1)(x)
+    R = real(eltype(x))
     if norm(x, 1) - f.r > f.r*eps(R)
         return R(Inf)
     end
     return R(0)
 end
 
-function prox!(y::AbstractArray{R}, f::IndBallL1, x::AbstractArray{R}, _::R=R(1)) where {R <: Real}
+function prox!(y, f::IndBallL1, x::AbstractArray{<:Real}, gamma)
+    R = eltype(x)
     if norm(x, 1) <= f.r
         y .= x
         return R(0)
@@ -49,7 +49,8 @@ function prox!(y::AbstractArray{R}, f::IndBallL1, x::AbstractArray{R}, _::R=R(1)
     end
 end
 
-function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, _::R=R(1)) where {R <: Real, T <: Complex{R}}
+function prox!(y, f::IndBallL1, x::AbstractArray{<:Complex}, gamma)
+    R = real(eltype(x))
     if norm(x, 1) <= f.r
         y .= x
         return R(0)
@@ -62,12 +63,8 @@ function prox!(y::AbstractArray{T}, f::IndBallL1, x::AbstractArray{T}, _::R=R(1)
     end
 end
 
-fun_name(f::IndBallL1) = "indicator of an L1 norm ball"
-fun_dom(f::IndBallL1) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::IndBallL1) = "x ↦ 0 if ‖x‖_1 ⩽ r, +∞ otherwise"
-fun_params(f::IndBallL1) = "r = $(f.r)"
-
-function prox_naive(f::IndBallL1, x::AbstractArray{T}, _::R=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(f::IndBallL1, x, gamma)
+    R = real(eltype(x))
     # do a simple bisection (aka binary search) on λ
     L = R(0)
     U = maximum(abs, x)

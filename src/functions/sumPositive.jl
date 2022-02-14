@@ -3,25 +3,24 @@
 export SumPositive
 
 """
-**Sum of the positive coefficients**
-
     SumPositive()
 
-Returns the function
+Return the function
 ```math
 f(x) = ∑_i \\max\\{0, x_i\\}.
 ```
 """
-struct SumPositive <: ProximableFunction end
+struct SumPositive end
 
-is_separable(f::SumPositive) = true
-is_convex(f::SumPositive) = true
+is_separable(f::Type{<:SumPositive}) = true
+is_convex(f::Type{<:SumPositive}) = true
 
-function (f::SumPositive)(x::AbstractArray{T}) where T <: Real
-    return sum(xi -> max(xi, 0), x)
+function (::SumPositive)(x)
+    return sum(xi -> max(xi, eltype(x)(0)), x)
 end
 
-function prox!(y::AbstractArray{R}, f::SumPositive, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
+function prox!(y, ::SumPositive, x, gamma)
+    R = eltype(x)
     fsum = R(0)
     for i in eachindex(x)
         y[i] = x[i] < gamma ? (x[i] > 0 ? R(0) : x[i]) : x[i]-gamma
@@ -30,16 +29,14 @@ function prox!(y::AbstractArray{R}, f::SumPositive, x::AbstractArray{R}, gamma::
     return fsum
 end
 
-function gradient!(y::AbstractArray{R}, f::SumPositive, x::AbstractArray{R}) where R <: Real
+function gradient!(y, ::SumPositive, x)
+    R = eltype(x)
     y .= max.(0, sign.(x))
-    return sum(xi -> max(xi, 0), x)
+    return sum(xi -> max(xi, R(0)), x)
 end
 
-fun_name(f::SumPositive) = "Sum of the positive coefficients"
-fun_dom(f::SumPositive) = "AbstractArray{Real}"
-fun_expr(f::SumPositive) = "x ↦ sum(max(0, x))"
-
-function prox_naive(f::SumPositive, x::AbstractArray{R}, gamma::R=R(1)) where R <: Real
+function prox_naive(::SumPositive, x, gamma)
+    R = eltype(x)
     y = copy(x)
     indpos = x .> 0
     y[indpos] = max.(R(0), x[indpos] .- gamma)
@@ -50,7 +47,8 @@ end
 # Prox with multiple gammas #
 # ######################### #
 
-function prox!(y::AbstractArray{R}, f::SumPositive, x::AbstractArray{R}, gamma::AbstractArray{R}) where R <: Real
+function prox!(y, ::SumPositive, x, gamma::AbstractArray)
+    R = eltype(x)
     fsum = R(0)
     for i in eachindex(x)
         y[i] = x[i] < gamma[i] ? (x[i] > 0 ? R(0) : x[i]) : x[i]-gamma[i]
@@ -59,7 +57,8 @@ function prox!(y::AbstractArray{R}, f::SumPositive, x::AbstractArray{R}, gamma::
     return fsum
 end
 
-function prox_naive(f::SumPositive, x::AbstractArray{R}, gamma::AbstractArray{R}) where R <: Real
+function prox_naive(::SumPositive, x, gamma::AbstractArray)
+    R = eltype(x)
     y = copy(x)
     indpos = x .> 0
     y[indpos] = max.(R(0), x[indpos] .- gamma[indpos])

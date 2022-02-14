@@ -1,12 +1,13 @@
 # Prox and gradient
 
+ProximalOperators relies on the first-order primitives defined in [ProximalCore](https://github.com/JuliaFirstOrder/ProximalCore.jl).
 The following methods allow to evaluate the proximal mapping (and gradient, when defined) of mathematical functions, which are constructed according to what described in [Functions](@ref) and [Calculus rules](@ref).
 
 ```@docs
-prox
-prox!
-gradient
-gradient!
+ProximalCore.prox
+ProximalCore.prox!
+ProximalCore.gradient
+ProximalCore.gradient!
 ```
 
 ## Complex and matrix variables

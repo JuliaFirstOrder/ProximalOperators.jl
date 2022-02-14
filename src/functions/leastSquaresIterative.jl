@@ -4,7 +4,7 @@
 
 using LinearAlgebra
 
-struct LeastSquaresIterative{N, R <: Real, RC <: RealOrComplex{R}, M, V <: AbstractArray{RC, N}, O} <: LeastSquares
+struct LeastSquaresIterative{N, R, RC, M, V, O, IsConvex} <: LeastSquares
     A::M # m-by-n operator
     b::V # m (by-p)
     lambda::R
@@ -16,35 +16,34 @@ struct LeastSquaresIterative{N, R <: Real, RC <: RealOrComplex{R}, M, V <: Abstr
     q::Array{RC, N} # n (by-p)
 end
 
-is_prox_accurate(f::LeastSquaresIterative) = false
-is_convex(f::LeastSquaresIterative) = f.lambda >= 0
-is_concave(f::LeastSquaresIterative) = f.lambda <= 0
+is_prox_accurate(f::Type{<:LeastSquaresIterative}) = false
+is_convex(::Type{LeastSquaresIterative{N, R, RC, M, V, O, IsConvex}}) where {N, R, RC, M, V, O, IsConvex} = IsConvex
 
-function LeastSquaresIterative(A::M, b::V, lambda::R) where {N, R <: Real, RC <: RealOrComplex{R}, M, V <: AbstractArray{RC, N}}
+function LeastSquaresIterative(A::M, b, lambda) where M
     if size(A, 1) != size(b, 1)
         error("A and b have incompatible dimensions")
     end
     m, n = size(A)
     x_shape = infer_shape_of_x(A, b)
-    if m >= n
-        shape = :Tall
-        S = AcA(A)
-        LeastSquaresIterative{N, R, RC, M, V, AcA}(A, b, lambda, lambda*(A'*b), shape, S, zero(b), [], zeros(RC, x_shape))
+    shape, S, res2 = if m >= n
+        :Tall, AcA(A), []
     else
-        shape = :Fat
-        S = AAc(A)
-        LeastSquaresIterative{N, R, RC, M, V, AAc}(A, b, lambda, lambda*(A'*b), shape, S, zero(b), zero(b), zeros(RC, x_shape))
+        :Fat, AAc(A), zero(b)
     end
+    RC = eltype(A)
+    R = real(RC)
+    LeastSquaresIterative{ndims(b), R, RC, M, typeof(b), typeof(S), lambda >= 0}(A, b, R(lambda), lambda*(A'*b), shape, S, zero(b), res2, zeros(RC, x_shape))
 end
 
-function (f::LeastSquaresIterative{N, R, RC, M, V})(x::AbstractArray{RC, N}) where {N, R, RC, M, V}
+function (f::LeastSquaresIterative)(x)
     mul!(f.res, f.A, x)
     f.res .-= f.b
     return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function prox!(y::AbstractArray{D, N}, f::LeastSquaresIterative{N, R, RC, M, V}, x::AbstractArray{D, N}, gamma::R=R(1)) where {N, R, RC, M, V, D <: RealOrComplex{R}}
+function prox!(y, f::LeastSquaresIterative, x, gamma)
     f.q .= f.lambdaAtb .+ x./gamma
+    RC = eltype(f.S)
     # two cases: (1) tall A, (2) fat A
     if f.shape == :Tall
         y .= x
@@ -65,7 +64,7 @@ function prox!(y::AbstractArray{D, N}, f::LeastSquaresIterative{N, R, RC, M, V},
     return (f.lambda/2)*norm(f.res, 2)^2
 end
 
-function gradient!(y::AbstractArray{D, N}, f::LeastSquaresIterative{N, R, RC, M, V}, x::AbstractArray{D, N}) where {N, R, RC, M, V, D <: Union{R, Complex{R}}}
+function gradient!(y, f::LeastSquaresIterative, x)
     mul!(f.res, f.A, x)
     f.res .-= f.b
     mul!(y, adjoint(f.A), f.res)
@@ -73,7 +72,7 @@ function gradient!(y::AbstractArray{D, N}, f::LeastSquaresIterative{N, R, RC, M,
     return (f.lambda / 2) * real(dot(f.res, f.res))
 end
 
-function prox_naive(f::LeastSquaresIterative{N}, x::AbstractArray{D, N}, gamma::R=R(1)) where {N, R, D <: RealOrComplex{R}}
+function prox_naive(f::LeastSquaresIterative, x, gamma)
     y = IterativeSolvers.cg(f.lambda*f.A'*f.A + I/gamma, f.lambda*f.A'*f.b + x/gamma)
     fy = (f.lambda/2)*norm(f.A*y-f.b)^2
     return y, fy

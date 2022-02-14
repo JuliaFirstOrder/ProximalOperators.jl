@@ -3,11 +3,9 @@
 export SeparableSum
 
 """
-**Separable sum of functions**
-
     SeparableSum(f_1, ..., f_k)
 
-Given functions `f_1` to `f_k`, returns their separable sum, that is
+Given functions `f_1` to `f_k`, return their separable sum, that is
 ```math
 g(x_1, ..., x_k) = \\sum_{i=1}^k f_i(x_i).
 ```
@@ -23,69 +21,41 @@ Example:
     f_xY = f((x, Y)); # evaluates f at (x, Y)
     (u, V), f_uV = prox(f, (x, Y), 1.3); # computes prox at (x, Y)
 """
-struct SeparableSum{T <: Tuple} <: ProximableFunction
+struct SeparableSum{T}
     fs::T
 end
 
-SeparableSum(fs::Vararg{ProximableFunction}) = SeparableSum((fs...,))
+SeparableSum(fs::Vararg) = SeparableSum((fs...,))
 
-is_prox_accurate(f::SeparableSum) = all(is_prox_accurate.(f.fs))
-is_convex(f::SeparableSum) = all(is_convex.(f.fs))
-is_set(f::SeparableSum) = all(is_set.(f.fs))
-is_singleton(f::SeparableSum) = all(is_singleton.(f.fs))
-is_cone(f::SeparableSum) = all(is_cone.(f.fs))
-is_affine(f::SeparableSum) = all(is_affine.(f.fs))
-is_smooth(f::SeparableSum) = all(is_smooth.(f.fs))
-is_quadratic(f::SeparableSum) = all(is_quadratic.(f.fs))
-is_generalized_quadratic(f::SeparableSum) = all(is_generalized_quadratic.(f.fs))
-is_strongly_convex(f::SeparableSum) = all(is_strongly_convex.(f.fs))
+component_types(::Type{SeparableSum{T}}) where T = fieldtypes(T)
 
-function (f::SeparableSum)(x::TupleOfArrays{R}) where R <: Real
-    sum = R(0)
-    for k in eachindex(x)
-        sum += f.fs[k](x[k])
-    end
-    return sum
-end
+@generated is_prox_accurate(::Type{T}) where T <: SeparableSum = return all(is_prox_accurate, component_types(T)) ? :(true) : :(false)
+@generated is_convex(::Type{T}) where T <: SeparableSum = return all(is_convex, component_types(T)) ? :(true) : :(false)
+@generated is_set(::Type{T}) where T <: SeparableSum = return all(is_set, component_types(T)) ? :(true) : :(false)
+@generated is_singleton(::Type{T}) where T <: SeparableSum = return all(is_singleton, component_types(T)) ? :(true) : :(false)
+@generated is_cone(::Type{T}) where T <: SeparableSum = return all(is_cone, component_types(T)) ? :(true) : :(false)
+@generated is_affine(::Type{T}) where T <: SeparableSum = return all(is_affine, component_types(T)) ? :(true) : :(false)
+@generated is_smooth(::Type{T}) where T <: SeparableSum = return all(is_smooth, component_types(T)) ? :(true) : :(false)
+@generated is_generalized_quadratic(::Type{T}) where T <: SeparableSum = return all(is_generalized_quadratic, component_types(T)) ? :(true) : :(false)
+@generated is_strongly_convex(::Type{T}) where T <: SeparableSum = return all(is_strongly_convex, component_types(T)) ? :(true) : :(false)
 
-function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::R=R(1)) where R <: Real
-    sum = R(0)
-    for k in eachindex(xs)
-        sum += prox!(ys[k], fs[k], xs[k], gamma)
-    end
-    return sum
-end
+(g::SeparableSum)(xs::Tuple) = sum(f(x) for (f, x) in zip(g.fs, xs))
 
-function prox!(ys::TupleOfArrays{R}, fs::Tuple, xs::TupleOfArrays{R}, gamma::Tuple) where R <: Real
-    sum = R(0)
-    for k in eachindex(xs)
-        sum += prox!(ys[k], fs[k], xs[k], gamma[k])
-    end
-    return sum
-end
+prox!(ys::Tuple, fs::Tuple, xs::Tuple, gamma::Number) = sum(prox!(y, f, x, gamma) for (y, f, x) in zip(ys, fs, xs))
 
-prox!(ys::TupleOfArrays{R}, f::SeparableSum, xs::TupleOfArrays{R}, gamma=R(1)) where R <: Real = prox!(ys, f.fs, xs, gamma)
+prox!(ys::Tuple, fs::Tuple, xs::Tuple, gammas::Tuple) = sum(prox!(y, f, x, gamma) for (y, f, x, gamma) in zip(ys, fs, xs, gammas))
 
-function gradient!(grad::TupleOfArrays{R}, fs::Tuple, x::TupleOfArrays{R}) where R <: Real
-    val = R(0)
-    for k in eachindex(fs)
-        val += gradient!(grad[k], fs[k], x[k])
-    end
-    return val
-end
+prox!(ys::Tuple, g::SeparableSum, xs::Tuple, gamma) = prox!(ys, g.fs, xs, gamma)
 
-gradient!(grad::TupleOfArrays, f::SeparableSum, x::TupleOfArrays) = gradient!(grad, f.fs, x)
+gradient!(grads::Tuple, fs::Tuple, xs::Tuple) = sum(gradient!(grad, f, x) for (grad, f, x) in zip(grads, fs, xs))
 
-fun_name(f::SeparableSum) = "separable sum"
-fun_dom(f::SeparableSum) = "n/a"
-fun_expr(f::SeparableSum) = "(x₁, …, xₖ) ↦ f₁(x₁) + … + fₖ(xₖ)"
-fun_params(f::SeparableSum) = "n/a"
+gradient!(grads::Tuple, g::SeparableSum, xs::Tuple) = gradient!(grads, g.fs, xs)
 
-function prox_naive(f::SeparableSum, xs::TupleOfArrays{R}, gamma::Union{R, Tuple}=R(1)) where R <: Real
-    fys = R(0)
+function prox_naive(f::SeparableSum, xs::Tuple, gamma)
+    fys = real(eltype(xs[1]))(0)
     ys = []
     for k in eachindex(xs)
-        y, fy = prox_naive(f.fs[k], xs[k], typeof(gamma) <: Real ? gamma : gamma[k])
+        y, fy = prox_naive(f.fs[k], xs[k], typeof(gamma) <: Number ? gamma : gamma[k])
         fys += fy
         append!(ys, [y])
     end

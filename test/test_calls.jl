@@ -12,7 +12,6 @@ test_cases_spec = [
         "constr" => DistL2,
         "wrong"  => [
             (IndBallL2(), -rand()),
-            (IndBinary(),)
         ],
         "right" => [
             ( (IndSOC(),), randn(Float32, 10) ),
@@ -28,7 +27,6 @@ test_cases_spec = [
         "constr" => SqrDistL2,
         "wrong"  => [
             (IndBallL2(), -rand()),
-            (IndBinary(),)
         ],
         "right" => [
             ( (IndSimplex(),), randn(Float32, 10) ),

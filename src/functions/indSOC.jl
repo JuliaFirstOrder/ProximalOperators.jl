@@ -3,29 +3,29 @@
 export IndSOC, IndRotatedSOC
 
 """
-**Indicator of the second-order cone**
-
     IndSOC()
 
-Returns the indicator of the second-order cone (also known as ice-cream cone or Lorentz cone), that is
+Return the indicator of the second-order cone (also known as ice-cream cone or Lorentz cone), that is
 ```math
 C = \\left\\{ (t, x) : \\|x\\| \\leq t \\right\\}.
 ```
 """
-struct IndSOC <: ProximableFunction end
+struct IndSOC end
 
-function (f::IndSOC)(x::AbstractVector{T}) where T <: Real
+function (::IndSOC)(x)
+    T = eltype(x)
     # the tolerance in the following line should be customizable
     if isapprox_le(norm(x[2:end]), x[1], atol=eps(T), rtol=sqrt(eps(T)))
         return T(0)
     end
-    return +Inf
+    return T(Inf)
 end
 
-is_convex(f::IndSOC) = true
-is_set(f::IndSOC) = true
+is_convex(f::Type{<:IndSOC}) = true
+is_cone(f::Type{<:IndSOC}) = true
 
-function prox!(y::AbstractVector{T}, f::IndSOC, x::AbstractVector{T}, gamma::T=T(1)) where T <: Real
+function prox!(y, ::IndSOC, x, gamma)
+    T = eltype(x)
     @views nx = norm(x[2:end])
     t = x[1]
     if t <= -nx
@@ -40,12 +40,8 @@ function prox!(y::AbstractVector{T}, f::IndSOC, x::AbstractVector{T}, gamma::T=T
     return T(0)
 end
 
-fun_name(f::IndSOC) = "indicator of the second-order cone"
-fun_dom(f::IndSOC) = "AbstractArray{Real,1}"
-fun_expr(f::IndSOC) = "x ↦ 0 if x[1] >= ||x[2:end]||, +∞ otherwise"
-fun_params(f::IndSOC) = "none"
-
-function prox_naive(f::IndSOC, x::AbstractVector{T}, gamma=T(1)) where T <: Real
+function prox_naive(::IndSOC, x, gamma)
+    T = eltype(x)
     nx = norm(x[2:end])
     t = x[1]
     if t <= -nx
@@ -70,14 +66,15 @@ end
 
         IndRotatedSOC()
 
-Returns the indicator of the *rotated* second-order cone (also known as ice-cream cone or Lorentz cone), that is
+Return the indicator of the *rotated* second-order cone (also known as ice-cream cone or Lorentz cone), that is
 ```math
 C = \\left\\{ (p, q, x) : \\|x\\|^2 \\leq 2\\cdot pq, p \\geq 0, q \\geq 0 \\right\\}.
 ```
 """
-struct IndRotatedSOC <: ProximableFunction end
+struct IndRotatedSOC end
 
-function (f::IndRotatedSOC)(x::AbstractVector{T}) where T <: Real
+function (::IndRotatedSOC)(x)
+    T = eltype(x)
     if isapprox_le(0, x[1], atol=eps(T), rtol=sqrt(eps(T))) &&
         isapprox_le(0, x[2], atol=eps(T), rtol=sqrt(eps(T))) &&
         isapprox_le(norm(x[3:end])^2, 2*x[1]*x[2], atol=eps(T), rtol=sqrt(eps(T)))
@@ -89,7 +86,8 @@ end
 is_convex(f::IndRotatedSOC) = true
 is_set(f::IndRotatedSOC) = true
 
-function prox!(y::AbstractVector{T}, f::IndRotatedSOC, x::AbstractVector{T}, gamma::T=T(1)) where T <: Real
+function prox!(y, ::IndRotatedSOC, x, gamma)
+    T = eltype(x)
     # sin(pi/4) = cos(pi/4) = 0.7071067811865475
     # rotate x ccw by pi/4
     x1 = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
@@ -117,12 +115,7 @@ function prox!(y::AbstractVector{T}, f::IndRotatedSOC, x::AbstractVector{T}, gam
     return T(0)
 end
 
-fun_name(f::IndRotatedSOC) = "indicator of the rotated second-order cone"
-fun_dom(f::IndRotatedSOC) = "AbstractArray{Real,1}"
-fun_expr(f::IndRotatedSOC) = "x ↦ 0 if x[1] ⩾ 0, x[2] ⩾ 0, norm(x[3:end])² ⩽ 2*x[1]*x[2], +∞ otherwise"
-fun_params(f::IndRotatedSOC) = "none"
-
-function prox_naive(f::IndRotatedSOC, x::AbstractVector{T}, gamma=T(1)) where T <: Real
+function prox_naive(::IndRotatedSOC, x, gamma)
     g = IndSOC()
     z = copy(x)
     z[1] = 0.7071067811865475*x[1] + 0.7071067811865475*x[2]
@@ -132,5 +125,5 @@ function prox_naive(f::IndRotatedSOC, x::AbstractVector{T}, gamma=T(1)) where T 
     y2 = 0.7071067811865475*y[1] - 0.7071067811865475*y[2]
     y[1] = y1
     y[2] = y2
-    return y, T(0)
+    return y, eltype(x)(0)
 end

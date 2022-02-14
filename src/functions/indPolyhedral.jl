@@ -1,16 +1,14 @@
 export IndPolyhedral
 
-abstract type IndPolyhedral <: ProximableFunction end
+abstract type IndPolyhedral end
 
-is_convex(::IndPolyhedral) = true
-is_set(::IndPolyhedral) = true
+is_convex(::Type{<:IndPolyhedral}) = true
+is_set(::Type{<:IndPolyhedral}) = true
 
 """
-**Indicator of a polyhedral set**
-
     IndPolyhedral([l,] A, [u, xmin, xmax])
 
-Returns the indicator function of the polyhedral set:
+Return the indicator function of the polyhedral set:
 ```math
 S = \\{ x : x_\\min \\leq x \\leq x_\\max, l \\leq Ax \\leq u \\}.
 ```

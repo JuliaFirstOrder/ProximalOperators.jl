@@ -3,22 +3,21 @@
 export IndNonpositive
 
 """
-**Indicator of the nonpositive orthant**
-
     IndNonpositive()
 
-Returns the indicator of the set
+Return the indicator of the nonpositive orthant
 ```math
 C = \\{ x : x \\leq 0 \\}.
 ```
 """
-struct IndNonpositive <: ProximableFunction end
+struct IndNonpositive end
 
-is_separable(f::IndNonpositive) = true
-is_convex(f::IndNonpositive) = true
-is_cone(f::IndNonpositive) = true
+is_separable(f::Type{<:IndNonpositive}) = true
+is_convex(f::Type{<:IndNonpositive}) = true
+is_cone(f::Type{<:IndNonpositive}) = true
 
-function (f::IndNonpositive)(x::AbstractArray{R}) where R <: Real
+function (::IndNonpositive)(x)
+    R = eltype(x)
     for k in eachindex(x)
         if x[k] > 0
             return R(Inf)
@@ -27,7 +26,8 @@ function (f::IndNonpositive)(x::AbstractArray{R}) where R <: Real
     return R(0)
 end
 
-function prox!(y::AbstractArray{R}, f::IndNonpositive, x::AbstractArray{R}, gamma=R(1)) where R <: Real
+function prox!(y, ::IndNonpositive, x, gamma)
+    R = eltype(x)
     for k in eachindex(x)
         if x[k] > 0
             y[k] = R(0)
@@ -38,12 +38,8 @@ function prox!(y::AbstractArray{R}, f::IndNonpositive, x::AbstractArray{R}, gamm
     return R(0)
 end
 
-fun_name(f::IndNonpositive) = "indicator of the Nonpositive cone"
-fun_dom(f::IndNonpositive) = "AbstractArray{Real}"
-fun_expr(f::IndNonpositive) = "x ↦ 0 if all(0 ⩾ x), +∞ otherwise"
-fun_params(f::IndNonpositive) = "none"
-
-function prox_naive(f::IndNonpositive, x::AbstractArray{R}, gamma=R(1)) where R <: Real
+function prox_naive(::IndNonpositive, x, gamma)
+    R = eltype(x)
     y = min.(R(0), x)
     return y, R(0)
 end

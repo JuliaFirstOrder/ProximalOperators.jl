@@ -4,22 +4,16 @@ mutable struct EpicomposeQuadratic{F, M, P, V, R} <: Epicompose
     L::M
     Q::P
     q::V
-    gamma::Maybe{R}
-    fact::Maybe{F}
-    function EpicomposeQuadratic{F, M, P, V, R}(L::M, Q::P, q::V) where {
-        R <: Real,
-        M <: AbstractMatrix{R},
-        P <: AbstractMatrix{R},
-        V <: AbstractVector{R},
-        F <: Factorization,
-    }
-        new(L, Q, q, nothing, nothing)
+    gamma::R
+    fact::F
+    function EpicomposeQuadratic{F, M, P, V, R}(L::M, Q::P, q::V) where {F, M, P, V, R}
+        new(L, Q, q, -R(1))
     end
 end
 
 function EpicomposeQuadratic(L, Q::P, q) where {R, P <: DenseMatrix{R}}
     return EpicomposeQuadratic{
-        LinearAlgebra.Cholesky{R}, typeof(L), P, typeof(q), real(eltype(L))
+        LinearAlgebra.Cholesky{R, P}, typeof(L), P, typeof(q), real(eltype(L))
     }(L, Q, q)
 end
 
@@ -32,30 +26,25 @@ end
 # TODO: enable construction from other types of quadratics, e.g. LeastSquares
 # TODO: probably some access methods are needed to obtain Hessian and linear term?
 
-function EpicomposeQuadratic(L, f::Q) where {Q <: Quadratic}
-    return EpicomposeQuadratic(L, f.Q, f.q)
-end
+EpicomposeQuadratic(L, f::Quadratic) = EpicomposeQuadratic(L, f.Q, f.q)
 
-function factor_step!(g::EpicomposeQuadratic, gamma::R) where {R <: Real}
-    g.gamma = gamma
-    g.fact = cholesky(g.Q + (g.L' * g.L)/gamma)
-end
-
-function prox!(y::AbstractArray{R}, g::EpicomposeQuadratic, x::AbstractArray{R}, gamma::R=one(R)) where {
-    R <: Real
-}
-    if g.gamma === nothing || !isapprox(gamma, g.gamma)
-        factor_step!(g, gamma)
+function get_factorization!(g::EpicomposeQuadratic, gamma)
+    if !isapprox(gamma, g.gamma)
+        g.gamma = gamma
+        g.fact = cholesky(g.Q + (g.L' * g.L)/gamma)
     end
-    p = g.fact\((g.L' * x) / gamma - g.q)
+    return g.fact
+end
+
+function prox!(y, g::EpicomposeQuadratic, x, gamma)
+    fact = get_factorization!(g, gamma)
+    p = fact\((g.L' * x) / gamma - g.q)
     fy = dot(p, g.Q * p)/2 + dot(p, g.q)
     mul!(y, g.L, p)
     return fy
 end
 
-function prox_naive(g::EpicomposeQuadratic, x::AbstractArray{R}, gamma::R=one(R)) where {
-    R <: Real
-}
+function prox_naive(g::EpicomposeQuadratic, x, gamma)
     S = g.Q + (g.L' * g.L) / gamma
     p = S\((g.L' * x) / gamma - g.q)
     fy = dot(p, g.Q * p)/2 + dot(p, g.q)

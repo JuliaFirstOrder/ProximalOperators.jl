@@ -3,20 +3,18 @@
 export SqrHingeLoss
 
 """
-**Squared Hinge loss**
-
     SqrHingeLoss(y, μ=1)
 
-Returns the function
+Return the squared Hinge loss
 ```math
 f(x) = μ⋅∑_i \\max\\{0, 1 - y_i ⋅ x_i\\}^2,
 ```
 where `y` is an array and `μ` is a positive parameter.
 """
-struct SqrHingeLoss{R <: Real, S <: Real, T <: AbstractArray{S}} <: ProximableFunction
+struct SqrHingeLoss{R, T}
     y::T
     mu::R
-    function SqrHingeLoss{R, S, T}(y::T, mu::R) where {R <: Real, S <: Real, T <: AbstractArray{S}}
+    function SqrHingeLoss{R, T}(y::T, mu::R) where {R, T}
         if mu <= 0
             error("parameter mu must be positive")
         else
@@ -25,15 +23,19 @@ struct SqrHingeLoss{R <: Real, S <: Real, T <: AbstractArray{S}} <: ProximableFu
     end
 end
 
-is_separable(f::SqrHingeLoss) = true
-is_convex(f::SqrHingeLoss) = true
-is_smooth(f::SqrHingeLoss) = true
+is_separable(f::Type{<:SqrHingeLoss}) = true
+is_convex(f::Type{<:SqrHingeLoss}) = true
+is_smooth(f::Type{<:SqrHingeLoss}) = true
 
-SqrHingeLoss(b::T, mu::R=1) where {R <: Real, S <: Real, T <: AbstractArray{S}} = SqrHingeLoss{R, S, T}(b, mu)
+SqrHingeLoss(b::T, mu::R=1) where {R, T} = SqrHingeLoss{R, T}(b, mu)
 
-(f::SqrHingeLoss)(x::T) where {R <: Real, T <: AbstractArray{R}} = f.mu*sum(max.(R(0), (R(1) .- f.y.*x)).^2)
+function (f::SqrHingeLoss)(x)
+    R = eltype(x)
+    return f.mu * sum(max.(R(0), (R(1) .- f.y .* x)).^2)
+end
 
-function gradient!(y::AbstractArray{R}, f::SqrHingeLoss, x::AbstractArray{R}) where R
+function gradient!(y, f::SqrHingeLoss, x)
+    R = eltype(x)
     sum = R(0)
     for i in eachindex(x)
         zz = 1 - f.y[i] * x[i]
@@ -44,8 +46,8 @@ function gradient!(y::AbstractArray{R}, f::SqrHingeLoss, x::AbstractArray{R}) wh
     return f.mu * sum
 end
 
-function prox!(z::AbstractArray{R}, f::SqrHingeLoss, x::AbstractArray{R}, gamma::R=R(1)) where R
-    v = R(0)
+function prox!(z, f::SqrHingeLoss, x, gamma)
+    v = eltype(x)(0)
     for k in eachindex(x)
         if f.y[k] * x[k] >= 1
             z[k] = x[k]
@@ -57,12 +59,7 @@ function prox!(z::AbstractArray{R}, f::SqrHingeLoss, x::AbstractArray{R}, gamma:
     return f.mu * v
 end
 
-fun_name(f::SqrHingeLoss) = "squared hinge loss"
-fun_dom(f::SqrHingeLoss) = "AbstractArray{Real}"
-fun_expr(f::SqrHingeLoss) = "x ↦ μ * sum( max(0,1-b*x_i)^2, i=1,...,n )"
-fun_params(f::SqrHingeLoss) = "b = $(typeof(f.y)), μ = $(f.mu)"
-
-function prox_naive(f::SqrHingeLoss, x::AbstractArray{R}, gamma::R=R(1)) where R
+function prox_naive(f::SqrHingeLoss, x, gamma)
     flag = f.y .* x .<= 1
     z = copy(x)
     z[flag] = (x[flag] .+ 2 .* f.mu .* gamma .* f.y[flag]) ./ (1 + 2 .* f.mu .* gamma .* f.y[flag].^2)

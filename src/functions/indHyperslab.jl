@@ -3,21 +3,19 @@
 export IndHyperslab
 
 """
-**Indicator of a hyperslab**
-
     IndHyperslab(low, a, upp)
 
-For an array `a` and scalars `low` and `upp`, returns the indicator of set
+For an array `a` and scalars `low` and `upp`, return the so-called hyperslab
 ```math
 S = \\{x : low \\leq \\langle a,x \\rangle \\leq upp \\}.
 ```
 """
-struct IndHyperslab{R <: Real, T <: AbstractArray{R}} <: ProximableFunction
+struct IndHyperslab{R, T}
     low::R
     a::T
     upp::R
     norm_a::R
-    function IndHyperslab{R, T}(low::R, a::T, upp::R) where {R <: Real, T <: AbstractArray{R}}
+    function IndHyperslab{R, T}(low::R, a::T, upp::R) where {R, T}
         norm_a = norm(a)
         if (norm_a == 0 && (upp < 0 || low > 0)) || upp < low
             error("function is improper")
@@ -26,30 +24,25 @@ struct IndHyperslab{R <: Real, T <: AbstractArray{R}} <: ProximableFunction
     end
 end
 
-IndHyperslab(low::R, a::T, upp::R) where {R <: Real, T <: AbstractArray{R}} = IndHyperslab{R, T}(low, a, upp)
+IndHyperslab(low::R, a::T, upp::R) where {R, T} = IndHyperslab{R, T}(low, a, upp)
 
-is_convex(f::IndHyperslab) = true
-is_set(f::IndHyperslab) = true
-is_cone(f::IndHyperslab{R}) where R =
-    iszero(f.norm_a) ||
-    (f.low == f.upp == 0) ||
-    (f.low == 0 && f.upp == Inf) ||
-    (f.low == -Inf && f.upp == 0) ||
-    (f.low == -Inf && f.upp == Inf)
+is_convex(f::Type{<:IndHyperslab}) = true
+is_set(f::Type{<:IndHyperslab}) = true
 
-function (f::IndHyperslab{R})(x::AbstractArray{R}) where R
+function (f::IndHyperslab)(x)
+    R = real(eltype(x))
     if iszero(f.norm_a)
         return R(0)
     end
     s = dot(f.a, x)
-    tol = eps(R) * f.norm_a
+    tol = 100 * eps(R) * f.norm_a
     if isapprox_le(f.low, s, atol=tol, rtol=tol) && isapprox_le(s, f.upp, atol=tol, rtol=tol)
         return R(0)
     end
     return R(Inf)
 end
 
-function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
+function prox!(y, f::IndHyperslab, x, gamma)
     s = dot(f.a, x)
     if s < f.low && f.norm_a > 0
         y .= x .- ((s - f.low)/f.norm_a^2) .* f.a
@@ -58,10 +51,11 @@ function prox!(y::AbstractArray{R}, f::IndHyperslab{R}, x::AbstractArray{R}, gam
     else
         copyto!(y, x)
     end
-    return R(0)
+    return real(eltype(x))(0)
 end
 
-function prox_naive(f::IndHyperslab{R}, x::AbstractArray{R}, gamma::R=R(1)) where R
+function prox_naive(f::IndHyperslab, x, gamma)
+    R = real(eltype(x))
     s = dot(f.a, x)
     if s < f.low && f.norm_a > 0
         return x - ((s - f.low)/norm(f.a)^2) * f.a, R(0)

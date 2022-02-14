@@ -22,11 +22,9 @@
 export Epicompose
 
 """
-**Epi-composition**
-
     Epicompose(L, f, [mu])
 
-Returns the epi-composition of ``f`` with ``L``, also known as infimal
+Return the epi-composition of ``f`` with ``L``, also known as infimal
 postcomposition or image function. Given a function f and a linear operator L,
 their epi-composition is:
 ```math
@@ -39,10 +37,10 @@ If ``mu > 0`` is specified, then ``L`` is assumed to be such that ``L'*L == mu*I
 and the proximal operator is computable for any convex ``f``. If ``mu`` is
 not specified, then ``f`` must be of ``Quadratic`` type.
 """
-abstract type Epicompose <: ProximableFunction end
+abstract type Epicompose end
 
-Epicompose(L, f::T, mu) where {T <: ProximableFunction} = EpicomposeGramDiagonal(L, f, mu)
-Epicompose(L, f::T) where {T <: Quadratic} = EpicomposeQuadratic(L, f)
+Epicompose(L, f, mu) = EpicomposeGramDiagonal(L, f, mu)
+Epicompose(L, f::Quadratic) = EpicomposeQuadratic(L, f)
 
 # TODO add properties
 

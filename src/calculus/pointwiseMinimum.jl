@@ -1,31 +1,31 @@
 export PointwiseMinimum
 
 """
-**Pointwise minimum of functions**
-
     PointwiseMinimum(f_1, ..., f_k)
 
-Given functions `f_1` to `f_k`, returns their pointwise minimum, that is
+Given functions `f_1` to `f_k`, return their pointwise minimum, that is function
 ```math
 g(x) = \\min\\{f_1(x), ..., f_k(x)\\}
 ```
 Note that `g` is a nonconvex function in general.
 """
-struct PointwiseMinimum{T <: Tuple} <: ProximableFunction
+struct PointwiseMinimum{T}
     fs::T
 end
 
 PointwiseMinimum(fs...) = PointwiseMinimum{typeof(fs)}(fs)
 
-is_cone(g::PointwiseMinimum{T}) where T = all(is_cone(f) for f in g.fs)
-is_set(g::PointwiseMinimum{T}) where T = all(is_set(f) for f in g.fs)
+component_types(::Type{PointwiseMinimum{T}}) where T = fieldtypes(T)
+
+@generated is_set(::Type{T}) where T <: PointwiseMinimum = return all(is_set, component_types(T)) ? :(true) : :(false)
+@generated is_cone(::Type{T}) where T <: PointwiseMinimum = return all(is_cone, component_types(T)) ? :(true) : :(false)
 
 function (g::PointwiseMinimum{T})(x) where T
     return minimum(f(x) for f in g.fs)
 end
 
-function prox!(y::T, g::PointwiseMinimum, x::T, gamma::R=R(1)) where
-    {R <: Real, C <: Union{R, Complex{R}}, T <: AbstractArray{C}}
+function prox!(y, g::PointwiseMinimum, x, gamma)
+    R = real(eltype(x))
     y_temp = similar(y)
     minimum_moreau_env = Inf
     for f in g.fs
@@ -39,8 +39,8 @@ function prox!(y::T, g::PointwiseMinimum, x::T, gamma::R=R(1)) where
     return g(y)
 end
 
-function prox_naive(g::PointwiseMinimum, x::T, gamma::R=R(1)) where
-    {R <: Real, C <: Union{R, Complex{R}}, T <: AbstractArray{C}}
+function prox_naive(g::PointwiseMinimum, x, gamma)
+    R = real(eltype(x))
     proxes = [prox_naive(f, x, gamma) for f in g.fs]
     moreau_envs = [f_y + R(1)/(R(2)*gamma)*norm(x - y)^2 for (y, f_y) in proxes]
     _, i_min = findmin(moreau_envs)

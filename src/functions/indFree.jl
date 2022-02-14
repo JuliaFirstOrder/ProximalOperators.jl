@@ -3,43 +3,37 @@
 export IndFree
 
 """
-**Indicator of the free cone**
-
     IndFree()
 
-Returns the indicator function of the whole space, or "free cone", *i.e.*,
+Return the indicator function of the whole space, or "free cone", *i.e.*,
 a function which is identically zero.
 """
-struct IndFree <: ProximableFunction end
+struct IndFree end
 
-is_separable(f::IndFree) = true
-is_convex(f::IndFree) = true
-is_affine(f::IndFree) = true
-is_cone(f::IndFree) = true
-is_smooth(f::IndFree) = true
-is_quadratic(f::IndFree) = true
+is_separable(f::Type{<:IndFree}) = true
+is_convex(f::Type{<:IndFree}) = true
+is_affine(f::Type{<:IndFree}) = true
+is_cone(f::Type{<:IndFree}) = true
+is_smooth(f::Type{<:IndFree}) = true
+is_generalized_quadratic(f::Type{<:IndFree}) = true
 
 const Zero = IndFree
 
-function (f::IndFree)(x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
-    return R(0)
+function (::IndFree)(x)
+    return real(eltype(x))(0)
 end
 
-function prox!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}, args...) where {R, T <: RealOrComplex{R}}
+function prox!(y, ::IndFree, x, gamma)
     y .= x
-    return R(0)
+    return real(eltype(x))(0)
 end
 
-function gradient!(y::AbstractArray{T}, f::IndFree, x::AbstractArray{T}) where {R, T <: RealOrComplex{R}}
+function gradient!(y, ::IndFree, x)
+    T = eltype(x)
     y .= T(0)
-    return R(0)
+    return real(T)(0)
 end
 
-fun_name(f::IndFree) = "indicator of the free cone"
-fun_dom(f::IndFree) = "AbstractArray{Real}, AbstractArray{Complex}"
-fun_expr(f::IndFree) = "x ↦ 0"
-fun_params(f::IndFree) = "none"
-
-function prox_naive(f::IndFree, x::AbstractArray{R}, gamma=R(1)) where {R}
-    return x, R(0)
+function prox_naive(::IndFree, x, gamma)
+    return x, real(eltype(x))(0)
 end

@@ -3,11 +3,9 @@
 export Precompose
 
 """
-**Precomposition with linear mapping/translation**
-
     Precompose(f, L, μ, b)
 
-Returns the function
+Return the function
 ```math
 g(x) = f(Lx + b)
 ```
@@ -23,42 +21,41 @@ Bauschke, Combettes "Convex Analysis and Monotone Operator Theory in Hilbert
 Spaces", 2nd edition, 2016. The same result is Prop. 23.32 in the 1st edition
 of the same book.
 """
-struct Precompose{T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{C, AbstractArray{C}}, V <: Union{C, AbstractArray{C}}, M} <: ProximableFunction
+struct Precompose{T, M, U, V}
     f::T
     L::M
     mu::U
     b::V
-    function Precompose{T, R, C, U, V, M}(f::T, L::M, mu::U, b::V) where {T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{R, AbstractArray{R}}, V <: Union{C, AbstractArray{C}}, M}
+    function Precompose{T, M, U, V}(f::T, L::M, mu::U, b::V) where {T, M, U, V}
         if !is_convex(f)
             error("f must be convex")
         end
-        if any(mu .<= 0.0)
+        if any(mu .<= 0)
             error("elements of μ must be positive")
         end
         new(f, L, mu, b)
     end
 end
 
-is_prox_accurate(f::Precompose) = is_prox_accurate(f.f)
-is_convex(f::Precompose) = is_convex(f.f)
-is_set(f::Precompose) = is_set(f.f)
-is_singleton(f::Precompose) = is_singleton(f.f)
-is_cone(f::Precompose) = is_cone(f.f)
-is_affine(f::Precompose) = is_affine(f.f)
-is_smooth(f::Precompose) = is_smooth(f.f)
-is_quadratic(f::Precompose) = is_quadratic(f.f)
-is_generalized_quadratic(f::Precompose) = is_generalized_quadratic(f.f)
-is_strongly_convex(f::Precompose) = is_strongly_convex(f.f)
+is_prox_accurate(::Type{<:Precompose{T}}) where T = is_prox_accurate(T)
+is_convex(::Type{<:Precompose{T}}) where T = is_convex(T)
+is_set(::Type{<:Precompose{T}}) where T = is_set(T)
+is_singleton(::Type{<:Precompose{T}}) where T = is_singleton(T)
+is_cone(::Type{<:Precompose{T}}) where T = is_cone(T)
+is_affine(::Type{<:Precompose{T}}) where T = is_affine(T)
+is_smooth(::Type{<:Precompose{T}}) where T = is_smooth(T)
+is_generalized_quadratic(::Type{<:Precompose{T}}) where T = is_generalized_quadratic(T)
+is_strongly_convex(::Type{<:Precompose{T}}) where T = is_strongly_convex(T)
 
-Precompose(f::T, L::M, mu::U, b::V) where {T <: ProximableFunction, R <: Real, C <: Union{R, Complex{R}}, U <: Union{R, AbstractArray{R}}, V <: Union{C, AbstractArray{C}}, M} = Precompose{T, R, C, U, V, M}(f, L, mu, b)
+Precompose(f::T, L::M, mu::U, b::V) where {T, M, U, V} = Precompose{T, M, U, V}(f, L, mu, b)
 
-Precompose(f::T, L::M, mu::U) where {T <: ProximableFunction, R <: Real, U <: Union{R, AbstractArray{R}}, M} = Precompose{T, R, R, U, R, M}(f, L, mu, R(0))
+Precompose(f::T, L::M, mu::U) where {T, M, U} = Precompose(f, L, mu, 0)
 
-function (g::Precompose)(x::T) where {T <: Union{Tuple, AbstractArray}}
-    return g.f(g.L*x .+ g.b)
+function (g::Precompose)(x)
+    return g.f(g.L * x .+ g.b)
 end
 
-function gradient!(y::AbstractArray{T}, g::Precompose, x::AbstractArray{T}) where T <: RealOrComplex
+function gradient!(y, g::Precompose, x)
     res = g.L*x .+ g.b
     gradres = similar(res)
     v = gradient!(gradres, g.f, res)
@@ -66,8 +63,11 @@ function gradient!(y::AbstractArray{T}, g::Precompose, x::AbstractArray{T}) wher
     return v
 end
 
-function prox!(y::AbstractArray{C}, g::Precompose, x::AbstractArray{C}, gamma::R=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
-    # See Prop. 24.14 in Bauschke, Combettes "Convex Analysis and Monotone Operator Theory in Hilbert Spaces", 2nd ed., 2016.
+function prox!(y, g::Precompose, x, gamma)
+    # See Prop. 24.14 in Bauschke, Combettes
+    # "Convex Analysis and Monotone Operator Theory in Hilbert Spaces",
+    # 2nd ed., 2016.
+    # 
     # The same result is Prop. 23.32 in the 1st ed. of the same book.
     #
     # This case has an additional translation: if f(x) = h(x + b) then
@@ -84,13 +84,9 @@ function prox!(y::AbstractArray{C}, g::Precompose, x::AbstractArray{C}, gamma::R
     return v
 end
 
-function prox_naive(g::Precompose, x::AbstractArray{C}, gamma::R=R(1)) where {R <: Real, C <: Union{R, Complex{R}}}
+function prox_naive(g::Precompose, x, gamma)
     res = g.L*x .+ g.b
     proxres, v = prox_naive(g.f, res, g.mu .* gamma)
     y = x + g.L'*((proxres .- res)./g.mu)
     return y, v
 end
-
-fun_name(f::Precompose) = "Precomposition"
-fun_dom(f::Precompose) = fun_dom(f.f)
-fun_expr(f::Precompose) = "x ↦ f(L(x) + b)"

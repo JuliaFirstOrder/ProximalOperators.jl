@@ -24,7 +24,7 @@ end
 
 # properties
 
-is_prox_accurate(::IndPolyhedralOSQP) = false
+is_prox_accurate(::Type{<:IndPolyhedralOSQP}) = false
 
 # constructors
 
@@ -55,14 +55,16 @@ IndPolyhedralOSQP(
 
 # function evaluation
 
-function (f::IndPolyhedralOSQP{R})(x::AbstractVector{R}) where R
+function (f::IndPolyhedralOSQP)(x)
+    R = eltype(x)
     Ax = f.A * x
     return all(f.l .<= Ax .<= f.u) ? R(0) : Inf
 end
 
 # prox
 
-function prox!(y::AbstractVector{R}, f::IndPolyhedralOSQP{R}, x::AbstractVector{R}, gamma::R=R(1)) where R
+function prox!(y, f::IndPolyhedralOSQP, x, gamma)
+    R = eltype(x)
     OSQP.update!(f.mod; q=-x)
     results = OSQP.solve!(f.mod)
     y .= results.x
@@ -79,7 +81,8 @@ end
 # dual problem is: minimize_y (1/2)||-A'y||^2 - x'A'y + g*(y)
 # can solve with (fast) dual proximal gradient method
 
-function prox_naive(f::IndPolyhedralOSQP{R}, x::AbstractVector{R}, gamma::R=R(1)) where R
+function prox_naive(f::IndPolyhedralOSQP, x, gamma)
+    R = eltype(x)
     y = zeros(R, size(f.A, 1)) # dual vector
     y1 = y
     g = IndBox(f.l, f.u)

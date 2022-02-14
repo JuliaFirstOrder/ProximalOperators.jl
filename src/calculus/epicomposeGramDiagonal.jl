@@ -14,18 +14,14 @@ end
 
 EpicomposeGramDiagonal(L, f, mu) = EpicomposeGramDiagonal{typeof(L), typeof(f), typeof(mu)}(L, f, mu)
 
-function prox!(y::AbstractArray{C}, g::EpicomposeGramDiagonal, x::AbstractArray{C}, gamma::R=one(R)) where {
-    R <: Real, C <: Union{R, Complex{R}}
-}
+function prox!(y, g::EpicomposeGramDiagonal, x, gamma)
     z = (g.L'*x)/g.mu
     p, v = prox(g.f, z, gamma/g.mu)
     mul!(y, g.L, p)
     return v
 end
 
-function prox_naive(g::EpicomposeGramDiagonal, x::AbstractArray{C}, gamma::R=one(R)) where {
-    R <: Real, C <: Union{R, Complex{R}}
-}
+function prox_naive(g::EpicomposeGramDiagonal, x, gamma)
     z = (g.L'*x)/g.mu
     p, v = prox_naive(g.f, z, gamma/g.mu)
     y = g.L*p

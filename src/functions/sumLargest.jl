@@ -15,25 +15,18 @@
 """
     SumLargest(k::Integer=1, λ::Real=1)
 
-Returns the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 1 and `λ ⩾ 0`.
+Return the function `g(x) = λ⋅sum(x_[1], ..., x_[k])`, for an integer k ⩾ 1 and `λ ⩾ 0`.
 """
-SumLargest(k::I=1, lambda::R=1) where {I <: Integer, R <: Real} = Postcompose(Conjugate(IndSimplex(k)), lambda)
+SumLargest(k::I=1, lambda::R=1) where {I, R} = Postcompose(Conjugate(IndSimplex(k)), lambda)
 
-function (f::Conjugate{IndSimplex{I}})(x::AbstractArray{S}) where {I <: Integer, S <: Real}
+function (f::Conjugate{<:IndSimplex})(x)
     if f.f.a == 1
         return maximum(x)
     end
-    v = zero(S)
-    if ndims(x) == 1
-        p = partialsortperm(x, 1:f.f.a, rev=true)
-        v = sum(x[p])
+    p = if ndims(x) == 1
+        partialsortperm(x, 1:f.f.a, rev=true)
     else
-        p = partialsortperm(x[:], 1:f.f.a, rev=true)
-        v = sum(x[p])
+        partialsortperm(x[:], 1:f.f.a, rev=true)
     end
-    return v
+    return sum(x[p])
 end
-
-fun_name(f::Postcompose{Conjugate{IndSimplex{I}}, R}) where {I <: Integer, R <: Real} = "sum of k largest components"
-fun_expr(f::Postcompose{Conjugate{IndSimplex{I}}, R}) where {I <: Integer, R <: Real} = "x ↦ λ⋅sum(x_[1], ..., x_[k])"
-fun_params(f::Postcompose{Conjugate{IndSimplex{I}}, R}) where {I <: Integer, R <: Real} = "k = $(f.f.f.a), λ = $(f.a)"
