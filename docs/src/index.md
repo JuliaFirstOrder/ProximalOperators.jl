@@ -2,6 +2,8 @@
 
 ProximalOperators is a [Julia](https://julialang.org) package that implements first-order primitives for a variety of functions, which are commonly used for implementing optimization algorithms in several application areas, *e.g.*, statistical learning, image and signal processing, optimal control.
 
+The package relies on the interfaces defined in [ProximalCore](https://github.com/JuliaFirstOrder/ProximalCore.jl).
+
 Please refer to the [GitHub repository](https://github.com/JuliaFirstOrder/ProximalOperators.jl) to browse the source code, report issues and submit pull requests.
 
 ## Installation
