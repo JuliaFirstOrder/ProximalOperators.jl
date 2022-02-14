@@ -22,7 +22,7 @@ function (::IndSOC)(x)
 end
 
 is_convex(f::Type{<:IndSOC}) = true
-is_set(f::Type{<:IndSOC}) = true
+is_cone(f::Type{<:IndSOC}) = true
 
 function prox!(y, ::IndSOC, x, gamma)
     T = eltype(x)
