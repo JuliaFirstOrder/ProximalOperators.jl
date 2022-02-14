@@ -6,13 +6,13 @@ using LinearAlgebra
 using SparseArrays
 using SuiteSparse
 
-mutable struct QuadraticDirect{R <: Real, M <: AbstractMatrix{R}, V <: AbstractVector{R}, F <: Factorization} <: Quadratic
+mutable struct QuadraticDirect{R, M, V, F} <: Quadratic
     Q::M
     q::V
     gamma::R
     temp::V
     fact::F
-    function QuadraticDirect{R, M, V, F}(Q::M, q::V) where {R <: Real, M <: AbstractMatrix{R}, V <: AbstractVector{R}, F <: Factorization}
+    function QuadraticDirect{R, M, V, F}(Q::M, q::V) where {R, M, V, F}
         if size(Q, 1) != size(Q, 2) || length(q) != size(Q, 2)
             error("Q must be squared and q must be compatible with Q")
         end
@@ -20,20 +20,22 @@ mutable struct QuadraticDirect{R <: Real, M <: AbstractMatrix{R}, V <: AbstractV
     end
 end
 
-function QuadraticDirect(Q::M, q::V) where {R <: Real, I <: Integer, M <: SparseMatrixCSC{R, I}, V <: AbstractVector{R}}
-    QuadraticDirect{R, M, V, SuiteSparse.CHOLMOD.Factor{R}}(Q, q)
+function QuadraticDirect(Q::M, q) where M <: SparseMatrixCSC
+    R = eltype(M)
+    QuadraticDirect{R, M, typeof(q), SuiteSparse.CHOLMOD.Factor{R}}(Q, q)
 end
 
-function QuadraticDirect(Q::M, q::V) where {R <: Real, M <: DenseMatrix{R}, V <: AbstractVector{R}}
-    QuadraticDirect{R, M, V, Cholesky{R, M}}(Q, q)
+function QuadraticDirect(Q::M, q) where M <: DenseMatrix
+    R = eltype(M)
+    QuadraticDirect{R, M, typeof(q), Cholesky{R, M}}(Q, q)
 end
 
-function (f::QuadraticDirect{R, M, V, F})(x::AbstractArray{R}) where {R, M, V, F}
+function (f::QuadraticDirect)(x)
     mul!(f.temp, f.Q, x)
     return 0.5*dot(x, f.temp) + dot(x, f.q)
 end
 
-function prox!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractArray{R}, gamma) where {R, M, V, F <: Cholesky}
+function prox!(y, f::QuadraticDirect{R, M, V, <:Cholesky}, x, gamma) where {R, M, V}
     if gamma != f.gamma
         factor_step!(f, gamma)
     end
@@ -47,7 +49,7 @@ function prox!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractA
     return fy
 end
 
-function prox!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractArray{R}, gamma) where {R, M, V, F <: SuiteSparse.CHOLMOD.Factor}
+function prox!(y, f::QuadraticDirect{R, M, V, <:SuiteSparse.CHOLMOD.Factor}, x, gamma) where {R, M, V}
     if gamma != f.gamma
         factor_step!(f, gamma)
     end
@@ -59,23 +61,23 @@ function prox!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractA
     return fy
 end
 
-function factor_step!(f::QuadraticDirect{R, M, V, F}, gamma) where {R, M <: DenseMatrix{R}, V, F}
+function factor_step!(f::QuadraticDirect{R, <:DenseMatrix, V, F}, gamma) where {R, V, F}
     f.gamma = gamma
     f.fact = cholesky(f.Q + I/gamma)
 end
 
-function factor_step!(f::QuadraticDirect{R, M, V, F}, gamma) where {R, I, M <: SparseMatrixCSC{R, I}, V, F}
+function factor_step!(f::QuadraticDirect{R, <:SparseMatrixCSC, V, F}, gamma) where {R, V, F}
     f.gamma = gamma
     f.fact = ldlt(f.Q; shift = 1/gamma)
 end
 
-function gradient!(y::AbstractArray{R}, f::QuadraticDirect{R, M, V, F}, x::AbstractArray{R}) where {R, M, V, F}
+function gradient!(y, f::QuadraticDirect{R, M, V, F}, x) where {R, M, V, F}
     mul!(y, f.Q, x)
     y .+= f.q
     return 0.5*(dot(x, y) + dot(x, f.q))
 end
 
-function prox_naive(f::QuadraticDirect, x::AbstractArray{R}, gamma) where R
+function prox_naive(f::QuadraticDirect, x, gamma)
     y = (gamma*f.Q + I)\(x - gamma*f.q)
     fy = 0.5*dot(y, f.Q*y) + dot(y, f.q)
     return y, fy

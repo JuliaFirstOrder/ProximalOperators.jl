@@ -24,7 +24,7 @@ f(x) = \\tfrac{1}{2}\\langle Qx, x\\rangle + \\langle q, x \\rangle.
 By default, a direct method (based on Cholesky factorization) is used to evaluate `prox!`.
 If `iterative=true`, then `prox!` is evaluated approximately using an iterative method instead.
 """
-function Quadratic(Q::M, q::V; iterative=false) where {M, V}
+function Quadratic(Q, q; iterative=false)
     if iterative == false
         QuadraticDirect(Q, q)
     else

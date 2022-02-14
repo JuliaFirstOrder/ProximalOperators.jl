@@ -7,18 +7,18 @@ using LinearAlgebra
 using SparseArrays
 using SuiteSparse
 
-mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization, IsConvex} <: LeastSquares
+mutable struct LeastSquaresDirect{N, R, C, M, V, F, IsConvex} <: LeastSquares
     A::M # m-by-n
     b::V # m (by-p)
     lambda::R
     lambdaAtb::V
-    gamma::Union{Nothing, R}
+    gamma::R
     shape::Symbol
     S::M
     res::Array{C, N} # m (by-p)
     q::Array{C, N} # n (by-p)
     fact::F
-    function LeastSquaresDirect{N, R, C, M, V, F, IsConvex}(A::M, b::V, lambda::R) where {N, R <: Real, C <: RealOrComplex{R}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}, F <: Factorization, IsConvex}
+    function LeastSquaresDirect{N, R, C, M, V, F, IsConvex}(A::M, b::V, lambda::R) where {N, R, C, M, V, F, IsConvex}
         if size(A, 1) != size(b, 1)
             error("A and b have incompatible dimensions")
         end
@@ -31,41 +31,40 @@ mutable struct LeastSquaresDirect{N, R <: Real, C <: RealOrComplex{R}, M <: Abst
             shape = :Fat
         end
         x_shape = infer_shape_of_x(A, b)
-        new(A, b, lambda, lambda*(A'*b), nothing, shape, S, zero(b), zeros(C, x_shape))
+        new(A, b, lambda, lambda*(A'*b), R(-1), shape, S, zero(b), zeros(C, x_shape))
     end
 end
 
 is_convex(::Type{LeastSquaresDirect{N, R, C, M, V, F, IsConvex}}) where {N, R, C, M, V, F, IsConvex} = IsConvex
 
-function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, M <: DenseMatrix{C}, V <: AbstractArray{C, N}}
-    LeastSquaresDirect{N, R, C, M, V, Cholesky{C, M}, lambda >= 0}(A, b, lambda)
+function LeastSquaresDirect(A::M, b, lambda) where M <: DenseMatrix
+    C = eltype(M)
+    R = real(C)
+    LeastSquaresDirect{ndims(b), R, C, M, typeof(b), Cholesky{C, M}, lambda >= 0}(A, b, R(lambda))
 end
 
-function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, I <: Integer, M <: SparseMatrixCSC{C, I}, V <: AbstractArray{C, N}}
-    LeastSquaresDirect{N, R, C, M, V, SuiteSparse.CHOLMOD.Factor{C}, lambda >= 0}(A, b, lambda)
+function LeastSquaresDirect(A::M, b, lambda) where M <: SparseMatrixCSC
+    C = eltype(M)
+    R = real(C)
+    LeastSquaresDirect{ndims(b), R, C, M, typeof(b), SuiteSparse.CHOLMOD.Factor{C}, lambda >= 0}(A, b, R(lambda))
 end
 
-# Adjoint/Transpose versions
-function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, M <: TransposeOrAdjoint{<:DenseMatrix{C}}, V <: AbstractArray{C, N}}
+function LeastSquaresDirect(A::TransposeOrAdjoint, b, lambda)
     LeastSquaresDirect(copy(A), b, lambda)
 end
 
-function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, I <: Integer, M <: TransposeOrAdjoint{<:SparseMatrixCSC{C, I}}, V <: AbstractArray{C, N}}
-    LeastSquaresDirect(copy(A), b, lambda)
-end
-
-function LeastSquaresDirect(A::M, b::V, lambda::R) where {N, R <: Real, C <: Union{R, Complex{R}}, M <: AbstractMatrix{C}, V <: AbstractArray{C, N}}
+function LeastSquaresDirect(A, b, lambda)
     @warn "Could not infer type of Factorization for $M in LeastSquaresDirect, this type will be type-unstable"
     LeastSquaresDirect{N, R, C, M, V, Factorization, lambda >= 0}(A, b, lambda)
 end
 
-function (f::LeastSquaresDirect{N, R, C})(x::AbstractArray{C, N}) where {N, R, C}
+function (f::LeastSquaresDirect)(x)
     mul!(f.res, f.A, x)
     f.res .-= f.b
     return (f.lambda / 2) * norm(f.res, 2)^2
 end
 
-function prox!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}, gamma) where {N, R, C, M, V, F}
+function prox!(y, f::LeastSquaresDirect, x, gamma)
     # if gamma different from f.gamma then call factor_step!
     if gamma != f.gamma
         factor_step!(f, gamma)
@@ -81,12 +80,12 @@ function factor_step!(f::LeastSquaresDirect{N, R, C, M, V, F}, gamma) where {N, 
     f.gamma = gamma
 end
 
-function factor_step!(f::LeastSquaresDirect{N, R, C, M, V, F}, gamma) where {N, R, C, M <: SparseMatrixCSC, V, F}
+function factor_step!(f::LeastSquaresDirect{N, R, C, <:SparseMatrixCSC, V, F}, gamma) where {N, R, C, V, F}
     f.fact = ldlt(f.S; shift = R(1)/gamma)
     f.gamma = gamma
 end
 
-function solve_step!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}, gamma) where {N, R, C, M, V, F <: Cholesky{C, M}}
+function solve_step!(y, f::LeastSquaresDirect{N, R, C, M, V, <:Cholesky}, x, gamma) where {N, R, C, M, V}
     f.q .= f.lambdaAtb .+ x./gamma
     # two cases: (1) tall A, (2) fat A
     if f.shape == :Tall
@@ -106,7 +105,7 @@ function solve_step!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V
     end
 end
 
-function solve_step!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}, gamma) where {N, R, C, M, V, F}
+function solve_step!(y, f::LeastSquaresDirect, x, gamma)
     f.q .= f.lambdaAtb .+ x./gamma
     # two cases: (1) tall A, (2) fat A
     if f.shape == :Tall
@@ -122,7 +121,7 @@ function solve_step!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V
     end
 end
 
-function gradient!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, F}, x::AbstractArray{C, N}) where {N, R, C, M, V, F}
+function gradient!(y, f::LeastSquaresDirect, x)
     mul!(f.res, f.A, x)
     f.res .-= f.b
     mul!(y, adjoint(f.A), f.res)
@@ -130,7 +129,7 @@ function gradient!(y::AbstractArray{C, N}, f::LeastSquaresDirect{N, R, C, M, V, 
     return (f.lambda / 2) * real(dot(f.res, f.res))
 end
 
-function prox_naive(f::LeastSquaresDirect{N, R, C}, x::AbstractArray{C, N}, gamma) where {N, R, C}
+function prox_naive(f::LeastSquaresDirect, x, gamma)
     lamgam = f.lambda*gamma
     y = (f.A'*f.A + I/lamgam)\(f.A' * f.b + x/lamgam)
     fy = (f.lambda/2)*norm(f.A*y-f.b)^2
