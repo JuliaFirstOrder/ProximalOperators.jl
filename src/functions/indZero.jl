@@ -15,7 +15,7 @@ is_singleton(f::Type{<:IndZero}) = true
 is_cone(f::Type{<:IndZero}) = true
 is_affine(f::Type{<:IndZero}) = true
 
-function (f::IndZero)(x)
+function (::IndZero)(x)
     C = eltype(x)
     for k in eachindex(x)
         if x[k] != C(0)
@@ -25,14 +25,13 @@ function (f::IndZero)(x)
     return real(C)(0)
 end
 
-function prox!(y, f::IndZero, x, gamma)
-    C = eltype(x)
-    for k in eachindex(x)
-        y[k] = C(0)
+function prox!(y, ::IndZero, x, gamma)
+    for k in eachindex(y)
+        y[k] = eltype(y)(0)
     end
-    return real(C)(0)
+    return real(eltype(x))(0)
 end
 
-function prox_naive(f::IndZero, x, gamma)
+function prox_naive(::IndZero, x, gamma)
     return zero(x), real(eltype(x))(0)
 end

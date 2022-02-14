@@ -77,11 +77,10 @@ end
 function prox!(z, f::LogisticLoss, x, gamma)
     R = eltype(x)
     c = R(1) / gamma # convexity modulus
-    L = maximum(abs, f.mu .* f.y) + c # Lipschitz constants
+    L = maximum(abs, f.mu .* f.y) + c # Lipschitz constant
     z .= x
     expyz = similar(z)
     Fz = similar(z)
-    F1z = similar(z)
     for k = 1:20
         expyz .= exp.(f.y .* z)
         Fz .= z .- x .- f.mu * gamma * (f.y ./ (1 .+ expyz))

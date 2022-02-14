@@ -13,9 +13,7 @@ for a nonnegative parameter `λ`.
 """
 NormLinf(lambda::T=1) where T = Conjugate(IndBallL1(lambda))
 
-function (f::Conjugate{<:IndBallL1})(x)
-    return (f.f.r) * norm(x, Inf)
-end
+(f::Conjugate{<:IndBallL1})(x) = (f.f.r) * norm(x, Inf)
 
 function gradient!(y, f::Conjugate{<:IndBallL1}, x)
     absxi, i = findmax(abs.(x)) # Largest absolute value

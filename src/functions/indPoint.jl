@@ -3,7 +3,7 @@
 export IndPoint
 
 """
-    IndPoint(p=0.0)
+    IndPoint(p)
 
 Return the indicator of the singleton set
 ```math
@@ -23,11 +23,11 @@ is_convex(f::Type{<:IndPoint}) = true
 is_singleton(f::Type{<:IndPoint}) = true
 is_affine(f::Type{<:IndPoint}) = true
 
-IndPoint(p::T=0.0) where T = IndPoint{T}(p)
+IndPoint(p::T) where T = IndPoint{T}(p)
 
 function (f::IndPoint)(x)
     R = real(eltype(x))
-    if all(x .≈ f.p)
+    if all(isapprox.(x, f.p))
         return R(0)
     end
     return R(Inf)

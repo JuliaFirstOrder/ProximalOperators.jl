@@ -34,13 +34,9 @@ is_positively_homogeneous(f::Type{<:NormL1}) = true
 
 NormL1(lambda::R=1) where R = NormL1{R}(lambda)
 
-function (f::NormL1)(x)
-    return f.lambda * norm(x, 1)
-end
+(f::NormL1)(x) = f.lambda * norm(x, 1)
 
-function (f::NormL1{<:AbstractArray})(x)
-    return norm(f.lambda .* x, 1)
-end
+(f::NormL1{<:AbstractArray})(x) = norm(f.lambda .* x, 1)
 
 function prox!(y, f::NormL1{<:AbstractArray}, x::AbstractArray{<:Real}, gamma)
     @assert length(y) == length(x) == length(f.lambda)

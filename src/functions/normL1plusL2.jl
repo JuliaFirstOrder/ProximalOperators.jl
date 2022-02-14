@@ -25,18 +25,16 @@ is_positively_homogeneous(f::Type{<:NormL1plusL2}) = true
 
 NormL1plusL2(lambda1::L=1, lambda2::M=1) where {L, M} = NormL1plusL2(NormL1(lambda1), NormL2(lambda2))
 
-function (f::NormL1plusL2)(x)
-    return f.l1(x) + f.l2(x)
-end
+(f::NormL1plusL2)(x) = f.l1(x) + f.l2(x)
 
 function prox!(y, f::NormL1plusL2, x, gamma)
     prox!(y, f.l1, x, gamma)
-    prox!(y, f.l2, y, gamma)
-    return f(y)
+    vl2 = prox!(y, f.l2, y, gamma)
+    return f.l1(y) + vl2
 end
 
 function prox_naive(f::NormL1plusL2, x, gamma)
-    y1, v1 = prox_naive(f.l1, x, gamma)
-    y2, v2 = prox_naive(f.l2, y1, gamma)
+    y1, = prox_naive(f.l1, x, gamma)
+    y2, = prox_naive(f.l2, y1, gamma)
     return y2, f(y2)
 end

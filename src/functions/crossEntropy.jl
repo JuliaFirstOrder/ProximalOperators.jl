@@ -28,18 +28,18 @@ is_smooth(f::Type{<:CrossEntropy}) = true
 CrossEntropy(b::T) where {T} = CrossEntropy{T}(b)
 
 function (f::CrossEntropy)(x)
-    sum = eltype(x)(0)
+    fsum = eltype(x)(0)
     for i in eachindex(f.b)
-        sum += f.b[i]*log(x[i])+(1-f.b[i])*log(1-x[i])
+        fsum += f.b[i]*log(x[i])+(1-f.b[i])*log(1-x[i])
     end
-    return -sum/length(f.b)
+    return -fsum/length(f.b)
 end
 
 function gradient!(y, f::CrossEntropy, x)
-    sum = eltype(x)(0)
+    fsum = eltype(x)(0)
     for i in eachindex(x)
         y[i] = 1/length(f.b)*( - f.b[i]/x[i] + (1-f.b[i])/(1-x[i]) )
-        sum += f.b[i]*log(x[i])+(1-f.b[i])*log(1-x[i])
+        fsum += f.b[i]*log(x[i])+(1-f.b[i])*log(1-x[i])
     end
-    return -1/length(f.b)*sum
+    return -1/length(f.b)*fsum
 end

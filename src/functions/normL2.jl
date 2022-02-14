@@ -26,9 +26,7 @@ is_positively_homogeneous(f::Type{<:NormL2}) = true
 
 NormL2(lambda::R=1) where R = NormL2{R}(lambda)
 
-function (f::NormL2)(x)
-    return f.lambda * norm(x)
-end
+(f::NormL2)(x) = f.lambda * norm(x)
 
 function prox!(y, f::NormL2, x, gamma)
     normx = norm(x)

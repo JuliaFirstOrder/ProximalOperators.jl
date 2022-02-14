@@ -24,9 +24,7 @@ end
 
 NormL0(lambda::R=1) where R = NormL0{R}(lambda)
 
-function (f::NormL0)(x)
-    return f.lambda * real(eltype(x))(count(v -> v != 0, x))
-end
+(f::NormL0)(x) = f.lambda * real(eltype(x))(count(!iszero, x))
 
 function prox!(y, f::NormL0, x, gamma)
     countnzy = real(eltype(x))(0)
@@ -42,5 +40,5 @@ end
 function prox_naive(f::NormL0, x, gamma)
     over = abs.(x) .> sqrt(2 * gamma * f.lambda)
     y = x.*over
-    return y, f.lambda * real(eltype(x))(count(v -> v != 0, y))
+    return y, f.lambda * real(eltype(x))(count(!iszero, y))
 end

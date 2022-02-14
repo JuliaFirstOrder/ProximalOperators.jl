@@ -23,6 +23,10 @@ function (f::Conjugate{<:IndSimplex})(x)
     if f.f.a == 1
         return maximum(x)
     end
-    p = ndims(x) == 1 ? partialsortperm(x, 1:f.f.a, rev=true) : partialsortperm(x[:], 1:f.f.a, rev=true)
+    p = if ndims(x) == 1
+        partialsortperm(x, 1:f.f.a, rev=true)
+    else
+        partialsortperm(x[:], 1:f.f.a, rev=true)
+    end
     return sum(x[p])
 end
