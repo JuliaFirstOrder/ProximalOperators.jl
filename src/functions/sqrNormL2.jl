@@ -5,20 +5,20 @@ export SqrNormL2
 """
     SqrNormL2(λ=1)
 
-With a positive scalar `λ`, return the squared Euclidean norm
+With a nonnegative scalar `λ`, return the squared Euclidean norm
 ```math
 f(x) = \\tfrac{λ}{2}\\|x\\|^2.
 ```
-With a positive array `λ`, return the weighted squared Euclidean norm
+With a nonnegative array `λ`, return the weighted squared Euclidean norm
 ```math
 f(x) = \\tfrac{1}{2}∑_i λ_i x_i^2.
 ```
 """
-struct SqrNormL2{T}
+struct SqrNormL2{T,SC}
     lambda::T
-    function SqrNormL2{T}(lambda::T) where T
-        if any(lambda .<= 0)
-            error("coefficients in λ must be positive")
+    function SqrNormL2{T,SC}(lambda::T) where {T,SC}
+        if any(lambda .< 0)
+            error("coefficients in λ must be nonnegative")
         else
             new(lambda)
         end
@@ -29,9 +29,9 @@ is_convex(f::Type{<:SqrNormL2}) = true
 is_smooth(f::Type{<:SqrNormL2}) = true
 is_separable(f::Type{<:SqrNormL2}) = true
 is_generalized_quadratic(f::Type{<:SqrNormL2}) = true
-is_strongly_convex(f::Type{<:SqrNormL2}) = true
+is_strongly_convex(f::Type{SqrNormL2{T,SC}}) where {T,SC} = SC
 
-SqrNormL2(lambda::T=1) where T = SqrNormL2{T}(lambda)
+SqrNormL2(lambda::T=1) where T = SqrNormL2{T,all(lambda .> 0)}(lambda)
 
 function (f::SqrNormL2{S})(x) where {S <: Real}
     return f.lambda / real(eltype(x))(2) * norm(x)^2
