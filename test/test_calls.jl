@@ -442,6 +442,7 @@ test_cases_spec = [
             ( (), randn(Float64, 10) ),
             ( (rand(Float32),), randn(Float32, 10) ),
             ( (rand(Float64),), randn(Float64, 10) ),
+            ( (Float64[1, 1, 1, 1, 0],), randn(Float64, 5) ),
             ( (rand(Float32, 20),), randn(Float32, 20) ),
             ( (rand(Float64, 20),), randn(Float64, 20) ),
             ( (rand(30),), rand(Complex{Float64}, 30) ),
