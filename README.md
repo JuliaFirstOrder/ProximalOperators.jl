@@ -11,6 +11,8 @@
 Proximal operators for nonsmooth optimization in Julia.
 This package can be used to easily implement proximal algorithms for convex and nonconvex optimization problems such as ADMM, the alternating direction method of multipliers.
 
+See [ProximalAlgorithms.jl](https://github.com/JuliaFirstOrder/ProximalAlgorithms.jl) for generic implementations of algorithms based on the primitives here defined.
+
 See the [documentation](https://juliafirstorder.github.io/ProximalOperators.jl/latest) on how to use the package.
 
 ## Installation
