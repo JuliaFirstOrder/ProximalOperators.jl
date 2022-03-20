@@ -17,7 +17,7 @@ size(Op::LinOp, i::Integer) = i <= 2 ? size(Op)[i] : 1
 
 # AAc (Gram matrix)
 
-mutable struct AAc{M, T} <: LinOp
+struct AAc{M, T} <: LinOp
     A::M
     buf::T
 end
@@ -44,7 +44,7 @@ eltype(Op::AAc) = eltype(Op.A)
 
 # AcA (Covariance matrix)
 
-mutable struct AcA{M, T} <: LinOp
+struct AcA{M, T} <: LinOp
     A::M
     buf::T
 end
