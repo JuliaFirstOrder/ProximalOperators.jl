@@ -33,7 +33,7 @@ end
 
 IndPSD(; scaling=false) = IndPSD(scaling)
 
-function (::IndPSD)(X::HermOrSym)
+function (::IndPSD)(X::Union{Symmetric, Hermitian})
     R = real(eltype(X))
     F = eigen(X)
     for i in eachindex(F.values)
@@ -48,7 +48,7 @@ end
 is_convex(f::Type{<:IndPSD}) = true
 is_cone(f::Type{<:IndPSD}) = true
 
-function prox!(Y::HermOrSym, ::IndPSD, X::HermOrSym, gamma)
+function prox!(Y::Union{Symmetric, Hermitian}, ::IndPSD, X::Union{Symmetric, Hermitian}, gamma)
     R = real(eltype(X))
     n = size(X, 1)
     F = eigen(X)
@@ -65,7 +65,7 @@ function prox!(Y::HermOrSym, ::IndPSD, X::HermOrSym, gamma)
     return R(0)
 end
 
-function prox_naive(::IndPSD, X::HermOrSym, gamma)
+function prox_naive(::IndPSD, X::Union{Symmetric, Hermitian}, gamma)
     R = real(eltype(X))
     F = eigen(X)
     return F.vectors * Diagonal(max.(R(0), F.values)) * F.vectors', R(0)

@@ -10,7 +10,7 @@ Given function `f`, an array `a` and a constant `b` (optional), return function
 g(x) = f(x) + \\langle a, x \\rangle + b.
 ```
 """
-struct Tilt{T, S <: AbstractArray, R <: Real}
+struct Tilt{T, S, R}
     f::T
     a::S
     b::R
@@ -24,18 +24,18 @@ is_smooth(::Type{<:Tilt{T}}) where T = is_smooth(T)
 is_generalized_quadratic(::Type{<:Tilt{T}}) where T = is_generalized_quadratic(T)
 is_strongly_convex(::Type{<:Tilt{T}}) where T = is_strongly_convex(T)
 
-Tilt(f::T, a::S) where {R <: Real, T, S <: AbstractArray{R}} = Tilt{T, S, R}(f, a, R(0))
+Tilt(f::T, a::S) where {T, S} = Tilt{T, S, real(eltype(S))}(f, a, real(eltype(S))(0))
 
-function (g::Tilt)(x::AbstractArray{T}) where T <: RealOrComplex
-    return g.f(x) + dot(g.a, x) + g.b
+function (g::Tilt)(x)
+    return g.f(x) + real(dot(g.a, x)) + g.b
 end
 
-function prox!(y::AbstractArray{T}, g::Tilt, x::AbstractArray{T}, gamma=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox!(y, g::Tilt, x, gamma)
     v = prox!(y, g.f, x .- gamma .* g.a, gamma)
-    return v + dot(g.a, y) + g.b
+    return v + real(dot(g.a, y)) + g.b
 end
 
-function prox_naive(g::Tilt, x::AbstractArray{T}, gamma=R(1)) where {R <: Real, T <: RealOrComplex{R}}
+function prox_naive(g::Tilt, x, gamma)
     y, v = prox_naive(g.f, x .- gamma .* g.a, gamma)
-    return y, v + dot(g.a, y) + g.b
+    return y, v + real(dot(g.a, y)) + g.b
 end

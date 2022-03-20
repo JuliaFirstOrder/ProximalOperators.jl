@@ -49,7 +49,7 @@ function LeastSquaresDirect(A::M, b, lambda) where M <: SparseMatrixCSC
     LeastSquaresDirect{ndims(b), R, C, M, typeof(b), SuiteSparse.CHOLMOD.Factor{C}, lambda >= 0}(A, b, R(lambda))
 end
 
-function LeastSquaresDirect(A::TransposeOrAdjoint, b, lambda)
+function LeastSquaresDirect(A::Union{Transpose, Adjoint}, b, lambda)
     LeastSquaresDirect(copy(A), b, lambda)
 end
 

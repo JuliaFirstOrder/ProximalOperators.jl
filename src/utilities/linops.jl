@@ -19,13 +19,14 @@ size(Op::LinOp, i::Integer) = i <= 2 ? size(Op)[i] : 1
 
 mutable struct AAc{M, T} <: LinOp
     A::M
-    buf::Maybe{AbstractArray{T}}
-    function AAc{M, T}(A::M) where {M, T}
-        new(A, nothing)
-    end
+    buf::T
 end
 
-AAc(A::M) where {M} = AAc{M, eltype(A)}(A)
+function AAc(A::M, input_shape::Tuple) where M
+    buffer_shape = (size(A, 2), input_shape[2:end]...)
+    buffer = zeros(eltype(A), buffer_shape)
+    AAc(A, buffer)
+end
 
 function mul!(y, Op::AAc, x)
     if Op.buf === nothing
@@ -45,13 +46,14 @@ eltype(Op::AAc) = eltype(Op.A)
 
 mutable struct AcA{M, T} <: LinOp
     A::M
-    buf::Maybe{AbstractArray{T}}
-    function AcA{M, T}(A::M) where {M, T}
-        new(A, nothing)
-    end
+    buf::T
 end
 
-AcA(A::M) where {M} = AcA{M, eltype(A)}(A)
+function AcA(A::M, input_shape::Tuple) where M
+    buffer_shape = (size(A, 1), input_shape[2:end]...)
+    buffer = zeros(eltype(A), buffer_shape)
+    AcA(A, buffer)
+end
 
 function mul!(y, Op::AcA, x)
     if Op.buf === nothing
