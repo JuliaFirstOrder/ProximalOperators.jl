@@ -2,7 +2,7 @@
 
 using LinearAlgebra
 
-struct IndGraphSkinny{T <: RealOrComplex} <: IndGraph
+struct IndGraphSkinny{T} <: IndGraph
   m::Int
   n::Int
   A::Matrix{T}

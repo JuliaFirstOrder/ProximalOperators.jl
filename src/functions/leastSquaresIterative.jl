@@ -26,9 +26,9 @@ function LeastSquaresIterative(A::M, b, lambda) where M
     m, n = size(A)
     x_shape = infer_shape_of_x(A, b)
     shape, S, res2 = if m >= n
-        :Tall, AcA(A), []
+        :Tall, AcA(A, x_shape), []
     else
-        :Fat, AAc(A), zero(b)
+        :Fat, AAc(A, size(b)), zero(b)
     end
     RC = eltype(A)
     R = real(RC)
