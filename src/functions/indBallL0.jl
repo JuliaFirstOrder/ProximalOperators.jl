@@ -34,22 +34,20 @@ function (f::IndBallL0)(x)
     return R(0)
 end
 
+function _get_top_k_abs_indices(x::AbstractVector, k)
+    range = firstindex(x):(firstindex(x) + k - 1)
+    return partialsortperm(x, range, by=abs, rev=true)
+end
+
+_get_top_k_abs_indices(x, k) = _get_top_k_abs_indices(x[:], k)
+
 function prox!(y, f::IndBallL0, x, gamma)
     T = eltype(x)
-    p = []
-    if ndims(x) == 1
-        p = partialsortperm(x, 1:f.r, by=abs, rev=true)
-    else
-        p = partialsortperm(x[:], 1:f.r, by=abs, rev=true)
-    end
-    sort!(p)
-    idx = 1
-    for i = 1:length(p)
-        y[idx:p[i]-1] .= T(0)
+    p = _get_top_k_abs_indices(x, f.r)
+    y .= T(0)
+    for i in eachindex(p)
         y[p[i]] = x[p[i]]
-        idx = p[i]+1
     end
-    y[idx:end] .= T(0)
     return real(T)(0)
 end
 
@@ -57,7 +55,7 @@ function prox_naive(f::IndBallL0, x, gamma)
     T = eltype(x)
     p = sortperm(abs.(x)[:], rev=true)
     y = similar(x)
-    y[p[1:f.r]] .= x[p[1:f.r]]
-    y[p[f.r+1:end]] .= T(0)
+    y[p[begin:begin+f.r-1]] .= x[p[begin:begin+f.r-1]]
+    y[p[begin+f.r:end]] .= T(0)
     return y, real(T)(0)
 end

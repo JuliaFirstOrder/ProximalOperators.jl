@@ -94,7 +94,7 @@ function (f::IndPSD)(x::AbstractVector{Float64})
     f.scaling && scale_diagonal!(y, sqrt(2))
 
     Z = dspev!(:N, :L, y)
-    for i in 1:length(Z)
+    for i in eachindex(Z)
         # Do we allow for some tolerance here?
         if Z[i] <= -1e-14
             return +Inf
@@ -118,7 +118,7 @@ function prox!(y::AbstractVector{Float64}, f::IndPSD, x::AbstractVector{Float64}
     # Now let M = Z*diagm(W)*Z'
     M = M*Z'
     n = length(W)
-    k = 1
+    k = firstindex(y)
     # Store lower diagonal of M in y
     for j in 1:n, i in j:n
         y[k] = M[i,j]
@@ -135,8 +135,8 @@ function prox_naive(f::IndPSD, x::AbstractVector{Float64}, gamma)
     # Formula for size of matrix
     n = Int(sqrt(1/4+2*length(x))-1/2)
     X = Matrix{Float64}(undef, n, n)
-    k = 1
-    # Store y in M
+    k = firstindex(x)
+    # Store x in X
     for j = 1:n, i = j:n
         # Lower half
         X[i,j] = x[k]
@@ -164,7 +164,7 @@ function prox_naive(f::IndPSD, x::AbstractVector{Float64}, gamma)
     end
 
     y = similar(x)
-    k = 1
+    k = firstindex(y)
     # Store Lower half of X in y
     for j = 1:n, i = j:n
         y[k] = X[i,j]

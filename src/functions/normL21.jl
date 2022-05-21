@@ -33,17 +33,17 @@ function (f::NormL21)(X)
     nslice = R(0)
     n21X = R(0)
     if f.dim == 1
-        for j = 1:size(X, 2)
+        for j in axes(X, 2)
             nslice = R(0)
-            for i = 1:size(X, 1)
+            for i in axes(X, 1)
                 nslice += abs(X[i, j])^2
             end
             n21X += sqrt(nslice)
         end
     elseif f.dim == 2
-        for i = 1:size(X, 1)
+        for i in axes(X, 1)
             nslice = R(0)
-            for j = 1:size(X, 2)
+            for j in axes(X, 2)
                 nslice += abs(X[i, j])^2
             end
             n21X += sqrt(nslice)
@@ -58,29 +58,29 @@ function prox!(Y, f::NormL21, X, gamma)
     nslice = R(0)
     n21X = R(0)
     if f.dim == 1
-        for j = 1:size(X, 2)
+        for j in axes(X, 2)
             nslice = R(0)
-            for i = 1:size(X, 1)
+            for i in axes(X, 1)
                 nslice += abs(X[i, j])^2
             end
             nslice = sqrt(nslice)
             scal = 1 - gl / nslice
             scal = scal <= 0 ? R(0) : scal
-            for i = 1:size(X, 1)
+            for i in axes(X, 1)
                 Y[i, j] = scal * X[i, j]
             end
             n21X += scal * nslice
         end
     elseif f.dim == 2
-        for i = 1:size(X, 1)
+        for i in axes(X, 1)
             nslice = R(0)
-            for j = 1:size(X, 2)
+            for j in axes(X, 2)
                 nslice += abs(X[i, j])^2
             end
             nslice = sqrt(nslice)
             scal = 1-gl/nslice
             scal = scal <= 0 ? R(0) : scal
-            for j = 1:size(X, 2)
+            for j in axes(X, 2)
                 Y[i, j] = scal * X[i, j]
             end
             n21X += scal * nslice

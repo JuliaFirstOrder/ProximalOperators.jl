@@ -321,7 +321,7 @@ stuff = [
       )
 ]
 
-@testset "$(i)" for i = 1:length(stuff)
+@testset "$(i)" for i in eachindex(stuff)
 
     f = stuff[i]["f"]
     x = stuff[i]["x"]

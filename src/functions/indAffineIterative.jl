@@ -33,11 +33,10 @@ end
 function prox!(y, f::IndAffineIterative{M, V}, x, gamma) where {M, V}
     # Von Neumann's alternating projections
     R = real(eltype(x))
-    m = size(f.A, 1)
     y .= x
     for k = 1:1000
         maxres = R(0)
-        for i = 1:m
+        for i in eachindex(f.b)
             resi = (f.b[i] - dot(f.A[i,:], y))
             y .= y + resi*f.A[i,:] # no need to divide: rows of A are normalized
             absresi = resi > 0 ? resi : -resi

@@ -141,7 +141,7 @@ stuff = [
       ),
 ]
 
-for i = 1:length(stuff)
+for i in eachindex(stuff)
 
   f = stuff[i]["f"]
   x = stuff[i]["x"]
