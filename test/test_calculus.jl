@@ -100,11 +100,11 @@ stuff = [
       )
 ]
 
-@testset "$i" for i = 1:length(stuff)
+@testset "$i" for i in eachindex(stuff)
     f = stuff[i]["funcs"][1]
     g = stuff[i]["funcs"][2]
 
-    for j = 1:length(stuff[i]["args"])
+    for j in eachindex(stuff[i]["args"])
         x = stuff[i]["args"][j]
         gamma = stuff[i]["gammas"][j]
 

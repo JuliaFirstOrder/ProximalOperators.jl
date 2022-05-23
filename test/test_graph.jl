@@ -66,17 +66,17 @@ stuff = [
       ),
 ]
 
-for i = 1:length(stuff)
+for i in eachindex(stuff)
   constr = stuff[i]["constr"]
 
   if haskey(stuff[i], "wrong")
-    for j = 1:length(stuff[i]["wrong"])
+    for j in eachindex(stuff[i]["wrong"])
       wrong = stuff[i]["wrong"][j]
       @test_throws ErrorException constr(wrong...)
     end
   end
 
-  for j = 1:length(stuff[i]["params"])
+  for j in eachindex(stuff[i]["params"])
     params = stuff[i]["params"][j]
     x      = stuff[i]["args"][j]
     f = constr(params...)
