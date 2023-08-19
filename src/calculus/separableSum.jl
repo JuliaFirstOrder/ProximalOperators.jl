@@ -41,15 +41,23 @@ component_types(::Type{SeparableSum{T}}) where T = fieldtypes(T)
 
 (g::SeparableSum)(xs::Tuple) = sum(f(x) for (f, x) in zip(g.fs, xs))
 
-prox!(ys::Tuple, fs::Tuple, xs::Tuple, gamma::Number) = sum(prox!(y, f, x, gamma) for (y, f, x) in zip(ys, fs, xs))
+prox!(ys::Tuple, g::SeparableSum, xs::Tuple, gamma::Number) = sum(prox!(y, f, x, gamma) for (y, f, x) in zip(ys, g.fs, xs))
 
-prox!(ys::Tuple, fs::Tuple, xs::Tuple, gammas::Tuple) = sum(prox!(y, f, x, gamma) for (y, f, x, gamma) in zip(ys, fs, xs, gammas))
+prox!(ys::Tuple, g::SeparableSum, xs::Tuple, gammas::Tuple) = sum(prox!(y, f, x, gamma) for (y, f, x, gamma) in zip(ys, g.fs, xs, gammas))
 
-prox!(ys::Tuple, g::SeparableSum, xs::Tuple, gamma) = prox!(ys, g.fs, xs, gamma)
+function prox(g::SeparableSum, xs::Tuple, gamma=1)
+    ys = similar.(xs)
+    fys = prox!(ys, g, xs, gamma)
+    return ys, fys
+end
 
-gradient!(grads::Tuple, fs::Tuple, xs::Tuple) = sum(gradient!(grad, f, x) for (grad, f, x) in zip(grads, fs, xs))
+gradient!(grads::Tuple, g::SeparableSum, xs::Tuple) = sum(gradient!(grad, f, x) for (grad, f, x) in zip(grads, g.fs, xs))
 
-gradient!(grads::Tuple, g::SeparableSum, xs::Tuple) = gradient!(grads, g.fs, xs)
+function gradient(g::SeparableSum, xs::Tuple)
+    ys = similar.(xs)
+    fxs = gradient!(ys, g, xs)
+    return ys, fxs
+end
 
 function prox_naive(f::SeparableSum, xs::Tuple, gamma)
     fys = real(eltype(xs[1]))(0)

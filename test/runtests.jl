@@ -18,6 +18,8 @@ using ProximalOperators:
     is_positively_homogeneous,
     is_support
 
+using Aqua
+
 function call_test(f, x::ArrayOrTuple{R}) where R <: Real
     try
         fx = @inferred f(x)
@@ -29,6 +31,8 @@ function call_test(f, x::ArrayOrTuple{R}) where R <: Real
         end
     end
 end
+
+Base.zero(xs::Tuple) = Base.zero.(xs)
 
 # tests equality of the results of prox, prox! and prox_naive
 function prox_test(f, x::ArrayOrTuple{R}, gamma=1) where R <: Real
@@ -109,8 +113,8 @@ function predicates_test(f)
     @test !is_strongly_convex(f) || is_convex(f)
 end
 
-@testset "Sanity checks" begin
-    @test isempty(detect_unbound_args(ProximalOperators))
+@testset "Aqua" begin
+    Aqua.test_all(ProximalOperators; ambiguities=false)
 end
 
 @testset "Utilities" begin
