@@ -3,6 +3,7 @@
 [![Build status](https://github.com/JuliaFirstOrder/ProximalOperators.jl/workflows/CI/badge.svg?branch=master)](https://github.com/JuliaFirstOrder/ProximalOperators.jl/actions?query=workflow%3ACI+branch%3Amaster)
 [![codecov](https://codecov.io/gh/JuliaFirstOrder/ProximalOperators.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaFirstOrder/ProximalOperators.jl)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4020558.svg)](https://doi.org/10.5281/zenodo.4020558)
+[![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl)
 
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliafirstorder.github.io/ProximalOperators.jl/stable)
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://juliafirstorder.github.io/ProximalOperators.jl/latest)

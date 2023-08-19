@@ -19,7 +19,6 @@ export prox, prox!, gradient, gradient!
 # Utilities
 
 include("utilities/approx_inequality.jl")
-include("utilities/tuples.jl")
 include("utilities/linops.jl")
 include("utilities/symmetricpacked.jl")
 include("utilities/uniformarrays.jl")
