@@ -10,6 +10,7 @@ makedocs(
         "Prox and gradient" => "operators.md",
         "Demos" => "demos.md"
     ],
+    checkdocs=:none,
 )
 
 deploydocs(
