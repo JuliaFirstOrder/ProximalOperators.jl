@@ -5,7 +5,6 @@
 
 using LinearAlgebra
 using SparseArrays
-using SuiteSparse
 
 mutable struct LeastSquaresDirect{N, R, C, M, V, F, IsConvex} <: LeastSquares
     A::M # m-by-n
@@ -46,7 +45,7 @@ end
 function LeastSquaresDirect(A::M, b, lambda) where M <: SparseMatrixCSC
     C = eltype(M)
     R = real(C)
-    LeastSquaresDirect{ndims(b), R, C, M, typeof(b), SuiteSparse.CHOLMOD.Factor{C}, lambda >= 0}(A, b, R(lambda))
+    LeastSquaresDirect{ndims(b), R, C, M, typeof(b), SparseArrays.CHOLMOD.Factor{C}, lambda >= 0}(A, b, R(lambda))
 end
 
 function LeastSquaresDirect(A::Union{Transpose, Adjoint}, b, lambda)

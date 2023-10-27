@@ -19,7 +19,7 @@ end
 
 function EpicomposeQuadratic(L, Q::P, q) where {R, P <: SparseMatrixCSC{R}}
     return EpicomposeQuadratic{
-        SuiteSparse.CHOLMOD.Factor{R}, typeof(L), P, typeof(q), real(eltype(L))
+        SparseArrays.CHOLMOD.Factor{R}, typeof(L), P, typeof(q), real(eltype(L))
     }(L, Q, q)
 end
 

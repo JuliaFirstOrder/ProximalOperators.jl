@@ -2,7 +2,6 @@
 
 using LinearAlgebra
 using SparseArrays
-using SuiteSparse
 
 export IndAffine
 
@@ -43,7 +42,6 @@ end
 
 using LinearAlgebra
 using SparseArrays
-using SuiteSparse
 
 include("indAffineDirect.jl")
 include("indAffineIterative.jl")
