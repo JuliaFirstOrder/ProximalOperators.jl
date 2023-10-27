@@ -19,7 +19,7 @@ function (::IndZero)(x)
     C = eltype(x)
     for k in eachindex(x)
         if x[k] != C(0)
-            return R(Inf)
+            return real(C)(Inf)
         end
     end
     return real(C)(0)
