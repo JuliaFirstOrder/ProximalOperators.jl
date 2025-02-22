@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1'
-          - '1.6'
+          - "1"
+          - "1.9"
         os:
           - ubuntu-latest
           - macOS-latest
@@ -23,7 +23,7 @@ jobs:
         arch:
           - x64
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@latest
         with:
           version: ${{ matrix.version }}
