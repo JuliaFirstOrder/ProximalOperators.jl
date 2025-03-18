@@ -598,7 +598,7 @@ test_cases_spec = [
         y, fy = prox_test(f, x, gam)
 
         ##### compute prox with multiple random gammas
-        if ProximalOperators.is_separable(f)
+        if ProximalCore.is_separable(f)
             gam = real(T)(0.5) .+ 2 .* rand(real(T), size(x))
             y, fy = prox_test(f, x, gam)
         end

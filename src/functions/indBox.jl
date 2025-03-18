@@ -28,7 +28,7 @@ end
 
 is_separable(f::Type{<:IndBox}) = true
 is_convex(f::Type{<:IndBox}) = true
-is_set(f::Type{<:IndBox}) = true
+is_set_indicator(f::Type{<:IndBox}) = true
 
 compatible_bounds(::Real, ::Real) = true
 compatible_bounds(::Real, ::AbstractArray) = true

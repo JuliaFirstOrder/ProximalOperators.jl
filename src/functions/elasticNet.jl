@@ -24,8 +24,9 @@ struct ElasticNet{R, S}
 end
 
 is_separable(f::Type{<:ElasticNet}) = true
-is_prox_accurate(f::Type{<:ElasticNet}) = true
+is_proximable(f::Type{<:ElasticNet}) = true
 is_convex(f::Type{<:ElasticNet}) = true
+is_locally_smooth(f::Type{<:ElasticNet}) = true
 
 ElasticNet(mu::R=1, lambda::S=1) where {R, S} = ElasticNet{R, S}(mu, lambda)
 

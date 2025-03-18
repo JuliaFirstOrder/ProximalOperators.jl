@@ -14,7 +14,7 @@ struct DistL2{R, T}
     ind::T
     lambda::R
     function DistL2{R, T}(ind::T, lambda::R) where {R, T}
-        if !is_set(ind)
+        if !is_set_indicator(ind)
             error("`ind` must be a convex set")
         end
         if lambda <= 0
@@ -25,7 +25,8 @@ struct DistL2{R, T}
     end
 end
 
-is_prox_accurate(::Type{DistL2{R, T}}) where {R, T} = is_prox_accurate(T)
+is_proximable(::Type{DistL2{R, T}}) where {R, T} = is_proximable(T)
+is_locally_smooth(::Type{DistL2{R, T}}) where {R, T} = is_proximable(T)
 is_convex(::Type{DistL2{R, T}}) where {R, T} = is_convex(T)
 
 DistL2(ind::T, lambda::R=1) where {R, T} = DistL2{R, T}(ind, lambda)

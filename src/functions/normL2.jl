@@ -23,6 +23,7 @@ end
 
 is_convex(f::Type{<:NormL2}) = true
 is_positively_homogeneous(f::Type{<:NormL2}) = true
+is_locally_smooth(f::Type{<:NormL2}) = true
 
 NormL2(lambda::R=1) where R = NormL2{R}(lambda)
 

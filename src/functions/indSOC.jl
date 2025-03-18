@@ -22,7 +22,7 @@ function (::IndSOC)(x)
 end
 
 is_convex(f::Type{<:IndSOC}) = true
-is_cone(f::Type{<:IndSOC}) = true
+is_cone_indicator(f::Type{<:IndSOC}) = true
 
 function prox!(y, ::IndSOC, x, gamma)
     T = eltype(x)
@@ -84,7 +84,7 @@ function (::IndRotatedSOC)(x)
 end
 
 is_convex(f::IndRotatedSOC) = true
-is_set(f::IndRotatedSOC) = true
+is_set_indicator(f::IndRotatedSOC) = true
 
 function prox!(y, ::IndRotatedSOC, x, gamma)
     T = eltype(x)

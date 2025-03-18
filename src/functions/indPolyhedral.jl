@@ -3,7 +3,7 @@ export IndPolyhedral
 abstract type IndPolyhedral end
 
 is_convex(::Type{<:IndPolyhedral}) = true
-is_set(::Type{<:IndPolyhedral}) = true
+is_set_indicator(::Type{<:IndPolyhedral}) = true
 
 """
     IndPolyhedral([l,] A, [u, xmin, xmax])

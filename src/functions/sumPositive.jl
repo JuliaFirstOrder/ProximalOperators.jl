@@ -14,6 +14,8 @@ struct SumPositive end
 
 is_separable(f::Type{<:SumPositive}) = true
 is_convex(f::Type{<:SumPositive}) = true
+is_positively_homogeneous(f::Type{<:SumPositive}) = true
+is_locally_smooth(f::Type{<:SumPositive}) = true
 
 function (::SumPositive)(x)
     return sum(xi -> max(xi, eltype(x)(0)), x)
