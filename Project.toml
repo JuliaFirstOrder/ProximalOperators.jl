@@ -11,11 +11,18 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 SuiteSparse = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 TSVD = "9449cd9e-2762-5aa3-a617-5413e99d722e"
 
+[weakdeps]
+RecursiveArrayTools = "731186ca-8d62-57ce-b412-fbd966d074cd"
+
+[extensions]
+RecursiveArrayToolsExt = "RecursiveArrayTools"
+
 [compat]
 IterativeSolvers = "0.8 - 0.9"
 LinearAlgebra = "1.4"
 OSQP = "0.3 - 0.8"
 ProximalCore = "0.2"
+RecursiveArrayTools = "2, 3"
 SparseArrays = "1.4"
 SuiteSparse = "1.4"
 TSVD = "0.3 - 0.4"
