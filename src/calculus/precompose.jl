@@ -57,7 +57,10 @@ function (g::Precompose)(x)
 end
 
 function gradient!(y, g::Precompose, x)
-    res = g.L*x .+ g.b
+    res = g.L*x
+    if g.b != 0
+        res .+= g.b
+    end
     gradres = similar(res)
     v = gradient!(gradres, g.f, res)
     mul!(y, adjoint(g.L), gradres)
@@ -75,7 +78,10 @@ function prox!(y, g::Precompose, x, gamma)
     #     prox_f(x) = prox_h(x + b) - b
     # Then one can apply the above mentioned result to g(x) = f(Lx).
     #
-    res = g.L*x .+ g.b
+    res = g.L * x
+    if g.b != 0
+        res .+= g.b
+    end
     proxres = similar(res)
     v = prox!(proxres, g.f, res, g.mu.*gamma)
     proxres .-= res

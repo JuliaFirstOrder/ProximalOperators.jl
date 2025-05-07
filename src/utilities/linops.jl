@@ -9,7 +9,8 @@ infer_shape_of_y(Op, ::AbstractVector) = (size(Op, 1), )
 infer_shape_of_y(Op, x::AbstractMatrix) = (size(Op, 1), size(x, 2))
 
 function (*)(Op::LinOp, x)
-    y = zeros(promote_type(eltype(Op), eltype(x)), infer_shape_of_y(Op, x))
+    y = similar(x, promote_type(eltype(Op), eltype(x)), infer_shape_of_y(Op, x))
+    y .= 0
     mul!(y, Op, x)
 end
 
