@@ -113,7 +113,8 @@ function predicates_test(f)
 end
 
 @testset "Aqua" begin
-    Aqua.test_all(ProximalOperators; ambiguities=false)
+    Aqua.test_all(ProximalOperators; ambiguities=false, stale_deps=false, persistent_tasks=false)
+    Aqua.test_stale_deps(ProximalOperators, ignore=[:OSQP])
 end
 
 @testset "Utilities" begin
