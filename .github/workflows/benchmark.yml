@@ -5,11 +5,18 @@ jobs:
   benchmark:
     name: Benchmark
     runs-on: ubuntu-latest
+
+    # needed to allow julia-actions/cache to delete old caches that it has created
+    permissions:
+      actions: write
+      contents: read
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
+      - uses: julia-actions/cache@v2
       - run: git fetch origin '+refs/heads/master:refs/remotes/origin/master'
       - run: git branch master origin/master
       - run: |

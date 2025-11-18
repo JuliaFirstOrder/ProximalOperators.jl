@@ -37,13 +37,14 @@ struct Precompose{T, M, U, V}
     end
 end
 
-is_prox_accurate(::Type{<:Precompose{T}}) where T = is_prox_accurate(T)
+is_proximable(::Type{<:Precompose{T}}) where T = is_proximable(T)
 is_convex(::Type{<:Precompose{T}}) where T = is_convex(T)
-is_set(::Type{<:Precompose{T}}) where T = is_set(T)
-is_singleton(::Type{<:Precompose{T}}) where T = is_singleton(T)
-is_cone(::Type{<:Precompose{T}}) where T = is_cone(T)
-is_affine(::Type{<:Precompose{T}}) where T = is_affine(T)
+is_set_indicator(::Type{<:Precompose{T}}) where T = is_set_indicator(T)
+is_singleton_indicator(::Type{<:Precompose{T}}) where T = is_singleton_indicator(T)
+is_cone_indicator(::Type{<:Precompose{T}}) where T = is_cone_indicator(T)
+is_affine_indicator(::Type{<:Precompose{T}}) where T = is_affine_indicator(T)
 is_smooth(::Type{<:Precompose{T}}) where T = is_smooth(T)
+is_locally_smooth(::Type{<:Precompose{T}}) where T = is_locally_smooth(T)
 is_generalized_quadratic(::Type{<:Precompose{T}}) where T = is_generalized_quadratic(T)
 is_strongly_convex(::Type{<:Precompose{T}}) where T = is_strongly_convex(T)
 
@@ -56,7 +57,10 @@ function (g::Precompose)(x)
 end
 
 function gradient!(y, g::Precompose, x)
-    res = g.L*x .+ g.b
+    res = g.L*x
+    if g.b != 0
+        res .+= g.b
+    end
     gradres = similar(res)
     v = gradient!(gradres, g.f, res)
     mul!(y, adjoint(g.L), gradres)
@@ -74,7 +78,10 @@ function prox!(y, g::Precompose, x, gamma)
     #     prox_f(x) = prox_h(x + b) - b
     # Then one can apply the above mentioned result to g(x) = f(Lx).
     #
-    res = g.L*x .+ g.b
+    res = g.L * x
+    if g.b != 0
+        res .+= g.b
+    end
     proxres = similar(res)
     v = prox!(proxres, g.f, res, g.mu.*gamma)
     proxres .-= res

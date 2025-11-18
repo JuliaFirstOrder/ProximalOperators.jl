@@ -33,10 +33,10 @@ x = randn(T, shape_x...)
 f = LeastSquares(A, b, iterative=(mode == :iterative))
 predicates_test(f)
 
-@test ProximalOperators.is_smooth(f) == true
-@test ProximalOperators.is_quadratic(f) == true
-@test ProximalOperators.is_generalized_quadratic(f) == true
-@test ProximalOperators.is_set(f) == false
+@test ProximalCore.is_smooth(f) == true
+@test ProximalCore.is_quadratic(f) == true
+@test ProximalCore.is_generalized_quadratic(f) == true
+@test ProximalCore.is_set_indicator(f) == false
 
 grad_fx, fx = gradient_test(f, x)
 lsres = A*x - b

@@ -1,6 +1,6 @@
 name = "ProximalOperators"
 uuid = "a725b495-10eb-56fe-b38b-717eba820537"
-version = "0.16.1"
+version = "0.17.0"
 
 [deps]
 IterativeSolvers = "42fd0dbc-a981-5370-80f2-aaf504508153"
@@ -11,11 +11,18 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 SuiteSparse = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 TSVD = "9449cd9e-2762-5aa3-a617-5413e99d722e"
 
+[weakdeps]
+RecursiveArrayTools = "731186ca-8d62-57ce-b412-fbd966d074cd"
+
+[extensions]
+RecursiveArrayToolsExt = "RecursiveArrayTools"
+
 [compat]
 IterativeSolvers = "0.8 - 0.9"
 LinearAlgebra = "1.4"
 OSQP = "0.3 - 0.8"
-ProximalCore = "0.1"
+ProximalCore = "0.2"
+RecursiveArrayTools = "2, 3"
 SparseArrays = "1.4"
 SuiteSparse = "1.4"
 TSVD = "0.3 - 0.4"

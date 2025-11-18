@@ -25,9 +25,10 @@ struct Regularize{T, S, A}
 end
 
 is_separable(::Type{<:Regularize{T}}) where T = is_separable(T)
-is_prox_accurate(::Type{<:Regularize{T}}) where T = is_prox_accurate(T)
+is_proximable(::Type{<:Regularize{T}}) where T = is_proximable(T)
 is_convex(::Type{<:Regularize{T}}) where T = is_convex(T)
 is_smooth(::Type{<:Regularize{T}}) where T = is_smooth(T)
+is_locally_smooth(::Type{<:Regularize{T}}) where T = is_locally_smooth(T)
 is_generalized_quadratic(::Type{<:Regularize{T}}) where T = is_generalized_quadratic(T)
 is_strongly_convex(::Type{<:Regularize}) = true
 

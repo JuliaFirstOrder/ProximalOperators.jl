@@ -9,8 +9,8 @@ f = PointwiseMinimum(IndPoint(T[-1.0]), IndPoint(T[1.0]))
 x = T[0.1]
 
 predicates_test(f)
-@test ProximalOperators.is_set(f) == true
-@test ProximalOperators.is_cone(f) == false
+@test ProximalCore.is_set_indicator(f) == true
+@test ProximalCore.is_cone_indicator(f) == false
 
 y, fy = prox_test(f, x)
 @test all(y .== T[1.0])

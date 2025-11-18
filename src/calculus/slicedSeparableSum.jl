@@ -51,46 +51,46 @@ SlicedSeparableSum(f::F, idxs::T) where {F, T <: Tuple} =
 SlicedSeparableSum(Tuple(f for k in eachindex(idxs)), idxs)
 
 # Unroll the loop over the different types of functions to evaluate
-@generated function (f::SlicedSeparableSum{A, B, N})(x) where {A, B, N}
-    ex = :(v = 0.0)
-    for i = 1:N # For each function type
-        ex = quote $ex;
-            for k in eachindex(f.fs[$i]) # For each function of that type
-                v += f.fs[$i][k](view(x,f.idxs[$i][k]...))
-            end
+function (f::SlicedSeparableSum)(x)
+    v = zero(eltype(x))
+    for (fs_group, idxs_group) = zip(f.fs, f.idxs) # For each function type
+        for (fun, idx) in zip(fs_group, idxs_group) # For each function of that type
+            v += fun(view(x, idx...))
         end
     end
-    ex = :($ex; return v)
+    return v
 end
 
 # Unroll the loop over the different types of functions to prox on
-@generated function prox!(y, f::SlicedSeparableSum{A, B, N}, x, gamma) where {A, B, N}
-    ex = :(v = 0.0)
-    for i = 1:N # For each function type
-        ex = quote $ex;
-            for k in eachindex(f.fs[$i]) # For each function of that type
-                g = prox!(view(y, f.idxs[$i][k]...), f.fs[$i][k], view(x,f.idxs[$i][k]...), gamma)
-                v += g
+function prox!(y, f::SlicedSeparableSum, x, gamma)
+    v = zero(eltype(x))
+    for (fs_group, idxs_group) = zip(f.fs, f.idxs) # For each function type
+        for (fun, idx) in zip(fs_group, idxs_group) # For each function of that type
+            g = if idx isa Tuple
+                prox!(view(y, idx...), fun, view(x, idx...), gamma)
+            else
+                prox!(view(y, idx), fun, view(x, idx), gamma)
             end
+            v += g
         end
     end
-    ex = :($ex; return v)
+    return v
 end
 
 component_types(::Type{SlicedSeparableSum{S, T, N}}) where {S, T, N} = Tuple(A.parameters[1] for A in fieldtypes(S))
 
-@generated is_prox_accurate(::Type{T}) where T <: SlicedSeparableSum = return all(is_prox_accurate, component_types(T)) ? :(true) : :(false)
+@generated is_proximable(::Type{T}) where T <: SlicedSeparableSum = return all(is_proximable, component_types(T)) ? :(true) : :(false)
 @generated is_convex(::Type{T}) where T <: SlicedSeparableSum = return all(is_convex, component_types(T)) ? :(true) : :(false)
-@generated is_set(::Type{T}) where T <: SlicedSeparableSum = return all(is_set, component_types(T)) ? :(true) : :(false)
-@generated is_singleton(::Type{T}) where T <: SlicedSeparableSum = return all(is_singleton, component_types(T)) ? :(true) : :(false)
-@generated is_cone(::Type{T}) where T <: SlicedSeparableSum = return all(is_cone, component_types(T)) ? :(true) : :(false)
-@generated is_affine(::Type{T}) where T <: SlicedSeparableSum = return all(is_affine, component_types(T)) ? :(true) : :(false)
+@generated is_set_indicator(::Type{T}) where T <: SlicedSeparableSum = return all(is_set_indicator, component_types(T)) ? :(true) : :(false)
+@generated is_singleton_indicator(::Type{T}) where T <: SlicedSeparableSum = return all(is_singleton_indicator, component_types(T)) ? :(true) : :(false)
+@generated is_cone_indicator(::Type{T}) where T <: SlicedSeparableSum = return all(is_cone_indicator, component_types(T)) ? :(true) : :(false)
+@generated is_affine_indicator(::Type{T}) where T <: SlicedSeparableSum = return all(is_affine_indicator, component_types(T)) ? :(true) : :(false)
 @generated is_smooth(::Type{T}) where T <: SlicedSeparableSum = return all(is_smooth, component_types(T)) ? :(true) : :(false)
 @generated is_generalized_quadratic(::Type{T}) where T <: SlicedSeparableSum = return all(is_generalized_quadratic, component_types(T)) ? :(true) : :(false)
 @generated is_strongly_convex(::Type{T}) where T <: SlicedSeparableSum = return all(is_strongly_convex, component_types(T)) ? :(true) : :(false)
 
 function prox_naive(f::SlicedSeparableSum, x, gamma)
-    fy = 0
+    fy = zero(eltype(x))
     y = similar(x)
     for t in eachindex(f.fs)
         for k in eachindex(f.fs[t])

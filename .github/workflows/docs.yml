@@ -11,11 +11,18 @@ jobs:
   build:
     name: Documentation
     runs-on: ubuntu-latest
+
+    # needed to allow julia-actions/cache to delete old caches that it has created
+    permissions:
+      actions: write
+      contents: read
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
       - uses: julia-actions/setup-julia@latest
         with:
           version: '1'
+      - uses: julia-actions/cache@v2
       - name: Install dependencies
         run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
       - name: Build and deploy

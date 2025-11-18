@@ -1,37 +1,33 @@
 # IndPolyhedral: OSQP implementation
 
-using OSQP
-
-struct IndPolyhedralOSQP{R} <: IndPolyhedral
+struct IndPolyhedralOSQP{R,M} <: IndPolyhedral
     l::AbstractVector{R}
     A::AbstractMatrix{R}
     u::AbstractVector{R}
-    mod::OSQP.Model
-    function IndPolyhedralOSQP{R}(
+    mod::M
+    function IndPolyhedralOSQP(
         l::AbstractVector{R}, A::AbstractMatrix{R}, u::AbstractVector{R}
     ) where R
         m, n = size(A)
-        mod = OSQP.Model()
-        if !all(l .<= u)
-            error("function is improper (are some bounds inverted?)")
+        mod = Base.invokelatest(Base.require(@__MODULE__, :OSQP)) do OSQP
+            mod = OSQP.Model()
+            if !all(l .<= u)
+                error("function is improper (are some bounds inverted?)")
+            end
+            OSQP.setup!(mod; P=SparseMatrixCSC{R}(I, n, n), l=l, A=sparse(A), u=u, verbose=false,
+                eps_abs=eps(R), eps_rel=eps(R),
+                eps_prim_inf=eps(R), eps_dual_inf=eps(R))
+            mod
         end
-        OSQP.setup!(mod; P=SparseMatrixCSC{R}(I, n, n), l=l, A=sparse(A), u=u, verbose=false,
-            eps_abs=eps(R), eps_rel=eps(R),
-            eps_prim_inf=eps(R), eps_dual_inf=eps(R))
-        new(l, A, u, mod)
+        new{R,typeof(mod)}(l, A, u, mod)
     end
 end
 
 # properties
 
-is_prox_accurate(::Type{<:IndPolyhedralOSQP}) = false
+is_proximable(::Type{<:IndPolyhedralOSQP}) = false
 
 # constructors
-
-IndPolyhedralOSQP(
-    l::AbstractVector{R}, A::AbstractMatrix{R}, u::AbstractVector{R}
-) where R =
-    IndPolyhedralOSQP{R}(l, A, u)
 
 IndPolyhedralOSQP(
     l::AbstractVector{R}, A::AbstractMatrix{R}, u::AbstractVector{R},
@@ -65,8 +61,10 @@ end
 
 function prox!(y, f::IndPolyhedralOSQP, x, gamma)
     R = eltype(x)
-    OSQP.update!(f.mod; q=-x)
-    results = OSQP.solve!(f.mod)
+    results = Base.invokelatest(Base.require(@__MODULE__, :OSQP)) do OSQP
+        OSQP.update!(f.mod; q=-x)
+        OSQP.solve!(f.mod)
+    end
     y .= results.x
     return R(0)
 end

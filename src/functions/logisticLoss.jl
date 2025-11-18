@@ -27,7 +27,7 @@ LogisticLoss(y::T, mu::R=1) where {R, T} = LogisticLoss{T, R}(y, mu)
 is_separable(f::Type{<:LogisticLoss}) = true
 is_convex(f::Type{<:LogisticLoss}) = true
 is_smooth(f::Type{<:LogisticLoss}) = true
-is_prox_accurate(f::Type{<:LogisticLoss}) = false
+is_proximable(f::Type{<:LogisticLoss}) = false
 
 # f(x)  =  mu log(1 + exp(-y x))
 
