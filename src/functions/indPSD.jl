@@ -46,7 +46,7 @@ function (::IndPSD)(X::Union{Symmetric, Hermitian})
 end
 
 is_convex(f::Type{<:IndPSD}) = true
-is_cone(f::Type{<:IndPSD}) = true
+is_cone_indicator(f::Type{<:IndPSD}) = true
 
 function prox!(Y::Union{Symmetric, Hermitian}, ::IndPSD, X::Union{Symmetric, Hermitian}, gamma)
     R = real(eltype(X))

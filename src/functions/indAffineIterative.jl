@@ -15,7 +15,7 @@ struct IndAffineIterative{M, V} <: IndAffine
     end
 end
 
-is_prox_accurate(f::Type{<:IndAffineIterative}) = false
+is_proximable(f::Type{<:IndAffineIterative}) = false
 
 IndAffineIterative(A::M, b::V) where {M, V} = IndAffineIterative{M, V}(A, b)
 

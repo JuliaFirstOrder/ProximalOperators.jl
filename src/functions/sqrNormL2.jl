@@ -25,11 +25,12 @@ struct SqrNormL2{T,SC}
     end
 end
 
-is_convex(f::Type{<:SqrNormL2}) = true
-is_smooth(f::Type{<:SqrNormL2}) = true
-is_separable(f::Type{<:SqrNormL2}) = true
-is_generalized_quadratic(f::Type{<:SqrNormL2}) = true
-is_strongly_convex(f::Type{SqrNormL2{T,SC}}) where {T,SC} = SC
+is_proximable(::Type{<:SqrNormL2}) = true
+is_convex(::Type{<:SqrNormL2}) = true
+is_smooth(::Type{<:SqrNormL2}) = true
+is_separable(::Type{<:SqrNormL2}) = true
+is_generalized_quadratic(::Type{<:SqrNormL2}) = true
+is_strongly_convex(::Type{SqrNormL2{T,SC}}) where {T,SC} = SC
 
 SqrNormL2(lambda::T=1) where T = SqrNormL2{T,all(lambda .> 0)}(lambda)
 

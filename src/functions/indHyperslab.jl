@@ -27,7 +27,7 @@ end
 IndHyperslab(low::R, a::T, upp::R) where {R, T} = IndHyperslab{R, T}(low, a, upp)
 
 is_convex(f::Type{<:IndHyperslab}) = true
-is_set(f::Type{<:IndHyperslab}) = true
+is_set_indicator(f::Type{<:IndHyperslab}) = true
 
 function (f::IndHyperslab)(x)
     R = real(eltype(x))

@@ -158,7 +158,7 @@ for i in eachindex(stuff)
     ∇f, fx = gradient_test(f, x)
     for k = 1:10
       # Test conditions in different directions
-      if ProximalOperators.is_convex(f)
+      if is_convex(f)
         # Test ∇f is subgradient
 	if typeof(f) <: CrossEntropy
 		d = x.*(rand(Float64, size(x)).-1)./2 # assures 0 <= x+d <= 1

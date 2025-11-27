@@ -1,16 +1,15 @@
 using Test
 
 using ProximalOperators
-
-using ProximalOperators:
-    ArrayOrTuple,
-    is_prox_accurate,
+using ProximalOperators: ArrayOrTuple
+using ProximalCore:
+    is_proximable,
     is_separable,
     is_convex,
-    is_singleton,
-    is_cone,
-    is_affine,
-    is_set,
+    is_singleton_indicator,
+    is_cone_indicator,
+    is_affine_indicator,
+    is_set_indicator,
     is_smooth,
     is_quadratic,
     is_generalized_quadratic,
@@ -49,19 +48,19 @@ function prox_test(f, x::ArrayOrTuple{R}, gamma=1) where R <: Real
 
     @test typeof(fy_naive) == R
     
-    rtol = if ProximalOperators.is_prox_accurate(f) sqrt(eps(R)) else 1e-4 end
+    rtol = if is_proximable(f) sqrt(eps(R)) else 1e-4 end
 
-    if ProximalOperators.is_convex(f)
+    if is_convex(f)
         @test all(isapprox.(y_prealloc, y, rtol=rtol, atol=100*eps(R)))
         @test all(isapprox.(y_naive, y, rtol=rtol, atol=100*eps(R)))
-        if ProximalOperators.is_set(f)
+        if is_set_indicator(f)
             @test fy_prealloc == 0
         end
         @test isapprox(fy_prealloc, fy, rtol=rtol, atol=100*eps(R))
         @test isapprox(fy_naive, fy, rtol=rtol, atol=100*eps(R))
     end
 
-    if !ProximalOperators.is_set(f) || ProximalOperators.is_prox_accurate(f)
+    if !is_set_indicator(f) || is_proximable(f)
         f_at_y = call_test(f, y)
         if f_at_y !== nothing
             @test isapprox(f_at_y, fy, rtol=rtol, atol=100*eps(R))
@@ -88,10 +87,10 @@ function predicates_test(f)
         is_generalized_quadratic,
         is_quadratic,
         is_smooth,
-        is_singleton,
-        is_cone,
-        is_affine,
-        is_set,
+        is_singleton_indicator,
+        is_cone_indicator,
+        is_affine_indicator,
+        is_set_indicator,
         is_positively_homogeneous,
         is_support,
     ]
@@ -104,9 +103,9 @@ function predicates_test(f)
     # quadratic => generalized_quadratic && smooth
     @test !is_quadratic(f) || (is_generalized_quadratic(f) && is_smooth(f))
     # (singleton || cone || affine) => set
-    @test !(is_singleton(f) || is_cone(f) || is_affine(f)) || is_set(f)
+    @test !(is_singleton_indicator(f) || is_cone_indicator(f) || is_affine_indicator(f)) || is_set_indicator(f)
     # cone => positively homogeneous
-    @test !is_cone(f) || is_positively_homogeneous(f)
+    @test !is_cone_indicator(f) || is_positively_homogeneous(f)
     # (convex && positively homogeneous) <=> (convex && support)
     @test (is_convex(f) && is_positively_homogeneous(f)) == (is_convex(f) && is_support(f))
     # strongly_convex => convex

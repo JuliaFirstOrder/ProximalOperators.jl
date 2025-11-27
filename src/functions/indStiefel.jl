@@ -14,7 +14,7 @@ are inferred from the matrix provided as input.
 """
 struct IndStiefel end
 
-is_set(f::Type{<:IndStiefel}) = true
+is_set_indicator(f::Type{<:IndStiefel}) = true
 
 function (::IndStiefel)(X)
     R = real(eltype(X))

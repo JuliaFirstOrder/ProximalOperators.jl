@@ -16,10 +16,10 @@ x = randn(n)
 
 predicates_test(f)
 
-@test ProximalOperators.is_smooth(f) == false
-@test ProximalOperators.is_quadratic(f) == false
-@test ProximalOperators.is_generalized_quadratic(f) == true
-@test ProximalOperators.is_set(f) == true
+@test is_smooth(f) == false
+@test is_quadratic(f) == false
+@test is_generalized_quadratic(f) == true
+@test is_set_indicator(f) == true
 
 call_test(f, x)
 y, fy = prox_test(f, x)

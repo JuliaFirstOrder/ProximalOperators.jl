@@ -10,9 +10,9 @@ f = Sum(f1, f2)
 
 predicates_test(f)
 
-@test ProximalOperators.is_quadratic(f) == true
-@test ProximalOperators.is_strongly_convex(f) == true
-@test ProximalOperators.is_set(f) == false
+@test is_quadratic(f) == true
+@test is_strongly_convex(f) == true
+@test is_set_indicator(f) == false
 
 xtest = randn(10)
 
@@ -33,9 +33,9 @@ g = Sum(g1, g2)
 
 predicates_test(g)
 
-@test ProximalOperators.is_smooth(g) == false
-@test ProximalOperators.is_strongly_convex(g) == true
-@test ProximalOperators.is_set(g) == false
+@test is_smooth(g) == false
+@test is_strongly_convex(g) == true
+@test is_set_indicator(g) == false
 
 xtest = randn(10)
 

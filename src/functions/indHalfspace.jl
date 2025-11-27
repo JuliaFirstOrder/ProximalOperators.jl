@@ -26,7 +26,7 @@ end
 IndHalfspace(a::T, b::R) where {R, T} = IndHalfspace{R, T}(a, b)
 
 is_convex(f::Type{<:IndHalfspace}) = true
-is_set(f::Type{<:IndHalfspace}) = true
+is_set_indicator(f::Type{<:IndHalfspace}) = true
 
 function (f::IndHalfspace)(x)
     R = real(eltype(x))

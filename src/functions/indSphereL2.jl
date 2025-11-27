@@ -22,7 +22,7 @@ struct IndSphereL2{R}
     end
 end
 
-is_set(f::Type{<:IndSphereL2}) = true
+is_set_indicator(f::Type{<:IndSphereL2}) = true
 
 IndSphereL2(r::R=1) where R = IndSphereL2{R}(r)
 

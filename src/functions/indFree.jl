@@ -12,8 +12,8 @@ struct IndFree end
 
 is_separable(f::Type{<:IndFree}) = true
 is_convex(f::Type{<:IndFree}) = true
-is_affine(f::Type{<:IndFree}) = true
-is_cone(f::Type{<:IndFree}) = true
+is_affine_indicator(f::Type{<:IndFree}) = true
+is_cone_indicator(f::Type{<:IndFree}) = true
 is_smooth(f::Type{<:IndFree}) = true
 is_generalized_quadratic(f::Type{<:IndFree}) = true
 

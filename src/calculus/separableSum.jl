@@ -29,15 +29,16 @@ SeparableSum(fs::Vararg) = SeparableSum((fs...,))
 
 component_types(::Type{SeparableSum{T}}) where T = fieldtypes(T)
 
-@generated is_prox_accurate(::Type{T}) where T <: SeparableSum = return all(is_prox_accurate, component_types(T)) ? :(true) : :(false)
-@generated is_convex(::Type{T}) where T <: SeparableSum = return all(is_convex, component_types(T)) ? :(true) : :(false)
-@generated is_set(::Type{T}) where T <: SeparableSum = return all(is_set, component_types(T)) ? :(true) : :(false)
-@generated is_singleton(::Type{T}) where T <: SeparableSum = return all(is_singleton, component_types(T)) ? :(true) : :(false)
-@generated is_cone(::Type{T}) where T <: SeparableSum = return all(is_cone, component_types(T)) ? :(true) : :(false)
-@generated is_affine(::Type{T}) where T <: SeparableSum = return all(is_affine, component_types(T)) ? :(true) : :(false)
-@generated is_smooth(::Type{T}) where T <: SeparableSum = return all(is_smooth, component_types(T)) ? :(true) : :(false)
-@generated is_generalized_quadratic(::Type{T}) where T <: SeparableSum = return all(is_generalized_quadratic, component_types(T)) ? :(true) : :(false)
-@generated is_strongly_convex(::Type{T}) where T <: SeparableSum = return all(is_strongly_convex, component_types(T)) ? :(true) : :(false)
+@generated is_proximable(::Type{T}) where T <: SeparableSum = return all(is_proximable, component_types(T)) ? true : false
+@generated is_convex(::Type{T}) where T <: SeparableSum = return all(is_convex, component_types(T)) ? true : false
+@generated is_set_indicator(::Type{T}) where T <: SeparableSum = return all(is_set_indicator, component_types(T)) ? true : false
+@generated is_singleton_indicator(::Type{T}) where T <: SeparableSum = return all(is_singleton_indicator, component_types(T)) ? true : false
+@generated is_cone_indicator(::Type{T}) where T <: SeparableSum = return all(is_cone_indicator, component_types(T)) ? true : false
+@generated is_affine_indicator(::Type{T}) where T <: SeparableSum = return all(is_affine_indicator, component_types(T)) ? true : false
+@generated is_smooth(::Type{T}) where T <: SeparableSum = return all(is_smooth, component_types(T)) ? true : false
+@generated is_locally_smooth(::Type{T}) where T <: SeparableSum = return all(is_locally_smooth, component_types(T)) ? true : false
+@generated is_generalized_quadratic(::Type{T}) where T <: SeparableSum = return all(is_generalized_quadratic, component_types(T)) ? true : false
+@generated is_strongly_convex(::Type{T}) where T <: SeparableSum = return all(is_strongly_convex, component_types(T)) ? true : false
 
 (g::SeparableSum)(xs::Tuple) = sum(f(x) for (f, x) in zip(g.fs, xs))
 

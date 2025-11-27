@@ -340,7 +340,7 @@ stuff = [
     y, fy = prox_test(f, x, gamma)
     @test y ≈ ref_y
 
-    if ProximalOperators.is_prox_accurate(f)
+    if is_proximable(f)
         @test fy ≈ ref_fy
     end
 

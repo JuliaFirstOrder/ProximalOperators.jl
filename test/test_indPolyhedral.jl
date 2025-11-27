@@ -30,8 +30,8 @@ p = similar(x)
     () -> IndPolyhedral(l, A, u, xmin, xmax),
 ]
     f = constr()
-    @test ProximalOperators.is_convex(f) == true
-    @test ProximalOperators.is_set(f) == true
+    @test is_convex(f) == true
+    @test is_set_indicator(f) == true
     fx = call_test(f, x)
     p, fp = prox_test(f, x)
 end

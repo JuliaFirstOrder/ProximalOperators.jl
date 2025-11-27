@@ -14,13 +14,14 @@ struct Translate{T, V}
 end
 
 is_separable(::Type{<:Translate{T}}) where T = is_separable(T)
-is_prox_accurate(::Type{<:Translate{T}}) where T = is_prox_accurate(T)
+is_proximable(::Type{<:Translate{T}}) where T = is_proximable(T)
 is_convex(::Type{<:Translate{T}}) where T = is_convex(T)
-is_set(::Type{<:Translate{T}}) where T = is_set(T)
-is_singleton(::Type{<:Translate{T}}) where T = is_singleton(T)
-is_cone(::Type{<:Translate{T}}) where T = is_cone(T)
-is_affine(::Type{<:Translate{T}}) where T = is_affine(T)
+is_set_indicator(::Type{<:Translate{T}}) where T = is_set_indicator(T)
+is_singleton_indicator(::Type{<:Translate{T}}) where T = is_singleton_indicator(T)
+is_cone_indicator(::Type{<:Translate{T}}) where T = is_cone_indicator(T)
+is_affine_indicator(::Type{<:Translate{T}}) where T = is_affine_indicator(T)
 is_smooth(::Type{<:Translate{T}}) where T = is_smooth(T)
+is_locally_smooth(::Type{<:Translate{T}}) where T = is_locally_smooth(T)
 is_generalized_quadratic(::Type{<:Translate{T}}) where T = is_generalized_quadratic(T)
 is_strongly_convex(::Type{<:Translate{T}}) where T = is_strongly_convex(T)
 
