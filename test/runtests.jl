@@ -18,6 +18,7 @@ using ProximalCore:
     is_support
 
 using Aqua
+using Documenter
 
 function call_test(f, x::ArrayOrTuple{R}) where R <: Real
     try
@@ -114,6 +115,10 @@ end
 
 @testset "Aqua" begin
     Aqua.test_all(ProximalOperators; ambiguities=false)
+end
+
+@testset "Documentation" begin
+    doctest(ProximalOperators)
 end
 
 @testset "Utilities" begin
