@@ -10,7 +10,7 @@ export IndAffine
 
 abstract type IndAffine end
 
-is_affine(f::Type{<:IndAffine}) = true
+is_affine_indicator(f::Type{<:IndAffine}) = true
 is_generalized_quadratic(f::Type{<:IndAffine}) = true
 
 fun_name(f::IndAffine) = "Indicator of an affine subspace"

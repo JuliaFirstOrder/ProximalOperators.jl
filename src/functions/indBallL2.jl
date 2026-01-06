@@ -23,7 +23,7 @@ struct IndBallL2{R}
 end
 
 is_convex(f::Type{<:IndBallL2}) = true
-is_set(f::Type{<:IndBallL2}) = true
+is_set_indicator(f::Type{<:IndBallL2}) = true
 
 IndBallL2(r::R=1) where R = IndBallL2{R}(r)
 

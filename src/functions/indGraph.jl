@@ -29,8 +29,8 @@ function IndGraph(A::AbstractMatrix)
 end
 
 is_convex(f::Type{<:IndGraph}) = true
-is_set(f::Type{<:IndGraph}) = true
-is_cone(f::Type{<:IndGraph}) = true
+is_set_indicator(f::Type{<:IndGraph}) = true
+is_cone_indicator(f::Type{<:IndGraph}) = true
 
 IndGraph(a::AbstractVector) = IndGraph(a')
 

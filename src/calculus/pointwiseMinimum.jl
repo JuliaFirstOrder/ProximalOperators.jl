@@ -17,8 +17,8 @@ PointwiseMinimum(fs...) = PointwiseMinimum{typeof(fs)}(fs)
 
 component_types(::Type{PointwiseMinimum{T}}) where T = fieldtypes(T)
 
-@generated is_set(::Type{T}) where T <: PointwiseMinimum = return all(is_set, component_types(T)) ? :(true) : :(false)
-@generated is_cone(::Type{T}) where T <: PointwiseMinimum = return all(is_cone, component_types(T)) ? :(true) : :(false)
+@generated is_set_indicator(::Type{T}) where T <: PointwiseMinimum = return all(is_set_indicator, component_types(T)) ? :(true) : :(false)
+@generated is_cone_indicator(::Type{T}) where T <: PointwiseMinimum = return all(is_cone_indicator, component_types(T)) ? :(true) : :(false)
 
 function (g::PointwiseMinimum{T})(x) where T
     return minimum(f(x) for f in g.fs)
