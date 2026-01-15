@@ -11,9 +11,9 @@ struct IndZero end
 
 is_separable(f::Type{<:IndZero}) = true
 is_convex(f::Type{<:IndZero}) = true
-is_singleton(f::Type{<:IndZero}) = true
-is_cone(f::Type{<:IndZero}) = true
-is_affine(f::Type{<:IndZero}) = true
+is_singleton_indicator(f::Type{<:IndZero}) = true
+is_cone_indicator(f::Type{<:IndZero}) = true
+is_affine_indicator(f::Type{<:IndZero}) = true
 
 function (::IndZero)(x)
     C = eltype(x)

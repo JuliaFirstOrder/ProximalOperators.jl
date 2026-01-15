@@ -16,7 +16,7 @@ struct LeastSquaresIterative{N, R, RC, M, V, O, IsConvex} <: LeastSquares
     q::Array{RC, N} # n (by-p)
 end
 
-is_prox_accurate(f::Type{<:LeastSquaresIterative}) = false
+is_proximable(f::Type{<:LeastSquaresIterative}) = false
 is_convex(::Type{LeastSquaresIterative{N, R, RC, M, V, O, IsConvex}}) where {N, R, RC, M, V, O, IsConvex} = IsConvex
 
 function LeastSquaresIterative(A::M, b, lambda) where M

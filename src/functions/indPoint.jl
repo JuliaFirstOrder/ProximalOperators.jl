@@ -20,8 +20,8 @@ end
 
 is_separable(f::Type{<:IndPoint}) = true
 is_convex(f::Type{<:IndPoint}) = true
-is_singleton(f::Type{<:IndPoint}) = true
-is_affine(f::Type{<:IndPoint}) = true
+is_singleton_indicator(f::Type{<:IndPoint}) = true
+is_affine_indicator(f::Type{<:IndPoint}) = true
 
 IndPoint(p::T=0) where T = IndPoint{T}(p)
 

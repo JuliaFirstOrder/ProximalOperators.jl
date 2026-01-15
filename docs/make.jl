@@ -1,5 +1,7 @@
 using Documenter, ProximalOperators, ProximalCore
 
+DocMeta.setdocmeta!(ProximalCore, :DocTestSetup, :(import ProximalCore); recursive=true)
+
 makedocs(
     modules = [ProximalOperators, ProximalCore],
     sitename = "ProximalOperators.jl",

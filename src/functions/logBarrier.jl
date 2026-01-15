@@ -26,6 +26,7 @@ end
 
 is_separable(f::Type{<:LogBarrier}) = true
 is_convex(f::Type{<:LogBarrier}) = true
+is_locally_smooth(f::Type{<:LogBarrier}) = true
 
 LogBarrier(a::R=1, b::S=0, mu::T=1) where {R, S, T} = LogBarrier{R, S, T}(a, b, mu)
 

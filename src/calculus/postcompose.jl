@@ -23,14 +23,15 @@ struct Postcompose{T, R, S}
     end
 end
 
-is_prox_accurate(::Type{<:Postcompose{T}}) where T = is_prox_accurate(T)
+is_proximable(::Type{<:Postcompose{T}}) where T = is_proximable(T)
 is_separable(::Type{<:Postcompose{T}}) where T = is_separable(T)
 is_convex(::Type{<:Postcompose{T}}) where T = is_convex(T)
-is_set(::Type{<:Postcompose{T}}) where T = is_set(T)
-is_singleton(::Type{<:Postcompose{T}}) where T = is_singleton(T)
-is_cone(::Type{<:Postcompose{T}}) where T = is_cone(T)
-is_affine(::Type{<:Postcompose{T}}) where T = is_affine(T)
+is_set_indicator(::Type{<:Postcompose{T}}) where T = is_set_indicator(T)
+is_singleton_indicator(::Type{<:Postcompose{T}}) where T = is_singleton_indicator(T)
+is_cone_indicator(::Type{<:Postcompose{T}}) where T = is_cone_indicator(T)
+is_affine_indicator(::Type{<:Postcompose{T}}) where T = is_affine_indicator(T)
 is_smooth(::Type{<:Postcompose{T}}) where T = is_smooth(T)
+is_locally_smooth(::Type{<:Postcompose{T}}) where T = is_locally_smooth(T)
 is_generalized_quadratic(::Type{<:Postcompose{T}}) where T = is_generalized_quadratic(T)
 is_strongly_convex(::Type{<:Postcompose{T}}) where T = is_strongly_convex(T)
 

@@ -24,7 +24,7 @@ end
 
 # properties
 
-is_prox_accurate(::Type{<:IndPolyhedralOSQP}) = false
+is_proximable(::Type{<:IndPolyhedralOSQP}) = false
 
 # constructors
 
