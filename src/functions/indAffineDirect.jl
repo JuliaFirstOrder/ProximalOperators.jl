@@ -22,7 +22,7 @@ end
 
 IndAffineDirect(A::M, b::V) where {T, M <: DenseMatrix{T}, V} = IndAffineDirect{M, V, QRCompactWY{T, M}}(A, b)
 
-IndAffineDirect(A::M, b::V) where {T, M <: SparseMatrixCSC{T}, V} = IndAffineDirect{M, V, SuiteSparse.SPQR.Factorization{T}}(A, b)
+IndAffineDirect(A::M, b::V) where {T, M <: SparseMatrixCSC{T}, V} = IndAffineDirect{M, V, SparseArrays.SPQR.Factorization{T}}(A, b)
 
 IndAffineDirect(a::V, b::T) where {T, V <: AbstractVector{T}} = IndAffineDirect(reshape(a,1,:), [b])
 
@@ -52,7 +52,7 @@ function prox!(::Type{<:QRCompactWY}, y, f::IndAffineDirect, x, gamma)
     return real(eltype(x))(0)
 end
 
-function prox!(::Type{<:SuiteSparse.SPQR.Factorization}, y, f::IndAffineDirect, x, gamma)
+function prox!(::Type{<:SparseArrays.SPQR.Factorization}, y, f::IndAffineDirect, x, gamma)
     mul!(f.res, f.A, x)
     f.res .= f.b .- f.res
     ##############################################################################

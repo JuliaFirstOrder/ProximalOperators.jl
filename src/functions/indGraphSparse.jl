@@ -1,12 +1,11 @@
 using LinearAlgebra
 using SparseArrays
-using SuiteSparse
 
 struct IndGraphSparse{T, Ti} <: IndGraph
   m::Int
   n::Int
   A::SparseMatrixCSC{T, Ti}
-  F::SuiteSparse.CHOLMOD.Factor{T} #LDL factorization
+  F::SparseArrays.CHOLMOD.Factor{T} #LDL factorization
   tmp::Vector{T}
   tmpx::SubArray{T, 1, Vector{T}, Tuple{UnitRange{Int}}, true}
   res::Vector{T}
