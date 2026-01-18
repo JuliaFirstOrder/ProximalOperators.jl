@@ -4,7 +4,6 @@
 
 using LinearAlgebra
 using SparseArrays
-using SuiteSparse
 
 mutable struct QuadraticDirect{R, M, V, F} <: Quadratic
     Q::M
@@ -22,7 +21,7 @@ end
 
 function QuadraticDirect(Q::M, q) where M <: SparseMatrixCSC
     R = eltype(M)
-    QuadraticDirect{R, M, typeof(q), SuiteSparse.CHOLMOD.Factor{R}}(Q, q)
+    QuadraticDirect{R, M, typeof(q), SparseArrays.CHOLMOD.Factor{R}}(Q, q)
 end
 
 function QuadraticDirect(Q::M, q) where M <: DenseMatrix
@@ -49,7 +48,7 @@ function prox!(y, f::QuadraticDirect{R, M, V, <:Cholesky}, x, gamma) where {R, M
     return fy
 end
 
-function prox!(y, f::QuadraticDirect{R, M, V, <:SuiteSparse.CHOLMOD.Factor}, x, gamma) where {R, M, V}
+function prox!(y, f::QuadraticDirect{R, M, V, <:SparseArrays.CHOLMOD.Factor}, x, gamma) where {R, M, V}
     if gamma != f.gamma
         factor_step!(f, gamma)
     end

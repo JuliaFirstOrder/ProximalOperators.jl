@@ -24,7 +24,7 @@ struct IndSimplex{R}
 end
 
 is_convex(f::Type{<:IndSimplex}) = true
-is_set(f::Type{<:IndSimplex}) = true
+is_set_indicator(f::Type{<:IndSimplex}) = true
 
 IndSimplex(a::R=1) where R = IndSimplex{R}(a)
 

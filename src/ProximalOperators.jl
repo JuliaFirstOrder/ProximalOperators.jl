@@ -4,15 +4,27 @@ module ProximalOperators
 
 using LinearAlgebra
 import ProximalCore: prox, prox!, gradient, gradient!
-import ProximalCore: is_convex, is_generalized_quadratic
+import ProximalCore:
+	is_convex,
+	is_strongly_convex,
+	is_generalized_quadratic,
+	is_proximable,
+	is_separable,
+	is_singleton_indicator,
+	is_cone_indicator,
+	is_affine_indicator,
+	is_set_indicator,
+	is_smooth,
+	is_locally_smooth,
+	is_support
 
-const RealOrComplex{R <: Real} = Union{R, Complex{R}}
-const HermOrSym{T, S} = Union{Hermitian{T, S}, Symmetric{T, S}}
-const RealBasedArray{R} = AbstractArray{C, N} where {C <: RealOrComplex{R}, N}
-const TupleOfArrays{R} = Tuple{RealBasedArray{R}, Vararg{RealBasedArray{R}}}
-const ArrayOrTuple{R} = Union{RealBasedArray{R}, TupleOfArrays{R}}
-const TransposeOrAdjoint{M} = Union{Transpose{C,M} where C, Adjoint{C,M} where C}
-const Maybe{T} = Union{T, Nothing}
+const RealOrComplex{R<:Real} = Union{R,Complex{R}}
+const HermOrSym{T,S} = Union{Hermitian{T,S},Symmetric{T,S}}
+const RealBasedArray{R} = AbstractArray{C,N} where {C<:RealOrComplex{R},N}
+const TupleOfArrays{R} = Tuple{RealBasedArray{R},Vararg{RealBasedArray{R}}}
+const ArrayOrTuple{R} = Union{RealBasedArray{R},TupleOfArrays{R}}
+const TransposeOrAdjoint{M} = Union{Transpose{C,M} where C,Adjoint{C,M} where C}
+const Maybe{T} = Union{T,Nothing}
 
 export prox, prox!, gradient, gradient!
 
@@ -23,7 +35,6 @@ include("utilities/linops.jl")
 include("utilities/symmetricpacked.jl")
 include("utilities/uniformarrays.jl")
 include("utilities/normdiff.jl")
-include("utilities/traits.jl")
 
 # Basic functions
 

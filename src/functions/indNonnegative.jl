@@ -14,7 +14,7 @@ struct IndNonnegative end
 
 is_separable(f::Type{<:IndNonnegative}) = true
 is_convex(f::Type{<:IndNonnegative}) = true
-is_cone(f::Type{<:IndNonnegative}) = true
+is_cone_indicator(f::Type{<:IndNonnegative}) = true
 
 function (::IndNonnegative)(x)
     R = eltype(x)

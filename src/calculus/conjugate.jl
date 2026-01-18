@@ -20,14 +20,14 @@ struct Conjugate{T}
     end
 end
 
-is_prox_accurate(::Type{Conjugate{T}}) where T = is_prox_accurate(T)
+is_proximable(::Type{Conjugate{T}}) where T = is_proximable(T)
 is_convex(::Type{Conjugate{T}}) where T = true
-is_cone(::Type{Conjugate{T}}) where T = is_cone(T) && is_convex(T)
+is_cone_indicator(::Type{Conjugate{T}}) where T = is_cone_indicator(T) && is_convex(T)
 is_smooth(::Type{Conjugate{T}}) where T = is_strongly_convex(T)
 is_strongly_convex(::Type{Conjugate{T}}) where T = is_smooth(T)
 is_generalized_quadratic(::Type{Conjugate{T}}) where T = is_generalized_quadratic(T)
-is_set(::Type{Conjugate{T}}) where T = is_convex(T) && is_support(T)
-is_positively_homogeneous(::Type{Conjugate{T}}) where T = is_convex(T) && is_set(T)
+is_set_indicator(::Type{Conjugate{T}}) where T = is_convex(T) && is_support(T)
+is_positively_homogeneous(::Type{Conjugate{T}}) where T = is_convex(T) && is_set_indicator(T)
 
 Conjugate(f::T) where T = Conjugate{T}(f)
 
@@ -37,7 +37,7 @@ Conjugate(f::T) where T = Conjugate{T}(f)
 function prox!(y, g::Conjugate, x, gamma)
     # Moreau identity
     v = prox!(y, g.f, x/gamma, 1/gamma)
-    if is_set(g)
+    if is_set_indicator(g)
         v = real(eltype(x))(0)
     else
         v = real(dot(x, y)) - gamma * real(dot(y, y)) - v
@@ -50,7 +50,7 @@ end
 
 function prox_naive(g::Conjugate, x, gamma)
     y, v = prox_naive(g.f, x/gamma, 1/gamma)
-    return x - gamma * y, if is_set(g) real(eltype(x))(0) else real(dot(x, y)) - gamma * real(dot(y, y)) - v end
+    return x - gamma * y, if is_set_indicator(g) real(eltype(x))(0) else real(dot(x, y)) - gamma * real(dot(y, y)) - v end
 end
 
 # TODO: hard-code conjugation rules? E.g. precompose/epicompose
