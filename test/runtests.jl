@@ -156,6 +156,7 @@ end
     include("test_separableSum.jl")
     include("test_slicedSeparableSum.jl")
     include("test_sum.jl")
+    include("test_reshapeInput.jl")
 end
 
 @testset "Equivalences" begin

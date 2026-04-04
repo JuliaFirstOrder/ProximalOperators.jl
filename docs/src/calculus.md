@@ -32,4 +32,5 @@ Precompose
 PrecomposeDiagonal
 Tilt
 Translate
+ReshapeInput
 ```
