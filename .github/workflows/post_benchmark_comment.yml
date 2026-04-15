@@ -1,0 +1,19 @@
+name: Post Benchmark Comment
+
+on:
+  workflow_run:
+    workflows: ["Benchmark"]
+    types: [completed]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  comment:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hakkelt/AirspeedVelocity.jl/post-comment@master
+        with:
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
