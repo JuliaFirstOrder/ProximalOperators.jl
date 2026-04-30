@@ -22,12 +22,22 @@ for i = 1:N
   r = 5*rand()
   f = IndSimplex(r)
   g = IndBallL1(r)
+  h = IndUnitSimplex(r)
 
   y1, fy1 = prox(f, abs.(x))
-  y1 = sign.(x).*y1
+  y1_l1ball = sign.(x).*y1
   y2, gy2 = prox(g, x)
+  y3, hy3 = prox(h, abs.(x))
 
-  @test y1 ≈ y2
+  @test y1_l1ball ≈ y2
+  @test y1 ≈ y3
+
+  x2 = abs.(x) * 0.5 * r
+  x2 ./= sum(x2)
+
+  y_probsimplex = prox(f, x2)
+  y_unit_simplex = prox(h, x2)
+  @test norm(y_probsimplex) >= norm(y_unit_simplex)
 end
 
 # projecting onto the simplex
