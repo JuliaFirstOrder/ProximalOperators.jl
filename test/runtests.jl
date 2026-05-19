@@ -155,6 +155,7 @@ end
     include("test_regularize.jl")
     include("test_separableSum.jl")
     include("test_slicedSeparableSum.jl")
+    include("test_precomposedSlicedSeparableSum.jl")
     include("test_sum.jl")
     include("test_reshapeInput.jl")
 end

@@ -30,6 +30,7 @@ Regularize
 Postcompose
 Precompose
 PrecomposeDiagonal
+PrecomposedSlicedSeparableSum
 Tilt
 Translate
 ReshapeInput
