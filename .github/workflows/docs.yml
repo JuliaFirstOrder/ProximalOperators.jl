@@ -1,25 +1,24 @@
-name: Documentation
-
+name: Documenter
 on:
   push:
-    branches:
-      - master
-    tags: "*"
+    branches: master
+    tags: [v*]
   pull_request:
 
 jobs:
-  build:
+  Documenter:
+    permissions:
+      contents: write
+      statuses: write
     name: Documentation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@latest
+      - uses: julia-actions/setup-julia@v2
         with:
-          version: "1"
-      - name: Install dependencies
-        run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
-      - name: Build and deploy
+          version: '1'
+          show-versioninfo: true               # this causes versioninfo to be printed to the action log
+      - uses: julia-actions/cache@v2           # cache using https://github.com/julia-actions/cache
+      - uses: julia-actions/julia-docdeploy@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
-          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }} # For authentication with SSH deploy key
-        run: julia --project=docs/ docs/make.jl
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
