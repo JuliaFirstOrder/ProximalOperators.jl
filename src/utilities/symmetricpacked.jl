@@ -34,7 +34,7 @@ function dspev!(jobz::Symbol, uplo::Symbol, A::StridedVector{Float64})
     lwork = BlasInt(3*n)
     info  = Ref{BlasInt}()
     work = Array{Float64}(undef, lwork)
-    ccall((@blasfunc(dspev_), Base.liblapack_name), Cvoid,
+    ccall((@blasfunc(dspev_), LinearAlgebra.BLAS.liblapack), Cvoid,
           (Ptr{UInt8}, Ptr{UInt8}, Ptr{BlasInt}, Ptr{Float64},
           Ptr{Float64}, Ptr{Float64}, Ptr{BlasInt}, Ptr{Float64}, Ptr{BlasInt}),
           jobz, uplo, Ref(n), A,
@@ -58,7 +58,7 @@ function dspevV!(uplo::Symbol, A::StridedVector{Float64})
     lwork = BlasInt(3*n)
     info  = Ref{BlasInt}()
     work = Array{Float64}(undef, lwork)
-    ccall((@blasfunc(dspev_), Base.liblapack_name), Cvoid,
+    ccall((@blasfunc(dspev_), LinearAlgebra.BLAS.liblapack), Cvoid,
           (Ptr{UInt8}, Ptr{UInt8}, Ptr{BlasInt}, Ptr{Float64},
           Ptr{Float64}, Ptr{Float64}, Ptr{BlasInt}, Ptr{Float64}, Ptr{BlasInt}),
           jobz, uplo, Ref(n), A,
