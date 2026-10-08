@@ -31,6 +31,8 @@ test_cases_spec = [
         "right" => [
             ( (IndSimplex(),), randn(Float32, 10) ),
             ( (IndSimplex(),), randn(Float64, 10) ),
+            ( (IndUnitSimplex(),), randn(Float32, 10) ),
+            ( (IndUnitSimplex(),), randn(Float64, 10) ),
             ( (IndNonnegative(), rand()), randn(Float64, 10) ),
             ( (IndZero(),), randn(Float64, 10) ),
             ( (IndBox(-1, 1),), randn(Float32, 10) ),

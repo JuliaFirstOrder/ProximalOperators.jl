@@ -1,6 +1,6 @@
 # indicator of a simplex
 
-export IndSimplex
+export IndSimplex, IndUnitSimplex
 
 """
     IndSimplex(a=1.0)
@@ -106,4 +106,50 @@ function prox_naive(f::IndSimplex, x, gamma)
         end
     end
     return v, R(0)
+end
+
+"""
+    IndUnitSimplex(a=1.0)
+
+Return the indicator of the unit simplex
+```math
+S = \\left\\{ x : x \\geq 0, \\sum_i x_i \\leq a \\right\\}.
+```
+
+By default `a=1`, therefore ``S`` is the probability simplex of dimension n+1.
+"""
+struct IndUnitSimplex{R}
+    a::R
+    function IndUnitSimplex{R}(a::R) where R
+        if a <= 0
+            error("parameter a must be positive")
+        else
+            new(a)
+        end
+    end
+end
+
+is_convex(f::Type{<:IndUnitSimplex}) = true
+is_set(f::Type{<:IndUnitSimplex}) = true
+
+IndUnitSimplex(a::R=1) where R = IndUnitSimplex{R}(a)
+
+function (f::IndUnitSimplex)(x)
+    R = eltype(x)
+    if all(x .>= 0) && sum(x) <= f.a + eps(f.a)
+        return R(0)
+    end
+    return R(Inf)
+end
+
+function prox!(y, f::IndUnitSimplex{R}, x, gamma) where {R}
+    fx = zero(R)
+    for i in eachindex(x)
+        y[i] = max(x[i], zero(R))
+        fx += y[i]
+    end
+    if fx > f.a
+        simplex_proj_condat!(y, f.a, x)
+    end
+    return eltype(x)(0)
 end
