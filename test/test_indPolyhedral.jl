@@ -1,4 +1,5 @@
 using ProximalOperators
+using OSQP  # loads ProximalOperatorsOSQPExt, enabling IndPolyhedral(...; solver=:osqp)
 using Test
 
 @testset "IndPolyhedral" begin
